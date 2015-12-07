@@ -1,0 +1,9 @@
+com.amazon.speech
+com.amazon.speech.json
+com.amazon.speech.slu
+com.amazon.speech.speechlet
+com.amazon.speech.speechlet.authentication
+com.amazon.speech.speechlet.lambda
+com.amazon.speech.speechlet.servlet
+com.amazon.speech.speechlet.verifier
+com.amazon.speech.ui
