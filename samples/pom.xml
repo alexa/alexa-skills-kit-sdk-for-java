@@ -8,18 +8,11 @@
   <name>Alexa Skills Kit Samples</name>
   <url>http://developer.amazon.com/ask</url>
 
-  <repositories>
-    <repository>
-      <id>alexa-skills-kit-repo</id>
-      <url>file://${project.basedir}/../repo</url>
-    </repository>
-  </repositories>
-
   <dependencies>
     <dependency>
-      <groupId>alexa-skills-kit</groupId>
+      <groupId>com.amazon.alexa</groupId>
       <artifactId>alexa-skills-kit</artifactId>
-      <version>1.1</version>
+      <version>1.1.1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
