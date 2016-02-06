@@ -90,8 +90,11 @@ public final class SpeechletRequestSignatureVerifier {
             Signature signature = Signature.getInstance(Sdk.SIGNATURE_ALGORITHM);
             signature.initVerify(signingCertificate.getPublicKey());
             signature.update(serializedSpeechletRequest);
-            signature.verify(Base64.decodeBase64(baseEncoded64Signature
-                    .getBytes(Sdk.CHARACTER_ENCODING)));
+            if (!signature.verify(Base64.decodeBase64(baseEncoded64Signature
+                    .getBytes(Sdk.CHARACTER_ENCODING)))) {
+                throw new SecurityException(
+                        "Failed to verify the signature/certificate for the provided speechlet request");
+            }
         } catch (CertificateException | SignatureException | NoSuchAlgorithmException
                 | InvalidKeyException | IOException ex) {
             throw new SecurityException(
