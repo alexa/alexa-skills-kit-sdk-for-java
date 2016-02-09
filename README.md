@@ -18,8 +18,6 @@ link below for more details):
 - TidePooler : a skill that looks up tide information for various cities.
 - ScoreKeeper : a skill that can keep score of a game.
 
-To access the SDK Jar directly, go to the [Jar folder](repo/alexa-skills-kit/alexa-skills-kit/1.1/).
-
 ## Usage
 Navigate to the README.md in each sub directory in the samples folder and follow the instructions for getting the sample up and running.
 
