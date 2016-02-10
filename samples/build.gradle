@@ -1,0 +1,43 @@
+apply plugin: 'java'
+
+group = "alexa-skills-kit-samples"
+version = '1.0'
+
+compileJava {
+    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_1_8
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'Launcher',
+                'Implementation-Title': 'Gradle Quickstart',
+                'Implementation-Version': version
+    }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.amazon.alexa:alexa-skills-kit:1.1.2'
+    compile 'com.amazonaws:aws-lambda-java-core:1.0.0'
+    compile 'com.amazonaws:aws-java-sdk-dynamodb:1.9.40'
+
+    compile 'log4j:log4j:1.2.17'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile 'org.apache.directory.studio:org.apache.commons.io:2.4'
+    compile 'org.eclipse.jetty:jetty-server:9.0.6.v20130930'
+    compile 'org.eclipse.jetty:jetty-servlet:9.0.6.v20130930'
+    compile 'org.slf4j:slf4j-api:1.7.10'
+}
+
+task fatJar(type: Jar) {
+    baseName = project.name + '-fat'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+build.dependsOn fatJar
