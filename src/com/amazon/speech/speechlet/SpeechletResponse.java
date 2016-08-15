@@ -13,8 +13,6 @@ package com.amazon.speech.speechlet;
 import com.amazon.speech.ui.Card;
 import com.amazon.speech.ui.OutputSpeech;
 import com.amazon.speech.ui.Reprompt;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * The response to a {@code Speechlet} invocation. Defines text to speak to the user, content to
@@ -54,7 +52,6 @@ public class SpeechletResponse {
      * 
      * @return whether the session should end
      */
-    @JsonInclude(Include.NON_DEFAULT)
     public boolean getShouldEndSession() {
         return shouldEndSession;
     }
