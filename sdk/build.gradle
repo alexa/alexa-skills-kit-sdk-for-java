@@ -1,0 +1,24 @@
+
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Alexa Skills Kit SDK',
+                'Implementation-Version': version
+    }
+}
+
+dependencies {
+
+    compile group: 'com.amazonaws', name: 'aws-lambda-java-core', version: '1.1.0'
+    compileOnly 'org.eclipse.jetty:jetty-servlet:9.0.6.v20130930'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.2'
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
+
+    compile 'org.slf4j:slf4j-api:1.7.10'
+}
+
+jar{
+    baseName 'alexa-skills-kit-sdk'
+}
