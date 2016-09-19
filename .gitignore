@@ -8,3 +8,5 @@ hs_err_pid*
 sdk/build
 .gradle/
 samples/build/
+sdk/target/
+samples/target/
