@@ -21,7 +21,8 @@ jar{
 }
 
 task fatJar(type: Jar) {
-    baseName = 'alexa-skills-kit-samples-fat'
+    baseName = 'alexa-skills-kit-samples'
+    classifier = 'jar-with-dependencies'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
