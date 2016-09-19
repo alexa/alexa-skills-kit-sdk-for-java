@@ -24,6 +24,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  */
 @JsonTypeName("LaunchRequest")
 public final class LaunchRequest extends SpeechletRequest {
+    private final String locale;
+
     /**
      * Returns a new builder instance used to construct a new {@code LaunchRequest}.
      *
@@ -41,6 +43,7 @@ public final class LaunchRequest extends SpeechletRequest {
      */
     private LaunchRequest(final Builder builder) {
         super(builder.requestId, builder.timestamp);
+        this.locale = builder.locale;
     }
 
     /**
@@ -48,19 +51,30 @@ public final class LaunchRequest extends SpeechletRequest {
      *
      * @param requestId
      *            the unique identifier associated with the request
+     * @param locale
+     *            the locale associated with the request
      * @param timestamp
      *            the request timestamp
      */
-    private LaunchRequest(@JsonProperty("requestId") final String requestId,
+    private LaunchRequest(@JsonProperty("requestId") final String requestId, @JsonProperty("locale") final String locale,
             @JsonProperty("timestamp") final Date timestamp) {
         super(requestId, timestamp);
+        this.locale = locale;
     }
+
+    /**
+     * Returns the request locale.
+     *
+     * @return the request locale.
+     */
+    public final String getLocale() { return locale; }
 
     /**
      * Builder used to construct a new {@code LaunchRequest}.
      */
     public static final class Builder {
         private String requestId;
+        private String locale;
         private Date timestamp = new Date();
 
         private Builder() {
@@ -73,6 +87,11 @@ public final class LaunchRequest extends SpeechletRequest {
 
         public Builder withTimestamp(final Date timestamp) {
             this.timestamp = (timestamp != null) ? new Date(timestamp.getTime()) : null;
+            return this;
+        }
+
+        public Builder withLocale(final String locale) {
+            this.locale = locale;
             return this;
         }
 

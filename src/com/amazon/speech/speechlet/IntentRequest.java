@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName("IntentRequest")
 public class IntentRequest extends SpeechletRequest {
     private final Intent intent;
+    private final String locale;
 
     /**
      * Returns a new builder instance used to construct a new {@code IntentRequest}.
@@ -45,6 +46,7 @@ public class IntentRequest extends SpeechletRequest {
     private IntentRequest(final Builder builder) {
         super(builder.requestId, builder.timestamp);
         this.intent = builder.intent;
+        this.locale = builder.locale;
     }
 
     /**
@@ -54,15 +56,25 @@ public class IntentRequest extends SpeechletRequest {
      *            the request identifier.
      * @param timestamp
      *            the request timestamp.
+     * @param locale
+     *            the request locale.
      * @param intent
      *            the intent to handle.
      */
     protected IntentRequest(@JsonProperty("requestId") final String requestId,
-            @JsonProperty("timestamp") final Date timestamp,
+            @JsonProperty("timestamp") final Date timestamp, @JsonProperty("locale") final String locale,
             @JsonProperty("intent") final Intent intent) {
         super(requestId, timestamp);
         this.intent = intent;
+        this.locale = locale;
     }
+
+    /**
+     * Returns the request locale.
+     *
+     * @return the request locale.
+     */
+    public final String getLocale() { return locale; }
 
     /**
      * Returns the intent associated with this request. For a new session, the {@code Intent} passed
@@ -82,6 +94,7 @@ public class IntentRequest extends SpeechletRequest {
      */
     public static final class Builder {
         private String requestId;
+        private String locale;
         private Date timestamp = new Date();
         private Intent intent;
 
@@ -95,6 +108,11 @@ public class IntentRequest extends SpeechletRequest {
 
         public Builder withTimestamp(final Date timestamp) {
             this.timestamp = (timestamp != null) ? new Date(timestamp.getTime()) : null;
+            return this;
+        }
+
+        public Builder withLocale(final String locale) {
+            this.locale = locale;
             return this;
         }
 
