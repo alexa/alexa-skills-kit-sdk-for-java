@@ -15,7 +15,6 @@ dependencies {
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
     compile 'org.apache.commons:commons-lang3:3.3.2'
     compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
-
     compile 'org.slf4j:slf4j-api:1.7.10'
 }
 
