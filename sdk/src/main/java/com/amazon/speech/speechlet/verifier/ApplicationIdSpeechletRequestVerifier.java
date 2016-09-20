@@ -45,12 +45,14 @@ public class ApplicationIdSpeechletRequestVerifier implements SpeechletRequestVe
      * verifier was constructed from an empty set of supported {@code applicationId}s, this method
      * returns true for any application ID (including null values). Otherwise, this method returns
      * true only if the {@link SpeechletRequest}'s {@code applicationId} is supported. If any of
-     * {@link Session}, {@link Session#getApplication()}, or {@link Application#getApplicationId()}
+     * {@link Session}, {@link Session#getApplication()}, or {@link Session#getApplication()#getApplicationId()}
      * is {@code null}, this method returns false.
-     * 
-     * @param applicationId
-     *            the application ID to verify
-     * @return true if the provided application ID is supported by this verifier
+     *
+     * @param request
+     *            {@link SpeechletRequest} to verify
+     * @param session
+     *            {@link Session} context within which to verify the call
+     * @return
      */
     @Override
     public boolean verify(SpeechletRequest request, Session session) {
