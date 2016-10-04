@@ -91,6 +91,16 @@ public class SpeechletRequestDispatcher {
             // Don't save session attributes as the session already ended
             saveSessionAttributes = false;
             speechlet.onSessionEnded((SessionEndedRequest) speechletRequest, session);
+        } else if (speechletRequest instanceof PlaybackStartedRequest) {
+            speechlet.onPlaybackStarted((PlaybackStartedRequest) speechletRequest);
+        } else if (speechletRequest instanceof PlaybackStoppedRequest) {
+            speechlet.onPlaybackStopped((PlaybackStoppedRequest) speechletRequest);
+        } else if (speechletRequest instanceof PlaybackFinishedRequest) {
+            speechlet.onPlaybackFinished((PlaybackFinishedRequest) speechletRequest);
+        } else if (speechletRequest instanceof PlaybackNearlyFinishedRequest) {
+            speechlet.onPlaybackNearlyFinished((PlaybackNearlyFinishedRequest) speechletRequest);
+        } else if (speechletRequest instanceof PlaybackFailedRequest) {
+            speechlet.onPlaybackFailed((PlaybackFailedRequest) speechletRequest);
         } else {
             String requestType =
                     (speechletRequest != null) ? speechletRequest.getClass().getName() : null;
