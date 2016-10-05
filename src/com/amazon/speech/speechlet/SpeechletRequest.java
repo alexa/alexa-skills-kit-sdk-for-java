@@ -28,7 +28,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
         @Type(value = LaunchRequest.class),
         @Type(value = IntentRequest.class),
         @Type(value = SessionStartedRequest.class),
-        @Type(value = SessionEndedRequest.class)
+        @Type(value = SessionEndedRequest.class),
+        @Type(value = PlaybackStartedRequest.class),
+        @Type(value = PlaybackStoppedRequest.class),
+        @Type(value = PlaybackFinishedRequest.class),
+        @Type(value = PlaybackNearlyFinishedRequest.class),
+        @Type(value = PlaybackFailedRequest.class)
 })
 public abstract class SpeechletRequest {
     private final String requestId;

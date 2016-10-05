@@ -102,4 +102,11 @@ public interface Speechlet {
      *             for any errors encountered in the processing of the request
      */
     void onSessionEnded(SessionEndedRequest request, Session session) throws SpeechletException;
+
+    // New Audio Interface
+    void onPlaybackStarted(PlaybackStartedRequest request) throws SpeechletException;
+    void onPlaybackFinished(PlaybackFinishedRequest request) throws SpeechletException;
+    void onPlaybackStopped(PlaybackStoppedRequest request) throws SpeechletException;
+    void onPlaybackNearlyFinished(PlaybackNearlyFinishedRequest request) throws SpeechletException;
+    void onPlaybackFailed(PlaybackFailedRequest request) throws SpeechletException;
 }
