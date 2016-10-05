@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 public class Stream {
     private String token;
     private String url;
-    private int offsetInMilliseconds;
+    private long offsetInMilliseconds;
 
     public void setToken(String token) {
         this.token = token;
@@ -28,11 +28,11 @@ public class Stream {
         return this.url;
     }
 
-    public void setOffsetInMilliseconds(int offsetInMilliseconds) {
+    public void setOffsetInMilliseconds(long offsetInMilliseconds) {
         this.offsetInMilliseconds = offsetInMilliseconds;
     }
 
-    public int getOffsetInMilliseconds() {
+    public long getOffsetInMilliseconds() {
         return this.offsetInMilliseconds;
     }
 }

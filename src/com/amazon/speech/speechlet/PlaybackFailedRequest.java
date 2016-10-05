@@ -13,7 +13,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName("AudioPlayer.PlaybackFailed")
 public final class PlaybackFailedRequest extends SpeechletRequest {
     private final String token;
-    private final int offsetInMilliseconds;
+    private final long offsetInMilliseconds;
     private final String locale;
     private final PlaybackFailedError error;
     private final PlaybackFailedState currentPlaybackState;
@@ -35,7 +35,7 @@ public final class PlaybackFailedRequest extends SpeechletRequest {
             @JsonProperty("requestId") final String requestId,
             @JsonProperty("timestamp") final Date timestamp,
             @JsonProperty("token") final String token,
-            @JsonProperty("offsetInMilliseconds") final int offsetInMilliseconds,
+            @JsonProperty("offsetInMilliseconds") final long offsetInMilliseconds,
             @JsonProperty("locale") final String locale,
             @JsonProperty("error") final PlaybackFailedError error,
             @JsonProperty("currentPlaybackState") final PlaybackFailedState currentPlaybackState
@@ -52,7 +52,7 @@ public final class PlaybackFailedRequest extends SpeechletRequest {
         return this.token;
     }
 
-    public int getOffsetInMilliseconds() {
+    public long getOffsetInMilliseconds() {
         return this.offsetInMilliseconds;
     }
 
@@ -72,7 +72,7 @@ public final class PlaybackFailedRequest extends SpeechletRequest {
         private String requestId;
         private Date timestamp = new Date();
         private String token;
-        private int offsetInMilliseconds;
+        private long offsetInMilliseconds;
         private String locale;
         private PlaybackFailedError error;
         private PlaybackFailedState currentPlaybackState;
@@ -95,7 +95,7 @@ public final class PlaybackFailedRequest extends SpeechletRequest {
             return this;
         }
 
-        public Builder withOffsetInMilliseconds(final int offsetInMilliseconds) {
+        public Builder withOffsetInMilliseconds(final long offsetInMilliseconds) {
             this.offsetInMilliseconds = offsetInMilliseconds;
             return this;
         }

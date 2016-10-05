@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class PlaybackFailedState {
     private final String token;
-    private final int offsetInMilliseconds;
+    private final long offsetInMilliseconds;
     private final String playerActivity;
 
     public static Builder builder() {
@@ -21,7 +21,7 @@ public final class PlaybackFailedState {
 
     private PlaybackFailedState(
             @JsonProperty("token") final String token,
-            @JsonProperty("offsetInMilliseconds") final int offsetInMilliseconds,
+            @JsonProperty("offsetInMilliseconds") final long offsetInMilliseconds,
             @JsonProperty("playerActivity") final String playerActivity
     ) {
         this.token = token;
@@ -33,7 +33,7 @@ public final class PlaybackFailedState {
         return token;
     }
 
-    public int getOffsetInMilliseconds() {
+    public long getOffsetInMilliseconds() {
         return offsetInMilliseconds;
     }
 
@@ -43,7 +43,7 @@ public final class PlaybackFailedState {
 
     public static final class Builder {
         private String token;
-        private int offsetInMilliseconds;
+        private long offsetInMilliseconds;
         private String playerActivity;
 
         private Builder() {
@@ -54,7 +54,7 @@ public final class PlaybackFailedState {
             return this;
         }
 
-        public Builder withOffsetInMilliseconds(final int offsetInMilliseconds) {
+        public Builder withOffsetInMilliseconds(final long offsetInMilliseconds) {
             this.offsetInMilliseconds = offsetInMilliseconds;
             return this;
         }
