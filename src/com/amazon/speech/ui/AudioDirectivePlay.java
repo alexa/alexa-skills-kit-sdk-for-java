@@ -22,11 +22,11 @@ public class AudioDirectivePlay extends AudioDirective {
         return this.audioItem;
     }
 
-    public void setPlayBehaviour(String playBehavior) {
+    public void setPlayBehavior(String playBehavior) {
         this.playBehavior = playBehavior;
     }
 
-    public String getPlayBehaviour() {
+    public String getPlayBehavior() {
         return this.playBehavior;
     }
 }
