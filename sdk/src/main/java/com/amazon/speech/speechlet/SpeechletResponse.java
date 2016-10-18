@@ -13,8 +13,11 @@ package com.amazon.speech.speechlet;
 import com.amazon.speech.ui.Card;
 import com.amazon.speech.ui.OutputSpeech;
 import com.amazon.speech.ui.Reprompt;
+import com.amazon.speech.ui.AudioDirective;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import java.util.List;
 
 /**
  * The response to a {@code Speechlet} invocation. Defines text to speak to the user, content to
@@ -29,6 +32,7 @@ public class SpeechletResponse {
     private Card card = null;
     private Reprompt reprompt = null;
     private boolean shouldEndSession = true;
+    private List<AudioDirective> directives;
 
     /**
      * Returns the speech associated with this response.
@@ -107,6 +111,65 @@ public class SpeechletResponse {
         this.reprompt = reprompt;
     }
 
+
+    public void setDirectives(List<AudioDirective> directives)
+    {
+        this.directives = directives;
+    }
+
+    @JsonInclude(Include.NON_DEFAULT)    
+    public List<AudioDirective> getDirectives()
+    {
+        return this.directives;
+    }
+
+    public static SpeechletResponse newTellResponse(final List<AudioDirective> directives)
+    {
+        if (directives == null)
+        {
+            throw new IllegalArgumentException("AudioDirective cannot be null");
+        }
+
+        SpeechletResponse response = new SpeechletResponse();
+        response.setShouldEndSession(true);
+        response.setDirectives(directives);
+        return response;
+    }
+
+    public static SpeechletResponse newTellResponse(final OutputSpeech outputSpeech, 
+            final List<AudioDirective> directives)
+    {
+        if (directives == null)
+        {
+            throw new IllegalArgumentException("AudioDirective cannot be null");
+        }
+
+        SpeechletResponse response = new SpeechletResponse();
+        response.setShouldEndSession(true);
+        response.setOutputSpeech(outputSpeech);
+        response.setDirectives(directives);
+        return response;
+    }
+
+    public static SpeechletResponse newTellResponse(final OutputSpeech outputSpeech, final Card card,
+            final List<AudioDirective> directives)
+    {
+        if (card == null)
+        {
+            throw new IllegalArgumentException("Card cannot be null");
+        }
+        if (directives == null)
+        {
+            throw new IllegalArgumentException("AudioDirective cannot be null");
+        }
+
+        SpeechletResponse response = new SpeechletResponse();
+        response.setShouldEndSession(true);
+        response.setOutputSpeech(outputSpeech);
+        response.setCard(card);
+        response.setDirectives(directives);
+        return response;
+    }
     /**
      * Creates and returns a response intended to tell the user something. After the specified
      * output is read to the user, the session ends. Note that the response created with this method
