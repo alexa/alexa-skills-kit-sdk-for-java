@@ -20,6 +20,7 @@ Gradle:
     }
 
 Maven:
+
     <?xml version="1.0" encoding="UTF-8" ?>
     <settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd'
               xmlns='http://maven.apache.org/SETTINGS/1.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
@@ -55,9 +56,11 @@ Maven:
     </settings>
 Then include in your dependencies:
 Gradle:
+
     compile 'com.amazon.alexa:alexa-skills-kit-java:1.1.4_SNAPSHOT'
     
 Maven:
+
     <dependency>
       <groupId>com.amazon.alexa</groupId>
       <artifactId>alexa-skills-kit-java</artifactId>
