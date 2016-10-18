@@ -16,14 +16,13 @@ import com.amazon.speech.ui.Reprompt;
 import com.amazon.speech.ui.AudioDirective;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import java.util.List;
 
 /**
  * The response to a {@code Speechlet} invocation. Defines text to speak to the user, content to
  * display in the companion application, and whether or not the current {@code Speechlet} session
  * should end.
- * 
+ *
  * @see Speechlet#onLaunch(LaunchRequest, Session)
  * @see Speechlet#onIntent(IntentRequest, Session)
  */
@@ -36,7 +35,7 @@ public class SpeechletResponse {
 
     /**
      * Returns the speech associated with this response.
-     * 
+     *
      * @return the speech
      */
     public OutputSpeech getOutputSpeech() {
@@ -45,7 +44,7 @@ public class SpeechletResponse {
 
     /**
      * Sets the speech associated with this response.
-     * 
+     *
      * @param outputSpeech
      *            the speech to set
      */
@@ -55,17 +54,16 @@ public class SpeechletResponse {
 
     /**
      * Returns whether or not the session should end with this response.
-     * 
+     *
      * @return whether the session should end
      */
-    @JsonInclude(Include.NON_DEFAULT)
     public boolean getShouldEndSession() {
         return shouldEndSession;
     }
 
     /**
      * Sets whether or not the session should end with this response.
-     * 
+     *
      * @param shouldEndSession
      *            {@code true} if the session should end with this response
      */
@@ -75,7 +73,7 @@ public class SpeechletResponse {
 
     /**
      * Returns the UI card associated with this response.
-     * 
+     *
      * @return the UI card to set
      */
     public Card getCard() {
@@ -84,7 +82,7 @@ public class SpeechletResponse {
 
     /**
      * Sets the UI card associated with this response.
-     * 
+     *
      * @param card
      *            the UI card to set
      */
@@ -94,7 +92,7 @@ public class SpeechletResponse {
 
     /**
      * Returns the reprompt associated with this response.
-     * 
+     *
      * @return the reprompt
      */
     public Reprompt getReprompt() {
@@ -103,7 +101,7 @@ public class SpeechletResponse {
 
     /**
      * Sets the reprompt associated with this response.
-     * 
+     *
      * @param reprompt
      *            the reprompt
      */
@@ -117,7 +115,7 @@ public class SpeechletResponse {
         this.directives = directives;
     }
 
-    @JsonInclude(Include.NON_DEFAULT)    
+    @JsonInclude(Include.NON_DEFAULT)
     public List<AudioDirective> getDirectives()
     {
         return this.directives;
@@ -136,7 +134,7 @@ public class SpeechletResponse {
         return response;
     }
 
-    public static SpeechletResponse newTellResponse(final OutputSpeech outputSpeech, 
+    public static SpeechletResponse newTellResponse(final OutputSpeech outputSpeech,
             final List<AudioDirective> directives)
     {
         if (directives == null)
@@ -176,7 +174,7 @@ public class SpeechletResponse {
      * does not include a graphical card for the companion app.
      * <p>
      * All arguments in this method are required and cannot be null.
-     * 
+     *
      * @param outputSpeech
      *            output speech content for the tell voice response
      * @return SpeechletResponse spoken response for the given input
@@ -198,7 +196,7 @@ public class SpeechletResponse {
      * ends.
      * <p>
      * All arguments in this method are required and cannot be null.
-     * 
+     *
      * @param outputSpeech
      *            output speech content for the tell voice response
      * @param card
@@ -222,7 +220,7 @@ public class SpeechletResponse {
      * method does not include a graphical card for the companion app.
      * <p>
      * All arguments in this method are required and cannot be null.
-     * 
+     *
      * @param outputSpeech
      *            output speech content for the ask voice response
      * @param reprompt
@@ -254,7 +252,7 @@ public class SpeechletResponse {
      * immediately end after the ask response.
      * <p>
      * All arguments in this method are required and cannot be null.
-     * 
+     *
      * @param outputSpeech
      *            output speech content for the ask voice response
      * @param reprompt
