@@ -10,3 +10,6 @@ sdk/build
 samples/build/
 sdk/target/
 samples/target/
+parent.iml
+samples/alexa-skills-kit-samples.iml
+sdk/alexa-skills-kit-sdk.iml

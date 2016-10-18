@@ -9,18 +9,11 @@
  */
 package spacegeek;
 
+import com.amazon.speech.speechlet.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.amazon.speech.slu.Intent;
-import com.amazon.speech.speechlet.IntentRequest;
-import com.amazon.speech.speechlet.LaunchRequest;
-import com.amazon.speech.speechlet.Session;
-import com.amazon.speech.speechlet.SessionEndedRequest;
-import com.amazon.speech.speechlet.SessionStartedRequest;
-import com.amazon.speech.speechlet.Speechlet;
-import com.amazon.speech.speechlet.SpeechletException;
-import com.amazon.speech.speechlet.SpeechletResponse;
 import com.amazon.speech.ui.PlainTextOutputSpeech;
 import com.amazon.speech.ui.Reprompt;
 import com.amazon.speech.ui.SimpleCard;
@@ -30,6 +23,32 @@ import com.amazon.speech.ui.SimpleCard;
  * example of how to handle Alexa Skill requests.
  */
 public class SpaceGeekSpeechlet implements Speechlet {
+
+    @Override
+    public void onPlaybackStarted(PlaybackStartedRequest request) throws SpeechletException {
+
+    }
+
+    @Override
+    public void onPlaybackFinished(PlaybackFinishedRequest request) throws SpeechletException {
+
+    }
+
+    @Override
+    public void onPlaybackStopped(PlaybackStoppedRequest request) throws SpeechletException {
+
+    }
+
+    @Override
+    public void onPlaybackNearlyFinished(PlaybackNearlyFinishedRequest request) throws SpeechletException {
+
+    }
+
+    @Override
+    public void onPlaybackFailed(PlaybackFailedRequest request) throws SpeechletException {
+
+    }
+
     private static final Logger log = LoggerFactory.getLogger(SpaceGeekSpeechlet.class);
 
     /**
