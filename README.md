@@ -1,5 +1,9 @@
 # Java Alexa Skills Kit SDK & Samples
 
+## This is a fork of the main aws java sdk repository. Because they haven't been responsive to PRs
+I've merged those into this repo and invited authors of the PRs here to collaborate.
+I will push these to bintray for now so you can resolve this sdk in your gradle/maven build.
+
 ##Alexa Skills Kit Documentation
 The documentation for the Alexa Skills Kit is available on the [Amazon Apps and Services Developer Portal](https://developer.amazon.com/appsandservices/solutions/alexa/alexa-skills-kit/).
 
