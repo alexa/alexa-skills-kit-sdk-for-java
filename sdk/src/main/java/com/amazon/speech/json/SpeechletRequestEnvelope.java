@@ -19,6 +19,8 @@ import com.amazon.speech.speechlet.SpeechletRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Envelope to wrap the various parameters of a {@code Speechlet} invocation.
@@ -31,6 +33,8 @@ public final class SpeechletRequestEnvelope {
     /**
      * A Jackson {@code ObjectMapper} configured for our deserialization use case.
      */
+    private static final Logger log = LoggerFactory.getLogger(SpeechletRequestEnvelope.class);
+
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     static {
         /*
@@ -145,6 +149,7 @@ public final class SpeechletRequestEnvelope {
      *             if deserialization fails.
      */
     public static SpeechletRequestEnvelope fromJson(final byte[] json) throws IOException {
+        log.debug("Mapping json string to class:"+new String(json));
         return OBJECT_MAPPER.readValue(json, SpeechletRequestEnvelope.class);
     }
 
@@ -158,6 +163,7 @@ public final class SpeechletRequestEnvelope {
      *             if deserialization fails
      */
     public static SpeechletRequestEnvelope fromJson(final String json) throws IOException {
+        System.out.println("Mapping json string to class:"+json);
         return OBJECT_MAPPER.readValue(json, SpeechletRequestEnvelope.class);
     }
 

@@ -104,9 +104,10 @@ public interface Speechlet {
     void onSessionEnded(SessionEndedRequest request, Session session) throws SpeechletException;
 
     // New Audio Interface
-    void onPlaybackStarted(PlaybackStartedRequest request) throws SpeechletException;
-    void onPlaybackFinished(PlaybackFinishedRequest request) throws SpeechletException;
+    SpeechletResponse onPlaybackStarted(PlaybackStartedRequest request) throws SpeechletException;
+    SpeechletResponse onPlaybackFinished(PlaybackFinishedRequest request) throws SpeechletException;
     void onPlaybackStopped(PlaybackStoppedRequest request) throws SpeechletException;
-    void onPlaybackNearlyFinished(PlaybackNearlyFinishedRequest request) throws SpeechletException;
-    void onPlaybackFailed(PlaybackFailedRequest request) throws SpeechletException;
+    SpeechletResponse onPlaybackNearlyFinished(PlaybackNearlyFinishedRequest request) throws SpeechletException;
+    SpeechletResponse onPlaybackFailed(PlaybackFailedRequest request) throws SpeechletException;
+    void onSystemException(SystemExceptionEncounteredRequest request) throws SpeechletException;
 }

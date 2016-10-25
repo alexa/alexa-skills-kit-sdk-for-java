@@ -11,10 +11,12 @@
 package com.amazon.speech.speechlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.amazon.speech.Sdk;
 import com.amazon.speech.json.SpeechletRequestEnvelope;
 import com.amazon.speech.json.SpeechletResponseEnvelope;
+import com.amazon.speech.ui.AudioDirective;
 
 /**
  * This class takes an incoming request from the Alexa service, executes that call on the
@@ -92,16 +94,31 @@ public class SpeechletRequestDispatcher {
             saveSessionAttributes = false;
             speechlet.onSessionEnded((SessionEndedRequest) speechletRequest, session);
         } else if (speechletRequest instanceof PlaybackStartedRequest) {
-            speechlet.onPlaybackStarted((PlaybackStartedRequest) speechletRequest);
+
+            final SpeechletResponse speechletResponse =
+                    speechlet.onPlaybackStarted((PlaybackStartedRequest)speechletRequest);
+            responseEnvelope.setResponse(speechletResponse);
         } else if (speechletRequest instanceof PlaybackStoppedRequest) {
-            speechlet.onPlaybackStopped((PlaybackStoppedRequest) speechletRequest);
+           // cannot return anything on this one but must have an empty response
+            speechlet.onPlaybackStopped((PlaybackStoppedRequest)speechletRequest);
+			responseEnvelope.setResponse(SpeechletResponse.newTellResponse(new ArrayList<AudioDirective>()));
         } else if (speechletRequest instanceof PlaybackFinishedRequest) {
-            speechlet.onPlaybackFinished((PlaybackFinishedRequest) speechletRequest);
+            final SpeechletResponse speechletResponse =
+                    speechlet.onPlaybackFinished((PlaybackFinishedRequest)speechletRequest);
+            responseEnvelope.setResponse(speechletResponse);
         } else if (speechletRequest instanceof PlaybackNearlyFinishedRequest) {
-            speechlet.onPlaybackNearlyFinished((PlaybackNearlyFinishedRequest) speechletRequest);
+            final SpeechletResponse speechletResponse =
+                    speechlet.onPlaybackNearlyFinished((PlaybackNearlyFinishedRequest)speechletRequest);
+            responseEnvelope.setResponse(speechletResponse);
         } else if (speechletRequest instanceof PlaybackFailedRequest) {
-            speechlet.onPlaybackFailed((PlaybackFailedRequest) speechletRequest);
-        } else {
+            final SpeechletResponse speechletResponse =
+                    speechlet.onPlaybackFailed((PlaybackFailedRequest)speechletRequest);
+            responseEnvelope.setResponse(speechletResponse);
+        } else if (speechletRequest instanceof SystemExceptionEncounteredRequest) {
+			// can return nothing here but must have some sort of response
+			speechlet.onSystemException((SystemExceptionEncounteredRequest)speechletRequest);
+			responseEnvelope.setResponse(SpeechletResponse.newTellResponse(new ArrayList<AudioDirective>()));
+		} else {
             String requestType =
                     (speechletRequest != null) ? speechletRequest.getClass().getName() : null;
             String message =

@@ -134,6 +134,7 @@ public class SpeechletResponse {
         return response;
     }
 
+
     public static SpeechletResponse newTellResponse(final OutputSpeech outputSpeech,
             final List<AudioDirective> directives)
     {
