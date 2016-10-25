@@ -1,8 +1,82 @@
 # Java Alexa Skills Kit SDK & Samples
 
+## This is a fork of the main aws java sdk repository. Because they haven't been responsive to PRs
+I've merged those into this repo and invited authors of the PRs here to collaborate.
+I will push these to bintray for now so you can resolve this sdk in your gradle/maven build.
+
 ##Alexa Skills Kit Documentation
 The documentation for the Alexa Skills Kit is available on the [Amazon Apps and Services Developer Portal](https://developer.amazon.com/appsandservices/solutions/alexa/alexa-skills-kit/).
 
+## Include the released versions on bintray in your maven/gradle build
+
+You will need to add the repository to your build and use the differnet artifact name:
+
+Gradle:
+
+    repositories {
+        maven {
+            url  "http://dl.bintray.com/vanderfox/alexa-skills-kit-java" 
+        }
+    }
+
+Maven:
+
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <settings xsi:schemaLocation='http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd'
+              xmlns='http://maven.apache.org/SETTINGS/1.0.0' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'>
+        
+        <profiles>
+            <profile>
+                <repositories>
+                    <repository>
+                        <snapshots>
+                            <enabled>false</enabled>
+                        </snapshots>
+                        <id>bintray-vanderfox-alexa-skills-kit-java</id>
+                        <name>bintray</name>
+                        <url>http://dl.bintray.com/vanderfox/alexa-skills-kit-java</url>
+                    </repository>
+                </repositories>
+                <pluginRepositories>
+                    <pluginRepository>
+                        <snapshots>
+                            <enabled>false</enabled>
+                        </snapshots>
+                        <id>bintray-vanderfox-alexa-skills-kit-java</id>
+                        <name>bintray-plugins</name>
+                        <url>http://dl.bintray.com/vanderfox/alexa-skills-kit-java</url>
+                    </pluginRepository>
+                </pluginRepositories>
+                <id>bintray</id>
+            </profile>
+        </profiles>
+        <activeProfiles>
+            <activeProfile>bintray</activeProfile>
+        </activeProfiles>
+    </settings>
+Then include in your dependencies:
+Gradle:
+
+    compile 'com.amazon.alexa:alexa-skills-kit-java:1.1.5_SNAPSHOT'
+    
+Maven:
+
+    <dependency>
+      <groupId>com.amazon.alexa</groupId>
+      <artifactId>alexa-skills-kit-java</artifactId>
+      <version>1.1.5_SNAPSHOT</version>
+      <type>pom</type>
+    </dependency>
+    
+## Changes
+# 1.1.5_snapshot
+
+- added SystemExceptionEncounteredRequest handling so you can log errors with faulty requests send to Alexa
+- fixed interface for audio calls to allow a SpeechletResponse so you can send directives back
+- note: some audio command only allow certain directives to be used, for now you will have to validate that yourself!
+- See docs at https://developer.amazon.com/public/solutions/alexa/alexa-voice-service/reference/system#overview
+- link to working example app (this is in Groovy Lambda should be useful: (sample app not complete, it always plays the same podcast for now)
+- Example app with working audio skills: https://github.com/rvanderwerf/alexa-groovy-podcast
 ## Contents
 The included samples represent how to use Java AWS Lambda functions as Alexa Skills.
 The following samples are included (ordered by complexity, see the Using Alexa Skills Kit Samples

@@ -1,0 +1,49 @@
+apply plugin: 'com.jfrog.bintray'
+
+group 'com.amazon.alexa'
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+            groupId 'com.amazon.alexa'
+            artifactId 'alexa-skills-kit-java'
+            version '1.1.5_SNAPSHOT'
+        }
+    }
+}
+
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+    publications = ['MyPublication']
+    pkg {
+        repo = 'alexa-skills-kit-java'
+        name = 'alexa-skills-kit-java'
+        userOrg = 'vanderfox'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/vanderfox/alexa-skills-kit-java'
+    }
+}
+
+//T
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Alexa Skills Kit SDK',
+                'Implementation-Version': version
+    }
+}
+
+dependencies {
+
+    compile group: 'com.amazonaws', name: 'aws-lambda-java-core', version: '1.1.0'
+    compileOnly 'org.eclipse.jetty:jetty-servlet:9.0.6.v20130930'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.2'
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    compile 'org.apache.commons:commons-lang3:3.3.2'
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
+    compile 'org.slf4j:slf4j-api:1.7.10'
+}
+
+jar{
+    baseName 'alexa-skills-kit-sdk'
+}
