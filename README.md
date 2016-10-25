@@ -57,18 +57,26 @@ Maven:
 Then include in your dependencies:
 Gradle:
 
-    compile 'com.amazon.alexa:alexa-skills-kit-java:1.1.4_SNAPSHOT'
+    compile 'com.amazon.alexa:alexa-skills-kit-java:1.1.5_SNAPSHOT'
     
 Maven:
 
     <dependency>
       <groupId>com.amazon.alexa</groupId>
       <artifactId>alexa-skills-kit-java</artifactId>
-      <version>1.1.4_SNAPSHOT</version>
+      <version>1.1.5_SNAPSHOT</version>
       <type>pom</type>
     </dependency>
     
+## Changes
+# 1.1.5_snapshot
 
+- added SystemExceptionEncounteredRequest handling so you can log errors with faulty requests send to Alexa
+- fixed interface for audio calls to allow a SpeechletResponse so you can send directives back
+- note: some audio command only allow certain directives to be used, for now you will have to validate that yourself!
+- See docs at https://developer.amazon.com/public/solutions/alexa/alexa-voice-service/reference/system#overview
+- link to working example app (this is in Groovy Lambda should be useful: (sample app not complete, it always plays the same podcast for now)
+- Example app with working audio skills: https://github.com/rvanderwerf/alexa-groovy-podcast
 ## Contents
 The included samples represent how to use Java AWS Lambda functions as Alexa Skills.
 The following samples are included (ordered by complexity, see the Using Alexa Skills Kit Samples
