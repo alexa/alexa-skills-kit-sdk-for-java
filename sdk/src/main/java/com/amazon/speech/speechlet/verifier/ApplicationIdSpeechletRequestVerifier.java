@@ -65,6 +65,9 @@ public class ApplicationIdSpeechletRequestVerifier implements SpeechletRequestVe
         if (request.getClass().getSimpleName().startsWith("Playback")) {
             return true;
         }
+        if (request.getClass().getSimpleName().startsWith("SystemException")) {
+            return true;
+        }
 
         if (session == null || session.getApplication() == null
                 || session.getApplication().getApplicationId() == null) {
