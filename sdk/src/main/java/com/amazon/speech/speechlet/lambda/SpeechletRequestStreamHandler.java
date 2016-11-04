@@ -91,6 +91,7 @@ public abstract class SpeechletRequestStreamHandler implements RequestStreamHand
             outputBytes =
                     speechletRequestHandler.handleSpeechletCall(speechlet,
                             serializedSpeechletRequest);
+
         } catch (SpeechletRequestHandlerException | SpeechletException ex) {
             throw new RuntimeException(ex);
         }

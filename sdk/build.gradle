@@ -7,7 +7,7 @@ publishing {
             from components.java
             groupId 'com.amazon.alexa'
             artifactId 'alexa-skills-kit-java'
-            version '1.1.5_SNAPSHOT'
+            version '1.1.6-SNAPSHOT'
         }
     }
 }

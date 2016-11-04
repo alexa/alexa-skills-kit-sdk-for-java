@@ -18,7 +18,7 @@ subprojects{
 	apply plugin: 'maven-publish'
 
     group = "com.amazon.alexa"
-    version = '1.1.4_SNAPSHOT'
+    version = '1.1.6-SNAPSHOT'
     compileJava {
         targetCompatibility = JavaVersion.VERSION_1_7
         sourceCompatibility = JavaVersion.VERSION_1_7
