@@ -3,6 +3,13 @@ com.amazon.speech.json
 com.amazon.speech.slu
 com.amazon.speech.speechlet
 com.amazon.speech.speechlet.authentication
+com.amazon.speech.speechlet.interfaces.audioplayer
+com.amazon.speech.speechlet.interfaces.audioplayer.directive
+com.amazon.speech.speechlet.interfaces.audioplayer.request
+com.amazon.speech.speechlet.interfaces.playbackcontroller
+com.amazon.speech.speechlet.interfaces.playbackcontroller.request
+com.amazon.speech.speechlet.interfaces.system
+com.amazon.speech.speechlet.interfaces.system.request
 com.amazon.speech.speechlet.lambda
 com.amazon.speech.speechlet.servlet
 com.amazon.speech.speechlet.verifier
