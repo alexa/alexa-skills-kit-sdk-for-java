@@ -1,16 +1,20 @@
-/**
-    Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+/*
+    Copyright 2014-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
-    Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
+    Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file
+    except in compliance with the License. A copy of the License is located at
 
         http://aws.amazon.com/apache2.0/
 
-    or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+    or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for
+    the specific language governing permissions and limitations under the License.
  */
 
 package com.amazon.speech.speechlet;
 
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.commons.lang3.Validate;
 
@@ -18,12 +22,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * The request object used to notify a {@code Speechlet} that a new session has launched.
+ * The request object used to notify a {@code SpeechletV2} that a new session has launched.
  *
- * @see Speechlet#onLaunch(LaunchRequest, Session)
+ * @see SpeechletV2#onLaunch(SpeechletRequestEnvelope)
  */
 @JsonTypeName("LaunchRequest")
-public final class LaunchRequest extends SpeechletRequest {
+public class LaunchRequest extends CoreSpeechletRequest {
     /**
      * Returns a new builder instance used to construct a new {@code LaunchRequest}.
      *
@@ -40,7 +44,7 @@ public final class LaunchRequest extends SpeechletRequest {
      *            the builder used to construct the {@code LaunchRequest}
      */
     private LaunchRequest(final Builder builder) {
-        super(builder.requestId, builder.timestamp);
+        super(builder);
     }
 
     /**
@@ -50,36 +54,26 @@ public final class LaunchRequest extends SpeechletRequest {
      *            the unique identifier associated with the request
      * @param timestamp
      *            the request timestamp
+     * @param locale
+     *            the locale of the request
      */
     private LaunchRequest(@JsonProperty("requestId") final String requestId,
-            @JsonProperty("timestamp") final Date timestamp) {
-        super(requestId, timestamp);
+            @JsonProperty("timestamp") final Date timestamp,
+            @JsonProperty("locale") final Locale locale) {
+        super(requestId, timestamp, locale);
     }
 
     /**
      * Builder used to construct a new {@code LaunchRequest}.
      */
-    public static final class Builder {
-        private String requestId;
-        private Date timestamp = new Date();
-
+    public static final class Builder extends SpeechletRequestBuilder<Builder, LaunchRequest> {
         private Builder() {
         }
 
-        public Builder withRequestId(final String requestId) {
-            this.requestId = requestId;
-            return this;
-        }
-
-        public Builder withTimestamp(final Date timestamp) {
-            this.timestamp = (timestamp != null) ? new Date(timestamp.getTime()) : null;
-            return this;
-        }
-
+        @Override
         public LaunchRequest build() {
-            Validate.notBlank(requestId, "RequestId must be defined");
+            Validate.notBlank(getRequestId(), "RequestId must be defined");
             return new LaunchRequest(this);
         }
     }
 }
-

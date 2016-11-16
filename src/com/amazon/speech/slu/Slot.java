@@ -1,11 +1,14 @@
-/**
-    Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+/*
+    Copyright 2014-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
-    Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
+    Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file
+    except in compliance with the License. A copy of the License is located at
 
         http://aws.amazon.com/apache2.0/
 
-    or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+    or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for
+    the specific language governing permissions and limitations under the License.
  */
 
 package com.amazon.speech.slu;
@@ -19,11 +22,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * A {@code Slot} is part of an {@link Intent} that provides arguments need to process the intent
  * This is based on a predefined domain definition, or schema.
  * </p>
- * 
+ *
  * For example:
  * <p>
- * If the user said, "place a reservation for two," with the intent schema: <br/>
- * 
+ * If the user said, "place a reservation for two," with the intent schema: <br>
+ *
  * <pre>
  * {
  *     "intents":[
@@ -40,7 +43,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * A ReservationIntent {@code Intent} would contain a <b>Seats</b> {@code Slot} with the value of
  * "2".
  * </p>
- * 
+ *
  * <p>
  * A {@code Slot} can be {@code null} if:
  * <ul>
@@ -50,7 +53,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * <li>If the {@code Slot} is specified in the domain definition, but the user did not provide
  * enough information in their request. Example: "place a reservation."</li>
  * </ul>
- * 
+ *
  * @see Intent#getSlots()
  * @see Intent#getSlot(String)
  */
@@ -60,7 +63,7 @@ public final class Slot {
 
     /**
      * Returns a new builder instance used to construct a new {@code Slot}.
-     * 
+     *
      * @return the builder
      */
     public static Builder builder() {
@@ -69,7 +72,7 @@ public final class Slot {
 
     /**
      * Private constructor to return a new {@code Slot} from a {@code Builder}.
-     * 
+     *
      * @param builder
      *            the builder used to construct the {@code Slot}.
      */
@@ -80,7 +83,7 @@ public final class Slot {
 
     /**
      * Private constructor used for JSON serialization.
-     * 
+     *
      * @param name
      *            the slot name
      * @param value
@@ -93,7 +96,7 @@ public final class Slot {
 
     /**
      * Returns the name of this {@code Slot}.
-     * 
+     *
      * @return the slot name
      */
     public String getName() {
@@ -102,7 +105,7 @@ public final class Slot {
 
     /**
      * Returns the value of this {@code Slot}.
-     * 
+     *
      * @return the slot value, or {@code null} if undefined
      */
     public String getValue() {

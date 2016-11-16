@@ -1,31 +1,37 @@
-/**
-    Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+/*
+    Copyright 2014-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
-    Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
+    Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file
+    except in compliance with the License. A copy of the License is located at
 
         http://aws.amazon.com/apache2.0/
 
-    or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+    or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for
+    the specific language governing permissions and limitations under the License.
  */
 
 package com.amazon.speech.speechlet;
 
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.commons.lang3.Validate;
 
+import com.amazon.speech.speechlet.interfaces.system.Error;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * The request object containing all the parameters passed to notify a {@code Speechlet} that a
+ * The request object containing all the parameters passed to notify a {@code SpeechletV2} that a
  * session ended.
  *
- * @see Speechlet#onSessionEnded(SessionEndedRequest, Session)
+ * @see SpeechletV2#onSessionEnded(SpeechletRequestEnvelope)
  */
 @JsonTypeName("SessionEndedRequest")
-public final class SessionEndedRequest extends SpeechletRequest {
+public final class SessionEndedRequest extends CoreSpeechletRequest {
     private final Reason reason;
+    private final Error error;
 
     /**
      * Returns a new builder instance used to construct a new {@code SessionEndedRequest}.
@@ -40,11 +46,12 @@ public final class SessionEndedRequest extends SpeechletRequest {
      * Private constructor to return a new {@code SessionEndedRequest} from a {@code Builder}.
      *
      * @param builder
-     *            the builder used to construct the {@code SessionEndedRequest}.
+     *            the builder used to construct the {@code SessionEndedRequest}
      */
     private SessionEndedRequest(final Builder builder) {
-        super(builder.requestId, builder.timestamp);
+        super(builder);
         reason = builder.reason;
+        error = builder.error;
     }
 
     /**
@@ -54,14 +61,18 @@ public final class SessionEndedRequest extends SpeechletRequest {
      *            the request identifier
      * @param timestamp
      *            the request timestamp
+     * @param locale
+     *            the locale of the request
      * @param reason
      *            the reason for the session to have ended
      */
     private SessionEndedRequest(@JsonProperty("requestId") final String requestId,
             @JsonProperty("timestamp") final Date timestamp,
-            @JsonProperty("reason") final Reason reason) {
-        super(requestId, timestamp);
+            @JsonProperty("locale") final Locale locale,
+            @JsonProperty("reason") final Reason reason, @JsonProperty("error") final Error error) {
+        super(requestId, timestamp, locale);
         this.reason = reason;
+        this.error = error;
     }
 
     /**
@@ -75,19 +86,27 @@ public final class SessionEndedRequest extends SpeechletRequest {
     }
 
     /**
-     * This enum lists the reasons why a {@code Speechlet} session ended when not initiated by the
-     * {@code Speechlet} itself.
+     * @return the error that caused this SessionEndedRquest, if {@code Reason} was
+     *         {@code Reason.ERROR}
+     */
+    public Error getError() {
+        return error;
+    }
+
+    /**
+     * This enum lists the reasons why a session ended when not initiated by the {@code SpeechletV2}
+     * itself.
      *
      * @see SessionEndedRequest#getReason()
      */
     public static enum Reason {
         /**
-         * The user explicitly exited the {@code Speechlet}.
+         * The user explicitly exited the skill.
          */
         USER_INITIATED,
 
         /**
-         * An error occurred and the {@code Speechlet} session had to be ended.
+         * An error occurred and the session had to be ended.
          */
         ERROR,
 
@@ -101,22 +120,11 @@ public final class SessionEndedRequest extends SpeechletRequest {
     /**
      * Builder used to construct a new {@code SessionEndedRequest}.
      */
-    public static final class Builder {
-        private String requestId;
-        private Date timestamp = new Date();
+    public static final class Builder extends SpeechletRequestBuilder<Builder, SessionEndedRequest> {
         private Reason reason;
+        private Error error;
 
         private Builder() {
-        }
-
-        public Builder withRequestId(final String requestId) {
-            this.requestId = requestId;
-            return this;
-        }
-
-        public Builder withTimestamp(final Date timestamp) {
-            this.timestamp = (timestamp != null) ? new Date(timestamp.getTime()) : null;
-            return this;
         }
 
         public Builder withReason(final Reason reason) {
@@ -124,8 +132,14 @@ public final class SessionEndedRequest extends SpeechletRequest {
             return this;
         }
 
+        public Builder withError(final Error error) {
+            this.error = error;
+            return this;
+        }
+
+        @Override
         public SessionEndedRequest build() {
-            Validate.notBlank(requestId, "RequestId must be defined");
+            Validate.notBlank(getRequestId(), "RequestId must be defined");
             return new SessionEndedRequest(this);
         }
     }

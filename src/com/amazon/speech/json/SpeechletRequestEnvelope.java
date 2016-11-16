@@ -1,11 +1,14 @@
-/**
-    Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+/*
+    Copyright 2014-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
-    Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
+    Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file
+    except in compliance with the License. A copy of the License is located at
 
         http://aws.amazon.com/apache2.0/
 
-    or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+    or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for
+    the specific language governing permissions and limitations under the License.
  */
 
 package com.amazon.speech.json;
@@ -14,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import com.amazon.speech.Sdk;
+import com.amazon.speech.speechlet.Context;
 import com.amazon.speech.speechlet.Session;
 import com.amazon.speech.speechlet.SpeechletRequest;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,13 +25,17 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Envelope to wrap the various parameters of a {@code Speechlet} invocation.
+ * Envelope to wrap the various parameters of a {@code SpeechletV2} invocation.
  *
- * @see com.amazon.speech.speechlet.Speechlet
+ * @param <T>
+ *            the specific type of request the envelope is for
+ *
+ * @see com.amazon.speech.speechlet.SpeechletV2
  * @see com.amazon.speech.speechlet.IntentRequest
  * @see com.amazon.speech.speechlet.Session
+ * @see com.amazon.speech.speechlet.Context
  */
-public final class SpeechletRequestEnvelope {
+public class SpeechletRequestEnvelope<T extends SpeechletRequest> {
     /**
      * A Jackson {@code ObjectMapper} configured for our deserialization use case.
      */
@@ -39,6 +47,7 @@ public final class SpeechletRequestEnvelope {
          */
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         OBJECT_MAPPER.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
+        OBJECT_MAPPER.registerModule(new SpeechletRequestModule());
     }
 
     // ----------
@@ -46,15 +55,16 @@ public final class SpeechletRequestEnvelope {
 
     private final String version;
     private final Session session;
-    private final SpeechletRequest request;
+    private final Context context;
+    private final T request;
 
     /**
      * Returns a new builder instance used to construct a new {@code SpeechletRequestEnvelope}.
      *
      * @return the builder
      */
-    public static Builder builder() {
-        return new Builder();
+    public static <E extends SpeechletRequest> Builder<E> builder() {
+        return new Builder<E>();
     }
 
     /**
@@ -63,9 +73,10 @@ public final class SpeechletRequestEnvelope {
      * @param builder
      *            the builder used to construct the {@code SpeechletRequestEnvelope}.
      */
-    private SpeechletRequestEnvelope(final Builder builder) {
+    private SpeechletRequestEnvelope(final Builder<T> builder) {
         version = builder.version;
         session = builder.session;
+        context = builder.context;
         request = builder.request;
     }
 
@@ -81,9 +92,11 @@ public final class SpeechletRequestEnvelope {
      */
     private SpeechletRequestEnvelope(@JsonProperty("version") final String version,
             @JsonProperty("session") final Session session,
-            @JsonProperty("request") final SpeechletRequest request) {
+            @JsonProperty("context") final Context context,
+            @JsonProperty("request") final T request) {
         this.version = version;
         this.session = session;
+        this.context = context;
         this.request = request;
     }
 
@@ -100,20 +113,32 @@ public final class SpeechletRequestEnvelope {
     }
 
     /**
-     * Returns the {@code Speechlet} session.
+     * Returns the session, if present. It will only be present if the parameterized type {@code T}
+     * is {@link com.amazon.speech.speechlet.IntentRequest},
+     * {@link com.amazon.speech.speechlet.LaunchRequest}, or
+     * {@link com.amazon.speech.speechlet.SessionEndedRequest}.
      *
-     * @return the session
+     * @return the session, if present
      */
     public Session getSession() {
         return session;
     }
 
     /**
-     * Returns the {@code Speechlet} request.
+     * Returns the context.
+     *
+     * @return the context
+     */
+    public Context getContext() {
+        return context;
+    }
+
+    /**
+     * Returns the request.
      *
      * @return the request
      */
-    public SpeechletRequest getRequest() {
+    public T getRequest() {
         return request;
     }
 
@@ -130,7 +155,7 @@ public final class SpeechletRequestEnvelope {
      * @throws IOException
      *             if deserialization fails
      */
-    public static SpeechletRequestEnvelope fromJson(final InputStream in) throws IOException {
+    public static SpeechletRequestEnvelope<?> fromJson(final InputStream in) throws IOException {
         return OBJECT_MAPPER.readValue(in, SpeechletRequestEnvelope.class);
     }
 
@@ -144,7 +169,7 @@ public final class SpeechletRequestEnvelope {
      * @throws IOException
      *             if deserialization fails.
      */
-    public static SpeechletRequestEnvelope fromJson(final byte[] json) throws IOException {
+    public static SpeechletRequestEnvelope<?> fromJson(final byte[] json) throws IOException {
         return OBJECT_MAPPER.readValue(json, SpeechletRequestEnvelope.class);
     }
 
@@ -157,38 +182,44 @@ public final class SpeechletRequestEnvelope {
      * @throws IOException
      *             if deserialization fails
      */
-    public static SpeechletRequestEnvelope fromJson(final String json) throws IOException {
+    public static SpeechletRequestEnvelope<?> fromJson(final String json) throws IOException {
         return OBJECT_MAPPER.readValue(json, SpeechletRequestEnvelope.class);
     }
 
     /**
      * Builder used to construct a new {@code SpeechletRequestEnvelope}.
      */
-    public static final class Builder {
+    public static final class Builder<T extends SpeechletRequest> {
         private String version = Sdk.VERSION;
         private Session session;
-        private SpeechletRequest request;
+        private Context context;
+        private T request;
 
         private Builder() {
         }
 
-        public Builder withVersion(final String version) {
+        public Builder<T> withVersion(final String version) {
             this.version = version;
             return this;
         }
 
-        public Builder withSession(final Session session) {
+        public Builder<T> withSession(final Session session) {
             this.session = session;
             return this;
         }
 
-        public Builder withRequest(final SpeechletRequest request) {
+        public Builder<T> withContext(final Context context) {
+            this.context = context;
+            return this;
+        }
+
+        public Builder<T> withRequest(final T request) {
             this.request = request;
             return this;
         }
 
-        public SpeechletRequestEnvelope build() {
-            return new SpeechletRequestEnvelope(this);
+        public SpeechletRequestEnvelope<T> build() {
+            return new SpeechletRequestEnvelope<T>(this);
         }
     }
 }

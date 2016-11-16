@@ -1,66 +1,56 @@
-/**
-    Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+/*
+    Copyright 2014-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
-    Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
+    Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file
+    except in compliance with the License. A copy of the License is located at
 
         http://aws.amazon.com/apache2.0/
 
-    or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+    or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for
+    the specific language governing permissions and limitations under the License.
  */
 
 package com.amazon.speech.speechlet.servlet;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.amazon.speech.Sdk;
 import com.amazon.speech.speechlet.Speechlet;
-import com.amazon.speech.speechlet.SpeechletRequestHandler;
 import com.amazon.speech.speechlet.SpeechletRequestHandlerException;
+import com.amazon.speech.speechlet.SpeechletToSpeechletV2Adapter;
+import com.amazon.speech.speechlet.SpeechletV2;
 import com.amazon.speech.speechlet.authentication.SpeechletRequestSignatureVerifier;
-import com.amazon.speech.speechlet.verifier.ApplicationIdSpeechletRequestVerifier;
-import com.amazon.speech.speechlet.verifier.CardSpeechletResponseVerifier;
-import com.amazon.speech.speechlet.verifier.OutputSpeechSpeechletResponseVerifier;
-import com.amazon.speech.speechlet.verifier.ResponseSizeSpeechletResponseVerifier;
-import com.amazon.speech.speechlet.verifier.SpeechletRequestVerifier;
-import com.amazon.speech.speechlet.verifier.TimestampSpeechletRequestVerifier;
 
 /**
  * <p>
- * Simple implementation of {@code Speechlet} in the form of a Java EE servlet. Use this class when
- * coding the skill as a web service.
+ * Simple implementation of a skill in the form of a Java EE servlet. Use this class when coding the
+ * skill as a web service.
  * </p>
  * <p>
  * This class takes care of the JSON serialization / deserialization of the HTTP body and the
- * invocation of the right method of the provided {@code Speechlet} . It also handles sending back
+ * invocation of the right method of the provided {@code SpeechletV2} . It also handles sending back
  * modified session attributes, user attributes and authentication tokens when needed and handles
  * exception cases.
  *
- * @see Speechlet
- * @see #setSpeechlet(Speechlet)
+ * @see SpeechletV2
+ * @see #setSpeechlet(SpeechletV2)
  */
 public class SpeechletServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(SpeechletServlet.class);
     private static final long serialVersionUID = 3257254794185762002L;
 
-    private transient Speechlet speechlet;
-    private final transient SpeechletRequestHandler speechletRequestHandler;
+    private transient SpeechletV2 speechlet;
+    private transient ServletSpeechletRequestHandler speechletRequestHandler;
     private final boolean disableRequestSignatureCheck;
 
     public SpeechletServlet() {
@@ -68,24 +58,12 @@ public class SpeechletServlet extends HttpServlet {
         disableRequestSignatureCheck =
                 Boolean.parseBoolean(System
                         .getProperty(Sdk.DISABLE_REQUEST_SIGNATURE_CHECK_SYSTEM_PROPERTY));
-
-        List<SpeechletRequestVerifier> requestVerifiers = new ArrayList<SpeechletRequestVerifier>();
-        requestVerifiers.add(getApplicationIdVerifier());
-        TimestampSpeechletRequestVerifier timestampVerifier = getTimetampVerifier();
-        if (timestampVerifier != null) {
-            requestVerifiers.add(timestampVerifier);
-        }
-
-        speechletRequestHandler =
-                new SpeechletRequestHandler(requestVerifiers, Arrays.asList(
-                        new ResponseSizeSpeechletResponseVerifier(),
-                        new OutputSpeechSpeechletResponseVerifier(),
-                        new CardSpeechletResponseVerifier()));
+        speechletRequestHandler = new ServletSpeechletRequestHandler();
     }
 
     /**
      * Handles a POST request. Based on the request parameters, invokes the right method on the
-     * {@code Speechlet}.
+     * {@code SpeechletV2}.
      *
      * @param request
      *            the object that contains the request the client has made of the servlet
@@ -138,9 +116,22 @@ public class SpeechletServlet extends HttpServlet {
     /**
      * Returns the {@code Speechlet} object that this servlet uses.
      *
-     * @return the {@code Speechlet} associated with this servlet
+     * @return the {@code Speechlet} associated with this servlet, or null if there is not one
      */
     public Speechlet getSpeechlet() {
+        if (speechlet instanceof SpeechletToSpeechletV2Adapter) {
+            return ((SpeechletToSpeechletV2Adapter) speechlet).getSpeechlet();
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the {@code SpeechletV2} object that this servlet uses.
+     *
+     * @return the {@code SpeechletV2} object that this servlet uses.
+     */
+    public SpeechletV2 getSpeechletV2() {
         return speechlet;
     }
 
@@ -151,56 +142,16 @@ public class SpeechletServlet extends HttpServlet {
      *            the {@code Speechlet} to associate with this servlet
      */
     public void setSpeechlet(final Speechlet speechlet) {
+        this.speechlet = new SpeechletToSpeechletV2Adapter(speechlet);
+    }
+
+    /**
+     * Sets the {@code SpeechletV2} object that this servlet uses.
+     *
+     * @param speechlet
+     *            the {@code SpeechletV2} to associate with this servlet
+     */
+    public void setSpeechlet(final SpeechletV2 speechlet) {
         this.speechlet = speechlet;
-    }
-
-    /**
-     * Returns a {@link ApplicationIdSpeechletRequestVerifier} configured using the supported
-     * application IDs provided by the system property
-     * {@link Sdk#SUPPORTED_APPLICATION_IDS_SYSTEM_PROPERTY}. If the supported application IDs are
-     * not defined, then an {@link ApplicationIdSpeechletRequestVerifier} initialized with an empty
-     * set is returned.
-     *
-     * @return a configured {@link ApplicationIdSpeechletRequestVerifier}
-     */
-    private ApplicationIdSpeechletRequestVerifier getApplicationIdVerifier() {
-        // Build an application ID verifier from a comma-delimited system property value
-        Set<String> supportedApplicationIds = Collections.emptySet();
-        String commaDelimitedListOfSupportedApplicationIds =
-                System.getProperty(Sdk.SUPPORTED_APPLICATION_IDS_SYSTEM_PROPERTY);
-        if (!StringUtils.isBlank(commaDelimitedListOfSupportedApplicationIds)) {
-            supportedApplicationIds =
-                    new HashSet<String>(Arrays.asList(commaDelimitedListOfSupportedApplicationIds
-                            .split(",")));
-        }
-
-        return new ApplicationIdSpeechletRequestVerifier(supportedApplicationIds);
-    }
-
-    /**
-     * Returns a {@link TimestampSpeechletRequestVerifier} configured using timestamp tolerance
-     * defined by the system property {@link Sdk#TIMESTAMP_TOLERANCE_SYSTEM_PROPERTY}. If a valid
-     * timestamp tolerance is missing in the system properties, then {@code null} is returned.
-     *
-     * @return a configured TimestampSpeechletRequestVerifier or null
-     */
-    private TimestampSpeechletRequestVerifier getTimetampVerifier() {
-        String timestampToleranceAsString =
-                System.getProperty(Sdk.TIMESTAMP_TOLERANCE_SYSTEM_PROPERTY);
-
-        if (!StringUtils.isBlank(timestampToleranceAsString)) {
-            try {
-                long timestampTolerance = Long.parseLong(timestampToleranceAsString);
-                return new TimestampSpeechletRequestVerifier(timestampTolerance, TimeUnit.SECONDS);
-            } catch (NumberFormatException ex) {
-                log.warn("The configured timestamp tolerance {} is invalid, "
-                        + "disabling timestamp verification", timestampToleranceAsString);
-            }
-        } else {
-            log.warn("No timestamp tolerance has been configured, "
-                    + "disabling timestamp verification");
-        }
-
-        return null;
     }
 }

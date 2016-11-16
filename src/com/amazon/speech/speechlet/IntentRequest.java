@@ -1,16 +1,20 @@
-/**
-    Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+/*
+    Copyright 2014-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
-    Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
+    Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file
+    except in compliance with the License. A copy of the License is located at
 
         http://aws.amazon.com/apache2.0/
 
-    or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+    or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for
+    the specific language governing permissions and limitations under the License.
  */
 
 package com.amazon.speech.speechlet;
 
 import java.util.Date;
+import java.util.Locale;
 
 import org.apache.commons.lang3.Validate;
 
@@ -19,12 +23,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
- * The request object containing an {@link Intent} for {@code Speechlet} invocation.
+ * The request object containing an {@link Intent} for {@code SpeechletV2} invocation.
  *
- * @see Speechlet#onIntent(IntentRequest, Session)
+ * @see SpeechletV2#onIntent(SpeechletRequestEnvelope)
  */
 @JsonTypeName("IntentRequest")
-public class IntentRequest extends SpeechletRequest {
+public class IntentRequest extends CoreSpeechletRequest {
     private final Intent intent;
 
     /**
@@ -40,10 +44,10 @@ public class IntentRequest extends SpeechletRequest {
      * Private constructor to return a new {@code IntentRequest} from a {@code Builder}.
      *
      * @param builder
-     *            the builder used to construct the {@code IntentRequest}.
+     *            the builder used to construct the {@code IntentRequest}
      */
     private IntentRequest(final Builder builder) {
-        super(builder.requestId, builder.timestamp);
+        super(builder);
         this.intent = builder.intent;
     }
 
@@ -51,16 +55,18 @@ public class IntentRequest extends SpeechletRequest {
      * Protected constructor used for JSON serialization and for extending this class.
      *
      * @param requestId
-     *            the request identifier.
+     *            the request identifier
      * @param timestamp
-     *            the request timestamp.
+     *            the request timestamp
+     * @param locale
+     *            the locale of the request
      * @param intent
-     *            the intent to handle.
+     *            the intent to handle
      */
     protected IntentRequest(@JsonProperty("requestId") final String requestId,
             @JsonProperty("timestamp") final Date timestamp,
-            @JsonProperty("intent") final Intent intent) {
-        super(requestId, timestamp);
+            @JsonProperty("locale") final Locale locale, @JsonProperty("intent") final Intent intent) {
+        super(requestId, timestamp, locale);
         this.intent = intent;
     }
 
@@ -71,7 +77,7 @@ public class IntentRequest extends SpeechletRequest {
      * can simply be the {@code Intent} resulting from the user saying
      * "Alexa, start &lt;Invocation Name&gt;".
      *
-     * @return the intent to handle.
+     * @return the intent to handle
      */
     public Intent getIntent() {
         return intent;
@@ -80,22 +86,10 @@ public class IntentRequest extends SpeechletRequest {
     /**
      * Builder used to construct a new {@code IntentRequest}.
      */
-    public static final class Builder {
-        private String requestId;
-        private Date timestamp = new Date();
+    public static final class Builder extends SpeechletRequestBuilder<Builder, IntentRequest> {
         private Intent intent;
 
         private Builder() {
-        }
-
-        public Builder withRequestId(final String requestId) {
-            this.requestId = requestId;
-            return this;
-        }
-
-        public Builder withTimestamp(final Date timestamp) {
-            this.timestamp = (timestamp != null) ? new Date(timestamp.getTime()) : null;
-            return this;
         }
 
         public Builder withIntent(final Intent intent) {
@@ -103,8 +97,9 @@ public class IntentRequest extends SpeechletRequest {
             return this;
         }
 
+        @Override
         public IntentRequest build() {
-            Validate.notBlank(requestId, "RequestId must be defined");
+            Validate.notBlank(getRequestId(), "RequestId must be defined");
             return new IntentRequest(this);
         }
     }

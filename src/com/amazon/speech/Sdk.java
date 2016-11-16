@@ -1,11 +1,14 @@
-/**
-    Copyright 2014-2015 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+/*
+    Copyright 2014-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
-    Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
+    Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file
+    except in compliance with the License. A copy of the License is located at
 
         http://aws.amazon.com/apache2.0/
 
-    or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+    or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for
+    the specific language governing permissions and limitations under the License.
  */
 
 package com.amazon.speech;
@@ -112,8 +115,8 @@ public final class Sdk {
      * <p>
      * The {@link com.amazon.speech.speechlet.servlet.SpeechletServlet} class enforces request
      * signing to ensure that all requests processed by your web service are legitimate and come
-     * from the Alexa service. In order to test your service with a tool like {@code curl}, you
-     * need to disable this mechanism. This is controlled by the
+     * from the Alexa service. In order to test your service with a tool like {@code curl}, you need
+     * to disable this mechanism. This is controlled by the
      * {@code com.amazon.speech.speechlet.servlet.disableRequestSignatureCheck} system property,
      * which is defined by this constant.
      * </p>
@@ -133,10 +136,9 @@ public final class Sdk {
      * <java classname="Launcher" classpathref="java.sdk.classpath" fork="true">
      *     <sysproperty key="com.amazon.speech.speechlet.servlet.disableRequestSignatureCheck"
      *                  value="true" />
+     * </java>
      * }
      * </pre>
-     *
-     * </p>
      *
      * <p>
      * Disabling request signing verification is only acceptable for developing and testing. Your
@@ -174,10 +176,9 @@ public final class Sdk {
      * <java classname="Launcher" classpathref="java.sdk.classpath" fork="true">
      *     <sysproperty key="com.amazon.speech.speechlet.servlet.supportedApplicationIds"
      *                  value="amzn1.echo-sdk-ams.app.1234,amzn1.echo-sdk-ams.app.5678" />
+     * </java>
      * }
      * </pre>
-     *
-     * </p>
      */
     public static final String SUPPORTED_APPLICATION_IDS_SYSTEM_PROPERTY =
             "com.amazon.speech.speechlet.servlet.supportedApplicationIds";
@@ -206,10 +207,9 @@ public final class Sdk {
      * <java classname="Launcher" classpathref="java.sdk.classpath" fork="true">
      *     <sysproperty key="com.amazon.speech.speechlet.servlet.timestampTolerance"
      *                  value="150" />
+     * </java>
      * }
      * </pre>
-     *
-     * </p>
      *
      * <p>
      * Disabling timestamp verification is only acceptable for developing and testing. Your
