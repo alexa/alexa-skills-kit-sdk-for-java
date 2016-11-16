@@ -8,11 +8,18 @@
   <name>Alexa Skills Kit Samples</name>
   <url>http://developer.amazon.com/ask</url>
 
+  <repositories>
+    <repository>
+      <id>alexa-skills-kit-repo</id>
+      <url>file://${project.basedir}/repo</url>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>com.amazon.alexa</groupId>
       <artifactId>alexa-skills-kit</artifactId>
-      <version>1.1.2</version>
+      <version>1.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -40,6 +47,11 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.7.10</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.3.2</version>
@@ -54,6 +66,12 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-lambda-java-core</artifactId>
+      <version>1.0.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-lambda-java-log4j</artifactId>
       <version>1.0.0</version>
       <scope>compile</scope>
     </dependency>
