@@ -69,6 +69,15 @@ Maven:
     </dependency>
     
 ## Changes
+# 1.1.6_snapshot
+
+- added access to Context object on relevant Speelet interface methods. You will need this to access the token for pause/resume - for example: 
+
+public SpeechletResponse onIntent(final IntentRequest request, final Session session, Context context)
+            throws SpeechletException {}
+     
+- see example at <a href="https://github.com/rvanderwerf/alexa-groovy-podcast/blob/master/src/main/groovy/com/vanderfox/demo/Speechlet.groovy">https://github.com/rvanderwerf/alexa-groovy-podcast/blob/master/src/main/groovy/com/vanderfox/demo/Speechlet.groovy</a> for usage example.
+            
 # 1.1.5_snapshot
 
 - added SystemExceptionEncounteredRequest handling so you can log errors with faulty requests send to Alexa
