@@ -56,6 +56,7 @@ public class SpeechletRequestDispatcher {
         boolean saveSessionAttributes = true;
 
         SpeechletRequest speechletRequest = requestEnvelope.getRequest();
+        Context context = requestEnvelope.getContext();
 
         // Prepare a response envelope
         final SpeechletResponseEnvelope responseEnvelope = new SpeechletResponseEnvelope();
@@ -73,7 +74,7 @@ public class SpeechletRequestDispatcher {
 
         if (speechletRequest instanceof IntentRequest) {
             final SpeechletResponse speechletResponse =
-                    speechlet.onIntent((IntentRequest) speechletRequest, session);
+                    speechlet.onIntent((IntentRequest) speechletRequest, session, context);
             responseEnvelope.setResponse(speechletResponse);
 
             // Don't save session attributes if the session just ended
@@ -96,23 +97,23 @@ public class SpeechletRequestDispatcher {
         } else if (speechletRequest instanceof PlaybackStartedRequest) {
 
             final SpeechletResponse speechletResponse =
-                    speechlet.onPlaybackStarted((PlaybackStartedRequest)speechletRequest);
+                    speechlet.onPlaybackStarted((PlaybackStartedRequest)speechletRequest, context);
             responseEnvelope.setResponse(speechletResponse);
         } else if (speechletRequest instanceof PlaybackStoppedRequest) {
            // cannot return anything on this one but must have an empty response
-            speechlet.onPlaybackStopped((PlaybackStoppedRequest)speechletRequest);
+            speechlet.onPlaybackStopped((PlaybackStoppedRequest)speechletRequest, context);
 			responseEnvelope.setResponse(SpeechletResponse.newTellResponse(new ArrayList<AudioDirective>()));
         } else if (speechletRequest instanceof PlaybackFinishedRequest) {
             final SpeechletResponse speechletResponse =
-                    speechlet.onPlaybackFinished((PlaybackFinishedRequest)speechletRequest);
+                    speechlet.onPlaybackFinished((PlaybackFinishedRequest)speechletRequest, context);
             responseEnvelope.setResponse(speechletResponse);
         } else if (speechletRequest instanceof PlaybackNearlyFinishedRequest) {
             final SpeechletResponse speechletResponse =
-                    speechlet.onPlaybackNearlyFinished((PlaybackNearlyFinishedRequest)speechletRequest);
+                    speechlet.onPlaybackNearlyFinished((PlaybackNearlyFinishedRequest)speechletRequest, context);
             responseEnvelope.setResponse(speechletResponse);
         } else if (speechletRequest instanceof PlaybackFailedRequest) {
             final SpeechletResponse speechletResponse =
-                    speechlet.onPlaybackFailed((PlaybackFailedRequest)speechletRequest);
+                    speechlet.onPlaybackFailed((PlaybackFailedRequest)speechletRequest, context);
             responseEnvelope.setResponse(speechletResponse);
         } else if (speechletRequest instanceof SystemExceptionEncounteredRequest) {
 			// can return nothing here but must have some sort of response

@@ -87,7 +87,9 @@ public interface Speechlet {
      * @throws SpeechletException
      *             for any errors encountered in the processing of the request
      */
-    SpeechletResponse onIntent(IntentRequest request, Session session) throws SpeechletException;
+    //SpeechletResponse onIntent(IntentRequest request, Session session) throws SpeechletException;
+
+    SpeechletResponse onIntent(IntentRequest request, Session session, Context context) throws SpeechletException;
 
     /**
      * Callback used to notify that the session ended as a result of the user interacting, or not
@@ -104,10 +106,10 @@ public interface Speechlet {
     void onSessionEnded(SessionEndedRequest request, Session session) throws SpeechletException;
 
     // New Audio Interface
-    SpeechletResponse onPlaybackStarted(PlaybackStartedRequest request) throws SpeechletException;
-    SpeechletResponse onPlaybackFinished(PlaybackFinishedRequest request) throws SpeechletException;
-    void onPlaybackStopped(PlaybackStoppedRequest request) throws SpeechletException;
-    SpeechletResponse onPlaybackNearlyFinished(PlaybackNearlyFinishedRequest request) throws SpeechletException;
-    SpeechletResponse onPlaybackFailed(PlaybackFailedRequest request) throws SpeechletException;
+    SpeechletResponse onPlaybackStarted(PlaybackStartedRequest request, Context context) throws SpeechletException;
+    SpeechletResponse onPlaybackFinished(PlaybackFinishedRequest request, Context context) throws SpeechletException;
+    void onPlaybackStopped(PlaybackStoppedRequest request, Context context) throws SpeechletException;
+    SpeechletResponse onPlaybackNearlyFinished(PlaybackNearlyFinishedRequest request, Context context) throws SpeechletException;
+    SpeechletResponse onPlaybackFailed(PlaybackFailedRequest request, Context context) throws SpeechletException;
     void onSystemException(SystemExceptionEncounteredRequest request) throws SpeechletException;
 }
