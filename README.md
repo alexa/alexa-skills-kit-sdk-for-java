@@ -76,7 +76,7 @@ Maven:
 public SpeechletResponse onIntent(final IntentRequest request, final Session session, Context context)
             throws SpeechletException {}
      
-- see example at <a href="https://github.com/rvanderwerf/alexa-groovy-podcast/blob/master/src/main/groovy/com/vanderfox/demo/Speechlet.groovy">https://github.com/rvanderwerf/alexa-groovy-podcast/blob/master/src/main/groovy/com/vanderfox/demo/Speechlet.groovy</a> for usage example.
+- see example at <a href="https://github.com/rvanderwerf/alexa-groovy-podcast/blob/master/src/main/groovy/com/vanderfox/demo/GroovyPodcastSpeechlet.groovy">https://github.com/rvanderwerf/alexa-groovy-podcast/blob/master/src/main/groovy/com/vanderfox/demo/Speechlet.groovy</a> for usage example.
             
 # 1.1.5_snapshot
 
