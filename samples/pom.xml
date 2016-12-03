@@ -87,6 +87,8 @@
         <disableRequestSignatureCheck>false</disableRequestSignatureCheck>
         <supportedApplicationIds></supportedApplicationIds>
         <timestampTolerance>150</timestampTolerance>
+        <keyStore>/insert/your/path/java-keystore.jks</keyStore>
+        <keyStorePassword>insert_your_password</keyStorePassword>
     </properties>
 
     <build>
@@ -134,11 +136,11 @@
                     <systemProperties>
                         <systemProperty>
                             <key>javax.net.ssl.keyStore</key>
-                            <value>/insert/your/path/java-keystore.jks</value>
+                            <value>${keyStore}</value>
                         </systemProperty>
                         <systemProperty>
                             <key>javax.net.ssl.keyStorePassword</key>
-                            <value>insert_your_password</value>
+                            <value>${keyStorePassword}</value>
                         </systemProperty>
                         <systemProperty>
                             <key>com.amazon.speech.speechlet.servlet.disableRequestSignatureCheck</key>
