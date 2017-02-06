@@ -11,17 +11,16 @@ To run this example skill you need to do two things. The first is to deploy the 
 1. Go to the AWS Console and click on the Lambda link. Note: ensure you are in us-east or you wont be able to use Alexa with Lambda.
 2. Click on the Create a Lambda Function or Get Started Now button.
 3. Skip the blueprint
-4. Name the Lambda Function "Hello-World-Example-Skill".
-5. Select the runtime as Java 8
-6. Go to the the root directory containing pom.xml, and run 'mvn assembly:assembly -DdescriptorId=jar-with-dependencies package'. This will generate a zip file named "alexa-skills-kit-samples-1.0-jar-with-dependencies.jar" in the target directory.
-7. Select Code entry type as "Upload a .ZIP file" and then upload the "alexa-skills-kit-samples-1.0-jar-with-dependencies.jar" file from the build directory to Lambda
-8. Set the Handler as helloworld.HelloWorldSpeechletRequestStreamHandler (this refers to the Lambda RequestStreamHandler file in the zip).
-9. Create a basic execution role and click create.
-10. Leave the Advanced settings as the defaults.
-11. Click "Next" and review the settings then click "Create Function"
-12. Click the "Event Sources" tab and select "Add event source"
-13. Set the Event Source type as Alexa Skills kit and Enable it now. Click Submit.
-14. Copy the ARN from the top right to be used later in the Alexa Skill Setup.
+4. Configure Triggers Screen click the outlined empty square and select Alexa Skill Kit.  Click Next
+5. Name the Lambda Function "Hello-World-Example-Skill".
+6. Select the runtime as Java 8
+7. Go to the the root directory containing pom.xml, and run 'mvn assembly:assembly -DdescriptorId=jar-with-dependencies package'. This will generate a zip file named "alexa-skills-kit-samples-1.0-jar-with-dependencies.jar" in the target directory.
+8. Select Code entry type as "Upload a .ZIP file" and then upload the "alexa-skills-kit-samples-1.0-jar-with-dependencies.jar" file from the build directory to Lambda
+9. Set the Handler as helloworld.HelloWorldSpeechletRequestStreamHandler (this refers to the Lambda RequestStreamHandler file in the zip).
+10. Create a basic execution role and click create.
+11. Leave the Advanced settings as the defaults.
+12. Click "Next" and review the settings then click "Create Function"
+13. Copy the ARN from the top right to be used later in the Alexa Skill Setup.
 
 ### Alexa Skill Setup
 1. Go to the [Alexa Console](https://developer.amazon.com/edw/home.html) and click Add a New Skill.
