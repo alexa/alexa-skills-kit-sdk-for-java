@@ -7,7 +7,7 @@ This simple sample has no external dependencies or session management, and shows
 ## Setup
 To run this example skill you need to do two things. The first is to deploy the example code in lambda, and the second is to configure the Alexa skill to use Lambda.
 
-### AWS Lambda Setup
+### AWS Lambda Setup - First part
 1. Go to the AWS Console and click on the Lambda link. Note: ensure you are in us-east or you wont be able to use Alexa with Lambda.
 2. Click on the Create a Lambda Function or Get Started Now button.
 3. Skip the blueprint
@@ -33,6 +33,15 @@ To run this example skill you need to do two things. The first is to deploy the 
 7. You are now able to start testing your sample skill! You should be able to go to the [Echo webpage](http://echo.amazon.com/#skills) and see your skill enabled.
 8. In order to test it, try to say some of the Sample Utterances from the Examples section below.
 9. Your skill is now saved and once you are finished testing you can continue to publish your skill.
+
+### Connecting AWS Lambda with your Alexa Skill
+
+1. The Application Id of your Skill can be found on https://developer.amazon.com/edw/home.html#/ "Edit" the relevant Alexa Skill and copy the relevant Application Id to the clipboard.
+2. Paste the Application Id of your Alexa Skill to you HelloWorldSpeechletRequestStreamHandler class.
+3. Go to the AWS Console and click on the Lambda link.
+7. Go to the the root directory containing pom.xml, and run 'mvn assembly:assembly -DdescriptorId=jar-with-dependencies package'. This will generate a zip file named "alexa-skills-kit-samples-1.0-jar-with-dependencies.jar" in the target directory.
+8. Again, upload the "alexa-skills-kit-samples-1.0-jar-with-dependencies.jar" file from the build directory to Lambda. Click Save.
+
 
 ## Examples
 ### One-shot model:
