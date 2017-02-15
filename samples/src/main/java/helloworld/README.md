@@ -7,7 +7,7 @@ This simple sample has no external dependencies or session management, and shows
 ## Setup
 To run this example skill you need to do two things. The first is to deploy the example code in lambda, and the second is to configure the Alexa skill to use Lambda.
 
-### AWS Lambda Setup - First part
+### AWS Lambda Setup
 1. Go to the AWS Console and click on the Lambda link. Note: ensure you are in us-east or you wont be able to use Alexa with Lambda.
 2. Click on the Create a Lambda Function or Get Started Now button.
 3. Skip the blueprint
