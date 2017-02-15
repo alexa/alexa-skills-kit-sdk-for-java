@@ -39,8 +39,8 @@ To run this example skill you need to do two things. The first is to deploy the 
 1. The Application Id of your Skill can be found on https://developer.amazon.com/edw/home.html#/ "Edit" the relevant Alexa Skill and copy the relevant Application Id to the clipboard.
 2. Paste the Application Id of your Alexa Skill to you HelloWorldSpeechletRequestStreamHandler class.
 3. Go to the AWS Console and click on the Lambda link.
-7. Go to the the root directory containing pom.xml, and run 'mvn assembly:assembly -DdescriptorId=jar-with-dependencies package'. This will generate a zip file named "alexa-skills-kit-samples-1.0-jar-with-dependencies.jar" in the target directory.
-8. Again, upload the "alexa-skills-kit-samples-1.0-jar-with-dependencies.jar" file from the build directory to Lambda. Click Save.
+4. Go to the the root directory containing pom.xml, and run 'mvn assembly:assembly -DdescriptorId=jar-with-dependencies package'. This will generate a zip file named "alexa-skills-kit-samples-1.0-jar-with-dependencies.jar" in the target directory.
+5. Again, upload the "alexa-skills-kit-samples-1.0-jar-with-dependencies.jar" file from the build directory to Lambda. Click Save.
 
 
 ## Examples
