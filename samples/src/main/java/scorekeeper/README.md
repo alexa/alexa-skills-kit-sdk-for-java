@@ -33,7 +33,7 @@ To run this example skill you need to do two things. The first is to deploy the 
 
 ### AWS DynamoDB Setup
 1. Go to the AWS Console and click on [DynamoDB link](https://console.aws.amazon.com/dynamodb). Note: ensure you are in us-east (same as your Lambda)
-2. Click on CreateTable: set "ScoreKeeperUserData" as the table name, use String for the primary key type and set "CustomerId" as the hash attribute name.
+2. Click on CreateTable: set "ScoreKeeperUserData" as the table name, use Hash for the primary key type and set "CustomerId" as the hash attribute name.
 3. Continue the steps with the default settings to finish the setup of DynamoDB table.
 
 ### Alexa Skill Setup
