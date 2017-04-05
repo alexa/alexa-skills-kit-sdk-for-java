@@ -23,6 +23,7 @@ public final class SystemState extends State<SystemInterface> {
     private final Application application;
     private final User user;
     private final Device device;
+    private final String apiEndpoint;
 
     /**
      * Returns a new builder instance used to construct a new {@code SystemState}.
@@ -43,6 +44,7 @@ public final class SystemState extends State<SystemInterface> {
         application = builder.application;
         user = builder.user;
         device = builder.device;
+        apiEndpoint = builder.apiEndpoint;
     }
 
     /**
@@ -54,24 +56,52 @@ public final class SystemState extends State<SystemInterface> {
      *            the user object
      * @param device
      *            the device object
+     * @param apiEndpoint
+     *            the endpoint to be used to access Alexa API resources for the user
      */
     private SystemState(@JsonProperty("application") final Application application,
-            @JsonProperty("user") final User user, @JsonProperty("device") final Device device) {
+            @JsonProperty("user") final User user, @JsonProperty("device") final Device device,
+            @JsonProperty("apiEndpoint") final String apiEndpoint) {
         this.application = application;
         this.user = user;
         this.device = device;
+        this.apiEndpoint = apiEndpoint;
     }
 
+    /**
+     * Returns the {@link Application} associated with this state.
+     *
+     * @return {@link Application} object
+     */
     public Application getApplication() {
         return application;
     }
 
+    /**
+     * Returns the {@link User} associated with this state.
+     *
+     * @return {@link User} object
+     */
     public User getUser() {
         return user;
     }
 
+    /**
+     * Returns the {@link Device} associated with this state.
+     *
+     * @return {@link Device} object
+     */
     public Device getDevice() {
         return device;
+    }
+
+    /**
+     * Returns the API endpoint value.
+     *
+     * @return API endpoint value
+     */
+    public String getApiEndpoint() {
+        return apiEndpoint;
     }
 
     @Override
@@ -86,6 +116,7 @@ public final class SystemState extends State<SystemInterface> {
         private Application application;
         private User user;
         private Device device;
+        private String apiEndpoint;
 
         private Builder() {
         }
@@ -102,6 +133,11 @@ public final class SystemState extends State<SystemInterface> {
 
         public Builder withDevice(final Device device) {
             this.device = device;
+            return this;
+        }
+
+        public Builder withApiEndpoint(final String apiEndpoint) {
+            this.apiEndpoint = apiEndpoint;
             return this;
         }
 

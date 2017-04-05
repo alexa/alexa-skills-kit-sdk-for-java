@@ -13,6 +13,8 @@
 
 package com.amazon.speech.speechlet;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -20,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * supports.
  */
 public final class Device {
+    private final String deviceId;
     private final SupportedInterfaces supportedInterfaces;
 
     /**
@@ -38,6 +41,7 @@ public final class Device {
      *            the builder used to construct the {@code Device}
      */
     private Device(final Builder builder) {
+        deviceId = builder.deviceId;
         supportedInterfaces = builder.supportedInterfaces;
     }
 
@@ -47,14 +51,25 @@ public final class Device {
      * @param supportedInterfaces
      *            supported interfaces
      */
-    private Device(
+    private Device(@JsonProperty("deviceId") final String deviceId,
             @JsonProperty("supportedInterfaces") final SupportedInterfaces supportedInterfaces) {
+        this.deviceId = deviceId;
         this.supportedInterfaces = supportedInterfaces;
     }
 
     /**
+     * Returns the ID of the device.
+     *
+     * @return the device ID
+     */
+    @JsonInclude(Include.NON_NULL)
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    /**
      * Returns an object representing the list of interfaces supported by the device.
-     * 
+     *
      * @return an object representing the list of interfaces supported by the device.
      */
     public SupportedInterfaces getSupportedInterfaces() {
@@ -65,9 +80,15 @@ public final class Device {
      * Builder used to construct a new {@code Device}.
      */
     public static final class Builder {
+        private String deviceId;
         private SupportedInterfaces supportedInterfaces;
 
         private Builder() {
+        }
+
+        public Builder withDeviceId(final String deviceId) {
+            this.deviceId = deviceId;
+            return this;
         }
 
         public Builder withSupportedInterfaces(final SupportedInterfaces supportedInterfaces) {
@@ -76,7 +97,7 @@ public final class Device {
         }
 
         public Device build() {
-            return new Device(supportedInterfaces);
+            return new Device(this);
         }
     }
 }
