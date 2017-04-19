@@ -1,6 +1,6 @@
 # Java Alexa Skills Kit SDK & Samples
 
-##Alexa Skills Kit Documentation
+## Alexa Skills Kit Documentation
 The documentation for the Alexa Skills Kit is available on the [Amazon Apps and Services Developer Portal](https://developer.amazon.com/appsandservices/solutions/alexa/alexa-skills-kit/).
 
 ## Contents
