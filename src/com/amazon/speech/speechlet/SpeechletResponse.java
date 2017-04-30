@@ -13,8 +13,14 @@
 
 package com.amazon.speech.speechlet;
 
+import java.util.Arrays;
 import java.util.List;
 
+import com.amazon.speech.slu.Intent;
+import com.amazon.speech.speechlet.interfaces.dialog.ConfirmIntentDirective;
+import com.amazon.speech.speechlet.interfaces.dialog.ConfirmSlotDirective;
+import com.amazon.speech.speechlet.interfaces.dialog.DelegateDirective;
+import com.amazon.speech.speechlet.interfaces.dialog.ElicitSlotDirective;
 import com.amazon.speech.ui.Card;
 import com.amazon.speech.ui.OutputSpeech;
 import com.amazon.speech.ui.Reprompt;
@@ -230,6 +236,80 @@ public class SpeechletResponse {
         }
 
         SpeechletResponse response = newAskResponse(outputSpeech, reprompt);
+        response.setCard(card);
+        return response;
+    }
+
+    public static SpeechletResponse newDelegateResponse(Intent updatedIntent) {
+        final SpeechletResponse response = new SpeechletResponse();
+        response.setShouldEndSession(false);
+        response.setDirectives(Arrays.asList(new Directive[]{DelegateDirective.builder()
+                .withUpdatedIntent(updatedIntent)
+                .build()}));
+        return response;
+    }
+
+    public static SpeechletResponse newElicitSlotResponse(final String slotToElicit, final Intent updatedIntent,
+                                                          final OutputSpeech outputSpeech,
+                                                          final Reprompt reprompt) {
+        final SpeechletResponse response = new SpeechletResponse();
+        response.setShouldEndSession(false);
+        response.setOutputSpeech(outputSpeech);
+        response.setReprompt(reprompt);
+        response.setDirectives(Arrays.asList(new Directive[]{ElicitSlotDirective.builder()
+                .withSlotToElicit(slotToElicit)
+                .withUpdatedIntent(updatedIntent)
+                .build()}));
+        return response;
+    }
+
+    public static SpeechletResponse newElicitSlotResponse(final String slotToElicit, final Intent updatedIntent,
+                                                          final OutputSpeech outputSpeech,
+                                                          final Reprompt reprompt, final Card card) {
+        final SpeechletResponse response = newElicitSlotResponse(slotToElicit, updatedIntent, outputSpeech, reprompt);
+        response.setCard(card);
+        return response;
+    }
+
+    public static SpeechletResponse newConfirmSlotResponse(final String slotToConfirm, final Intent updatedIntent,
+                                                           final OutputSpeech outputSpeech,
+                                                           final Reprompt reprompt) {
+        final SpeechletResponse response = new SpeechletResponse();
+        response.setShouldEndSession(false);
+        response.setOutputSpeech(outputSpeech);
+        response.setReprompt(reprompt);
+        response.setDirectives(Arrays.asList(new Directive[]{ConfirmSlotDirective.builder()
+                .withSlotToConfirm(slotToConfirm)
+                .withUpdatedIntent(updatedIntent)
+                .build()}));
+        return response;
+    }
+
+    public static SpeechletResponse newConfirmSlotResponse(final String slotToConfirm, final Intent updatedIntent,
+                                                           final OutputSpeech outputSpeech,
+                                                           final Reprompt reprompt, final Card card) {
+        final SpeechletResponse response = newConfirmSlotResponse(slotToConfirm, updatedIntent, outputSpeech, reprompt);
+        response.setCard(card);
+        return response;
+    }
+
+    public static SpeechletResponse newConfirmIntentResponse(final Intent updatedIntent,
+                                                             final OutputSpeech outputSpeech,
+                                                             final Reprompt reprompt) {
+        final SpeechletResponse response = new SpeechletResponse();
+        response.setShouldEndSession(false);
+        response.setOutputSpeech(outputSpeech);
+        response.setReprompt(reprompt);
+        response.setDirectives(Arrays.asList(new Directive[]{ConfirmIntentDirective.builder()
+                .withUpdatedIntent(updatedIntent)
+                .build()}));
+        return response;
+    }
+
+    public static SpeechletResponse newConfirmIntentResponse(final Intent updatedIntent,
+                                                             final OutputSpeech outputSpeech,
+                                                             final Reprompt reprompt, final Card card) {
+        final SpeechletResponse response = newConfirmIntentResponse(updatedIntent, outputSpeech, reprompt);
         response.setCard(card);
         return response;
     }

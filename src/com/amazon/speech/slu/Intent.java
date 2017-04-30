@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.amazon.speech.speechlet.interfaces.dialog.ConfirmationStatus;
 import org.apache.commons.lang3.Validate;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -52,6 +53,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public final class Intent {
     private final String name;
     private final Map<String, Slot> slots;
+    @JsonInclude(Include.NON_EMPTY)
+    private final ConfirmationStatus confirmationStatus;
 
     /**
      * Returns a new builder instance used to construct a new {@code Intent}.
@@ -70,7 +73,8 @@ public final class Intent {
      */
     private Intent(final Builder builder) {
         name = builder.name;
-        slots = Collections.unmodifiableMap(builder.slots);
+        slots = builder.slots;
+        confirmationStatus = builder.confirmationStatus;
     }
 
     /**
@@ -82,14 +86,17 @@ public final class Intent {
      *            the slots associated with the intent
      */
     private Intent(@JsonProperty("name") final String name,
-            @JsonProperty("slots") final Map<String, Slot> slots) {
+            @JsonProperty("slots") final Map<String, Slot> slots,
+            @JsonProperty("confirmationStatus") final ConfirmationStatus confirmationStatus) {
         this.name = name;
 
         if (slots != null) {
-            this.slots = Collections.unmodifiableMap(slots);
+            this.slots = slots;
         } else {
             this.slots = Collections.emptyMap();
         }
+
+        this.confirmationStatus = confirmationStatus;
     }
 
     /**
@@ -123,11 +130,24 @@ public final class Intent {
     }
 
     /**
+     * Sets a slot value with the provided name and value pair
+     * @param value the slot value
+     */
+    public void setSlot(final Slot value) {
+        this.slots.put(value.getName(), value);
+    }
+
+    public ConfirmationStatus getConfirmationStatus() {
+        return confirmationStatus == null ? ConfirmationStatus.NONE : confirmationStatus;
+    }
+
+    /**
      * Builder used to construct a new {@code Intent}.
      */
     public static final class Builder {
         private String name;
         private final Map<String, Slot> slots = new HashMap<>();
+        private ConfirmationStatus confirmationStatus;
 
         private Builder() {
         }
@@ -139,6 +159,11 @@ public final class Intent {
 
         public Builder withSlots(final Map<String, Slot> slots) {
             this.slots.putAll(slots);
+            return this;
+        }
+
+        public Builder withConfirmationStatus(final ConfirmationStatus confirmationStatus) {
+            this.confirmationStatus = confirmationStatus;
             return this;
         }
 

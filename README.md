@@ -17,6 +17,7 @@ link below for more details):
 - Savvy Consumer : a skill that looks up a category on Amazon and returns the best selling products.
 - TidePooler : a skill that looks up tide information for various cities.
 - ScoreKeeper : a skill that can keep score of a game.
+- PlanTripDialog : a skill that asks user to plan a fictitious trip using Alexa Skill Builder (Beta) dialog model.
 
 ## Usage
 Navigate to the README.md in each sub directory in the samples folder and follow the instructions for getting the sample up and running.

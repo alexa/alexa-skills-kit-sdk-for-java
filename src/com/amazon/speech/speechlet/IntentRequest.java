@@ -16,6 +16,8 @@ package com.amazon.speech.speechlet;
 import java.util.Date;
 import java.util.Locale;
 
+import com.amazon.speech.speechlet.interfaces.dialog.DialogState;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.Validate;
 
 import com.amazon.speech.slu.Intent;
@@ -30,6 +32,8 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 @JsonTypeName("IntentRequest")
 public class IntentRequest extends CoreSpeechletRequest {
     private final Intent intent;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private final DialogState dialogState;
 
     /**
      * Returns a new builder instance used to construct a new {@code IntentRequest}.
@@ -49,25 +53,28 @@ public class IntentRequest extends CoreSpeechletRequest {
     private IntentRequest(final Builder builder) {
         super(builder);
         this.intent = builder.intent;
+        this.dialogState = builder.dialogState;
     }
 
     /**
      * Protected constructor used for JSON serialization and for extending this class.
-     *
-     * @param requestId
+     *  @param requestId
      *            the request identifier
      * @param timestamp
      *            the request timestamp
      * @param locale
-     *            the locale of the request
+ *            the locale of the request
      * @param intent
-     *            the intent to handle
+     * @param dialogState
      */
     protected IntentRequest(@JsonProperty("requestId") final String requestId,
-            @JsonProperty("timestamp") final Date timestamp,
-            @JsonProperty("locale") final Locale locale, @JsonProperty("intent") final Intent intent) {
+                            @JsonProperty("timestamp") final Date timestamp,
+                            @JsonProperty("locale") final Locale locale,
+                            @JsonProperty("intent") final Intent intent,
+                            @JsonProperty("dialogState") final DialogState dialogState) {
         super(requestId, timestamp, locale);
         this.intent = intent;
+        this.dialogState = dialogState;
     }
 
     /**
@@ -83,17 +90,27 @@ public class IntentRequest extends CoreSpeechletRequest {
         return intent;
     }
 
+    public DialogState getDialogState() {
+        return dialogState;
+    }
+
     /**
      * Builder used to construct a new {@code IntentRequest}.
      */
     public static final class Builder extends SpeechletRequestBuilder<Builder, IntentRequest> {
         private Intent intent;
+        private DialogState dialogState;
 
         private Builder() {
         }
 
         public Builder withIntent(final Intent intent) {
             this.intent = intent;
+            return this;
+        }
+
+        public Builder withDialogState(final DialogState dialogState) {
+            this.dialogState = dialogState;
             return this;
         }
 

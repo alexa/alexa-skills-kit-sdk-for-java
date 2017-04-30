@@ -13,6 +13,8 @@
 
 package com.amazon.speech.slu;
 
+import com.amazon.speech.speechlet.interfaces.dialog.ConfirmationStatus;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.Validate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -59,7 +61,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public final class Slot {
     private final String name;
-    private final String value;
+    private String value;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private final ConfirmationStatus confirmationStatus;
 
     /**
      * Returns a new builder instance used to construct a new {@code Slot}.
@@ -79,6 +83,7 @@ public final class Slot {
     private Slot(final Builder builder) {
         name = builder.name;
         value = builder.value;
+        confirmationStatus = builder.confirmationStatus;
     }
 
     /**
@@ -89,9 +94,11 @@ public final class Slot {
      * @param value
      *            the resolved value
      */
-    private Slot(@JsonProperty("name") final String name, @JsonProperty("value") final String value) {
+    private Slot(@JsonProperty("name") final String name, @JsonProperty("value") final String value,
+                 @JsonProperty("confirmationStatus") final ConfirmationStatus confirmationStatus) {
         this.name = name;
         this.value = value;
+        this.confirmationStatus = confirmationStatus;
     }
 
     /**
@@ -113,11 +120,24 @@ public final class Slot {
     }
 
     /**
+     * Sets the value of this {@code Slot}
+     * @param value new slot value
+     */
+    public void setValue(final String value) {
+        this.value = value;
+    }
+
+    public ConfirmationStatus getConfirmationStatus() {
+        return confirmationStatus == null ? ConfirmationStatus.NONE : confirmationStatus;
+    }
+
+    /**
      * Builder used to construct a new {@code Slot}.
      */
     public static final class Builder {
         private String name;
         private String value;
+        private ConfirmationStatus confirmationStatus;
 
         private Builder() {
         }
@@ -129,6 +149,11 @@ public final class Slot {
 
         public Builder withValue(final String value) {
             this.value = value;
+            return this;
+        }
+
+        public Builder withConfirmationStatus(final ConfirmationStatus confirmationStatus) {
+            this.confirmationStatus = confirmationStatus;
             return this;
         }
 

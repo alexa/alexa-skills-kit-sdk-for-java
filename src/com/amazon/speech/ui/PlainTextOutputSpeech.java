@@ -22,6 +22,13 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 public class PlainTextOutputSpeech extends OutputSpeech {
     private String text;
 
+    public PlainTextOutputSpeech() {
+    }
+
+    private PlainTextOutputSpeech(Builder builder) {
+        this.text = builder.text;
+    }
+
     /**
      * Returns the text to speak.
      *
@@ -39,5 +46,25 @@ public class PlainTextOutputSpeech extends OutputSpeech {
      */
     public void setText(final String text) {
         this.text = text;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String text;
+
+        private Builder() {
+        }
+
+        public Builder withText(String text) {
+            this.text = text;
+            return this;
+        }
+
+        public PlainTextOutputSpeech build() {
+            return new PlainTextOutputSpeech(this);
+        }
     }
 }
