@@ -23,6 +23,13 @@ public class Reprompt {
      */
     private OutputSpeech outputSpeech;
 
+    public Reprompt() {
+    }
+
+    private Reprompt(Builder builder) {
+        this.outputSpeech = builder.outputSpeech;
+    }
+
     /**
      * Returns the output speech for the reprompt.
      *
@@ -41,5 +48,30 @@ public class Reprompt {
      */
     public void setOutputSpeech(OutputSpeech outputSpeech) {
         this.outputSpeech = outputSpeech;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private OutputSpeech outputSpeech;
+
+        private Builder() {
+        }
+
+        public Builder withPlainText(String text) {
+            this.outputSpeech = PlainTextOutputSpeech.builder().withText(text).build();
+            return this;
+        }
+
+        public Builder withOutputSpeech(OutputSpeech outputSpeech) {
+            this.outputSpeech = outputSpeech;
+            return this;
+        }
+
+        public Reprompt build() {
+            return new Reprompt(this);
+        }
     }
 }

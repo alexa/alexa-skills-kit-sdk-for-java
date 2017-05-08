@@ -1,0 +1,202 @@
+{
+  "intents": [
+    {
+      "name": "AMAZON.CancelIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.HelpIntent",
+      "samples": []
+    },
+    {
+      "name": "AMAZON.StopIntent",
+      "samples": []
+    },
+    {
+      "name": "PlanMyTripIntent",
+      "samples": [
+        "i am going on a trip on {travelDate} ",
+        "i want to visit {toCity} ",
+        "I want to travel from {fromCity} to {toCity} {travelDate} ",
+        "i'm traveling to {toCity} to go {activity}",
+        "I want to go on a trip"
+      ],
+      "slots": [
+        {
+          "name": "travelDate",
+          "type": "AMAZON.DATE",
+          "samples": [
+            "{travelDate} ",
+            "I want to travel on the {travelDate} ",
+            "i want to travel {travelDate} "
+          ]
+        },
+        {
+          "name": "toCity",
+          "type": "AMAZON.US_CITY",
+          "samples": [
+            "{toCity} ",
+            "I want to go to {toCity} "
+          ]
+        },
+        {
+          "name": "fromCity",
+          "type": "AMAZON.US_CITY",
+          "samples": [
+            "{fromCity}",
+            "i'm leaving from {fromCity}",
+            "flying out of {fromCity}",
+            "traveling from {fromCity}",
+            "my trip starts in {fromCity}"
+          ]
+        },
+        {
+          "name": "activity",
+          "type": "LIST_OF_ACTIVITIES",
+          "samples": []
+        }
+      ]
+    }
+  ],
+  "types": [
+    {
+      "name": "LIST_OF_ACTIVITIES",
+      "values": [
+        {
+          "name": {
+            "value": "bicycling"
+          }
+        },
+        {
+          "name": {
+            "value": "bike"
+          }
+        },
+        {
+          "name": {
+            "value": "biking"
+          }
+        },
+        {
+          "name": {
+            "value": "camp"
+          }
+        }
+      ]
+    }
+  ],
+  "prompts": [
+    {
+      "id": "Confirm.Intent-PlanMyTripIntent",
+      "promptVersion": "1.0",
+      "definitionVersion": "1.0",
+      "variations": [
+        {
+          "type": "PlainText",
+          "value": "I'm saving your trip {fromCity} to {toCity} on {travelDate}. Is that Ok?"
+        }
+      ]
+    },
+    {
+      "id": "Elicit.Intent-PlanMyTripIntent.IntentSlot-travelDate",
+      "promptVersion": "1.0",
+      "definitionVersion": "1.0",
+      "variations": [
+        {
+          "type": "PlainText",
+          "value": "when did you want to travel?"
+        }
+      ]
+    },
+    {
+      "id": "Elicit.Intent-PlanMyTripIntent.IntentSlot-toCity",
+      "promptVersion": "1.0",
+      "definitionVersion": "1.0",
+      "variations": [
+        {
+          "type": "PlainText",
+          "value": "where do you want to go?"
+        }
+      ]
+    },
+    {
+      "id": "Confirm.Intent-PlanMyTripIntent.IntentSlot-toCity",
+      "promptVersion": "1.0",
+      "definitionVersion": "1.0",
+      "variations": [
+        {
+          "type": "PlainText",
+          "value": "you wanted to travel to {toCity}, right?"
+        }
+      ]
+    },
+    {
+      "id": "Elicit.Intent-PlanMyTripIntent.IntentSlot-fromCity",
+      "promptVersion": "1.0",
+      "definitionVersion": "1.0",
+      "variations": [
+        {
+          "type": "PlainText",
+          "value": "What city are you leaving from?"
+        },
+        {
+          "type": "PlainText",
+          "value": "Where are you starting your trip?"
+        },
+        {
+          "type": "PlainText",
+          "value": "From where did you want to start your trip?"
+        }
+      ]
+    }
+  ],
+  "dialog": {
+    "version": "1.0",
+    "intents": [
+      {
+        "name": "PlanMyTripIntent",
+        "confirmationRequired": true,
+        "prompts": {
+          "confirm": "Confirm.Intent-PlanMyTripIntent"
+        },
+        "slots": [
+          {
+            "name": "travelDate",
+            "type": "AMAZON.DATE",
+            "elicitationRequired": true,
+            "confirmationRequired": false,
+            "prompts": {
+              "elicit": "Elicit.Intent-PlanMyTripIntent.IntentSlot-travelDate"
+            }
+          },
+          {
+            "name": "toCity",
+            "type": "AMAZON.US_CITY",
+            "elicitationRequired": true,
+            "confirmationRequired": true,
+            "prompts": {
+              "elicit": "Elicit.Intent-PlanMyTripIntent.IntentSlot-toCity",
+              "confirm": "Confirm.Intent-PlanMyTripIntent.IntentSlot-toCity"
+            }
+          },
+          {
+            "name": "fromCity",
+            "type": "AMAZON.US_CITY",
+            "elicitationRequired": true,
+            "confirmationRequired": false,
+            "prompts": {
+              "elicit": "Elicit.Intent-PlanMyTripIntent.IntentSlot-fromCity"
+            }
+          },
+          {
+            "name": "activity",
+            "type": "LIST_OF_ACTIVITIES",
+            "elicitationRequired": false,
+            "confirmationRequired": false,
+            "prompts": {}
+          }
+        ]
+      }
+    ]
+  }
+}

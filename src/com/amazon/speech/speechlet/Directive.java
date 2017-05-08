@@ -16,6 +16,10 @@ package com.amazon.speech.speechlet;
 import com.amazon.speech.speechlet.interfaces.audioplayer.directive.ClearQueueDirective;
 import com.amazon.speech.speechlet.interfaces.audioplayer.directive.PlayDirective;
 import com.amazon.speech.speechlet.interfaces.audioplayer.directive.StopDirective;
+import com.amazon.speech.speechlet.interfaces.dialog.ConfirmIntentDirective;
+import com.amazon.speech.speechlet.interfaces.dialog.ConfirmSlotDirective;
+import com.amazon.speech.speechlet.interfaces.dialog.DelegateDirective;
+import com.amazon.speech.speechlet.interfaces.dialog.ElicitSlotDirective;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -27,7 +31,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes({
         @JsonSubTypes.Type(PlayDirective.class),
         @JsonSubTypes.Type(StopDirective.class),
-        @JsonSubTypes.Type(ClearQueueDirective.class)
+        @JsonSubTypes.Type(ClearQueueDirective.class),
+        @JsonSubTypes.Type(value=DelegateDirective.class, name="Dialog.Delegate"),
+        @JsonSubTypes.Type(value=ElicitSlotDirective.class, name="Dialog.ElicitSlot"),
+        @JsonSubTypes.Type(value=ConfirmSlotDirective.class, name="Dialog.ConfirmSlot"),
+        @JsonSubTypes.Type(value=ConfirmIntentDirective.class, name="Dialog.ConfirmIntent")
 })
 public abstract class Directive {
 }
