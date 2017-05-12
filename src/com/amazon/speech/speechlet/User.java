@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class User {
     private final String userId;
     private final String accessToken;
+    private final Permissions permissions;
 
     /**
      * Returns a new builder instance used to construct a new {@code IntentRequest}.
@@ -47,12 +48,12 @@ public class User {
      */
     @Deprecated
     public User(final String userId) {
-        this(userId, null);
+        this(userId, null, null);
     }
 
     @SuppressWarnings("unused")
     private User() {
-        this(null, null);
+        this(null, null, null);
     }
 
     /**
@@ -64,6 +65,7 @@ public class User {
     private User(final Builder builder) {
         this.userId = builder.userId;
         this.accessToken = builder.accessToken;
+        this.permissions = builder.permissions;
     }
 
     /**
@@ -75,9 +77,11 @@ public class User {
      *            the access token
      */
     private User(@JsonProperty("userId") final String userId,
-            @JsonProperty("accessToken") final String accessToken) {
+            @JsonProperty("accessToken") final String accessToken,
+            @JsonProperty("permissions") final Permissions permissions) {
         this.userId = userId;
         this.accessToken = accessToken;
+        this.permissions = permissions;
     }
 
     /**
@@ -102,11 +106,22 @@ public class User {
     }
 
     /**
+     * Returns the user consent permissions
+     *
+     * @return the user consent permissions.
+     */
+    @JsonInclude(Include.NON_NULL)
+    public Permissions getPermissions() {
+        return permissions;
+    }
+
+    /**
      * Builder used to construct a new {@code User}.
      */
     public static final class Builder {
         private String userId;
         private String accessToken;
+        private Permissions permissions;
 
         private Builder() {
         }
@@ -118,6 +133,11 @@ public class User {
 
         public Builder withAccessToken(final String accessToken) {
             this.accessToken = accessToken;
+            return this;
+        }
+
+        public Builder withPermissions(final Permissions permissions) {
+            this.permissions = permissions;
             return this;
         }
 

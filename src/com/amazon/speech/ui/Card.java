@@ -42,7 +42,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
         // The sub types that extend the Card class.
         @Type(value = SimpleCard.class),
         @Type(value = LinkAccountCard.class),
-        @Type(value = StandardCard.class)
+        @Type(value = StandardCard.class),
+        @Type(value = AskForPermissionsConsentCard.class)
 })
 public abstract class Card {
     private String title;

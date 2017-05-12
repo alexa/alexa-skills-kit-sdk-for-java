@@ -1,0 +1,10 @@
+{
+  "intents": [
+    {
+      "intent": "GetAddress"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    }
+  ]
+}
