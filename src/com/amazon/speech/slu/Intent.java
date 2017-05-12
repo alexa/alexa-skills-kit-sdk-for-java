@@ -50,7 +50,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @see com.amazon.speech.speechlet.IntentRequest#getIntent()
  */
 public final class Intent {
+
     private final String name;
+    private final ConfirmationStatus confirmationStatus;
     private final Map<String, Slot> slots;
 
     /**
@@ -70,6 +72,9 @@ public final class Intent {
      */
     private Intent(final Builder builder) {
         name = builder.name;
+
+        confirmationStatus = builder.confirmationStatus;
+
         slots = Collections.unmodifiableMap(builder.slots);
     }
 
@@ -82,8 +87,10 @@ public final class Intent {
      *            the slots associated with the intent
      */
     private Intent(@JsonProperty("name") final String name,
-            @JsonProperty("slots") final Map<String, Slot> slots) {
+                   @JsonProperty("confirmationStatus") final ConfirmationStatus confirmationStatus,
+                   @JsonProperty("slots") final Map<String, Slot> slots) {
         this.name = name;
+        this.confirmationStatus = confirmationStatus;
 
         if (slots != null) {
             this.slots = Collections.unmodifiableMap(slots);
@@ -123,22 +130,39 @@ public final class Intent {
     }
 
     /**
+     * Returns the confirmationStatus associated with this request.
+     *
+     * @return the confirmationStatus
+     */
+    public ConfirmationStatus getConfirmationStatus() {
+        return confirmationStatus;
+    }
+
+    /**
      * Builder used to construct a new {@code Intent}.
      */
     public static final class Builder {
         private String name;
         private final Map<String, Slot> slots = new HashMap<>();
-
-        private Builder() {
-        }
+        private ConfirmationStatus confirmationStatus;
 
         public Builder withName(final String name) {
             this.name = name;
             return this;
         }
 
+        public Builder withConfirmationStatus(final ConfirmationStatus confirmationStatus) {
+            this.confirmationStatus = confirmationStatus;
+            return this;
+        }
+
         public Builder withSlots(final Map<String, Slot> slots) {
             this.slots.putAll(slots);
+            return this;
+        }
+
+        public Builder withSlot(final Slot slot) {
+            this.slots.put(slot.getName(), slot);
             return this;
         }
 

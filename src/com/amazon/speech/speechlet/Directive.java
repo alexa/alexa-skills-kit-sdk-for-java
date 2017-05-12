@@ -13,6 +13,10 @@
 
 package com.amazon.speech.speechlet;
 
+import com.amazon.speech.speechlet.dialog.directives.ConfirmIntentDirective;
+import com.amazon.speech.speechlet.dialog.directives.ConfirmSlotDirective;
+import com.amazon.speech.speechlet.dialog.directives.DelegateDirective;
+import com.amazon.speech.speechlet.dialog.directives.ElicitSlotDirective;
 import com.amazon.speech.speechlet.interfaces.audioplayer.directive.ClearQueueDirective;
 import com.amazon.speech.speechlet.interfaces.audioplayer.directive.PlayDirective;
 import com.amazon.speech.speechlet.interfaces.audioplayer.directive.StopDirective;
@@ -27,7 +31,11 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes({
         @JsonSubTypes.Type(PlayDirective.class),
         @JsonSubTypes.Type(StopDirective.class),
-        @JsonSubTypes.Type(ClearQueueDirective.class)
+        @JsonSubTypes.Type(ClearQueueDirective.class),
+        @JsonSubTypes.Type(DelegateDirective.class),
+        @JsonSubTypes.Type(ElicitSlotDirective.class),
+        @JsonSubTypes.Type(ConfirmSlotDirective.class),
+        @JsonSubTypes.Type(ConfirmIntentDirective.class),
 })
 public abstract class Directive {
 }

@@ -48,8 +48,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * A {@code Slot} can be {@code null} if:
  * <ul>
  * <li>If what the user said is not in the definition, meaning that it does not match any predefined
- * {@code Slot}, or no {@code Slot}s are defined for the Intent. Example:
- * "place a reservation tonight"</li>
+ * {@code Slot}, or no {@code Slot}s are defined for the Intent. Example: "place a reservation
+ * tonight"</li>
  * <li>If the {@code Slot} is specified in the domain definition, but the user did not provide
  * enough information in their request. Example: "place a reservation."</li>
  * </ul>
@@ -58,8 +58,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @see Intent#getSlot(String)
  */
 public final class Slot {
+
     private final String name;
     private final String value;
+    private final ConfirmationStatus confirmationStatus;
 
     /**
      * Returns a new builder instance used to construct a new {@code Slot}.
@@ -79,6 +81,7 @@ public final class Slot {
     private Slot(final Builder builder) {
         name = builder.name;
         value = builder.value;
+        confirmationStatus = builder.confirmationStatus;
     }
 
     /**
@@ -89,9 +92,12 @@ public final class Slot {
      * @param value
      *            the resolved value
      */
-    private Slot(@JsonProperty("name") final String name, @JsonProperty("value") final String value) {
+    private Slot(@JsonProperty("name") final String name,
+            @JsonProperty("value") final String value,
+            @JsonProperty("confirmationStatus") final ConfirmationStatus confirmationStatus) {
         this.name = name;
         this.value = value;
+        this.confirmationStatus = confirmationStatus;
     }
 
     /**
@@ -113,14 +119,21 @@ public final class Slot {
     }
 
     /**
+     * Returns the confirmationStatus for this {@code Slot}.
+     *
+     * @return the confirmation status
+     */
+    public ConfirmationStatus getConfirmationStatus() {
+        return confirmationStatus;
+    }
+
+    /**
      * Builder used to construct a new {@code Slot}.
      */
     public static final class Builder {
         private String name;
         private String value;
-
-        private Builder() {
-        }
+        private ConfirmationStatus confirmationStatus;
 
         public Builder withName(final String name) {
             this.name = name;
@@ -129,6 +142,11 @@ public final class Slot {
 
         public Builder withValue(final String value) {
             this.value = value;
+            return this;
+        }
+
+        public Builder withConfirmationStatus(final ConfirmationStatus confirmationStatus) {
+            this.confirmationStatus = confirmationStatus;
             return this;
         }
 

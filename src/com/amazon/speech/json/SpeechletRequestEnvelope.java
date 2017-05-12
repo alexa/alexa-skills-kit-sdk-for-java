@@ -61,6 +61,7 @@ public class SpeechletRequestEnvelope<T extends SpeechletRequest> {
     /**
      * Returns a new builder instance used to construct a new {@code SpeechletRequestEnvelope}.
      *
+     * @param <E> SpeechletRequest
      * @return the builder
      */
     public static <E extends SpeechletRequest> Builder<E> builder() {
@@ -87,6 +88,8 @@ public class SpeechletRequestEnvelope<T extends SpeechletRequest> {
      *            the version of the request envelope
      * @param session
      *            the session
+     * @param context
+     *            the context
      * @param request
      *            the speechlet request
      */
