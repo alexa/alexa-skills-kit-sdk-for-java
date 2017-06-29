@@ -17,27 +17,34 @@ import com.amazon.speech.speechlet.Interface;
 import com.amazon.speech.speechlet.State;
 import com.amazon.speech.speechlet.interfaces.audioplayer.AudioPlayerInterface;
 import com.amazon.speech.speechlet.interfaces.audioplayer.AudioPlayerState;
+import com.amazon.speech.speechlet.interfaces.display.DisplayInterface;
+import com.amazon.speech.speechlet.interfaces.display.DisplayState;
 import com.amazon.speech.speechlet.interfaces.system.SystemInterface;
 import com.amazon.speech.speechlet.interfaces.system.SystemState;
+import com.amazon.speech.speechlet.interfaces.videoapp.VideoAppInterface;
 
 enum SerializedInterface {
     AudioPlayer(AudioPlayerInterface.class, AudioPlayerState.class),
+    Display(DisplayInterface.class, DisplayState.class),
+    VideoApp(VideoAppInterface.class, null /* no state */),
     System(SystemInterface.class, SystemState.class);
 
     private final Class<? extends Interface> interfaceClass;
-    private final Class<? extends State> stateClass;
+    private final Class<? extends State<?>> stateClass;
 
     SerializedInterface(final Class<? extends Interface> interfaceClass,
-            final Class<? extends State> stateClass) {
+                        final Class<? extends State<?>> stateClass) {
         this.interfaceClass = interfaceClass;
         this.stateClass = stateClass;
     }
 
+    @SuppressWarnings("unchecked")
     protected <T extends Interface> Class<T> getInterfaceClass() {
         return (Class<T>) interfaceClass;
     }
 
-    protected <T extends State> Class<T> getStateClass() {
+    @SuppressWarnings("unchecked")
+    protected <T extends State<?>> Class<T> getStateClass() {
         return (Class<T>) stateClass;
     }
 }

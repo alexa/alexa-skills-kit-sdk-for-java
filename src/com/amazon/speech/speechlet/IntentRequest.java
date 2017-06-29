@@ -16,6 +16,7 @@ package com.amazon.speech.speechlet;
 import java.util.Date;
 import java.util.Locale;
 
+import com.amazon.speech.json.SpeechletRequestEnvelope;
 import org.apache.commons.lang3.Validate;
 
 import com.amazon.speech.slu.Intent;
@@ -25,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 /**
  * The request object containing an {@link Intent} for {@code SpeechletV2} invocation.
  *
- * @see SpeechletV2#onIntent
+ * @see SpeechletV2#onIntent(SpeechletRequestEnvelope)
  */
 @JsonTypeName("IntentRequest")
 public class IntentRequest extends CoreSpeechletRequest {

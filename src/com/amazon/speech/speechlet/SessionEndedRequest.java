@@ -16,6 +16,7 @@ package com.amazon.speech.speechlet;
 import java.util.Date;
 import java.util.Locale;
 
+import com.amazon.speech.json.SpeechletRequestEnvelope;
 import org.apache.commons.lang3.Validate;
 
 import com.amazon.speech.speechlet.interfaces.system.Error;
@@ -69,7 +70,8 @@ public final class SessionEndedRequest extends CoreSpeechletRequest {
     private SessionEndedRequest(@JsonProperty("requestId") final String requestId,
             @JsonProperty("timestamp") final Date timestamp,
             @JsonProperty("locale") final Locale locale,
-            @JsonProperty("reason") final Reason reason, @JsonProperty("error") final Error error) {
+            @JsonProperty("reason") final Reason reason,
+            @JsonProperty("error") final Error error) {
         super(requestId, timestamp, locale);
         this.reason = reason;
         this.error = error;

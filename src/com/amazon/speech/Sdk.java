@@ -18,7 +18,7 @@ package com.amazon.speech;
  */
 public final class Sdk {
     /**
-     * The version number for this library.
+     * The version number for request and response layout.
      */
     public static final String VERSION = "1.0";
 

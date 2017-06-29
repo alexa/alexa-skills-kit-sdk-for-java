@@ -15,6 +15,7 @@ package com.amazon.speech.speechlet;
 
 import java.util.List;
 
+import com.amazon.speech.json.SpeechletRequestEnvelope;
 import com.amazon.speech.ui.Card;
 import com.amazon.speech.ui.OutputSpeech;
 import com.amazon.speech.ui.Reprompt;
@@ -32,7 +33,7 @@ public class SpeechletResponse {
     private Card card = null;
     private List<Directive> directives = null;
     private Reprompt reprompt = null;
-    private boolean shouldEndSession = true;
+    private Boolean shouldEndSession = true;
 
     /**
      * Returns the speech associated with this response.
@@ -55,10 +56,17 @@ public class SpeechletResponse {
 
     /**
      * Returns whether or not the session should end with this response.
+     * in case of {@code null} value returns {@code false}
      *
      * @return whether the session should end
+     *
+     * @deprecated with version 1.4.0 replaced with {@link #getNullableShouldEndSession()}
      */
+    @Deprecated
     public boolean getShouldEndSession() {
+        if(shouldEndSession==null) {
+            return false;
+        }
         return shouldEndSession;
     }
 
@@ -67,11 +75,44 @@ public class SpeechletResponse {
      *
      * @param shouldEndSession
      *            {@code true} if the session should end with this response
+     *
+     * @deprecated with version 1.4.0 {@code null} value is allowed.
+     *            See {@link #setNullableShouldEndSession(Boolean)}
      */
+    @Deprecated
     public void setShouldEndSession(final boolean shouldEndSession) {
         this.shouldEndSession = shouldEndSession;
     }
 
+    /**
+     * Returns value of shouldEndSession attribute
+     * <p> {@code false} means session should be kept open and voice command is expected
+     * <p> {@code true} means session should be terminated
+     * <p> {@code null} for non-display cases defaults to {@code true} and for display template
+     *            scenarios keeps session open without expecting voice command
+     * <p> Refer to online documentation for more information
+     *
+      * @return value of shouldEndSession attribute
+     */
+    public Boolean getNullableShouldEndSession() {
+        return shouldEndSession;
+    }
+
+    /**
+     * Sets value of shouldEndSession attribute
+     * <p> Set it to {@code true} to end session
+     * <p> Set it to {@code false} to keep session open and wait for a voice command or response
+     * <p> Set it to {@code null} to keep session open without waiting for a voice command when
+     *            displaying template. If no template is displayed it will default to
+     *            previous behavior and end session.
+     * <p> Refer to online documentation for more details.
+     *
+     * @param shouldEndSession
+     *            new value of shouldEndSession attribute
+     */
+    public void setNullableShouldEndSession(final Boolean shouldEndSession) {
+        this.shouldEndSession = shouldEndSession;
+    }
     /**
      * Returns the UI card associated with this response.
      *
@@ -146,7 +187,7 @@ public class SpeechletResponse {
         }
 
         SpeechletResponse response = new SpeechletResponse();
-        response.setShouldEndSession(true);
+        response.setNullableShouldEndSession(true);
         response.setOutputSpeech(outputSpeech);
         return response;
     }
@@ -200,7 +241,7 @@ public class SpeechletResponse {
         }
 
         SpeechletResponse response = new SpeechletResponse();
-        response.setShouldEndSession(false);
+        response.setNullableShouldEndSession(false);
         response.setOutputSpeech(outputSpeech);
         response.setReprompt(reprompt);
         return response;

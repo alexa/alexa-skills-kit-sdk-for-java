@@ -20,6 +20,9 @@ import com.amazon.speech.speechlet.dialog.directives.ElicitSlotDirective;
 import com.amazon.speech.speechlet.interfaces.audioplayer.directive.ClearQueueDirective;
 import com.amazon.speech.speechlet.interfaces.audioplayer.directive.PlayDirective;
 import com.amazon.speech.speechlet.interfaces.audioplayer.directive.StopDirective;
+import com.amazon.speech.speechlet.interfaces.core.directive.HintDirective;
+import com.amazon.speech.speechlet.interfaces.display.directive.RenderTemplateDirective;
+import com.amazon.speech.speechlet.interfaces.videoapp.directive.LaunchDirective;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
@@ -29,13 +32,16 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
+        @JsonSubTypes.Type(HintDirective.class),
         @JsonSubTypes.Type(PlayDirective.class),
         @JsonSubTypes.Type(StopDirective.class),
         @JsonSubTypes.Type(ClearQueueDirective.class),
+        @JsonSubTypes.Type(RenderTemplateDirective.class),
+        @JsonSubTypes.Type(LaunchDirective.class),
         @JsonSubTypes.Type(DelegateDirective.class),
         @JsonSubTypes.Type(ElicitSlotDirective.class),
         @JsonSubTypes.Type(ConfirmSlotDirective.class),
-        @JsonSubTypes.Type(ConfirmIntentDirective.class),
+        @JsonSubTypes.Type(ConfirmIntentDirective.class)
 })
 public abstract class Directive {
 }

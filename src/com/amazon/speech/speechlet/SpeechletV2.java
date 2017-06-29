@@ -89,7 +89,7 @@ public interface SpeechletV2 {
     /**
      * Callback used to notify that the session ended as a result of the user interacting, or not
      * interacting with the device. This method is not invoked if the {@code SpeechletV2} itself
-     * ended the session using {@link SpeechletResponse#setShouldEndSession(boolean)}.
+     * ended the session using {@link SpeechletResponse#setNullableShouldEndSession(Boolean)}.
      *
      * @param requestEnvelope
      *            the end of session request envelope

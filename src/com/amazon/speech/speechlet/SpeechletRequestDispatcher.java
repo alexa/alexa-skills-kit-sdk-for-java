@@ -26,6 +26,9 @@ import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackFinish
 import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackNearlyFinishedRequest;
 import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackStartedRequest;
 import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackStoppedRequest;
+import com.amazon.speech.speechlet.interfaces.display.Display;
+import com.amazon.speech.speechlet.interfaces.display.request.DisplayRequest;
+import com.amazon.speech.speechlet.interfaces.display.request.ElementSelectedRequest;
 import com.amazon.speech.speechlet.interfaces.playbackcontroller.PlaybackController;
 import com.amazon.speech.speechlet.interfaces.playbackcontroller.request.NextCommandIssuedRequest;
 import com.amazon.speech.speechlet.interfaces.playbackcontroller.request.PauseCommandIssuedRequest;
@@ -202,6 +205,19 @@ public class SpeechletRequestDispatcher {
                             .onExceptionEncountered(typeSpecificRequestEnvelope);
                 }
             }
+            /** Display **/
+        } else if (speechletRequest instanceof DisplayRequest) {
+            if (speechletWithInterfaces instanceof Display) {
+                Display displaySpeechlet = (Display) speechletWithInterfaces;
+                if (speechletRequest instanceof ElementSelectedRequest) {
+                    @SuppressWarnings("unchecked")
+                    SpeechletRequestEnvelope<ElementSelectedRequest> typeSpecificRequestEnvelope =
+                            (SpeechletRequestEnvelope<ElementSelectedRequest>) requestEnvelope;
+                    speechletResponse =
+                            displaySpeechlet.onElementSelected(typeSpecificRequestEnvelope);
+                    saveSessionAttributes = shouldSaveSessionAttributes(speechletResponse);
+                }
+            }
             /** SpeechletV2 **/
         } else if (speechletRequest instanceof CoreSpeechletRequest) {
             try {
@@ -223,11 +239,7 @@ public class SpeechletRequestDispatcher {
                         speechletResponse = speechlet.onLaunch(parameterizedRequestEnvelope);
                     }
 
-                    if (speechletResponse != null) {
-                        saveSessionAttributes = !speechletResponse.getShouldEndSession();
-                    } else {
-                        saveSessionAttributes = true;
-                    }
+                    saveSessionAttributes = shouldSaveSessionAttributes(speechletResponse);
                 }
             } catch (RuntimeException e) {
                 // Doing this to preserve backwards compatibility if a Speechlet instead of a
@@ -257,5 +269,13 @@ public class SpeechletRequestDispatcher {
         }
 
         return responseEnvelope;
+    }
+
+    private boolean shouldSaveSessionAttributes(SpeechletResponse speechletResponse) {
+        if (speechletResponse != null && speechletResponse.getNullableShouldEndSession() != null) {
+            return !speechletResponse.getNullableShouldEndSession();
+        } else {
+            return true;
+        }
     }
 }

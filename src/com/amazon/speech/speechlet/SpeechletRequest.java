@@ -22,6 +22,7 @@ import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackFinish
 import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackNearlyFinishedRequest;
 import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackStartedRequest;
 import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackStoppedRequest;
+import com.amazon.speech.speechlet.interfaces.display.request.ElementSelectedRequest;
 import com.amazon.speech.speechlet.interfaces.playbackcontroller.request.NextCommandIssuedRequest;
 import com.amazon.speech.speechlet.interfaces.playbackcontroller.request.PauseCommandIssuedRequest;
 import com.amazon.speech.speechlet.interfaces.playbackcontroller.request.PlayCommandIssuedRequest;
@@ -64,7 +65,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
         @Type(value = PauseCommandIssuedRequest.class),
         @Type(value = NextCommandIssuedRequest.class),
         @Type(value = PreviousCommandIssuedRequest.class),
-        @Type(value = ExceptionEncounteredRequest.class)
+        @Type(value = ExceptionEncounteredRequest.class),
+        @Type(value = ElementSelectedRequest.class)
 })
 public abstract class SpeechletRequest {
     private final String requestId;

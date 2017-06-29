@@ -16,6 +16,7 @@ package com.amazon.speech.speechlet;
 import java.util.Date;
 import java.util.Locale;
 
+import com.amazon.speech.json.SpeechletRequestEnvelope;
 import org.apache.commons.lang3.Validate;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

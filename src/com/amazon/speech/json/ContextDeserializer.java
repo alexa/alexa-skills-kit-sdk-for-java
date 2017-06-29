@@ -36,7 +36,7 @@ class ContextDeserializer extends StdDeserializer<Context> {
         Context.Builder contextBuilder = Context.builder();
 
         for (SerializedInterface interfaceName : SerializedInterface.values()) {
-            if (messageNode.has(interfaceName.name())) {
+            if (messageNode.has(interfaceName.name()) && (interfaceName.getStateClass() != null)) {
                 State<?> state =
                         underlyingMapper.convertValue(messageNode.get(interfaceName.name()),
                                 interfaceName.getStateClass());
