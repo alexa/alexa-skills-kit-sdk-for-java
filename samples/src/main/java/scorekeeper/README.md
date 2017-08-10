@@ -21,7 +21,7 @@ To run this example skill you need to do two things. The first is to deploy the 
 3. Skip the blueprint
 4. Name the Lambda Function "Score-Keeper-Example-Skill".
 5. Select the runtime as Java 8
-6. Go to the the root directory containing pom.xml, and run 'mvn assembly:assembly -DdescriptorId=jar-with-dependencies package'. This will generate a zip file named "alexa-skills-kit-samples-1.0-jar-with-dependencies.jar" in the target directory.
+6. Go to the the "samples" directory containing pom.xml, and run 'mvn assembly:assembly -DdescriptorId=jar-with-dependencies package'. This will generate a zip file named "alexa-skills-kit-samples-1.0-jar-with-dependencies.jar" in the target directory.
 7. Select Code entry type as "Upload a .ZIP file" and then upload the "alexa-skills-kit-samples-1.0-jar-with-dependencies.jar" file from the build directory to Lambda
 8. Set the Handler as scorekeeper.ScoreKeeperSpeechletRequestStreamHandler (this refers to the Lambda RequestStreamHandler file in the zip).
 9. Create a "Basic with DynamoDB" role and click create.
@@ -33,7 +33,7 @@ To run this example skill you need to do two things. The first is to deploy the 
 
 ### AWS DynamoDB Setup
 1. Go to the AWS Console and click on [DynamoDB link](https://console.aws.amazon.com/dynamodb). Note: ensure you are in us-east (same as your Lambda)
-2. Click on CreateTable: set "ScoreKeeperUserData" as the table name, use Hash for the primary key type and set "CustomerId" as the hash attribute name.
+2. Click on CreateTable: set "ScoreKeeperUserData" as the table name, use String for the primary key type and set "CustomerId" as the hash attribute name.
 3. Continue the steps with the default settings to finish the setup of DynamoDB table.
 
 ### Alexa Skill Setup
