@@ -19,6 +19,7 @@ import com.amazon.speech.json.SpeechletRequestEnvelope;
 import com.amazon.speech.ui.Card;
 import com.amazon.speech.ui.OutputSpeech;
 import com.amazon.speech.ui.Reprompt;
+import com.fasterxml.jackson.annotation.*;
 
 /**
  * The response to a {@code SpeechletV2} invocation. Defines text to speak to the user, content to
@@ -34,6 +35,22 @@ public class SpeechletResponse {
     private List<Directive> directives = null;
     private Reprompt reprompt = null;
     private Boolean shouldEndSession = true;
+
+    /**
+     * Default public constructor
+     */
+    public SpeechletResponse(){
+
+    }
+
+    /**
+     * Constructor used for deserialization
+     * @param shouldEndSession shouldEndSession
+     */
+    @JsonCreator()
+    private SpeechletResponse(@JsonProperty("shouldEndSession") Boolean shouldEndSession){
+        this.shouldEndSession = shouldEndSession;
+    }
 
     /**
      * Returns the speech associated with this response.
@@ -63,6 +80,7 @@ public class SpeechletResponse {
      * @deprecated with version 1.4.0 replaced with {@link #getNullableShouldEndSession()}
      */
     @Deprecated
+    @JsonIgnore
     public boolean getShouldEndSession() {
         if(shouldEndSession==null) {
             return false;
@@ -80,6 +98,7 @@ public class SpeechletResponse {
      *            See {@link #setNullableShouldEndSession(Boolean)}
      */
     @Deprecated
+    @JsonIgnore
     public void setShouldEndSession(final boolean shouldEndSession) {
         this.shouldEndSession = shouldEndSession;
     }
@@ -94,6 +113,8 @@ public class SpeechletResponse {
      *
       * @return value of shouldEndSession attribute
      */
+    @JsonGetter("shouldEndSession")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public Boolean getNullableShouldEndSession() {
         return shouldEndSession;
     }
