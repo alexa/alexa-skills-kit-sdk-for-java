@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ResolutionStatus {
 
     public enum ResolutionStatusCode {
-        ER_SUCCESS_MATCH
+        ER_SUCCESS_MATCH, ER_SUCCESS_NO_MATCH
     }
 
     private final ResolutionStatusCode code;
