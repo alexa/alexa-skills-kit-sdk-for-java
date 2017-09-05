@@ -22,12 +22,16 @@ import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackFinish
 import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackNearlyFinishedRequest;
 import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackStartedRequest;
 import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackStoppedRequest;
+import com.amazon.speech.speechlet.interfaces.core.*;
 import com.amazon.speech.speechlet.interfaces.display.request.ElementSelectedRequest;
 import com.amazon.speech.speechlet.interfaces.playbackcontroller.request.NextCommandIssuedRequest;
 import com.amazon.speech.speechlet.interfaces.playbackcontroller.request.PauseCommandIssuedRequest;
 import com.amazon.speech.speechlet.interfaces.playbackcontroller.request.PlayCommandIssuedRequest;
 import com.amazon.speech.speechlet.interfaces.playbackcontroller.request.PreviousCommandIssuedRequest;
 import com.amazon.speech.speechlet.interfaces.system.request.ExceptionEncounteredRequest;
+import com.amazon.speech.speechlet.services.householdlist.ListItemsCreatedRequest;
+import com.amazon.speech.speechlet.services.householdlist.ListItemsDeletedRequest;
+import com.amazon.speech.speechlet.services.householdlist.ListItemsUpdatedRequest;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -66,7 +70,15 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
         @Type(value = NextCommandIssuedRequest.class),
         @Type(value = PreviousCommandIssuedRequest.class),
         @Type(value = ExceptionEncounteredRequest.class),
-        @Type(value = ElementSelectedRequest.class)
+        @Type(value = ElementSelectedRequest.class),
+        @Type(value = SkillEnabledEventRequest.class),
+        @Type(value = SkillDisabledEventRequest.class),
+        @Type(value = PermissionAcceptedRequest.class),
+        @Type(value = PermissionChangedRequest.class),
+        @Type(value = AccountLinkedRequest.class),
+        @Type(value = ListItemsCreatedRequest.class),
+        @Type(value = ListItemsUpdatedRequest.class),
+        @Type(value = ListItemsDeletedRequest.class)
 })
 public abstract class SpeechletRequest {
     private final String requestId;

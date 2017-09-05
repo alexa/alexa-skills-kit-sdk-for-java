@@ -26,6 +26,7 @@ import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackFinish
 import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackNearlyFinishedRequest;
 import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackStartedRequest;
 import com.amazon.speech.speechlet.interfaces.audioplayer.request.PlaybackStoppedRequest;
+import com.amazon.speech.speechlet.interfaces.core.*;
 import com.amazon.speech.speechlet.interfaces.display.Display;
 import com.amazon.speech.speechlet.interfaces.display.request.DisplayRequest;
 import com.amazon.speech.speechlet.interfaces.display.request.ElementSelectedRequest;
@@ -38,6 +39,12 @@ import com.amazon.speech.speechlet.interfaces.playbackcontroller.request.Previou
 import com.amazon.speech.speechlet.interfaces.system.System;
 import com.amazon.speech.speechlet.interfaces.system.request.ExceptionEncounteredRequest;
 import com.amazon.speech.speechlet.interfaces.system.request.SystemRequest;
+import com.amazon.speech.speechlet.services.householdlist.AlexaHouseholdListEventRequest;
+import com.amazon.speech.speechlet.services.householdlist.HouseholdListEventListener;
+import com.amazon.speech.speechlet.services.householdlist.ListItemsCreatedRequest;
+import com.amazon.speech.speechlet.services.householdlist.ListItemsDeletedRequest;
+import com.amazon.speech.speechlet.services.householdlist.ListItemsUpdatedRequest;
+
 
 /**
  * This class takes an incoming request from the Alexa service, executes that call on the
@@ -53,7 +60,7 @@ public class SpeechletRequestDispatcher {
     public SpeechletRequestDispatcher(Speechlet speechlet) {
         this(new SpeechletToSpeechletV2Adapter(speechlet));
     }
-
+    
     /**
      * Processes the provided {@link SpeechletRequestEnvelope} and generates an appropriate response
      * after dispatching the appropriate method calls on the {@link SpeechletV2} provided at
@@ -120,8 +127,58 @@ public class SpeechletRequestDispatcher {
         boolean saveSessionAttributes = false;
         SpeechletResponse speechletResponse = null;
 
-        /** AudioPlayer **/
-        if (speechletRequest instanceof AudioPlayerRequest) {
+          /** SkillEvents **/
+        if(speechletRequest instanceof AlexaSkillEventRequest) {
+            if (speechletRequest instanceof SkillEnabledEventRequest) {
+                if (speechletWithInterfaces instanceof SkillEventListener) {
+                    @SuppressWarnings("unchecked")
+                    SpeechletRequestEnvelope<SkillEnabledEventRequest> typeSpecificRequestEnvelope =
+                            (SpeechletRequestEnvelope<SkillEnabledEventRequest>) requestEnvelope;
+                    ((SkillEventListener) speechletWithInterfaces).onSkillEnabled(typeSpecificRequestEnvelope);
+                }
+            } else if (speechletRequest instanceof SkillDisabledEventRequest) {
+                if (speechletWithInterfaces instanceof SkillEventListener) {
+                    @SuppressWarnings("unchecked")
+                    SpeechletRequestEnvelope<SkillDisabledEventRequest> typeSpecificRequestEnvelope =
+                            (SpeechletRequestEnvelope<SkillDisabledEventRequest>) requestEnvelope;
+                    ((SkillEventListener) speechletWithInterfaces).onSkillDisabled(typeSpecificRequestEnvelope);
+                }
+            } else if (speechletRequest instanceof PermissionAcceptedRequest) {
+                @SuppressWarnings("unchecked")
+                SpeechletRequestEnvelope<PermissionAcceptedRequest> typeSpecificRequestEnvelope =
+                        (SpeechletRequestEnvelope<PermissionAcceptedRequest>) requestEnvelope;
+                ((SkillEventListener) speechletWithInterfaces).onPermissionAccepted(typeSpecificRequestEnvelope);
+            } else if (speechletRequest instanceof PermissionChangedRequest) {
+                @SuppressWarnings("unchecked")
+                SpeechletRequestEnvelope<PermissionChangedRequest> typeSpecificRequestEnvelope =
+                        (SpeechletRequestEnvelope<PermissionChangedRequest>) requestEnvelope;
+                ((SkillEventListener) speechletWithInterfaces).onPermissionChanged(typeSpecificRequestEnvelope);
+            } else if (speechletRequest instanceof AccountLinkedRequest) {
+                @SuppressWarnings("unchecked")
+                SpeechletRequestEnvelope<AccountLinkedRequest> typeSpecificRequestEnvelope =
+                        (SpeechletRequestEnvelope<AccountLinkedRequest>) requestEnvelope;
+                ((SkillEventListener) speechletWithInterfaces).onAccountLinked(typeSpecificRequestEnvelope);
+            }
+            /** HouseholdListEvents **/
+        } else if(speechletRequest instanceof AlexaHouseholdListEventRequest) {
+            if(speechletRequest instanceof ListItemsCreatedRequest) {
+                @SuppressWarnings("unchecked")
+                SpeechletRequestEnvelope<ListItemsCreatedRequest> typeSpecificRequestEnvelope =
+                        (SpeechletRequestEnvelope<ListItemsCreatedRequest>) requestEnvelope;
+                ((HouseholdListEventListener) speechletWithInterfaces).onListItemsCreated(typeSpecificRequestEnvelope);
+            } else if(speechletRequest instanceof ListItemsUpdatedRequest) {
+                @SuppressWarnings("unchecked")
+                SpeechletRequestEnvelope<ListItemsUpdatedRequest> typeSpecificRequestEnvelope =
+                        (SpeechletRequestEnvelope<ListItemsUpdatedRequest>) requestEnvelope;
+                ((HouseholdListEventListener) speechletWithInterfaces).onListItemsUpdated(typeSpecificRequestEnvelope);
+            } else if(speechletRequest instanceof ListItemsDeletedRequest) {
+                @SuppressWarnings("unchecked")
+                SpeechletRequestEnvelope<ListItemsDeletedRequest> typeSpecificRequestEnvelope =
+                        (SpeechletRequestEnvelope<ListItemsDeletedRequest>) requestEnvelope;
+                ((HouseholdListEventListener) speechletWithInterfaces).onListItemsDeleted(typeSpecificRequestEnvelope);
+            }
+            /** AudioPlayer **/
+        } else if (speechletRequest instanceof AudioPlayerRequest) {
             if (speechletWithInterfaces instanceof AudioPlayer) {
                 AudioPlayer audioPlayerSpeechlet = (AudioPlayer) speechletWithInterfaces;
                 if (speechletRequest instanceof PlaybackFailedRequest) {
