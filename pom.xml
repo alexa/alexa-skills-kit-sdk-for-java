@@ -4,7 +4,7 @@
   <groupId>com.amazon.alexa</groupId>
   <artifactId>alexa-skills-kit</artifactId>
   <packaging>jar</packaging>
-  <version>1.5.0</version>
+  <version>1.5.1-SNAPSHOT</version>
   <name>Alexa Skills Kit</name>
   <description>Contains classes used by the Alexa Skills Kit.</description>
   <url>http://developer.amazon.com/ask</url>
