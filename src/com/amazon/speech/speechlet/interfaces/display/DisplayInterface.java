@@ -83,6 +83,8 @@ public final class DisplayInterface extends Interface {
 
     /**
      * Returns the current supported {@code templateVersion}.
+     *
+     * @return {@code templateVersion}
      */
     public String getTemplateVersion() {
         return this.templateVersion;
@@ -90,6 +92,8 @@ public final class DisplayInterface extends Interface {
 
     /**
      * Returns the current supported {@code markupVersion}.
+     *
+     * @return {@code markupVersion}
      */
     public String getMarkupVersion() {
         return this.markupVersion;

@@ -1,0 +1,10 @@
+{
+  "type" : "SessionEndedRequest",
+  "requestId" : "arbitraryNewRequestId",
+  "locale" : "fr-CA",
+  "reason" : "ERROR",
+  "error" : {
+    "type" : "INTERNAL_SERVICE_ERROR",
+    "message" : "arbitraryMessage"
+  }
+}

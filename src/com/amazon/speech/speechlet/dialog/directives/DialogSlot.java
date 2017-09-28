@@ -15,6 +15,7 @@ package com.amazon.speech.speechlet.dialog.directives;
 
 import com.amazon.speech.slu.ConfirmationStatus;
 import com.amazon.speech.slu.Intent;
+import com.amazon.speech.slu.entityresolution.Resolutions;
 import com.amazon.speech.slu.Slot;
 
 /**
@@ -42,15 +43,16 @@ public class DialogSlot {
      *            unknown
      * @see ConfirmationStatus
      */
-    public DialogSlot(final String name, final String value,
-            final ConfirmationStatus confirmationStatus) {
+    public DialogSlot(final String name,
+                      final String value,
+                      final ConfirmationStatus confirmationStatus) {
         this.name = name;
         this.value = value;
         this.confirmationStatus = confirmationStatus;
     }
 
     /**
-     * Constructs a dialog slot from name and value, sets confirmation status as {@code null}.
+     * Constructs a dialog slot from name and value, sets confirmation status and resolutions as {@code null}.
      *
      * @param name
      *            the name of dialog slot
@@ -62,7 +64,7 @@ public class DialogSlot {
     }
 
     /**
-     * Constructs a dialog slot, sets name, value and confirmation status as {@code null}.
+     * Constructs a dialog slot, sets name, value, confirmation status and resolutions as {@code null}.
      */
     public DialogSlot() {
         this(null, null, null);
@@ -75,7 +77,9 @@ public class DialogSlot {
      * @param requestSlot  the slot given
      */
     public DialogSlot(final Slot requestSlot) {
-        this(requestSlot.getName(), requestSlot.getValue(), requestSlot.getConfirmationStatus());
+        this(requestSlot.getName(),
+             requestSlot.getValue(),
+             requestSlot.getConfirmationStatus());
     }
 
     /**
@@ -136,5 +140,4 @@ public class DialogSlot {
     public void setConfirmationStatus(final ConfirmationStatus confirmationStatus) {
         this.confirmationStatus = confirmationStatus;
     }
-
 }

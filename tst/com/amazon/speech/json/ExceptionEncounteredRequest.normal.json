@@ -1,0 +1,12 @@
+{
+  "type" : "System.ExceptionEncountered",
+  "requestId" : "arbitraryNewRequestId",
+  "locale" : "fr-CA",
+  "error" : {
+    "type" : "INTERNAL_SERVICE_ERROR",
+    "message" : "arbitraryMessage"
+  },
+  "cause" : {
+    "requestId" : "arbitraryCauseRequestId"
+  }
+}
