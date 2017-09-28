@@ -158,6 +158,8 @@
   </dependencies>
 
   <build>
+    <sourceDirectory>src</sourceDirectory>
+    <testSourceDirectory>tst</testSourceDirectory>
     <pluginManagement>
       <plugins>
         <plugin>
