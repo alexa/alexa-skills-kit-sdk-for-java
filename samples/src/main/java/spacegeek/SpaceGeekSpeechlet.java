@@ -82,7 +82,7 @@ public class SpaceGeekSpeechlet implements Speechlet {
         String intentName = (intent != null) ? intent.getName() : null;
 
         if ("GetNewFactIntent".equals(intentName)) {
-            return getNewFactResponse();
+            return getFactResponse();
 
         } else if ("AMAZON.HelpIntent".equals(intentName)) {
             return getHelpResponse();
@@ -108,6 +108,25 @@ public class SpaceGeekSpeechlet implements Speechlet {
         log.info("onSessionEnded requestId={}, sessionId={}", request.getRequestId(),
                 session.getSessionId());
         // any cleanup logic goes here
+    }
+    
+    private SpeechletResponse getFactResponse() {
+		String fact = SPACE_FACTS[SPACE_FACTS.length];
+		
+		// Create speech output
+        String speechText = "Here's your space fact: " + fact;
+
+        // Create the Simple card content.
+        SimpleCard card = new SimpleCard();
+        card.setTitle("SpaceGeek");
+        card.setContent(speechText);
+
+        // Create the plain text output.
+        PlainTextOutputSpeech speech = new PlainTextOutputSpeech();
+        speech.setText(speechText);
+
+        return SpeechletResponse.newTellResponse(speech, card);
+    	
     }
 
     /**

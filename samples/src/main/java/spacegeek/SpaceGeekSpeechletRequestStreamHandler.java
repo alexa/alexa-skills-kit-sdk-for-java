@@ -30,7 +30,7 @@ public final class SpaceGeekSpeechletRequestStreamHandler extends SpeechletReque
          * Alexa Skill and put the relevant Application Ids in this Set.
          */
         supportedApplicationIds = new HashSet<String>();
-        // supportedApplicationIds.add("amzn1.echo-sdk-ams.app.[unique-value-here]");
+        supportedApplicationIds.add("amzn1.echo-sdk-ams.app.[unique-value-here]");
     }
 
     public SpaceGeekSpeechletRequestStreamHandler() {
