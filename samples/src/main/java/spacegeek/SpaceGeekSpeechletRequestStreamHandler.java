@@ -31,7 +31,6 @@ public final class SpaceGeekSpeechletRequestStreamHandler extends SpeechletReque
          */
         supportedApplicationIds = new HashSet<String>();
         supportedApplicationIds.add("amzn1.echo-sdk-ams.app.[unique-value-here]");
-//        supportedApplicationIds.add("amzn1.ask.skill.7469e89e-3360-4280-a591-45437e7a45df");
     }
 
     public SpaceGeekSpeechletRequestStreamHandler() {
