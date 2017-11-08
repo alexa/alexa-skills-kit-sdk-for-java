@@ -1,0 +1,31 @@
+{
+  "intents": [
+    {
+      "slots": [
+        {
+          "name": "StoryName",
+          "type": "LIST_OF_STORY_NAMES"
+        }
+      ],
+      "intent": "TellMeAStoryIntent"
+    },
+    {
+      "slots": [
+        {
+          "name": "StoryName",
+          "type": "LIST_OF_STORY_NAMES"
+        }
+      ],
+      "intent": "TellMeTheMoralOfIntent"
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    }
+  ]
+}

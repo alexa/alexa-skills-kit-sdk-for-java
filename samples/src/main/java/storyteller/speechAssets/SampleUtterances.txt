@@ -1,0 +1,7 @@
+TellMeAStoryIntent tell me the {StoryName} story
+TellMeAStoryIntent tell me the story of {StoryName}
+TellMeAStoryIntent {StoryName}
+
+TellMeTheMoralOfIntent moral of {StoryName}
+TellMeTheMoralOfIntent what is the moral of {StoryName}
+TellMeTheMoralOfIntent what's the moral of {StoryName}
