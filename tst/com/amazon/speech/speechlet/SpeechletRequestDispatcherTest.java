@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.withSettings;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -24,6 +25,9 @@ import com.amazon.speech.speechlet.interfaces.system.Error;
 import com.amazon.speech.speechlet.interfaces.system.ErrorCause;
 import com.amazon.speech.speechlet.interfaces.system.request.ExceptionEncounteredRequest;
 import com.amazon.speech.speechlet.services.householdlist.HouseholdListEventListener;
+import com.amazon.speech.speechlet.services.householdlist.HouseholdListEventListenerV2;
+import com.amazon.speech.speechlet.services.householdlist.ListBody;
+import com.amazon.speech.speechlet.services.householdlist.ListCreatedRequest;
 import com.amazon.speech.speechlet.services.householdlist.ListItemBody;
 import com.amazon.speech.speechlet.services.householdlist.ListItemsCreatedRequest;
 import com.amazon.speech.speechlet.services.householdlist.ListItemsDeletedRequest;
@@ -33,6 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -113,6 +118,9 @@ public class SpeechletRequestDispatcherTest {
 
     @Test
     public void permissionAcceptedRequest_happyPath_goesToPermissionGrantedHandler() throws SpeechletException, IOException, SpeechletRequestHandlerException {
+        Speechlet speechlet = Mockito.mock(Speechlet.class, withSettings().extraInterfaces(SkillEventListener.class));
+        SpeechletRequestDispatcher speechletRequestDispatcher = new SpeechletRequestDispatcher(speechlet);
+
         Permission acceptedPermission = Permission.builder().withScope("scope").build();
         List<Permission> acceptedPermissionList = new ArrayList<>();
         acceptedPermissionList.add(acceptedPermission);
@@ -127,11 +135,16 @@ public class SpeechletRequestDispatcherTest {
                     .build();
         SpeechletResponseEnvelope envelope =
                 speechletRequestDispatcher.dispatchSpeechletCall(getRequestEnvelope(request),session);
+
+        verify((SkillEventListener)speechlet, times(1)).onPermissionAccepted(any(SpeechletRequestEnvelope.class));
         assertNull(envelope.getResponse());
     }
 
     @Test
     public void accountLinkedRequest_happyPath_goesToAccountLinkedHandler() throws SpeechletException, IOException, SpeechletRequestHandlerException {
+        Speechlet speechlet = Mockito.mock(Speechlet.class, withSettings().extraInterfaces(SkillEventListener.class));
+        SpeechletRequestDispatcher speechletRequestDispatcher = new SpeechletRequestDispatcher(speechlet);
+
         AccountLinkedBody body = AccountLinkedBody.builder().withAccessToken("accessToken").build();
         AccountLinkedRequest request=
                 AccountLinkedRequest
@@ -143,11 +156,16 @@ public class SpeechletRequestDispatcherTest {
                     .build();
         SpeechletResponseEnvelope envelope =
                 speechletRequestDispatcher.dispatchSpeechletCall(getRequestEnvelope(request),session);
+
+        verify((SkillEventListener)speechlet, times(1)).onAccountLinked(any(SpeechletRequestEnvelope.class));
         assertNull(envelope.getResponse());
     }
 
     @Test
     public void listItemsCreatedRequest_happyPath_goesToListItemsCreatedHandler() throws SpeechletException, IOException, SpeechletRequestHandlerException {
+        Speechlet speechlet = Mockito.mock(Speechlet.class, withSettings().extraInterfaces(HouseholdListEventListener.class));
+        SpeechletRequestDispatcher speechletRequestDispatcher = new SpeechletRequestDispatcher(speechlet);
+
         List<String> listItems = new ArrayList<>();
         listItems.add("item1");
         listItems.add("item2");
@@ -162,8 +180,30 @@ public class SpeechletRequestDispatcherTest {
                     .build();
         SpeechletResponseEnvelope envelope =
                 speechletRequestDispatcher.dispatchSpeechletCall(getRequestEnvelope(request),session);
-        assertNull(envelope.getResponse());
 
+        verify((HouseholdListEventListener)speechlet, times(1)).onListItemsCreated(any(SpeechletRequestEnvelope.class));
+        assertNull(envelope.getResponse());
+    }
+
+    @Test
+    public void listCreatedRequest_happyPath_goesToListItemsCreatedHandler() throws SpeechletException, IOException, SpeechletRequestHandlerException {
+        Speechlet speechlet = Mockito.mock(Speechlet.class, withSettings().extraInterfaces(HouseholdListEventListenerV2.class));
+        SpeechletRequestDispatcher speechletRequestDispatcher = new SpeechletRequestDispatcher(speechlet);
+
+        ListBody body = ListBody.builder().withListId("listId").build();
+        ListCreatedRequest request =
+                ListCreatedRequest
+                        .builder()
+                        .withRequestId("requestId")
+                        .withLocale(LOCALE)
+                        .withTimestamp(mock(Date.class))
+                        .withListBody(body)
+                        .build();
+        SpeechletResponseEnvelope envelope =
+                speechletRequestDispatcher.dispatchSpeechletCall(getRequestEnvelope(request),session);
+
+        verify((HouseholdListEventListenerV2)speechlet, times(1)).onListCreated(any(SpeechletRequestEnvelope.class));
+        assertNull(envelope.getResponse());
     }
 
     @Test

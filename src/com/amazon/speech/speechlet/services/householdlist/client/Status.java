@@ -12,21 +12,30 @@
  * limitations under the License.
  */
 
-package com.amazon.speech.speechlet.services.householdlist;
+package com.amazon.speech.speechlet.services.householdlist.client;
 
-import com.amazon.speech.speechlet.SpeechletRequest;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Date;
-import java.util.Locale;
+public class Status {
 
-public class AlexaHouseholdListEventRequest extends SpeechletRequest {
-    protected AlexaHouseholdListEventRequest(SpeechletRequest.SpeechletRequestBuilder builder) {
-        super(builder);
+    @JsonProperty("href")
+    private String url;
+    private ListItemState status;
+
+    public String getUrl() {
+        return url;
     }
 
-    protected AlexaHouseholdListEventRequest(String requestId, Date timestamp, Locale locale) {
-        super(requestId, timestamp, locale);
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public ListItemState getStatus() {
+        return status;
+    }
+
+    public void setStatus(ListItemState status) {
+        this.status = status;
     }
 
 }
-

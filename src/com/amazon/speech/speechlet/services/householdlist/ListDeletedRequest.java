@@ -18,54 +18,49 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
-@JsonTypeName("AlexaHouseholdListEvent.ItemsUpdated")
-public class ListItemsUpdatedRequest extends AlexaHouseholdListEventRequest {
-    private final ListItemBody body;
+@JsonTypeName("AlexaHouseholdListEvent.ListDeleted")
+public class ListDeletedRequest extends AlexaHouseholdListEventRequest {
+    private final ListBody body;
+
 
     public static Builder builder() {
         return new Builder();
     }
 
-    private ListItemsUpdatedRequest(final Builder builder) {
+    private ListDeletedRequest(final Builder builder) {
         super(builder);
         this.body = builder.body;
     }
 
-    private ListItemsUpdatedRequest(@JsonProperty("requestId") final String requestId,
-                                    @JsonProperty("timestamp") final Date timestamp,
-                                    @JsonProperty("locale") final Locale locale,
-                                    @JsonProperty("body") final ListItemBody body) {
+    private ListDeletedRequest(@JsonProperty("requestId") final String requestId,
+                               @JsonProperty("timestamp") final Date timestamp,
+                               @JsonProperty("locale") final Locale locale,
+                               @JsonProperty("body") final ListBody body) {
         super(requestId, timestamp, locale);
         this.body = body;
     }
 
     public String getListId() {
-        return body.getListId();
+        return this.body.getListId();
     }
 
-    public List<String> getListItemIds() {
-        return body.getListItemIds();
-    }
-
-    public static final class Builder extends SpeechletRequestBuilder<Builder, ListItemsUpdatedRequest> {
-        private ListItemBody body;
+    public static final class Builder extends SpeechletRequestBuilder<Builder, ListDeletedRequest> {
+        private ListBody body;
 
         private Builder() {
 
         }
 
-        public Builder withListItemBody(final ListItemBody body) {
+        public Builder withListBody(final ListBody body) {
             this.body = body;
             return this;
         }
 
         @Override
-        public ListItemsUpdatedRequest build() {
-            return new ListItemsUpdatedRequest(this);
+        public ListDeletedRequest build() {
+            return new ListDeletedRequest(this);
         }
     }
 }
-

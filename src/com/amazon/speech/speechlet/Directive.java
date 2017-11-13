@@ -13,6 +13,8 @@
 
 package com.amazon.speech.speechlet;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.amazon.speech.speechlet.dialog.directives.ConfirmIntentDirective;
 import com.amazon.speech.speechlet.dialog.directives.ConfirmSlotDirective;
 import com.amazon.speech.speechlet.dialog.directives.DelegateDirective;
@@ -23,8 +25,7 @@ import com.amazon.speech.speechlet.interfaces.audioplayer.directive.StopDirectiv
 import com.amazon.speech.speechlet.interfaces.core.directive.HintDirective;
 import com.amazon.speech.speechlet.interfaces.display.directive.RenderTemplateDirective;
 import com.amazon.speech.speechlet.interfaces.videoapp.directive.LaunchDirective;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.amazon.speech.speechlet.services.SpeakDirective;
 
 /**
  * An instruction returned from a skill in its response to a request, informing the Alexa service to
@@ -41,7 +42,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(DelegateDirective.class),
         @JsonSubTypes.Type(ElicitSlotDirective.class),
         @JsonSubTypes.Type(ConfirmSlotDirective.class),
-        @JsonSubTypes.Type(ConfirmIntentDirective.class)
+        @JsonSubTypes.Type(ConfirmIntentDirective.class),
+        @JsonSubTypes.Type(SpeakDirective.class)
 })
 public abstract class Directive {
 }

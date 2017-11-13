@@ -8,8 +8,13 @@ import java.util.Locale;
 
 @JsonTypeName("AlexaSkillEvent.SkillEnabled")
 public class SkillEnabledEventRequest extends AlexaSkillEventRequest {
-    protected SkillEnabledEventRequest(SpeechletRequestBuilder builder) {
+    private final Date eventCreationTime;
+    private final Date eventPublishingTime;
+
+    protected SkillEnabledEventRequest(Builder builder) {
         super(builder);
+        this.eventCreationTime = builder.eventCreationTime;
+        this.eventPublishingTime = builder.eventPublishingTime;
     }
 
     public static Builder builder() {
@@ -18,13 +23,38 @@ public class SkillEnabledEventRequest extends AlexaSkillEventRequest {
 
     private SkillEnabledEventRequest(@JsonProperty("requestId") final String requestId,
                                      @JsonProperty("timestamp") final Date timestamp,
-                                     @JsonProperty("locale") final Locale locale) {
+                                     @JsonProperty("locale") final Locale locale,
+                                     @JsonProperty("eventCreationTime") final Date eventCreationTime,
+                                     @JsonProperty("eventPublishingTime") final Date eventPublishingTime) {
         super(requestId, timestamp, locale);
+        this.eventCreationTime = eventCreationTime;
+        this.eventPublishingTime = eventPublishingTime;
+    }
+
+    public Date getEventCreationTime() {
+        return new Date(eventCreationTime.getTime());
+    }
+
+    public Date getEventPublishingTime() {
+        return new Date(eventPublishingTime.getTime());
     }
 
     public static final class Builder extends SpeechletRequestBuilder<Builder, SkillEnabledEventRequest> {
+        private Date eventCreationTime;
+        private Date eventPublishingTime;
+
         private Builder() {
 
+        }
+
+        public Builder withEventCreationTime(final Date eventCreationTime) {
+            this.eventCreationTime = new Date(eventCreationTime.getTime());
+            return this;
+        }
+
+        public Builder withEventPublishingTime(final Date eventPublishingTime) {
+            this.eventPublishingTime = new Date(eventPublishingTime.getTime());
+            return this;
         }
 
         @Override

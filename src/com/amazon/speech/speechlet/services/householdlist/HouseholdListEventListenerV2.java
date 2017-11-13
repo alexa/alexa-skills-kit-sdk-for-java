@@ -14,19 +14,20 @@
 
 package com.amazon.speech.speechlet.services.householdlist;
 
-import com.amazon.speech.speechlet.SpeechletRequest;
+import com.amazon.speech.json.SpeechletRequestEnvelope;
 
-import java.util.Date;
-import java.util.Locale;
+public interface HouseholdListEventListenerV2 {
 
-public class AlexaHouseholdListEventRequest extends SpeechletRequest {
-    protected AlexaHouseholdListEventRequest(SpeechletRequest.SpeechletRequestBuilder builder) {
-        super(builder);
-    }
+    void onListItemsCreated(SpeechletRequestEnvelope<ListItemsCreatedRequest> envelope);
 
-    protected AlexaHouseholdListEventRequest(String requestId, Date timestamp, Locale locale) {
-        super(requestId, timestamp, locale);
-    }
+    void onListItemsUpdated(SpeechletRequestEnvelope<ListItemsUpdatedRequest> envelope);
+
+    void onListItemsDeleted(SpeechletRequestEnvelope<ListItemsDeletedRequest> envelope);
+
+    void onListCreated(SpeechletRequestEnvelope<ListCreatedRequest> envelope);
+
+    void onListUpdated(SpeechletRequestEnvelope<ListUpdatedRequest> envelope);
+
+    void onListDeleted(SpeechletRequestEnvelope<ListDeletedRequest> envelope);
 
 }
-

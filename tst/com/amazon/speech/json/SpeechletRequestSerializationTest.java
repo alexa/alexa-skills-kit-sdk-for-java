@@ -52,6 +52,7 @@ import com.google.common.collect.ImmutableMap;
 public class SpeechletRequestSerializationTest extends SpeechletSerializationTestBase {
     private static final String USER_ID = "userId";
     private static final String ACCESS_TOKEN = "accessToken";
+    private static final String API_ACCESS_TOKEN = "apiAccessToken";
     private static final Locale LOCALE = Locale.forLanguageTag("en-US");
     private static final long OFFSET = 100l;
     private static final String TOKEN = "audioPlayerToken";
@@ -405,6 +406,7 @@ public class SpeechletRequestSerializationTest extends SpeechletSerializationTes
                                                                                                         .build())
                                                                                         .build())
                                                                         .build())
+                                                        .withApiAccessToken(API_ACCESS_TOKEN)
                                                         .build())
                                         .build())
                         .build();
@@ -449,6 +451,7 @@ public class SpeechletRequestSerializationTest extends SpeechletSerializationTes
                                                                                                         .build())
                                                                                         .build())
                                                                         .build())
+                                                        .withApiAccessToken(API_ACCESS_TOKEN)
                                                         .build())
                                         .build())
                         .build();
@@ -497,10 +500,10 @@ public class SpeechletRequestSerializationTest extends SpeechletSerializationTes
                                                                                 ACCESS_TOKEN)
                                                                         .build())
                                                         .withDevice(Device.builder().build())
+                                                        .withApiAccessToken(API_ACCESS_TOKEN)
                                                         .build())
                                         .build())
                         .build();
-
         String json = OBJECT_WRITER.writeValueAsString(envelope);
         log.info("Serialized JSON   : {}", json);
         testSerialization(envelope);

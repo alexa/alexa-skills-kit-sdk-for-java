@@ -24,6 +24,7 @@ public final class SystemState extends State<SystemInterface> {
     private final User user;
     private final Device device;
     private final String apiEndpoint;
+    private final String apiAccessToken;
 
     /**
      * Returns a new builder instance used to construct a new {@code SystemState}.
@@ -45,6 +46,7 @@ public final class SystemState extends State<SystemInterface> {
         user = builder.user;
         device = builder.device;
         apiEndpoint = builder.apiEndpoint;
+        apiAccessToken = builder.apiAccessToken;
     }
 
     /**
@@ -58,14 +60,19 @@ public final class SystemState extends State<SystemInterface> {
      *            the device object
      * @param apiEndpoint
      *            the endpoint to be used to access Alexa API resources for the user
+     * @param apiAccessToken
+     *            the token to authenticate with Alexa API resources
      */
     private SystemState(@JsonProperty("application") final Application application,
-            @JsonProperty("user") final User user, @JsonProperty("device") final Device device,
-            @JsonProperty("apiEndpoint") final String apiEndpoint) {
+            @JsonProperty("user") final User user,
+            @JsonProperty("device") final Device device,
+            @JsonProperty("apiEndpoint") final String apiEndpoint,
+            @JsonProperty("apiAccessToken") final String apiAccessToken) {
         this.application = application;
         this.user = user;
         this.device = device;
         this.apiEndpoint = apiEndpoint;
+        this.apiAccessToken = apiAccessToken;
     }
 
     /**
@@ -104,6 +111,15 @@ public final class SystemState extends State<SystemInterface> {
         return apiEndpoint;
     }
 
+    /**
+     * Returns the API access token.
+     *
+     * @return the API access token
+     */
+    public String getApiAccessToken() {
+        return apiAccessToken;
+    }
+
     @Override
     public Class<SystemInterface> getInterfaceClass() {
         return SystemInterface.class;
@@ -117,6 +133,7 @@ public final class SystemState extends State<SystemInterface> {
         private User user;
         private Device device;
         private String apiEndpoint;
+        private String apiAccessToken;
 
         private Builder() {
         }
@@ -138,6 +155,11 @@ public final class SystemState extends State<SystemInterface> {
 
         public Builder withApiEndpoint(final String apiEndpoint) {
             this.apiEndpoint = apiEndpoint;
+            return this;
+        }
+
+        public Builder withApiAccessToken(final String apiAccessToken) {
+            this.apiAccessToken = apiAccessToken;
             return this;
         }
 

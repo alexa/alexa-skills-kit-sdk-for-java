@@ -12,21 +12,18 @@
  * limitations under the License.
  */
 
-package com.amazon.speech.speechlet.services.householdlist;
+package com.amazon.speech.speechlet.services.householdlist.client;
 
-import com.amazon.speech.speechlet.SpeechletRequest;
+public class Links {
 
-import java.util.Date;
-import java.util.Locale;
+    private String next;
 
-public class AlexaHouseholdListEventRequest extends SpeechletRequest {
-    protected AlexaHouseholdListEventRequest(SpeechletRequest.SpeechletRequestBuilder builder) {
-        super(builder);
+    public String getNext() {
+        return next;
     }
 
-    protected AlexaHouseholdListEventRequest(String requestId, Date timestamp, Locale locale) {
-        super(requestId, timestamp, locale);
+    public void setNext(String next) {
+        this.next = next;
     }
 
 }
-

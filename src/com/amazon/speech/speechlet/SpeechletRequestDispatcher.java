@@ -41,9 +41,14 @@ import com.amazon.speech.speechlet.interfaces.system.request.ExceptionEncountere
 import com.amazon.speech.speechlet.interfaces.system.request.SystemRequest;
 import com.amazon.speech.speechlet.services.householdlist.AlexaHouseholdListEventRequest;
 import com.amazon.speech.speechlet.services.householdlist.HouseholdListEventListener;
+import com.amazon.speech.speechlet.services.householdlist.HouseholdListEventListenerV2;
+import com.amazon.speech.speechlet.services.householdlist.HouseholdListEventListenerV2Adapter;
+import com.amazon.speech.speechlet.services.householdlist.ListCreatedRequest;
+import com.amazon.speech.speechlet.services.householdlist.ListDeletedRequest;
 import com.amazon.speech.speechlet.services.householdlist.ListItemsCreatedRequest;
 import com.amazon.speech.speechlet.services.householdlist.ListItemsDeletedRequest;
 import com.amazon.speech.speechlet.services.householdlist.ListItemsUpdatedRequest;
+import com.amazon.speech.speechlet.services.householdlist.ListUpdatedRequest;
 
 
 /**
@@ -161,21 +166,40 @@ public class SpeechletRequestDispatcher {
             }
             /** HouseholdListEvents **/
         } else if(speechletRequest instanceof AlexaHouseholdListEventRequest) {
+            HouseholdListEventListenerV2 listener = (speechletWithInterfaces instanceof HouseholdListEventListener) ?
+                    new HouseholdListEventListenerV2Adapter((HouseholdListEventListener) speechletWithInterfaces) :
+                    (HouseholdListEventListenerV2) speechletWithInterfaces;
+
             if(speechletRequest instanceof ListItemsCreatedRequest) {
                 @SuppressWarnings("unchecked")
                 SpeechletRequestEnvelope<ListItemsCreatedRequest> typeSpecificRequestEnvelope =
                         (SpeechletRequestEnvelope<ListItemsCreatedRequest>) requestEnvelope;
-                ((HouseholdListEventListener) speechletWithInterfaces).onListItemsCreated(typeSpecificRequestEnvelope);
+                listener.onListItemsCreated(typeSpecificRequestEnvelope);
             } else if(speechletRequest instanceof ListItemsUpdatedRequest) {
                 @SuppressWarnings("unchecked")
                 SpeechletRequestEnvelope<ListItemsUpdatedRequest> typeSpecificRequestEnvelope =
                         (SpeechletRequestEnvelope<ListItemsUpdatedRequest>) requestEnvelope;
-                ((HouseholdListEventListener) speechletWithInterfaces).onListItemsUpdated(typeSpecificRequestEnvelope);
+                listener.onListItemsUpdated(typeSpecificRequestEnvelope);
             } else if(speechletRequest instanceof ListItemsDeletedRequest) {
                 @SuppressWarnings("unchecked")
                 SpeechletRequestEnvelope<ListItemsDeletedRequest> typeSpecificRequestEnvelope =
                         (SpeechletRequestEnvelope<ListItemsDeletedRequest>) requestEnvelope;
-                ((HouseholdListEventListener) speechletWithInterfaces).onListItemsDeleted(typeSpecificRequestEnvelope);
+                listener.onListItemsDeleted(typeSpecificRequestEnvelope);
+            } else if(speechletRequest instanceof ListCreatedRequest) {
+                @SuppressWarnings("unchecked")
+                SpeechletRequestEnvelope<ListCreatedRequest> typeSpecificRequestEnvelope =
+                        (SpeechletRequestEnvelope<ListCreatedRequest>) requestEnvelope;
+                listener.onListCreated(typeSpecificRequestEnvelope);
+            } else if(speechletRequest instanceof ListUpdatedRequest) {
+                @SuppressWarnings("unchecked")
+                SpeechletRequestEnvelope<ListUpdatedRequest> typeSpecificRequestEnvelope =
+                        (SpeechletRequestEnvelope<ListUpdatedRequest>) requestEnvelope;
+                listener.onListUpdated(typeSpecificRequestEnvelope);
+            } else if(speechletRequest instanceof ListDeletedRequest) {
+                @SuppressWarnings("unchecked")
+                SpeechletRequestEnvelope<ListDeletedRequest> typeSpecificRequestEnvelope =
+                        (SpeechletRequestEnvelope<ListDeletedRequest>) requestEnvelope;
+                listener.onListDeleted(typeSpecificRequestEnvelope);
             }
             /** AudioPlayer **/
         } else if (speechletRequest instanceof AudioPlayerRequest) {

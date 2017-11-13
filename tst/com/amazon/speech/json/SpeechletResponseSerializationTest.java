@@ -417,4 +417,4 @@ public class SpeechletResponseSerializationTest extends SpeechletSerializationTe
 
         return reprompt;
     }
-}
+ }
