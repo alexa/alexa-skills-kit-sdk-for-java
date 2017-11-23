@@ -40,7 +40,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
         @JsonSubTypes.Type(BodyTemplate1.class),
         @JsonSubTypes.Type(BodyTemplate2.class),
         @JsonSubTypes.Type(BodyTemplate3.class),
-        @JsonSubTypes.Type(BodyTemplate6.class)
+        @JsonSubTypes.Type(BodyTemplate6.class),
+        @JsonSubTypes.Type(BodyTemplate7.class)
 })
 public abstract class Template {
     private String token;
