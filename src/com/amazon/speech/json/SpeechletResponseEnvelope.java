@@ -39,6 +39,7 @@ public class SpeechletResponseEnvelope {
     private String version;
     private SpeechletResponse response;
     private Map<String, Object> sessionAttributes;
+    private String userAgent;
 
     /**
      * Returns the envelope version.
@@ -96,6 +97,26 @@ public class SpeechletResponseEnvelope {
     public void setSessionAttributes(Map<String, Object> sessionAttributes) {
         this.sessionAttributes = sessionAttributes;
     }
+
+    /**
+     * Returns the user agent.
+     *
+     * @return the user agent
+     */
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    /**
+     * Sets the user agent.
+     *
+     * @param userAgent
+     *            the user agent to set
+     */
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
 
     // ---------------------
     // JSON deserialization

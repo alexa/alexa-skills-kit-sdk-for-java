@@ -49,6 +49,7 @@ import com.amazon.speech.speechlet.services.householdlist.ListItemsCreatedReques
 import com.amazon.speech.speechlet.services.householdlist.ListItemsDeletedRequest;
 import com.amazon.speech.speechlet.services.householdlist.ListItemsUpdatedRequest;
 import com.amazon.speech.speechlet.services.householdlist.ListUpdatedRequest;
+import com.amazon.speech.speechlet.util.UserAgentUtils;
 
 
 /**
@@ -56,7 +57,10 @@ import com.amazon.speech.speechlet.services.householdlist.ListUpdatedRequest;
  * {@link SpeechletV2} and returns the resulting response.
  */
 public class SpeechletRequestDispatcher {
+
     private final SpeechletV2 speechlet;
+
+    private static final String USER_AGENT = UserAgentUtils.getUserAgent();
 
     public SpeechletRequestDispatcher(SpeechletV2 speechlet) {
         this.speechlet = speechlet;
@@ -91,6 +95,7 @@ public class SpeechletRequestDispatcher {
         // Prepare a response envelope
         final SpeechletResponseEnvelope responseEnvelope = new SpeechletResponseEnvelope();
         responseEnvelope.setVersion(Sdk.VERSION);
+        responseEnvelope.setUserAgent(USER_AGENT);
 
         // If this is a new session, invoke the speechlet's onSessionStarted life-cycle method.
         if ((session != null) && session.isNew()) {

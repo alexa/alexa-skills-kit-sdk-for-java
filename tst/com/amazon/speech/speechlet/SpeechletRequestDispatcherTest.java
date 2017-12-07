@@ -1,6 +1,7 @@
 package com.amazon.speech.speechlet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
@@ -227,6 +228,16 @@ public class SpeechletRequestDispatcherTest {
         } catch (Exception ex) {
             assert (false);
         }
+    }
+
+    @Test
+    public void responseEnvelopeContainsUserAgent() throws SpeechletException, IOException, SpeechletRequestHandlerException {
+        IntentRequest request =
+                IntentRequest.builder().withRequestId("requestId").withLocale(LOCALE).build();
+        SpeechletResponseEnvelope envelope =
+                speechletRequestDispatcher.dispatchSpeechletCall(getRequestEnvelope(request),
+                        session);
+        assertNotNull(envelope.getUserAgent());
     }
 
     /**

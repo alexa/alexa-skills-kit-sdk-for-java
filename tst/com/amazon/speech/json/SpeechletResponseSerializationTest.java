@@ -176,6 +176,18 @@ public class SpeechletResponseSerializationTest extends SpeechletSerializationTe
     }
 
     /**
+     * Tests that user agent is serialized properly.
+     */
+    @Test
+    public void serialization_withUserAgent_responseSerializedCorrectly() throws Exception {
+        final SpeechletResponseEnvelope envelope = new SpeechletResponseEnvelope();
+        envelope.setVersion(Sdk.VERSION);
+        envelope.setUserAgent("ask-java/1.8.0 Java/1.8.0_151");
+
+        testSerialization(envelope);
+    }
+
+    /**
      * Tests that a plain text output speech response is serialized properly.
      */
     @Test
