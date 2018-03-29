@@ -16,6 +16,10 @@ Walks you through step-by-step instructions for building the Hello World sample.
 ### [Color Picker](https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.0.x/samples/colorpicker)
   This is a step-up in functionality from Hello World. It allows you to capture input from your user and demonstrates the use of Slots.
 
+## Tutorials
+### [States Quiz](https://github.com/alexa/skill-sample-java-quiz-game)
+  This tutorial will guide you in building a fully-featured skill. The skill features Built-In and Custom slots, as well as state management. The skill you build with this tutorial can be customized to build your own game.
+
 ## Technical Documentation
 ### [Request Processing](https://github.com/alexa/alexa-skills-kit-sdk-for-java/wiki/Request-Processing)
   Covers how you can build request handlers to handle incoming requests, exception handlers to handle errors in your skill, and use request and response interceptors to perform tasks before or after handler execution.
