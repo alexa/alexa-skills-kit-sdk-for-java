@@ -1,0 +1,86 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "color picker",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "name": "MyColorIsIntent",
+          "slots": [
+            {
+              "name": "Color",
+              "type": "LIST_OF_COLORS"
+            }
+          ],
+          "samples": [
+            " my color is {Color}",
+            " my favorite color is {Color}"
+          ]
+        },
+        {
+          "name": "WhatsMyColorIntent",
+          "slots": [],
+          "samples": [
+            "whats my color",
+            "what is my color",
+            "say my color",
+            "tell me my color",
+            "whats my favorite color",
+            "what is my favorite color",
+            "say my favorite color",
+            "tell me my favorite color",
+            "tell me what my favorite color is"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "name": "LIST_OF_COLORS",
+          "values": [
+            {
+              "name": {
+                "value": "green"
+              }
+            },
+            {
+              "name": {
+                "value": "blue"
+              }
+            },
+            {
+              "name": {
+                "value": "purple"
+              }
+            },
+            {
+              "name": {
+                "value": "red"
+              }
+            },
+            {
+              "name": {
+                "value": "orange"
+              }
+            },
+            {
+              "name": {
+                "value": "yellow"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
