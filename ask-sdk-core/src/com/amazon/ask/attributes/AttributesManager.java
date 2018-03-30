@@ -18,7 +18,6 @@ import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.attributes.persistence.PersistenceAdapter;
 import org.slf4j.Logger;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -44,7 +43,7 @@ public class AttributesManager {
     protected AttributesManager(PersistenceAdapter persistenceAdapter, RequestEnvelope requestEnvelope) {
         this.persistenceAdapter = persistenceAdapter;
         this.requestEnvelope = requestEnvelope;
-        this.requestAttributes = Collections.emptyMap();
+        this.requestAttributes = new HashMap<>();
 
         if (requestEnvelope.getSession() != null) {
             Map<String, Object> attributes = requestEnvelope.getSession().getAttributes() != null ?
@@ -84,7 +83,7 @@ public class AttributesManager {
                 persistentAttributes = retrievedAttributes.get();
             } else {
                 logger.debug("[{}] No existing persistence attributes", request.getRequestId());
-                persistentAttributes = Collections.emptyMap();
+                persistentAttributes = new HashMap<>();
             }
             persistenceAttributesSet = true;
         }

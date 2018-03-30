@@ -36,6 +36,34 @@ import static org.mockito.Mockito.when;
 public class AttributesManagerTest {
 
     @Test
+    public void get_request_attributes() {
+        AttributesManager attributesManager = AttributesManager.builder()
+                .withRequestEnvelope(RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build())
+                .build();
+        assertEquals(attributesManager.getRequestAttributes(), Collections.emptyMap());
+    }
+
+    @Test
+    public void put_request_attribute() {
+        AttributesManager attributesManager = AttributesManager.builder()
+                .withRequestEnvelope(RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build())
+                .build();
+        Map<String, Object> requestAttributes = attributesManager.getRequestAttributes();
+        requestAttributes.put("foo", "bar");
+        assertEquals(attributesManager.getRequestAttributes().get("foo"), "bar");
+    }
+
+    @Test
+    public void set_request_attributes() {
+        Map<String, Object> attributes = (Collections.singletonMap("Foo", "Bar"));
+        AttributesManager attributesManager = AttributesManager.builder()
+                .withRequestEnvelope(RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build())
+                .build();
+        attributesManager.setRequestAttributes(attributes);
+        assertEquals(attributesManager.getRequestAttributes(), attributes);
+    }
+
+    @Test
     public void session_attributes_retrieved() {
         Map<String, Object> attr = Collections.singletonMap("Foo", "Bar");
         AttributesManager attributesManager = AttributesManager.builder()
@@ -60,6 +88,16 @@ public class AttributesManagerTest {
                 .withRequestEnvelope(env)
                 .build();
         assertEquals(attributesManager.getSessionAttributes(), Collections.emptyMap());
+    }
+
+    @Test
+    public void put_session_attribute() {
+        HandlerInput input = HandlerInput.builder()
+                .withRequestEnvelope(RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).withSession(Session.builder().build()).build())
+                .build();
+        Map<String, Object> sessionAttributes = input.getAttributesManager().getSessionAttributes();
+        sessionAttributes.put("foo", "bar");
+        assertEquals(input.getAttributesManager().getSessionAttributes().get("foo"), "bar");
     }
 
     @Test
@@ -89,6 +127,18 @@ public class AttributesManagerTest {
                 .withRequestEnvelope(RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build())
                 .withPersistenceAdapter(persistenceAdapter).build();
         assertEquals(input.getAttributesManager().getPersistentAttributes(), Collections.emptyMap());
+    }
+
+    @Test
+    public void put_persistent_attribute() {
+        PersistenceAdapter persistenceAdapter = mock(PersistenceAdapter.class);
+        when(persistenceAdapter.getAttributes(any())).thenReturn(Optional.empty());
+        HandlerInput input = HandlerInput.builder()
+                .withRequestEnvelope(RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build())
+                .withPersistenceAdapter(persistenceAdapter).build();
+        Map<String, Object> persistentAttributes = input.getAttributesManager().getPersistentAttributes();
+        persistentAttributes.put("foo", "bar");
+        assertEquals(persistentAttributes.get("foo"), "bar");
     }
 
     @Test

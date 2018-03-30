@@ -13,7 +13,6 @@
 
 package com.amazon.ask.util;
 
-import com.amazon.ask.dispatcher.impl.DefaultRequestDispatcher;
 import org.slf4j.Logger;
 
 import java.util.Properties;
