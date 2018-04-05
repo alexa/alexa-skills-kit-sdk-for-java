@@ -4,7 +4,7 @@
   <groupId>com.amazon.alexa</groupId>
   <artifactId>ask-sdk-apache-client</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.1</version>
+  <version>2.0.2</version>
   <name>ASK SDK for Java Apache API Client</name>
   <description>Apache HTTP Client API client plugin for the ASK SDK for Java.</description>
   <url>http://developer.amazon.com/ask</url>

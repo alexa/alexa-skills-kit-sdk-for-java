@@ -21,12 +21,14 @@ import com.amazonaws.services.dynamodbv2.model.AmazonDynamoDBException;
 import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
+import com.amazonaws.services.dynamodbv2.model.CreateTableResult;
 import com.amazonaws.services.dynamodbv2.model.GetItemRequest;
 import com.amazonaws.services.dynamodbv2.model.GetItemResult;
 import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
 import com.amazonaws.services.dynamodbv2.model.PutItemResult;
+import com.amazonaws.services.dynamodbv2.model.ResourceInUseException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -39,6 +41,8 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -103,10 +107,21 @@ public class DynamoDbPersistenceAdapterTest {
         verify(mockKeyGenerator, times(1)).apply(requestEnvelope);
     }
 
+    @Test
+    public void get_attributes_returns_empty_if_key_not_present() {
+        Map<String, AttributeValue> result = new HashMap<>();
+        result.put("not_attributes", new AttributeValue().withM(Collections.singletonMap("FooKey", new AttributeValue().withS("FooValue"))));
+        when(mockDdb.getItem(any())).thenReturn(new GetItemResult().withItem(result));
+        PersistenceAdapter adapter = DynamoDbPersistenceAdapter.builder().withTableName("foo").withDynamoDbClient(mockDdb).withPartitionKeyGenerator(mockKeyGenerator).build();
+        assertEquals(adapter.getAttributes(requestEnvelope), Optional.empty());
+        verify(mockKeyGenerator, times(1)).apply(requestEnvelope);
+    }
+
     @Test(expected = PersistenceException.class)
     public void get_attributes_exception_wrapped_in_persistence_exception() {
+        when(mockKeyGenerator.apply(requestEnvelope)).thenReturn("bar");
         when(mockDdb.getItem(any())).thenThrow(new AmazonDynamoDBException(""));
-        PersistenceAdapter adapter = DynamoDbPersistenceAdapter.builder().withTableName("foo").withDynamoDbClient(mockDdb).build();
+        PersistenceAdapter adapter = DynamoDbPersistenceAdapter.builder().withTableName("foo").withDynamoDbClient(mockDdb).withPartitionKeyGenerator(mockKeyGenerator).build();
         adapter.getAttributes(requestEnvelope);
     }
 
@@ -128,18 +143,22 @@ public class DynamoDbPersistenceAdapterTest {
 
     @Test(expected = PersistenceException.class)
     public void save_attributes_exception_wrapped_in_persistence_exception() {
+        when(mockKeyGenerator.apply(requestEnvelope)).thenReturn("bar");
         Map<String, Object> attr = Collections.singletonMap("Foo", "Bar");
         when(mockDdb.putItem(any())).thenThrow(new AmazonDynamoDBException(""));
-        PersistenceAdapter adapter = DynamoDbPersistenceAdapter.builder().withTableName("foo").withDynamoDbClient(mockDdb).build();
+        PersistenceAdapter adapter = DynamoDbPersistenceAdapter.builder().withTableName("foo").withDynamoDbClient(mockDdb).withPartitionKeyGenerator(mockKeyGenerator).build();
         adapter.saveAttributes(requestEnvelope, attr);
     }
 
     @Test
     public void create_table_called_once_when_enabled() {
-        when(mockDdb.getItem(any())).thenReturn(new GetItemResult());
+        Map<String, AttributeValue> result = new HashMap<>();
+        result.put("attributes", new AttributeValue().withM(Collections.singletonMap("FooKey", new AttributeValue().withS("FooValue"))));
+        when(mockDdb.createTable(any())).thenReturn(new CreateTableResult()).thenThrow(new ResourceInUseException(""));
+        when(mockDdb.getItem(any())).thenReturn(new GetItemResult().withItem(result));
         PersistenceAdapter adapter = DynamoDbPersistenceAdapter.builder().withAutoCreateTable(true).withTableName("bar").withPartitionKeyName("baz").withDynamoDbClient(mockDdb).withPartitionKeyGenerator(mockKeyGenerator).build();
-        adapter.getAttributes(requestEnvelope);
-        adapter.getAttributes(requestEnvelope);
+        Optional<Map<String, Object>> attr1 = adapter.getAttributes(requestEnvelope);
+        Optional<Map<String, Object>> attr2 = adapter.getAttributes(requestEnvelope);
         ArgumentCaptor<CreateTableRequest> createTableRequestCaptor = ArgumentCaptor.forClass(CreateTableRequest.class);
         verify(mockKeyGenerator, times(1)).apply(requestEnvelope);
         verify(mockDdb, times(1)).createTable(createTableRequestCaptor.capture());
@@ -160,15 +179,36 @@ public class DynamoDbPersistenceAdapterTest {
         ProvisionedThroughput throughput = createTableRequestCaptor.getValue().getProvisionedThroughput();
         assertEquals(new Long(5), throughput.getReadCapacityUnits());
         assertEquals(new Long(5), throughput.getWriteCapacityUnits());
+
+        assertFalse(attr1.isPresent());
+        assertTrue(attr2.isPresent());
+        assertEquals(attr2.get(), Collections.singletonMap("FooKey", "FooValue"));
+    }
+
+    @Test
+    public void create_table_not_called_when_table_already_exists() {
+        Map<String, AttributeValue> result = new HashMap<>();
+        result.put("attributes", new AttributeValue().withM(Collections.singletonMap("FooKey", new AttributeValue().withS("FooValue"))));
+        when(mockDdb.createTable(any())).thenThrow(new ResourceInUseException(""));
+        when(mockDdb.getItem(any())).thenReturn(new GetItemResult().withItem(result));
+        PersistenceAdapter adapter = DynamoDbPersistenceAdapter.builder().withAutoCreateTable(true).withTableName("bar").withPartitionKeyName("baz").withDynamoDbClient(mockDdb).withPartitionKeyGenerator(mockKeyGenerator).build();
+        Optional<Map<String, Object>> attr = adapter.getAttributes(requestEnvelope);
+        verify(mockKeyGenerator, times(1)).apply(requestEnvelope);
+        assertTrue(attr.isPresent());
+        assertEquals(attr.get(), Collections.singletonMap("FooKey", "FooValue"));
     }
 
     @Test
     public void create_table_not_called_when_not_enabled() {
-        when(mockDdb.getItem(any())).thenReturn(new GetItemResult());
+        Map<String, AttributeValue> result = new HashMap<>();
+        result.put("attributes", new AttributeValue().withM(Collections.singletonMap("FooKey", new AttributeValue().withS("FooValue"))));
+        when(mockDdb.getItem(any())).thenReturn(new GetItemResult().withItem(result));
         PersistenceAdapter adapter = DynamoDbPersistenceAdapter.builder().withAutoCreateTable(false).withTableName("bar").withDynamoDbClient(mockDdb).withPartitionKeyGenerator(mockKeyGenerator).build();
-        adapter.getAttributes(requestEnvelope);
+        Optional<Map<String, Object>> attr = adapter.getAttributes(requestEnvelope);
         verify(mockKeyGenerator, times(1)).apply(requestEnvelope);
         verify(mockDdb, never()).createTable(any());
+        assertTrue(attr.isPresent());
+        assertEquals(attr.get(), Collections.singletonMap("FooKey", "FooValue"));
     }
 
     @Test(expected = PersistenceException.class)
