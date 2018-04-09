@@ -4,7 +4,7 @@
   <groupId>com.amazon.alexa</groupId>
   <artifactId>ask-sdk-dynamodb-persistence-adapter</artifactId>
   <packaging>jar</packaging>
-  <version>2.0.1</version>
+  <version>2.0.2</version>
   <name>ASK SDK for Java DynamoDB Persistence Adapter</name>
   <description>Enables skill attributes to be persisted to DynamoDB through the ASK SDK for Java.</description>
   <url>http://developer.amazon.com/ask</url>
@@ -32,7 +32,7 @@
     <dependency>
       <groupId>com.amazon.alexa</groupId>
       <artifactId>ask-sdk-core</artifactId>
-      <version>2.0.1</version>
+      <version>2.0.2</version>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>

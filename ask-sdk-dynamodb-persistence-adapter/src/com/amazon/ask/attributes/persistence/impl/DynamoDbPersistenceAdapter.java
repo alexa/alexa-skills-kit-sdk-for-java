@@ -81,7 +81,7 @@ public final class DynamoDbPersistenceAdapter implements PersistenceAdapter {
             } catch (AmazonDynamoDBException e) {
                 throw new PersistenceException("Failed to retrieve attributes from DynamoDB", e);
             }
-            if (result != null) {
+            if (result != null && result.containsKey(attributesKeyName)) {
                 Map<String, Object> attributes = InternalUtils.toSimpleMapValue(result.get(attributesKeyName).getM());
                 return Optional.of(attributes);
             }
@@ -121,14 +121,12 @@ public final class DynamoDbPersistenceAdapter implements PersistenceAdapter {
                     .withReadCapacityUnits(5L)
                     .withWriteCapacityUnits(5L);
             try {
-                TableUtils.createTableIfNotExists(dynamoDb, new CreateTableRequest()
+                createTable = false;
+                return TableUtils.createTableIfNotExists(dynamoDb, new CreateTableRequest()
                         .withTableName(tableName)
                         .withAttributeDefinitions(partitionKeyDefinition)
                         .withKeySchema(partitionKeySchema)
-                        .withProvisionedThroughput(throughput)
-                );
-                createTable = false;
-                return true;
+                        .withProvisionedThroughput(throughput));
             } catch (AmazonDynamoDBException e) {
                 throw new PersistenceException("Create table request failed", e);
             }
