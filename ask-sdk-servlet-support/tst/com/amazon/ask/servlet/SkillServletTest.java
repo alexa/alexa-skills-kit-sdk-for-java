@@ -75,7 +75,7 @@ public class SkillServletTest extends SkillServletTestBase {
     @Test
     public void doPost_failedVerification_responseBadRequest() throws Exception {
         SkillServletVerifier mockVerifier = mock(SkillServletVerifier.class);
-        doThrow(new SecurityException()).when(mockVerifier).verify(any(), any(), any());
+        doThrow(new SecurityException("foo")).when(mockVerifier).verify(any(), any(), any());
         SkillServlet servlet = new SkillServlet(skill, Collections.singletonList(mockVerifier));
         OffsetDateTime timestamp = OffsetDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault());
         LaunchRequest request = LaunchRequest.builder().withRequestId("rId").withLocale(LOCALE).withTimestamp(timestamp).build();
