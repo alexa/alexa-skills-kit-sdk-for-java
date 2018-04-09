@@ -1,17 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.amazon.alexa</groupId>
-    <artifactId>ask-sdk-pom</artifactId>
-    <version>2.0.3-SNAPSHOT</version>
-  </parent>
   <groupId>com.amazon.alexa</groupId>
-  <artifactId>ask-sdk-dynamodb-persistence-adapter</artifactId>
-  <packaging>jar</packaging>
+  <artifactId>ask-sdk-pom</artifactId>
+  <packaging>pom</packaging>
   <version>2.0.3-SNAPSHOT</version>
-  <name>ASK SDK for Java DynamoDB Persistence Adapter</name>
-  <description>Enables skill attributes to be persisted to DynamoDB through the ASK SDK for Java.</description>
+  <name>ASK SDK for Java</name>
+  <description>The Alexa Skills Kit SDK for Java.</description>
   <url>http://developer.amazon.com/ask</url>
   <licenses>
     <license>
@@ -33,30 +27,13 @@
     <url>https://github.com/amzn/alexa-skills-kit-java.git</url>
   </scm>
 
-  <dependencies>
-    <dependency>
-      <groupId>com.amazon.alexa</groupId>
-      <artifactId>ask-sdk-core</artifactId>
-      <version>2.0.2</version>
-    </dependency>
-    <dependency>
-      <groupId>com.amazonaws</groupId>
-      <artifactId>aws-java-sdk-dynamodb</artifactId>
-      <version>1.11.301</version>
-    </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-api-mockito</artifactId>
-      <version>1.7.3</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+  <modules>
+    <module>ask-sdk-core</module>
+    <module>ask-sdk-lambda-support</module>
+    <module>ask-sdk-servlet-support</module>
+    <module>ask-sdk-dynamodb-persistence-adapter</module>
+    <module>ask-sdk-apache-client</module>
+  </modules>
 
   <build>
     <sourceDirectory>src</sourceDirectory>
