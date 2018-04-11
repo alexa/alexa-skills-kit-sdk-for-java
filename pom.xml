@@ -33,6 +33,7 @@
     <module>ask-sdk-servlet-support</module>
     <module>ask-sdk-dynamodb-persistence-adapter</module>
     <module>ask-sdk-apache-client</module>
+    <module>ask-sdk</module>
   </modules>
 
   <build>
