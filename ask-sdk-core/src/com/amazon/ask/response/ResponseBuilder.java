@@ -354,6 +354,9 @@ public class ResponseBuilder {
      * @return trimmed output speech
      */
     private String trimOutputSpeech(String outputSpeech) {
+        if (outputSpeech == null) {
+            return "";
+        }
         String trimmedOutputSpeech = outputSpeech.trim();
         if (trimmedOutputSpeech.startsWith("<speak>") && trimmedOutputSpeech.endsWith("</speak>")) {
             return trimmedOutputSpeech.substring(8, trimmedOutputSpeech.length() - 8).trim();

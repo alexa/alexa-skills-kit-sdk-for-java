@@ -517,4 +517,17 @@ public class ResponseBuilderTest {
                 .build();
         assertEquals(responseWithBuilder.get(), response);
     }
+
+    @Test
+    public void build_response_with_empty_speech() {
+        Response response = Response.builder()
+                .withOutputSpeech(SsmlOutputSpeech.builder()
+                        .withSsml("<speak></speak>")
+                        .build())
+                .build();
+        Optional<Response> responseWithBuilder = builder
+                .withSpeech(null)
+                .build();
+        assertEquals(responseWithBuilder.get(), response);
+    }
 }
