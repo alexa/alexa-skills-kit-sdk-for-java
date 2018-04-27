@@ -21,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Jackson backed implementation of {@link Serializer}
@@ -51,9 +53,27 @@ public final class JacksonSerializer implements Serializer {
     }
 
     @Override
+    public <T> void serialize(T object, OutputStream outputStream) {
+        try {
+            mapper.writeValue(outputStream, object);
+        } catch (IOException e) {
+            throw new AskSdkException("Deserialization error");
+        }
+    }
+
+    @Override
     public <T> T deserialize(String s, Class<T> aClass) {
         try {
             return mapper.readValue(s, aClass);
+        } catch (IOException e) {
+            throw new AskSdkException("Deserialization error", e);
+        }
+    }
+
+    @Override
+    public <T> T deserialize(InputStream inputStream, Class<T> type) {
+        try {
+            return mapper.readValue(inputStream, type);
         } catch (IOException e) {
             throw new AskSdkException("Deserialization error", e);
         }
