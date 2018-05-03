@@ -35,5 +35,8 @@ Walks you through step-by-step instructions for building the Hello World sample.
 ### [Response Building](https://github.com/alexa/alexa-skills-kit-sdk-for-java/wiki/Response-Building)
   Covers how the Response Builder can be used to easily compose multiple elements, like text, cards and audio, into a single response.
 
+### [Managing In-Skill Purchases](https://github.com/alexa/alexa-skills-kit-sdk-for-java/wiki/Managing-in-skill-purchase)
+Covers how you can manage in-skill products and the purchase experience in your skills.
+
 ## Got Feedback?
 Request and vote for Alexa features [here](https://alexa.uservoice.com/forums/906892-alexa-skills-developer-voice-and-vote)!
