@@ -62,10 +62,8 @@ public abstract class SkillStreamHandler implements RequestStreamHandler {
      */
     @Override
     public final void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
-        String serializedRequest = IOUtils.toString(input, StandardCharsets.UTF_8);
-        RequestEnvelope requestEnvelope = serializer.deserialize(serializedRequest, RequestEnvelope.class);
+        RequestEnvelope requestEnvelope = serializer.deserialize(input, RequestEnvelope.class);
         ResponseEnvelope response = skill.invoke(requestEnvelope);
-        byte[] serializedResponse = serializer.serialize(response).getBytes(StandardCharsets.UTF_8);
-        output.write(serializedResponse);
+        serializer.serialize(response, output);
     }
 }
