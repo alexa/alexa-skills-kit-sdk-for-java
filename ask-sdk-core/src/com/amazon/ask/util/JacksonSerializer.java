@@ -57,7 +57,7 @@ public final class JacksonSerializer implements Serializer {
         try {
             mapper.writeValue(outputStream, object);
         } catch (IOException e) {
-            throw new AskSdkException("Deserialization error");
+            throw new AskSdkException("Serialization error");
         }
     }
 
