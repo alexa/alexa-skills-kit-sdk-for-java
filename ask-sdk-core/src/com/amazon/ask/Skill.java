@@ -51,6 +51,8 @@ public class Skill {
                 .withRequestMappers(config.getRequestMappers())
                 .withExceptionMapper(config.getExceptionMapper())
                 .withHandlerAdapters(config.getHandlerAdapters())
+                .withRequestInterceptors(config.getRequestInterceptors())
+                .withResponseInterceptors(config.getResponseInterceptors())
                 .build();
         this.apiClient = config.getApiClient();
         this.serializer = new JacksonSerializer();

@@ -30,9 +30,6 @@ import com.amazon.ask.model.services.ApiClient;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.List;
-
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -64,29 +61,21 @@ public class CustomSkillBuilderTest {
     }
 
     @Test
-    public void request_mapper_configured_with_default_request_interceptor() {
+    public void request_interceptor_used() {
         RequestInterceptor requestInterceptor = mock(RequestInterceptor.class);
-        List<RequestInterceptor> requestInterceptors = Collections.singletonList(requestInterceptor);
-        when(mockRequestHandler.canHandle(any())).thenReturn(true);
-        builder.addRequestInterceptors(requestInterceptors);
         builder.addRequestHandler(mockRequestHandler);
+        builder.addRequestInterceptor(requestInterceptor);
         SkillConfiguration configuration = builder.getConfigBuilder().build();
-        RequestMapper mapper = configuration.getRequestMappers().get(0);
-        assertTrue(mapper instanceof DefaultRequestMapper);
-        assertEquals(requestInterceptors, mapper.getRequestHandlerChain(getInputForIntent("FooIntent")).get().getRequestInterceptors());
+        assertEquals(configuration.getRequestInterceptors().get(0), requestInterceptor);
     }
 
     @Test
-    public void request_mapper_configured_with_default_response_interceptor() {
+    public void response_interceptor_used() {
         ResponseInterceptor responseInterceptor = mock(ResponseInterceptor.class);
-        List<ResponseInterceptor> responseInterceptors = Collections.singletonList(responseInterceptor);
-        when(mockRequestHandler.canHandle(any())).thenReturn(true);
-        builder.addResponseInterceptors(responseInterceptor);
         builder.addRequestHandler(mockRequestHandler);
+        builder.addResponseInterceptor(responseInterceptor);
         SkillConfiguration configuration = builder.getConfigBuilder().build();
-        RequestMapper mapper = configuration.getRequestMappers().get(0);
-        assertTrue(mapper instanceof DefaultRequestMapper);
-        assertEquals(responseInterceptors, mapper.getRequestHandlerChain(getInputForIntent("FooIntent")).get().getResponseInterceptors());
+        assertEquals(configuration.getResponseInterceptors().get(0), responseInterceptor);
     }
 
     @Test

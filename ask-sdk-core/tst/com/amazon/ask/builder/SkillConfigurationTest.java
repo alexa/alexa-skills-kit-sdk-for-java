@@ -13,6 +13,8 @@
 
 package com.amazon.ask.builder;
 
+import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
+import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
 import com.amazon.ask.model.services.ApiClient;
 import com.amazon.ask.attributes.persistence.PersistenceAdapter;
 import com.amazon.ask.dispatcher.exception.ExceptionMapper;
@@ -47,6 +49,20 @@ public class SkillConfigurationTest {
         List<HandlerAdapter> handlerAdapters = Collections.singletonList(mock(HandlerAdapter.class));
         SkillConfiguration config = SkillConfiguration.builder().withHandlerAdapters(handlerAdapters).build();
         assertEquals(handlerAdapters, config.getHandlerAdapters());
+    }
+
+    @Test
+    public void get_request_interceptors() {
+        List<RequestInterceptor> requestInterceptors = Collections.singletonList(mock(RequestInterceptor.class));
+        SkillConfiguration config = SkillConfiguration.builder().withRequestInterceptors(requestInterceptors).build();
+        assertEquals(requestInterceptors, config.getRequestInterceptors());
+    }
+
+    @Test
+    public void get_response_interceptors() {
+        List<ResponseInterceptor> responseInterceptors = Collections.singletonList(mock(ResponseInterceptor.class));
+        SkillConfiguration config = SkillConfiguration.builder().withResponseInterceptors(responseInterceptors).build();
+        assertEquals(responseInterceptors, config.getResponseInterceptors());
     }
 
     @Test

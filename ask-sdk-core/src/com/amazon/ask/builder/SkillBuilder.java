@@ -120,9 +120,7 @@ public abstract class SkillBuilder<T extends SkillBuilder<T>> {
     protected SkillConfiguration.Builder getConfigBuilder() {
         List<DefaultRequestHandlerChain> requestHandlerChains = requestHandlers.stream()
                 .map(handler -> DefaultRequestHandlerChain.builder()
-                        .withRequestHandler(handler)
-                        .withRequestInterceptors(requestInterceptors)
-                        .withResponseInterceptor(responseInterceptors).build())
+                        .withRequestHandler(handler).build())
                 .collect(Collectors.toList());
 
         RequestMapper mapper = DefaultRequestMapper.builder()
@@ -137,6 +135,8 @@ public abstract class SkillBuilder<T extends SkillBuilder<T>> {
                 .withRequestMappers(Collections.singletonList(mapper))
                 .withHandlerAdapters(Collections.singletonList(new DefaultHandlerAdapter()))
                 .withExceptionMapper(exceptionMapper)
+                .withRequestInterceptors(requestInterceptors)
+                .withResponseInterceptors(responseInterceptors)
                 .withSkillId(skillId);
     }
 
