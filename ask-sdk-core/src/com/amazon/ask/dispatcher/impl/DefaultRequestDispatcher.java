@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import com.amazon.ask.exception.AskSdkException;
 import com.amazon.ask.exception.UnhandledSkillException;
@@ -49,12 +50,20 @@ public class DefaultRequestDispatcher implements RequestDispatcher {
     protected final Collection<HandlerAdapter> handlerAdapters;
     protected final Collection<RequestMapper> requestMappers;
     protected final ExceptionMapper exceptionMapper;
+    protected final Collection<RequestInterceptor> requestInterceptors;
+    protected final Collection<ResponseInterceptor> responseInterceptors;
 
-    protected DefaultRequestDispatcher(Collection<HandlerAdapter> handlerAdapters,
-                                     Collection<RequestMapper> requestMappers, ExceptionMapper exceptionMapper) {
+    protected DefaultRequestDispatcher(Collection<HandlerAdapter> handlerAdapters, Collection<RequestMapper> requestMappers, ExceptionMapper exceptionMapper) {
+        this(handlerAdapters, requestMappers, exceptionMapper, null, null);
+    }
+
+    protected DefaultRequestDispatcher(Collection<HandlerAdapter> handlerAdapters, Collection<RequestMapper> requestMappers, ExceptionMapper exceptionMapper,
+                                       Collection<RequestInterceptor> requestInterceptors, Collection<ResponseInterceptor> responseInterceptors) {
         this.handlerAdapters = ValidationUtils.assertNotNull(handlerAdapters, "handlerAdapters");
         this.requestMappers = ValidationUtils.assertNotEmpty(requestMappers, "requestMappers");
         this.exceptionMapper = ValidationUtils.assertNotNull(exceptionMapper, "exceptionMapper");
+        this.requestInterceptors = requestInterceptors != null ? requestInterceptors : new ArrayList<>();
+        this.responseInterceptors = responseInterceptors != null ? responseInterceptors : new ArrayList<>();
     }
 
     public Optional<Response> dispatch(HandlerInput input) throws AskSdkException {
@@ -81,8 +90,14 @@ public class DefaultRequestDispatcher implements RequestDispatcher {
     private Optional<Response> doDispatch(HandlerInput input) {
         Request request = input.getRequestEnvelope().getRequest();
         String requestId = request.getRequestId();
+
+        // execute any global request interceptors
+        for (RequestInterceptor requestInterceptor : requestInterceptors) {
+            requestInterceptor.process(input);
+        }
+
         Optional<RequestHandlerChain> handlerChain = Optional.empty();
-        //first we query the mappers to find a handler chain for the current request
+        // first we query the mappers to find a handler chain for the current request
         for (RequestMapper mapper : requestMappers) {
             handlerChain = mapper.getRequestHandlerChain(input);
             if (handlerChain.isPresent()) {
@@ -98,12 +113,8 @@ public class DefaultRequestDispatcher implements RequestDispatcher {
             throw new AskSdkException(message);
         }
 
-        for (RequestInterceptor requestInterceptor : handlerChain.get().getRequestInterceptors()) {
-            requestInterceptor.process(input);
-        }
-
         Object requestHandler = handlerChain.get().getRequestHandler();
-        //find an adapter that supports the handler and will do the invocation for it
+        // find an adapter that supports the discovered handler
         HandlerAdapter handlerAdapter = null;
         for (HandlerAdapter adapter : handlerAdapters) {
             if (adapter.supports(requestHandler)) {
@@ -119,11 +130,19 @@ public class DefaultRequestDispatcher implements RequestDispatcher {
             throw new AskSdkException(message);
         }
 
-        Optional<Response> handlerOutput = handlerAdapter.execute(input, requestHandler);
-        for (ResponseInterceptor responseInterceptor : handlerChain.get().getResponseInterceptors()) {
-            responseInterceptor.process(input, handlerOutput);
+        // execute any request interceptors attached to the handler chain
+        for (RequestInterceptor requestInterceptor : handlerChain.get().getRequestInterceptors()) {
+            requestInterceptor.process(input);
         }
-        return handlerOutput;
+
+        // invoke request handler using the adapter
+        Optional<Response> response = handlerAdapter.execute(input, requestHandler);
+
+        // first execute any response interceptors attached to the handler chain, then any global ones
+        Stream.concat(handlerChain.get().getResponseInterceptors().stream(), responseInterceptors.stream())
+                .forEach(responseInterceptor -> responseInterceptor.process(input, response));
+
+        return response;
     }
 
     public static Builder builder() { return new Builder(); }
@@ -132,6 +151,8 @@ public class DefaultRequestDispatcher implements RequestDispatcher {
         private Collection<HandlerAdapter> handlerAdapters;
         private Collection<RequestMapper> requestMappers;
         private ExceptionMapper exceptionMapper;
+        private Collection<RequestInterceptor> requestInterceptors;
+        private Collection<ResponseInterceptor> responseInterceptors;
 
         private Builder() {}
 
@@ -176,8 +197,44 @@ public class DefaultRequestDispatcher implements RequestDispatcher {
             return this;
         }
 
+        public Builder withRequestInterceptors(Collection<RequestInterceptor> requestInterceptors) {
+            this.requestInterceptors = requestInterceptors;
+            return this;
+        }
+
+        public Builder withRequestInterceptors(RequestInterceptor... requestInterceptors) {
+            this.requestInterceptors = Arrays.asList(requestInterceptors);
+            return this;
+        }
+
+        public Builder addRequestInterceptor(RequestInterceptor requestInterceptor) {
+            if (requestInterceptors == null) {
+                requestInterceptors = new ArrayList<>();
+            }
+            requestInterceptors.add(requestInterceptor);
+            return this;
+        }
+
+        public Builder withResponseInterceptors(Collection<ResponseInterceptor> responseInterceptors) {
+            this.responseInterceptors = responseInterceptors;
+            return this;
+        }
+
+        public Builder withResponseInterceptors(ResponseInterceptor... responseInterceptors) {
+            this.responseInterceptors = Arrays.asList(responseInterceptors);
+            return this;
+        }
+
+        public Builder addResponseInterceptor(ResponseInterceptor responseInterceptor) {
+            if (responseInterceptors == null) {
+                responseInterceptors = new ArrayList<>();
+            }
+            responseInterceptors.add(responseInterceptor);
+            return this;
+        }
+
         public DefaultRequestDispatcher build() {
-            return new DefaultRequestDispatcher(handlerAdapters, requestMappers, exceptionMapper);
+            return new DefaultRequestDispatcher(handlerAdapters, requestMappers, exceptionMapper, requestInterceptors, responseInterceptors);
         }
     }
 }

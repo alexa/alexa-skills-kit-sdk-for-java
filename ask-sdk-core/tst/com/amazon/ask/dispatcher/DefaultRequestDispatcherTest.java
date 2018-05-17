@@ -30,18 +30,24 @@ import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.exception.AskSdkException;
 import com.amazon.ask.exception.UnhandledSkillException;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -56,6 +62,8 @@ public class DefaultRequestDispatcherTest {
     private Optional<Response> mockOutput;
     private DefaultRequestDispatcher dispatcher;
     private HandlerInput handlerInput;
+    private List<RequestInterceptor> requestInterceptors;
+    private List<ResponseInterceptor> responseInterceptors;
 
     @Before
     public void setup() {
@@ -70,10 +78,14 @@ public class DefaultRequestDispatcherTest {
         mockOutput = Optional.of(mockResponse);
         mockExceptionMapper = mock(ExceptionMapper.class);
         when(mockAdapter.execute(any(HandlerInput.class), any(RequestHandler.class))).thenReturn(mockOutput);
+        requestInterceptors = new ArrayList<>();
+        responseInterceptors = new ArrayList<>();
         dispatcher = DefaultRequestDispatcher.builder()
                 .addRequestMapper(mockMapper)
                 .withExceptionMapper(mockExceptionMapper)
                 .addHandlerAdapter(mockAdapter)
+                .withRequestInterceptors(requestInterceptors)
+                .withResponseInterceptors(responseInterceptors)
                 .build();
         handlerInput = mock(HandlerInput.class);
         when(handlerInput.getRequestEnvelope()).thenReturn(RequestEnvelope.builder()
@@ -197,7 +209,7 @@ public class DefaultRequestDispatcherTest {
         when(mockAdapter.execute(any(HandlerInput.class), any(RequestHandler.class))).thenThrow(new IllegalStateException());
         try {
             dispatcher.dispatch(handlerInput);
-            Assert.fail("Expected exception was not thrown");
+            fail("Expected exception was not thrown");
         } catch (UnhandledSkillException ex) {
             assertEquals(ex.getClass(), UnhandledSkillException.class);
             assertEquals(ex.getCause().getClass(), IllegalStateException.class);
@@ -205,19 +217,230 @@ public class DefaultRequestDispatcherTest {
     }
 
     @Test
-    public void request_interceptor_called() {
-        RequestInterceptor requestInterceptor = mock(RequestInterceptor.class);
-        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(requestInterceptor));
+    public void handler_chain_level_request_interceptor_called_after_global_interceptor() {
+        RequestInterceptor globalInterceptor = mock(RequestInterceptor.class);
+        RequestInterceptor chainInterceptor = mock(RequestInterceptor.class);
+        requestInterceptors.add(globalInterceptor);
+        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainInterceptor));
         dispatcher.dispatch(handlerInput);
-        verify(requestInterceptor).process(handlerInput);
+        InOrder inOrder = inOrder(globalInterceptor, chainInterceptor, mockAdapter);
+        inOrder.verify(globalInterceptor).process(handlerInput);
+        inOrder.verify(chainInterceptor).process(handlerInput);
+        inOrder.verify(mockAdapter).execute(any(), any());
     }
 
     @Test
-    public void response_interceptor_called() {
-        ResponseInterceptor responseInterceptor = mock(ResponseInterceptor.class);
-        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(responseInterceptor));
+    public void handler_chain_level_response_interceptor_called_before_global_interceptor() {
+        ResponseInterceptor globalInterceptor = mock(ResponseInterceptor.class);
+        ResponseInterceptor chainInterceptor = mock(ResponseInterceptor.class);
+        responseInterceptors.add(globalInterceptor);
+        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainInterceptor));
         dispatcher.dispatch(handlerInput);
-        verify(responseInterceptor).process(handlerInput, mockOutput);
+        InOrder inOrder = inOrder(globalInterceptor, chainInterceptor, mockAdapter);
+        inOrder.verify(mockAdapter).execute(any(), any());
+        inOrder.verify(chainInterceptor).process(handlerInput, mockOutput);
+        inOrder.verify(globalInterceptor).process(handlerInput, mockOutput);
+    }
+
+    @Test
+    public void request_handler_not_found() {
+        RequestInterceptor globalRequestInterceptor = mock(RequestInterceptor.class);
+        RequestInterceptor chainRequestInterceptor = mock(RequestInterceptor.class);
+        requestInterceptors.add(globalRequestInterceptor);
+        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainRequestInterceptor));
+
+        ResponseInterceptor globalResponseInterceptor = mock(ResponseInterceptor.class);
+        ResponseInterceptor chainResponseInterceptor = mock(ResponseInterceptor.class);
+        responseInterceptors.add(globalResponseInterceptor);
+        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
+
+        when(mockMapper.getRequestHandlerChain(any())).thenReturn(Optional.empty());
+        when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
+        try {
+            dispatcher.dispatch(handlerInput);
+            fail("Unhandled skill exception should have been thrown");
+        } catch (UnhandledSkillException ex) {
+            verify(globalRequestInterceptor).process(handlerInput);
+            verify(chainRequestInterceptor, never()).process(handlerInput);
+            verify(chainResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(globalResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(mockMapper).getRequestHandlerChain(any());
+            verify(mockAdapter, never()).supports(any());
+            verify(mockAdapter, never()).execute(any(), any());
+        }
+    }
+
+    @Test
+    public void handler_adapter_not_found() {
+        RequestInterceptor globalRequestInterceptor = mock(RequestInterceptor.class);
+        RequestInterceptor chainRequestInterceptor = mock(RequestInterceptor.class);
+        requestInterceptors.add(globalRequestInterceptor);
+        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainRequestInterceptor));
+
+        ResponseInterceptor globalResponseInterceptor = mock(ResponseInterceptor.class);
+        ResponseInterceptor chainResponseInterceptor = mock(ResponseInterceptor.class);
+        responseInterceptors.add(globalResponseInterceptor);
+        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
+
+        when(mockAdapter.supports(any())).thenReturn(false);
+        when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
+        try {
+            dispatcher.dispatch(handlerInput);
+            fail("Unhandled skill exception should have been thrown");
+        } catch (UnhandledSkillException ex) {
+            verify(globalRequestInterceptor).process(handlerInput);
+            verify(chainRequestInterceptor, never()).process(handlerInput);
+            verify(chainResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(globalResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(mockMapper).getRequestHandlerChain(any());
+            verify(mockAdapter).supports(any());
+            verify(mockAdapter, never()).execute(any(), any());
+        }
+    }
+
+    @Test
+    public void exception_in_global_request_interceptor() {
+        RequestInterceptor globalRequestInterceptor = mock(RequestInterceptor.class);
+        RequestInterceptor chainRequestInterceptor = mock(RequestInterceptor.class);
+        requestInterceptors.add(globalRequestInterceptor);
+        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainRequestInterceptor));
+
+        ResponseInterceptor globalResponseInterceptor = mock(ResponseInterceptor.class);
+        ResponseInterceptor chainResponseInterceptor = mock(ResponseInterceptor.class);
+        responseInterceptors.add(globalResponseInterceptor);
+        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
+
+        Exception e = new IllegalStateException();
+        doThrow(e).when(globalRequestInterceptor).process(any());
+        when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
+        try {
+            dispatcher.dispatch(handlerInput);
+            fail("Unhandled skill exception should have been thrown");
+        } catch (UnhandledSkillException ex) {
+            verify(globalRequestInterceptor).process(handlerInput);
+            verify(chainRequestInterceptor, never()).process(handlerInput);
+            verify(chainResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(globalResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(mockMapper, never()).getRequestHandlerChain(any());
+            verify(mockAdapter, never()).supports(any());
+            verify(mockAdapter, never()).execute(any(), any());
+        }
+    }
+
+    @Test
+    public void exception_in_handler_chain_level_request_interceptor() {
+        RequestInterceptor globalRequestInterceptor = mock(RequestInterceptor.class);
+        RequestInterceptor chainRequestInterceptor = mock(RequestInterceptor.class);
+        requestInterceptors.add(globalRequestInterceptor);
+        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainRequestInterceptor));
+
+        ResponseInterceptor globalResponseInterceptor = mock(ResponseInterceptor.class);
+        ResponseInterceptor chainResponseInterceptor = mock(ResponseInterceptor.class);
+        responseInterceptors.add(globalResponseInterceptor);
+        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
+
+        Exception e = new IllegalStateException();
+        doThrow(e).when(chainRequestInterceptor).process(any());
+        when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
+        try {
+            dispatcher.dispatch(handlerInput);
+            fail("Unhandled skill exception should have been thrown");
+        } catch (UnhandledSkillException ex) {
+            verify(globalRequestInterceptor).process(handlerInput);
+            verify(chainRequestInterceptor).process(handlerInput);
+            verify(chainResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(globalResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(mockMapper).getRequestHandlerChain(any());
+            verify(mockAdapter).supports(any());
+            verify(mockAdapter, never()).execute(any(), any());
+        }
+    }
+
+    @Test
+    public void exception_in_request_handler() {
+        RequestInterceptor globalRequestInterceptor = mock(RequestInterceptor.class);
+        RequestInterceptor chainRequestInterceptor = mock(RequestInterceptor.class);
+        requestInterceptors.add(globalRequestInterceptor);
+        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainRequestInterceptor));
+
+        ResponseInterceptor globalResponseInterceptor = mock(ResponseInterceptor.class);
+        ResponseInterceptor chainResponseInterceptor = mock(ResponseInterceptor.class);
+        responseInterceptors.add(globalResponseInterceptor);
+        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
+
+        Exception e = new IllegalStateException();
+        when(mockAdapter.execute(any(HandlerInput.class), any(RequestHandler.class))).thenThrow(e);
+        when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
+        try {
+            dispatcher.dispatch(handlerInput);
+            fail("Unhandled skill exception should have been thrown");
+        } catch (UnhandledSkillException ex) {
+            verify(globalRequestInterceptor).process(handlerInput);
+            verify(chainRequestInterceptor).process(handlerInput);
+            verify(chainResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(globalResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(mockMapper).getRequestHandlerChain(any());
+            verify(mockAdapter).supports(any());
+            verify(mockAdapter).execute(any(), any());
+        }
+    }
+
+    @Test
+    public void exception_in_handler_chain_level_response_interceptor() {
+        RequestInterceptor globalRequestInterceptor = mock(RequestInterceptor.class);
+        RequestInterceptor chainRequestInterceptor = mock(RequestInterceptor.class);
+        requestInterceptors.add(globalRequestInterceptor);
+        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainRequestInterceptor));
+
+        ResponseInterceptor globalResponseInterceptor = mock(ResponseInterceptor.class);
+        ResponseInterceptor chainResponseInterceptor = mock(ResponseInterceptor.class);
+        responseInterceptors.add(globalResponseInterceptor);
+        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
+
+        Exception e = new IllegalStateException();
+        doThrow(e).when(chainResponseInterceptor).process(any(), any());
+        when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
+        try {
+            dispatcher.dispatch(handlerInput);
+            fail("Unhandled skill exception should have been thrown");
+        } catch (UnhandledSkillException ex) {
+            verify(globalRequestInterceptor).process(handlerInput);
+            verify(chainRequestInterceptor).process(handlerInput);
+            verify(chainResponseInterceptor).process(handlerInput, mockOutput);
+            verify(globalResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(mockMapper).getRequestHandlerChain(any());
+            verify(mockAdapter).supports(any());
+            verify(mockAdapter).execute(any(), any());
+        }
+    }
+
+    @Test
+    public void exception_in_global_response_interceptor() {
+        RequestInterceptor globalRequestInterceptor = mock(RequestInterceptor.class);
+        RequestInterceptor chainRequestInterceptor = mock(RequestInterceptor.class);
+        requestInterceptors.add(globalRequestInterceptor);
+        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainRequestInterceptor));
+
+        ResponseInterceptor globalResponseInterceptor = mock(ResponseInterceptor.class);
+        ResponseInterceptor chainResponseInterceptor = mock(ResponseInterceptor.class);
+        responseInterceptors.add(globalResponseInterceptor);
+        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
+
+        Exception e = new IllegalStateException();
+        doThrow(e).when(globalResponseInterceptor).process(any(), any());
+        when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
+        try {
+            dispatcher.dispatch(handlerInput);
+            fail("Unhandled skill exception should have been thrown");
+        } catch (UnhandledSkillException ex) {
+            verify(globalRequestInterceptor).process(handlerInput);
+            verify(chainRequestInterceptor).process(handlerInput);
+            verify(chainResponseInterceptor).process(handlerInput, mockOutput);
+            verify(globalResponseInterceptor).process(handlerInput, mockOutput);
+            verify(mockMapper).getRequestHandlerChain(any());
+            verify(mockAdapter).supports(any());
+            verify(mockAdapter).execute(any(), any());
+        }
     }
 
 }

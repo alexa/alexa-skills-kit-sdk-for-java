@@ -29,8 +29,8 @@ public class GenericRequestHandlerChain implements RequestHandlerChain {
     protected GenericRequestHandlerChain(Object handler, List<RequestInterceptor> requestInterceptors,
                                          List<ResponseInterceptor> responseInterceptors) {
         this.handler = ValidationUtils.assertNotNull(handler, "handler");
-        this.requestInterceptors = requestInterceptors;
-        this.responseInterceptors = responseInterceptors;
+        this.requestInterceptors = requestInterceptors != null ? requestInterceptors : new ArrayList<>();
+        this.responseInterceptors = responseInterceptors != null ? responseInterceptors : new ArrayList<>();
     }
 
     public static Builder builder() {

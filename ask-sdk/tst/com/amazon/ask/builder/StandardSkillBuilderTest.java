@@ -16,8 +16,6 @@ package com.amazon.ask.builder;
 import com.amazon.ask.attributes.persistence.impl.DynamoDbPersistenceAdapter;
 import com.amazon.ask.dispatcher.exception.ExceptionHandler;
 import com.amazon.ask.dispatcher.exception.ExceptionMapper;
-import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
-import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.dispatcher.request.mapper.RequestMapper;
@@ -62,32 +60,6 @@ public class StandardSkillBuilderTest {
         RequestMapper mapper = configuration.getRequestMappers().get(0);
         assertTrue(mapper instanceof DefaultRequestMapper);
         assertEquals(mockRequestHandler, mapper.getRequestHandlerChain(getInputForIntent("FooIntent")).get().getRequestHandler());
-    }
-
-    @Test
-    public void request_mapper_configured_with_default_request_interceptor() {
-        RequestInterceptor requestInterceptor = mock(RequestInterceptor.class);
-        List<RequestInterceptor> requestInterceptors = Collections.singletonList(requestInterceptor);
-        when(mockRequestHandler.canHandle(any())).thenReturn(true);
-        builder.addRequestInterceptors(requestInterceptors);
-        builder.addRequestHandler(mockRequestHandler);
-        SkillConfiguration configuration = builder.getConfigBuilder().build();
-        RequestMapper mapper = configuration.getRequestMappers().get(0);
-        assertTrue(mapper instanceof DefaultRequestMapper);
-        assertEquals(requestInterceptors, mapper.getRequestHandlerChain(getInputForIntent("FooIntent")).get().getRequestInterceptors());
-    }
-
-    @Test
-    public void request_mapper_configured_with_default_response_interceptor() {
-        ResponseInterceptor responseInterceptor = mock(ResponseInterceptor.class);
-        List<ResponseInterceptor> responseInterceptors = Collections.singletonList(responseInterceptor);
-        when(mockRequestHandler.canHandle(any())).thenReturn(true);
-        builder.addResponseInterceptors(responseInterceptor);
-        builder.addRequestHandler(mockRequestHandler);
-        SkillConfiguration configuration = builder.getConfigBuilder().build();
-        RequestMapper mapper = configuration.getRequestMappers().get(0);
-        assertTrue(mapper instanceof DefaultRequestMapper);
-        assertEquals(responseInterceptors, mapper.getRequestHandlerChain(getInputForIntent("FooIntent")).get().getResponseInterceptors());
     }
 
     @Test

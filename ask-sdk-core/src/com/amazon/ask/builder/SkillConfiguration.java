@@ -13,6 +13,8 @@
 
 package com.amazon.ask.builder;
 
+import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
+import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
 import com.amazon.ask.model.services.ApiClient;
 import com.amazon.ask.attributes.persistence.PersistenceAdapter;
 import com.amazon.ask.dispatcher.exception.ExceptionMapper;
@@ -27,6 +29,8 @@ import java.util.List;
 public class SkillConfiguration {
     protected final List<RequestMapper> requestMappers;
     protected final List<HandlerAdapter> handlerAdapters;
+    protected final List<RequestInterceptor> requestInterceptors;
+    protected final List<ResponseInterceptor> responseInterceptors;
     protected final ExceptionMapper exceptionMapper;
     protected final PersistenceAdapter persistenceAdapter;
     protected final ApiClient apiClient;
@@ -36,8 +40,18 @@ public class SkillConfiguration {
     protected SkillConfiguration(List<RequestMapper> requestMappers, List<HandlerAdapter> handlerAdapters,
                                  ExceptionMapper exceptionMapper, PersistenceAdapter persistenceAdapter, ApiClient apiClient,
                                  String customUserAgent, String skillId) {
+        this(requestMappers, handlerAdapters, null, null, exceptionMapper,
+                persistenceAdapter, apiClient, customUserAgent, skillId);
+    }
+
+    protected SkillConfiguration(List<RequestMapper> requestMappers, List<HandlerAdapter> handlerAdapters,
+                                 List<RequestInterceptor> requestInterceptors, List<ResponseInterceptor> responseInterceptors,
+                                 ExceptionMapper exceptionMapper, PersistenceAdapter persistenceAdapter, ApiClient apiClient,
+                                 String customUserAgent, String skillId) {
         this.requestMappers = requestMappers;
         this.handlerAdapters = handlerAdapters;
+        this.requestInterceptors = requestInterceptors;
+        this.responseInterceptors = responseInterceptors;
         this.exceptionMapper = exceptionMapper;
         this.persistenceAdapter = persistenceAdapter;
         this.apiClient = apiClient;
@@ -56,6 +70,10 @@ public class SkillConfiguration {
     public List<HandlerAdapter> getHandlerAdapters() {
         return handlerAdapters;
     }
+
+    public List<RequestInterceptor> getRequestInterceptors() { return requestInterceptors; }
+
+    public List<ResponseInterceptor> getResponseInterceptors() { return responseInterceptors; }
 
     public ExceptionMapper getExceptionMapper() {
         return exceptionMapper;
@@ -76,6 +94,8 @@ public class SkillConfiguration {
     public static final class Builder {
         private List<RequestMapper> requestMappers;
         private List<HandlerAdapter> handlerAdapters;
+        private List<RequestInterceptor> requestInterceptors;
+        private List<ResponseInterceptor> responseInterceptors;
         private ExceptionMapper exceptionMapper;
         private PersistenceAdapter persistenceAdapter;
         private ApiClient apiClient;
@@ -92,6 +112,16 @@ public class SkillConfiguration {
 
         public Builder withHandlerAdapters(List<HandlerAdapter> handlerAdapters) {
             this.handlerAdapters = handlerAdapters;
+            return this;
+        }
+
+        public Builder withRequestInterceptors(List<RequestInterceptor> requestInterceptors) {
+            this.requestInterceptors = requestInterceptors;
+            return this;
+        }
+
+        public Builder withResponseInterceptors(List<ResponseInterceptor> responseInterceptors) {
+            this.responseInterceptors = responseInterceptors;
             return this;
         }
 
@@ -121,7 +151,8 @@ public class SkillConfiguration {
         }
 
         public SkillConfiguration build() {
-            return new SkillConfiguration(requestMappers, handlerAdapters, exceptionMapper, persistenceAdapter, apiClient, customUserAgent, skillId);
+            return new SkillConfiguration(requestMappers, handlerAdapters, requestInterceptors, responseInterceptors,
+                    exceptionMapper, persistenceAdapter, apiClient, customUserAgent, skillId);
         }
     }
 }
