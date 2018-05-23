@@ -1,5 +1,14 @@
 # ASK SDK for Java [![Build Status](https://travis-ci.org/alexa/alexa-skills-kit-sdk-for-java.png?branch=2.0.x)](https://travis-ci.org/alexa/alexa-skills-kit-sdk-for-java)
 
+| Module       | Maven           |
+| ------------- | ------------- |
+|[ask-sdk](./ask-sdk)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk)| 
+|[ask-sdk-core](./ask-sdk-core)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-core.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-core)| 
+|[ask-sdk-lambda-support](./ask-sdk-lambda-support)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-lambda-support.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-lambda-support)| 
+|[ask-sdk-servlet-support](./ask-sdk-servlet-support)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-servlet-support.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-servlet-support)| 
+|[ask-sdk-dynamodb-persistence-adapter](./ask-sdk-dynamodb-persistence-adapter)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-dynamodb-persistence-adapter.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-dynamodb-persistence-adapter)| 
+|[ask-sdk-apache-client](./ask-sdk-apache-client)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-apache-client.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-apache-client)| 
+
 The ASK SDK for Java makes it easier for you to build highly engaging skills, by allowing you to spend more time on implementing features and less on writing boiler-plate code.
 
 To help you get started more with the SDK we have included several samples, references, and guides. We've collected links to all of them here to make them easy to find, as well as a description for what each document covers.
@@ -37,6 +46,9 @@ Walks you through step-by-step instructions for building the Hello World sample.
 
 ### [Managing In-Skill Purchases](https://github.com/alexa/alexa-skills-kit-sdk-for-java/wiki/Managing-in-skill-purchase)
 Covers how you can manage in-skill products and the purchase experience in your skills.
+
+### [Javadoc Reference](http://ask-sdk-java-javadocs.s3-website-us-west-2.amazonaws.com)
+Javadoc references from the latest version of the SDK.
 
 ## Got Feedback?
 Request and vote for Alexa features [here](https://alexa.uservoice.com/forums/906892-alexa-skills-developer-voice-and-vote)!
