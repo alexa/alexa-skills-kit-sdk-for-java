@@ -19,7 +19,7 @@ import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.util.ValidationUtils;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.document.internal.InternalUtils;
+import com.amazonaws.services.dynamodbv2.document.ItemUtils;
 import com.amazonaws.services.dynamodbv2.model.AmazonDynamoDBException;
 import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
@@ -29,6 +29,7 @@ import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
 import com.amazonaws.services.dynamodbv2.model.PutItemRequest;
+import com.amazonaws.services.dynamodbv2.model.ResourceNotFoundException;
 import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
 import com.amazonaws.services.dynamodbv2.util.TableUtils;
 
@@ -48,7 +49,7 @@ public final class DynamoDbPersistenceAdapter implements PersistenceAdapter {
     private final String partitionKeyName;
     private final String attributesKeyName;
     private final Function<RequestEnvelope, String> partitionKeyGenerator;
-    private boolean createTable;
+    private boolean autoCreateTable;
 
     private static final String DEFAULT_PARTITION_KEY_NAME = "id";
     private static final String DEFAULT_ATTRIBUTES_KEY_NAME = "attributes";
@@ -61,7 +62,8 @@ public final class DynamoDbPersistenceAdapter implements PersistenceAdapter {
         this.partitionKeyName = builder.partitionKeyName;
         this.attributesKeyName = builder.attributesKeyName;
         this.partitionKeyGenerator = builder.partitionKeyGenerator;
-        this.createTable = builder.autoCreateTable;
+        this.autoCreateTable = builder.autoCreateTable;
+        autoCreateTableIfNotExists();
     }
 
     public static Builder builder() {
@@ -70,21 +72,23 @@ public final class DynamoDbPersistenceAdapter implements PersistenceAdapter {
 
     @Override
     public Optional<Map<String, Object>> getAttributes(RequestEnvelope envelope) throws PersistenceException {
-        if (!createTableIfNotExists()) {
-            String partitionKey = partitionKeyGenerator.apply(envelope);
-            GetItemRequest request = new GetItemRequest()
-                    .withTableName(tableName)
-                    .withKey(Collections.singletonMap(partitionKeyName, new AttributeValue().withS(partitionKey)));
-            Map<String, AttributeValue> result;
-            try {
-                result = dynamoDb.getItem(request).getItem();
-            } catch (AmazonDynamoDBException e) {
-                throw new PersistenceException("Failed to retrieve attributes from DynamoDB", e);
+        String partitionKey = partitionKeyGenerator.apply(envelope);
+        GetItemRequest request = new GetItemRequest()
+                .withTableName(tableName)
+                .withKey(Collections.singletonMap(partitionKeyName, new AttributeValue().withS(partitionKey)));
+        Map<String, AttributeValue> result = null;
+        try {
+            result = dynamoDb.getItem(request).getItem();
+        } catch (ResourceNotFoundException e) {
+            if (!autoCreateTable) {
+                throw new PersistenceException(String.format("Table %s does not exist or is in the process of being created", tableName), e);
             }
-            if (result != null && result.containsKey(attributesKeyName)) {
-                Map<String, Object> attributes = InternalUtils.toSimpleMapValue(result.get(attributesKeyName).getM());
-                return Optional.of(attributes);
-            }
+        } catch (AmazonDynamoDBException e) {
+            throw new PersistenceException("Failed to retrieve attributes from DynamoDB", e);
+        }
+        if (result != null && result.containsKey(attributesKeyName)) {
+            Map<String, Object> attributes = ItemUtils.toSimpleMapValue(result.get(attributesKeyName).getM());
+            return Optional.of(attributes);
         }
         return Optional.empty();
     }
@@ -97,6 +101,8 @@ public final class DynamoDbPersistenceAdapter implements PersistenceAdapter {
                 .withItem(getItem(partitionKey, attributes));
         try {
             dynamoDb.putItem(request);
+        } catch (ResourceNotFoundException e) {
+            throw new PersistenceException(String.format("Table %s does not exist or is in the process of being created", tableName), e);
         } catch (AmazonDynamoDBException e) {
             throw new PersistenceException("Failed to save attributes to DynamoDB", e);
         }
@@ -105,12 +111,12 @@ public final class DynamoDbPersistenceAdapter implements PersistenceAdapter {
     private Map<String, AttributeValue> getItem(String id, Map<String, Object> attributes) {
         Map<String, AttributeValue> item = new HashMap<>();
         item.put(partitionKeyName, new AttributeValue().withS(id));
-        item.put(attributesKeyName, new AttributeValue().withM(InternalUtils.fromSimpleMap(attributes)));
+        item.put(attributesKeyName, new AttributeValue().withM(ItemUtils.fromSimpleMap(attributes)));
         return item;
     }
 
-    private boolean createTableIfNotExists() {
-        if (createTable) {
+    private void autoCreateTableIfNotExists() {
+        if (autoCreateTable) {
             AttributeDefinition partitionKeyDefinition = new AttributeDefinition()
                     .withAttributeName(partitionKeyName)
                     .withAttributeType(ScalarAttributeType.S);
@@ -121,8 +127,7 @@ public final class DynamoDbPersistenceAdapter implements PersistenceAdapter {
                     .withReadCapacityUnits(5L)
                     .withWriteCapacityUnits(5L);
             try {
-                createTable = false;
-                return TableUtils.createTableIfNotExists(dynamoDb, new CreateTableRequest()
+                TableUtils.createTableIfNotExists(dynamoDb, new CreateTableRequest()
                         .withTableName(tableName)
                         .withAttributeDefinitions(partitionKeyDefinition)
                         .withKeySchema(partitionKeySchema)
@@ -131,7 +136,6 @@ public final class DynamoDbPersistenceAdapter implements PersistenceAdapter {
                 throw new PersistenceException("Create table request failed", e);
             }
         }
-        return false;
     }
 
     public static final class Builder {
