@@ -1,54 +1,87 @@
-# ASK SDK for Java [![Build Status](https://travis-ci.org/alexa/alexa-skills-kit-sdk-for-java.png?branch=2.0.x)](https://travis-ci.org/alexa/alexa-skills-kit-sdk-for-java)
+# ASK SDK v2 for Java (Public Beta) - Readme
 
-| Module       | Maven           |
-| ------------- | ------------- |
-|[ask-sdk](./ask-sdk)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk)| 
-|[ask-sdk-core](./ask-sdk-core)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-core.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-core)| 
-|[ask-sdk-lambda-support](./ask-sdk-lambda-support)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-lambda-support.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-lambda-support)| 
-|[ask-sdk-servlet-support](./ask-sdk-servlet-support)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-servlet-support.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-servlet-support)| 
-|[ask-sdk-dynamodb-persistence-adapter](./ask-sdk-dynamodb-persistence-adapter)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-dynamodb-persistence-adapter.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-dynamodb-persistence-adapter)| 
-|[ask-sdk-apache-client](./ask-sdk-apache-client)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-apache-client.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-apache-client)| 
+## Disclaimer
 
-The ASK SDK for Java makes it easier for you to build highly engaging skills, by allowing you to spend more time on implementing features and less on writing boiler-plate code.
+This repo contains public beta versions of the ASK SDK v2 for Java, which may contain one or more Alexa features that are currently available in public beta. These features may contain unexpected bugs or be subject to future breaking changes. Production skills should use non-beta versions of the ASK SDK.
 
-To help you get started more with the SDK we have included several samples, references, and guides. We've collected links to all of them here to make them easy to find, as well as a description for what each document covers.
+## Prerequisites
 
-## Guides
-### [Setting Up The ASK SDK](https://github.com/alexa/alexa-skills-kit-sdk-for-java/wiki/Setting-Up-The-ASK-SDK)
-This guide will show you how to include the SDK as a dependency in your Maven project.
+* An [Apache Maven](https://maven.apache.org/) project.
+* A suitable Java development environment. The ASK SDK v2 for Java (Public Beta) requires a Java 8 compatible runtime environment.
 
-### [Developing Your First Skill](https://github.com/alexa/alexa-skills-kit-sdk-for-java/wiki/Developing-Your-First-Skill)
-Walks you through step-by-step instructions for building the Hello World sample.
+## Adding the SDK to your project
 
-## Samples
-### [Hello World](https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.0.x/samples/helloworld)
-  This code sample will allow you to hear a response from Alexa when you trigger it. It is a minimal sample to get you familiarized with the Alexa Skills Kit and AWS Lambda.
+To use the ASK SDK v2 for Java (Public Beta) in your project, declare it as a dependency on your project's `pom.xml` file. You can choose to depend on the standard SDK distribution or individually select the components on which to depend. The standard SDK distribution is the easiest way to quickly get up and running with the SDK. It includes the core SDK and the following additional modules that provide commonly used functionality:
 
-### [Color Picker](https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.0.x/samples/colorpicker)
-  This is a step-up in functionality from Hello World. It allows you to capture input from your user and demonstrates the use of Slots.
+* AWS Lambda support module, which allows skills to be run as part of an AWS Lambda function
+* Servlet support module, which allows skills to be run as a servlet on a web server
+* Amazon DynamoDB persistence adapter, which enables storing skill attributes to DynamoDB
+* Apache HTTPClient API client plugin, which leverages the Apache HttpClient to make API calls to Alexa services
 
-## Tutorials
-### [States Quiz](https://github.com/alexa/skill-sample-java-quiz-game)
-  This tutorial will guide you in building a fully-featured skill. The skill features Built-In and Custom slots, as well as state management. The skill you build with this tutorial can be customized to build your own game.
+### Including all standard SDK components
 
-## Technical Documentation
-### [Request Processing](https://github.com/alexa/alexa-skills-kit-sdk-for-java/wiki/Request-Processing)
-  Covers how you can build request handlers to handle incoming requests, exception handlers to handle errors in your skill, and use request and response interceptors to perform tasks before or after handler execution.
+From your Maven project's `pom.xml` add the following dependency to pull in the standard ASK SDK v2 for Java (Public Beta) distribution:
 
-### [Skill Attributes](https://github.com/alexa/alexa-skills-kit-sdk-for-java/wiki/Skill-Attributes)
-  Covers how skill attributes can be used on three different scopes (request, session and persistent), to store and retrieve skill data.
+```
+`<dependency>
+  <groupId>com.amazon.alexa</groupId>
+  <artifactId>ask-sdk</artifactId>
+  <version>2.4.0-beta.1</version>
+</dependency>`
+```
 
-### [Alexa Service Clients](https://github.com/alexa/alexa-skills-kit-sdk-for-java/wiki/Alexa-Service-Clients)
-  Covers how service clients can be used by your skill to access Alexa APIs.
+### Including individual SDK components
 
-### [Response Building](https://github.com/alexa/alexa-skills-kit-sdk-for-java/wiki/Response-Building)
-  Covers how the Response Builder can be used to easily compose multiple elements, like text, cards and audio, into a single response.
+Select one or more of the following modules to include in your project by adding the corresponding entry to your `pom.xml` file. To minimize dependency closure, add only the modules that you need.
 
-### [Managing In-Skill Purchases](https://github.com/alexa/alexa-skills-kit-sdk-for-java/wiki/Managing-in-skill-purchase)
-Covers how you can manage in-skill products and the purchase experience in your skills.
+**Core SDK (required)**
 
-### [Javadoc Reference](http://ask-sdk-java-javadocs.s3-website-us-west-2.amazonaws.com)
-Javadoc references from the latest version of the SDK.
+```
+`<dependency>
+  <groupId>com.amazon.alexa</groupId>
+  <artifactId>ask-sdk-core</artifactId>
+  <version>2.4.0-beta.1</version>
+</dependency>`
+```
 
-## Got Feedback?
-Request and vote for Alexa features [here](https://alexa.uservoice.com/forums/906892-alexa-skills-developer-voice-and-vote)!
+**AWS Lambda support module**
+
+```
+`<dependency>
+  <groupId>com.amazon.alexa</groupId>
+  <artifactId>ask-sdk-lambda-support</artifactId>
+  <version>`2.4.0-beta.1`</version>
+</dependency>`
+```
+
+**Servlet support module**
+
+```
+`<dependency>
+  <groupId>com.amazon.alexa</groupId>
+  <artifactId>ask-sdk-servlet-support</artifactId>
+  <version>`2.4.0-beta.1`</version>
+</dependency>`
+```
+
+**Amazon DynamoDB persistence adapter**
+
+```
+`<dependency>
+  <groupId>com.amazon.alexa</groupId>
+  <artifactId>ask-sdk-dynamodb-persistence-adapter</artifactId>
+  <version>`2.4.0-beta.1`</version>
+</dependency>`
+```
+
+**Apache HTTPClient API client plugin**
+
+```
+`<dependency>
+  <groupId>com.amazon.alexa</groupId>
+  <artifactId>ask-sdk-apache-client</artifactId>
+  <version>`2.4.0-beta.1`</version>
+</dependency>`
+```
+
+

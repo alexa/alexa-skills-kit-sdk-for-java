@@ -16,6 +16,7 @@ package com.amazon.ask.request;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Request;
+import com.amazon.ask.model.canfulfill.CanFulfillIntentRequest;
 import com.amazon.ask.model.interfaces.display.ElementSelectedRequest;
 
 import java.util.function.Predicate;
@@ -48,6 +49,17 @@ public class Predicates {
     }
 
     /**
+     * Returns a predicate that returns to true if the incoming request is an {@link CanFulfillIntentRequest}
+     * for the given intent name.
+     * @param intentName intent name to evaluate against
+     * @return true if the incoming request is an {@link CanFulfillIntentRequest} for the given intent name
+     */
+    public static Predicate<HandlerInput> canFulfillIntentName(String intentName) {
+        return i -> i.getRequestEnvelope().getRequest() instanceof CanFulfillIntentRequest
+                && intentName.equals(((CanFulfillIntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getName());
+    }
+
+    /**
      * Returns a predicate that returns to true if the incoming request is an {@link IntentRequest}
      * and contains the given slot name and value.
      * @param slotName expected intent slot name
@@ -59,6 +71,20 @@ public class Predicates {
                 && ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots() != null
                 && ((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots().containsKey(slotName)
                 && slotValue.equals(((IntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots().get(slotName).getValue());
+    }
+
+    /**
+     * Returns a predicate that returns to true if the incoming request is an {@link CanFulfillIntentRequest}
+     * and contains the given slot name and value.
+     * @param slotName expected intent slot name
+     * @param slotValue expected intent slot value
+     * @return true if the incoming request is an {@link CanFulfillIntentRequest} and contains the given slot name and value
+     */
+    public static Predicate<HandlerInput> canFulfillSlotValue(String slotName, String slotValue) {
+        return i -> i.getRequestEnvelope().getRequest() instanceof CanFulfillIntentRequest
+                && ((CanFulfillIntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots() != null
+                && ((CanFulfillIntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots().containsKey(slotName)
+                && slotValue.equals(((CanFulfillIntentRequest) i.getRequestEnvelope().getRequest()).getIntent().getSlots().get(slotName).getValue());
     }
 
     /**

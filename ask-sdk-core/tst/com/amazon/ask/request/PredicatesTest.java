@@ -23,6 +23,7 @@ import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.Session;
 import com.amazon.ask.model.SessionEndedRequest;
 import com.amazon.ask.model.Slot;
+import com.amazon.ask.model.canfulfill.CanFulfillIntentRequest;
 import com.amazon.ask.model.interfaces.display.ElementSelectedRequest;
 import org.junit.Test;
 
@@ -84,6 +85,24 @@ public class PredicatesTest {
     public void intent_name_predicate_non_matching_intent_name_returns_false() {
         HandlerInput input = getInputForRequest(IntentRequest.builder().withIntent(Intent.builder().withName("foo").build()).build());
         assertFalse(intentName("bar").test(input));
+    }
+
+    @Test
+    public void canfulfill_intent_name_predicate_non_canfulfill_intent_request_returns_false() {
+        HandlerInput input = getInputForRequest(SessionEndedRequest.builder().build());
+        assertFalse(canFulfillIntentName("foo").test(input));
+    }
+
+    @Test
+    public void canfulfill_intent_name_predicate_matching_canfulfill_intent_name_returns_true() {
+        HandlerInput input = getInputForRequest(CanFulfillIntentRequest.builder().withIntent(Intent.builder().withName("foo").build()).build());
+        assertTrue(canFulfillIntentName("foo").test(input));
+    }
+
+    @Test
+    public void canfulfill_intent_name_predicate_non_matching_canfulfill_intent_name_returns_false() {
+        HandlerInput input = getInputForRequest(CanFulfillIntentRequest.builder().withIntent(Intent.builder().withName("foo").build()).build());
+        assertFalse(canFulfillIntentName("bar").test(input));
     }
 
     @Test
@@ -177,6 +196,39 @@ public class PredicatesTest {
         Map<String, Slot> slots = Collections.singletonMap("foo", Slot.builder().withValue("bar").build());
         HandlerInput input = getInputForRequest(IntentRequest.builder().withIntent(Intent.builder().withSlots(slots).build()).build());
         assertTrue(slotValue("foo", "bar").test(input));
+    }
+
+    @Test
+    public void canfulfill_slot_value_predicate_non_canfulfill_intent_request_returns_false() {
+        HandlerInput input = getInputForRequest(LaunchRequest.builder().build());
+        assertFalse(canFulfillSlotValue("foo", "bar").test(input));
+    }
+
+    @Test
+    public void canfulfill_slot_value_predicate_null_slots_returns_false() {
+        HandlerInput input = getInputForRequest(CanFulfillIntentRequest.builder().withIntent(Intent.builder().build()).build());
+        assertFalse(canFulfillSlotValue("foo", "bar").test(input));
+    }
+
+    @Test
+    public void canfulfill_slot_value_predicate_non_matching_slot_key_returns_false() {
+        Map<String, Slot> slots = Collections.singletonMap("baz", Slot.builder().withValue("bar").build());
+        HandlerInput input = getInputForRequest(CanFulfillIntentRequest.builder().withIntent(Intent.builder().withSlots(slots).build()).build());
+        assertFalse(slotValue("foo", "bar").test(input));
+    }
+
+    @Test
+    public void canfulfill_slot_value_predicate_non_matching_slot_value_returns_false() {
+        Map<String, Slot> slots = Collections.singletonMap("foo", Slot.builder().withValue("baz").build());
+        HandlerInput input = getInputForRequest(CanFulfillIntentRequest.builder().withIntent(Intent.builder().withSlots(slots).build()).build());
+        assertFalse(canFulfillSlotValue("foo", "bar").test(input));
+    }
+
+    @Test
+    public void canfulfill_slot_value_predicate_matching_slot_value_returns_true() {
+        Map<String, Slot> slots = Collections.singletonMap("foo", Slot.builder().withValue("bar").build());
+        HandlerInput input = getInputForRequest(CanFulfillIntentRequest.builder().withIntent(Intent.builder().withSlots(slots).build()).build());
+        assertTrue(canFulfillSlotValue("foo", "bar").test(input));
     }
 
     private HandlerInput getInputWithSessionAttributes(Map<String, Object> attributes, boolean inSessionRequest) {
