@@ -426,7 +426,7 @@ public class ResponseBuilderTest {
                 .build();
 
         Optional<Response> responseWithBuilder = builder
-                .withSpeech("foo")
+                .withSpeech("<speak>foo</speak>")
                 .withSimpleCard("fooTitle", "fooText")
                 .withReprompt("fooReprompt")
                 .build();
@@ -527,6 +527,27 @@ public class ResponseBuilderTest {
                 .build();
         Optional<Response> responseWithBuilder = builder
                 .withSpeech(null)
+                .build();
+        assertEquals(responseWithBuilder.get(), response);
+    }
+    
+    @Test
+    public void build_response_testing_trim() {
+        Response response = Response.builder()
+                .withOutputSpeech(SsmlOutputSpeech.builder()
+                        .withSsml("<speak>" + "foo" + "</speak>")
+                        .build())
+                .withReprompt(Reprompt.builder()
+                        .withOutputSpeech(SsmlOutputSpeech.builder()
+                                .withSsml("<speak>" + "fooReprompt"  + "</speak>")
+                                .build())
+                        .build())
+                .withShouldEndSession(false)
+                .build();
+ 
+        Optional<Response> responseWithBuilder = builder
+                .withSpeech("   <speak>     foo     </speak>")
+                .withReprompt("fooReprompt")
                 .build();
         assertEquals(responseWithBuilder.get(), response);
     }
