@@ -371,7 +371,7 @@ public class ResponseBuilder {
         }
         String trimmedOutputSpeech = outputSpeech.trim();
         if (trimmedOutputSpeech.startsWith("<speak>") && trimmedOutputSpeech.endsWith("</speak>")) {
-            return trimmedOutputSpeech.substring(8, trimmedOutputSpeech.length() - 8).trim();
+            return trimmedOutputSpeech.substring(7, trimmedOutputSpeech.length() - 8).trim();
         }
         return trimmedOutputSpeech;
     }
