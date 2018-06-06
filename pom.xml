@@ -59,7 +59,6 @@
       <id>publishing</id>
       <build>
         <plugins>
-
           <plugin>
             <artifactId>maven-gpg-plugin</artifactId>
             <executions>
@@ -80,6 +79,36 @@
             <configuration>
               <serverId>sonatype-nexus-staging</serverId>
               <nexusUrl>https://oss.sonatype.org</nexusUrl>
+            </configuration>
+          </plugin>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>javadoc-jar</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <minmemory>128m</minmemory>
+              <maxmemory>4g</maxmemory>
+              <includeDependencySources>false</includeDependencySources>
+              <show>public</show>
+              <defaultexcludes>yes</defaultexcludes>
+              <author>false</author>
+              <version>true</version>
+              <use>false</use>
+              <notree>true</notree>
+              <nodeprecatedlist>true</nodeprecatedlist>
+              <windowtitle>ASK SDK for Java - ${project.version}</windowtitle>
+              <encoding>UTF-8</encoding>
+              <docencoding>UTF-8</docencoding>
+              <doctitle>ASK SDK for Java API Reference - ${project.version}</doctitle>
+              <packagesheader>ASK SDK for Java</packagesheader>
+              <bottom><![CDATA[Copyright &#169; Amazon.com, Inc. or its affiliates. All Rights Reserved.]]></bottom>
             </configuration>
           </plugin>
         </plugins>
