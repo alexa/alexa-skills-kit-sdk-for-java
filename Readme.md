@@ -4,6 +4,11 @@
 
 This repo contains public beta versions of the ASK SDK v2 for Java, which may contain one or more Alexa features that are currently available in public beta. These features may contain unexpected bugs or be subject to future breaking changes. Production skills should use non-beta versions of the ASK SDK.
 
+## Beta Features
+The following Alexa features are only available in the public beta SDK.
+
+* Support for `CanFulfillIntentRequest`, allowing [name-free interaction for custom skills](https://developer.amazon.com/docs/custom-skills/name-free-interaction.html). Includes ResponseBuilder and Predicate helpers.
+
 ## Prerequisites
 
 * An [Apache Maven](https://maven.apache.org/) project.
