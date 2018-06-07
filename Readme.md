@@ -50,5 +50,8 @@ Covers how you can manage in-skill products and the purchase experience in your 
 ### [Javadoc Reference](http://ask-sdk-java-javadocs.s3-website-us-west-2.amazonaws.com)
 Javadoc references from the latest version of the SDK.
 
+## Public Beta SDK
+The available [public beta version of the ASK SDK v2 for Java](https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.x_public-beta) may contain one or more Alexa features that are currently in public beta and not included in the production SDK version.
+
 ## Got Feedback?
 Request and vote for Alexa features [here](https://alexa.uservoice.com/forums/906892-alexa-skills-developer-voice-and-vote)!
