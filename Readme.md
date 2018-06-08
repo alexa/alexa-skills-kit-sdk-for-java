@@ -28,11 +28,11 @@ To use the ASK SDK v2 for Java (Public Beta) in your project, declare it as a de
 From your Maven project's `pom.xml` add the following dependency to pull in the standard ASK SDK v2 for Java (Public Beta) distribution:
 
 ```
-`<dependency>
+<dependency>
   <groupId>com.amazon.alexa</groupId>
   <artifactId>ask-sdk</artifactId>
-  <version>2.4.0-beta.1</version>
-</dependency>`
+  <version>2.4.0-beta.2</version>
+</dependency>
 ```
 
 ### Including individual SDK components
@@ -42,51 +42,51 @@ Select one or more of the following modules to include in your project by adding
 **Core SDK (required)**
 
 ```
-`<dependency>
+<dependency>
   <groupId>com.amazon.alexa</groupId>
   <artifactId>ask-sdk-core</artifactId>
-  <version>2.4.0-beta.1</version>
-</dependency>`
+  <version>2.4.0-beta.2</version>
+</dependency>
 ```
 
 **AWS Lambda support module**
 
 ```
-`<dependency>
+<dependency>
   <groupId>com.amazon.alexa</groupId>
   <artifactId>ask-sdk-lambda-support</artifactId>
-  <version>`2.4.0-beta.1`</version>
-</dependency>`
+  <version>2.4.0-beta.2</version>
+</dependency>
 ```
 
 **Servlet support module**
 
 ```
-`<dependency>
+<dependency>
   <groupId>com.amazon.alexa</groupId>
   <artifactId>ask-sdk-servlet-support</artifactId>
-  <version>`2.4.0-beta.1`</version>
-</dependency>`
+  <version>2.4.0-beta.2</version>
+</dependency>
 ```
 
 **Amazon DynamoDB persistence adapter**
 
 ```
-`<dependency>
+<dependency>
   <groupId>com.amazon.alexa</groupId>
   <artifactId>ask-sdk-dynamodb-persistence-adapter</artifactId>
-  <version>`2.4.0-beta.1`</version>
-</dependency>`
+  <version>2.4.0-beta.2</version>
+</dependency>
 ```
 
 **Apache HTTPClient API client plugin**
 
 ```
-`<dependency>
+<dependency>
   <groupId>com.amazon.alexa</groupId>
   <artifactId>ask-sdk-apache-client</artifactId>
-  <version>`2.4.0-beta.1`</version>
-</dependency>`
+  <version>2.4.0-beta.2</version>
+</dependency>
 ```
 
 

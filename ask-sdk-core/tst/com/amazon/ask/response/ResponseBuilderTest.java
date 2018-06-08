@@ -556,7 +556,6 @@ public class ResponseBuilderTest {
                 .build();
         assertEquals(responseWithBuilder.get(), response);
     }
-}
     
     @Test
     public void build_response_testing_trim() {
