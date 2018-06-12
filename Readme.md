@@ -2,12 +2,12 @@
 
 | Module       | Maven           |
 | ------------- | ------------- |
-|[ask-sdk](./ask-sdk)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk)| 
-|[ask-sdk-core](./ask-sdk-core)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-core.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-core)| 
-|[ask-sdk-lambda-support](./ask-sdk-lambda-support)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-lambda-support.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-lambda-support)| 
-|[ask-sdk-servlet-support](./ask-sdk-servlet-support)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-servlet-support.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-servlet-support)| 
-|[ask-sdk-dynamodb-persistence-adapter](./ask-sdk-dynamodb-persistence-adapter)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-dynamodb-persistence-adapter.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-dynamodb-persistence-adapter)| 
-|[ask-sdk-apache-client](./ask-sdk-apache-client)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-apache-client.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-apache-client)| 
+|[ask-sdk](./ask-sdk)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk/2.3.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk)| 
+|[ask-sdk-core](./ask-sdk-core)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-core/2.3.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-core)| 
+|[ask-sdk-lambda-support](./ask-sdk-lambda-support)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-lambda-support/2.3.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-lambda-support)| 
+|[ask-sdk-servlet-support](./ask-sdk-servlet-support)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-servlet-support/2.3.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-servlet-support)| 
+|[ask-sdk-dynamodb-persistence-adapter](./ask-sdk-dynamodb-persistence-adapter)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-dynamodb-persistence-adapter/2.3.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-dynamodb-persistence-adapter)| 
+|[ask-sdk-apache-client](./ask-sdk-apache-client)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-apache-client/2.3.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-apache-client)| 
 
 The ASK SDK for Java makes it easier for you to build highly engaging skills, by allowing you to spend more time on implementing features and less on writing boiler-plate code.
 
