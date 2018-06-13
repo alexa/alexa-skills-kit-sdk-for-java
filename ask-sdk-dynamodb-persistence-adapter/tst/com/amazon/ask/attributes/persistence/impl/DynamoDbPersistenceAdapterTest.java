@@ -179,12 +179,12 @@ public class DynamoDbPersistenceAdapterTest {
         verify(mockDdb, never()).createTable(any());
     }
 
-    @Test
-    public void get_attributes_returns_empty_if_auto_create_enabled_and_table_does_not_exist() {
+    @Test(expected = PersistenceException.class)
+    public void get_attributes_throws_exception_if_auto_create_enabled_and_table_does_not_exist() {
         when(mockKeyGenerator.apply(requestEnvelope)).thenReturn("bar");
         when(mockDdb.getItem(any())).thenThrow(new ResourceNotFoundException(""));
         PersistenceAdapter adapter = DynamoDbPersistenceAdapter.builder().withAutoCreateTable(true).withTableName("foo").withDynamoDbClient(mockDdb).withPartitionKeyGenerator(mockKeyGenerator).build();
-        assertEquals(adapter.getAttributes(requestEnvelope), Optional.empty());
+        adapter.getAttributes(requestEnvelope);
     }
 
     @Test(expected = PersistenceException.class)
