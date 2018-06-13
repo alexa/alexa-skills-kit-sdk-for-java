@@ -80,9 +80,7 @@ public final class DynamoDbPersistenceAdapter implements PersistenceAdapter {
         try {
             result = dynamoDb.getItem(request).getItem();
         } catch (ResourceNotFoundException e) {
-            if (!autoCreateTable) {
-                throw new PersistenceException(String.format("Table %s does not exist or is in the process of being created", tableName), e);
-            }
+            throw new PersistenceException(String.format("Table %s does not exist or is in the process of being created", tableName), e);
         } catch (AmazonDynamoDBException e) {
             throw new PersistenceException("Failed to retrieve attributes from DynamoDB", e);
         }
