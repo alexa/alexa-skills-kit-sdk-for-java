@@ -23,6 +23,6 @@ public final class SdkConstants {
     /**
      * The version number for the SDK.
      */
-    public static final String SDK_VERSION = "2.3.3";
+    public static final String SDK_VERSION = "2.3.4";
 
 }
