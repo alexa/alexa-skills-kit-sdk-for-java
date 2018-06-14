@@ -11,12 +11,22 @@
     the specific language governing permissions and limitations under the License.
  */
 
-package com.amazon.ask.builder;
+package com.amazon.ask.module;
 
 import com.amazon.ask.Skill;
+import com.amazon.ask.builder.SkillBuilder;
+import com.amazon.ask.builder.SkillConfiguration;
 
 /**
- * Builder used to construct a new {@link Skill} without any additional modules.
- * Direct passthrough to {@link SkillBuilder}.
+ * An interface for SDK extensions that can be registered on the {@link SkillBuilder} when setting up
+ * a {@link Skill} instance.
  */
-public class CustomSkillBuilder extends SkillBuilder<CustomSkillBuilder> {}
+public interface SdkModule {
+
+    /**
+     * Method called by the {@link SkillBuilder} when .build() is called. Allows this module to configure
+     * itself as part of {@link SkillConfiguration} building.
+     */
+    void setupModule(SdkModuleContext context);
+
+}

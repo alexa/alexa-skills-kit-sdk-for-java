@@ -101,8 +101,8 @@ public class DefaultRequestDispatcherTest {
                 .build();
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void no_exception_mapper_throws_exception() {
+    @Test
+    public void no_exception_mapper_no_exception() {
         DefaultRequestDispatcher.builder()
                 .addRequestMapper(mockMapper)
                 .withHandlerAdapters(mockAdapter)

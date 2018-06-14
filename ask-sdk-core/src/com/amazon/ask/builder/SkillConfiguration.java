@@ -21,6 +21,7 @@ import com.amazon.ask.dispatcher.exception.ExceptionMapper;
 import com.amazon.ask.dispatcher.request.handler.HandlerAdapter;
 import com.amazon.ask.dispatcher.request.mapper.RequestMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -105,8 +106,28 @@ public class SkillConfiguration {
         private Builder() {
         }
 
+        public Builder addRequestMapper(RequestMapper requestMapper) {
+            if (requestMappers == null) {
+                requestMappers = new ArrayList<>();
+            }
+            requestMappers.add(requestMapper);
+            return this;
+        }
+
         public Builder withRequestMappers(List<RequestMapper> requestMappers) {
             this.requestMappers = requestMappers;
+            return this;
+        }
+
+        public List<RequestMapper> getRequestMappers() {
+            return requestMappers;
+        }
+
+        public Builder addHandlerAdapter(HandlerAdapter handlerAdapter) {
+            if (handlerAdapters == null) {
+                handlerAdapters = new ArrayList<>();
+            }
+            handlerAdapters.add(handlerAdapter);
             return this;
         }
 
@@ -115,8 +136,32 @@ public class SkillConfiguration {
             return this;
         }
 
+        public List<HandlerAdapter> getHandlerAdapters() {
+            return handlerAdapters;
+        }
+
+        public Builder addRequestInterceptor(RequestInterceptor requestInterceptor) {
+            if (requestInterceptors == null) {
+                requestInterceptors = new ArrayList<>();
+            }
+            requestInterceptors.add(requestInterceptor);
+            return this;
+        }
+
         public Builder withRequestInterceptors(List<RequestInterceptor> requestInterceptors) {
             this.requestInterceptors = requestInterceptors;
+            return this;
+        }
+
+        public List<RequestInterceptor> getRequestInterceptors() {
+            return requestInterceptors;
+        }
+
+        public Builder addResponseInterceptor(ResponseInterceptor responseInterceptor) {
+            if (responseInterceptors == null) {
+                this.responseInterceptors = new ArrayList<>();
+            }
+            responseInterceptors.add(responseInterceptor);
             return this;
         }
 
@@ -125,9 +170,17 @@ public class SkillConfiguration {
             return this;
         }
 
+        public List<ResponseInterceptor> getResponseInterceptors() {
+            return responseInterceptors;
+        }
+
         public Builder withExceptionMapper(ExceptionMapper exceptionMapper) {
             this.exceptionMapper = exceptionMapper;
             return this;
+        }
+
+        public ExceptionMapper getExceptionMapper() {
+            return exceptionMapper;
         }
 
         public Builder withPersistenceAdapter(PersistenceAdapter persistenceAdapter) {
@@ -140,9 +193,17 @@ public class SkillConfiguration {
             return this;
         }
 
+        public ApiClient getApiClient() {
+            return apiClient;
+        }
+
         public Builder withCustomUserAgent(String customUserAgent) {
             this.customUserAgent = customUserAgent;
             return this;
+        }
+
+        public String getCustomUserAgent() {
+            return customUserAgent;
         }
 
         public Builder withSkillId(String skillId) {
@@ -150,9 +211,18 @@ public class SkillConfiguration {
             return this;
         }
 
+        public String getSkillId() {
+            return skillId;
+        }
+
         public SkillConfiguration build() {
             return new SkillConfiguration(requestMappers, handlerAdapters, requestInterceptors, responseInterceptors,
                     exceptionMapper, persistenceAdapter, apiClient, customUserAgent, skillId);
         }
+
+        public PersistenceAdapter getPersistenceAdapter() {
+            return persistenceAdapter;
+        }
+
     }
 }

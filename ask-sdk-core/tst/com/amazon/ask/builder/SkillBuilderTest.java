@@ -27,6 +27,8 @@ import com.amazon.ask.model.Intent;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.services.ApiClient;
+import com.amazon.ask.module.SdkModule;
+import com.amazon.ask.module.SdkModuleContext;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,9 +37,10 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CustomSkillBuilderTest {
+public class SkillBuilderTest {
 
     private CustomSkillBuilder builder;
     private RequestHandler mockRequestHandler;
@@ -98,7 +101,7 @@ public class CustomSkillBuilderTest {
     }
 
     @Test
-    public void no_custom_persistene_adapter_null() {
+    public void no_custom_persistence_adapter_null() {
         builder.addRequestHandler(mockRequestHandler);
         builder.withPersistenceAdapter(null);
         SkillConfiguration config = builder.getConfigBuilder().build();
@@ -129,6 +132,15 @@ public class CustomSkillBuilderTest {
         builder.withApiClient(apiClient);
         SkillConfiguration config = builder.getConfigBuilder().build();
         assertEquals(config.getApiClient(), apiClient);
+    }
+
+    @Test
+    public void sdk_module_executed() {
+        SdkModule mockModule = mock(SdkModule.class);
+        builder.addRequestHandler(mockRequestHandler);
+        builder.registerSdkModule(mockModule);
+        builder.build();
+        verify(mockModule).setupModule(any(SdkModuleContext.class));
     }
 
     private HandlerInput getInputForIntent(String intentName) {
