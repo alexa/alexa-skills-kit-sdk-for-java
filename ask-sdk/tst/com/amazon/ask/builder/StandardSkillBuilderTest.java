@@ -18,8 +18,8 @@ import com.amazon.ask.dispatcher.exception.ExceptionHandler;
 import com.amazon.ask.dispatcher.exception.ExceptionMapper;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
-import com.amazon.ask.dispatcher.request.mapper.RequestMapper;
 import com.amazon.ask.dispatcher.request.handler.impl.DefaultHandlerAdapter;
+import com.amazon.ask.dispatcher.request.mapper.RequestMapper;
 import com.amazon.ask.dispatcher.request.mapper.impl.DefaultRequestMapper;
 import com.amazon.ask.model.Intent;
 import com.amazon.ask.model.IntentRequest;
@@ -28,9 +28,6 @@ import com.amazon.ask.services.ApacheHttpApiClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Collections;
-import java.util.List;
 
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;

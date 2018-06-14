@@ -14,30 +14,34 @@
 package com.amazon.ask.builder;
 
 import com.amazon.ask.Skill;
+import com.amazon.ask.attributes.persistence.PersistenceAdapter;
 import com.amazon.ask.dispatcher.exception.ExceptionHandler;
 import com.amazon.ask.dispatcher.exception.ExceptionMapper;
 import com.amazon.ask.dispatcher.exception.impl.DefaultExceptionMapper;
 import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
 import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
-import com.amazon.ask.dispatcher.request.mapper.RequestMapper;
 import com.amazon.ask.dispatcher.request.handler.impl.DefaultHandlerAdapter;
 import com.amazon.ask.dispatcher.request.handler.impl.DefaultRequestHandlerChain;
 import com.amazon.ask.dispatcher.request.mapper.impl.DefaultRequestMapper;
+import com.amazon.ask.model.services.ApiClient;
+import com.amazon.ask.module.SdkModuleContext;
+import com.amazon.ask.module.SdkModule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class SkillBuilder<T extends SkillBuilder<T>> {
+public class SkillBuilder<T extends SkillBuilder<T>> {
 
     protected final List<RequestHandler> requestHandlers;
     protected final List<ExceptionHandler> exceptionHandlers;
     protected final List<RequestInterceptor> requestInterceptors;
     protected final List<ResponseInterceptor> responseInterceptors;
-
+    protected final List<SdkModule> sdkModules;
+    protected PersistenceAdapter persistenceAdapter;
+    protected ApiClient apiClient;
     protected String skillId;
 
     public SkillBuilder() {
@@ -45,6 +49,7 @@ public abstract class SkillBuilder<T extends SkillBuilder<T>> {
         this.exceptionHandlers = new ArrayList<>();
         this.requestInterceptors = new ArrayList<>();
         this.responseInterceptors = new ArrayList<>();
+        this.sdkModules = new ArrayList<>();
     }
 
     public T addRequestHandler(RequestHandler handler) {
@@ -107,6 +112,21 @@ public abstract class SkillBuilder<T extends SkillBuilder<T>> {
         return getThis();
     }
 
+    public T withPersistenceAdapter(PersistenceAdapter persistenceAdapter) {
+        this.persistenceAdapter = persistenceAdapter;
+        return getThis();
+    }
+
+    public T withApiClient(ApiClient apiClient) {
+        this.apiClient = apiClient;
+        return getThis();
+    }
+
+    public T registerSdkModule(SdkModule sdkModule) {
+        sdkModules.add(sdkModule);
+        return getThis();
+    }
+
     public T withSkillId(String skillId) {
         this.skillId = skillId;
         return getThis();
@@ -118,28 +138,43 @@ public abstract class SkillBuilder<T extends SkillBuilder<T>> {
     }
 
     protected SkillConfiguration.Builder getConfigBuilder() {
-        List<DefaultRequestHandlerChain> requestHandlerChains = requestHandlers.stream()
-                .map(handler -> DefaultRequestHandlerChain.builder()
-                        .withRequestHandler(handler).build())
-                .collect(Collectors.toList());
+        SkillConfiguration.Builder skillConfigBuilder = SkillConfiguration.builder();
 
-        RequestMapper mapper = DefaultRequestMapper.builder()
-                .withRequestHandlerChains(requestHandlerChains)
-                .build();
+        if (!requestHandlers.isEmpty()) {
+            List<DefaultRequestHandlerChain> requestHandlerChains = requestHandlers.stream()
+                    .map(handler -> DefaultRequestHandlerChain.builder()
+                            .withRequestHandler(handler).build())
+                    .collect(Collectors.toList());
 
-        ExceptionMapper exceptionMapper = DefaultExceptionMapper.builder()
-                .withExceptionHandlers(exceptionHandlers)
-                .build();
+            skillConfigBuilder.addRequestMapper(DefaultRequestMapper.builder()
+                    .withRequestHandlerChains(requestHandlerChains)
+                    .build())
+                    .addHandlerAdapter(new DefaultHandlerAdapter());
+        }
 
-        return SkillConfiguration.builder()
-                .withRequestMappers(Collections.singletonList(mapper))
-                .withHandlerAdapters(Collections.singletonList(new DefaultHandlerAdapter()))
-                .withExceptionMapper(exceptionMapper)
-                .withRequestInterceptors(requestInterceptors)
+        if (!exceptionHandlers.isEmpty()) {
+            ExceptionMapper exceptionMapper = DefaultExceptionMapper.builder()
+                    .withExceptionHandlers(exceptionHandlers)
+                    .build();
+            skillConfigBuilder.withExceptionMapper(exceptionMapper);
+        }
+
+        skillConfigBuilder.withRequestInterceptors(requestInterceptors)
                 .withResponseInterceptors(responseInterceptors)
+                .withPersistenceAdapter(persistenceAdapter)
+                .withApiClient(apiClient)
                 .withSkillId(skillId);
+
+        SdkModuleContext sdkModuleContext = new SdkModuleContext(skillConfigBuilder);
+        for (SdkModule sdkModule : sdkModules) {
+            sdkModule.setupModule(sdkModuleContext);
+        }
+
+        return skillConfigBuilder;
     }
 
-    public abstract Skill build();
+    public Skill build() {
+        return new Skill(getConfigBuilder().build());
+    }
 
 }

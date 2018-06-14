@@ -61,7 +61,7 @@ public class DefaultRequestDispatcher implements RequestDispatcher {
                                        Collection<RequestInterceptor> requestInterceptors, Collection<ResponseInterceptor> responseInterceptors) {
         this.handlerAdapters = ValidationUtils.assertNotNull(handlerAdapters, "handlerAdapters");
         this.requestMappers = ValidationUtils.assertNotEmpty(requestMappers, "requestMappers");
-        this.exceptionMapper = ValidationUtils.assertNotNull(exceptionMapper, "exceptionMapper");
+        this.exceptionMapper = exceptionMapper;
         this.requestInterceptors = requestInterceptors != null ? requestInterceptors : new ArrayList<>();
         this.responseInterceptors = responseInterceptors != null ? responseInterceptors : new ArrayList<>();
     }
@@ -76,7 +76,8 @@ public class DefaultRequestDispatcher implements RequestDispatcher {
         try {
             return doDispatch(input);
         } catch (Exception e) {
-            Optional<ExceptionHandler> exceptionHandler = exceptionMapper.getHandler(input, e);
+            Optional<ExceptionHandler> exceptionHandler = exceptionMapper != null
+                    ? exceptionMapper.getHandler(input, e) : Optional.empty();
             if (exceptionHandler.isPresent()) {
                 logger.debug("[{}] Found suitable exception handler", requestId);
                 return exceptionHandler.get().handle(input, e);

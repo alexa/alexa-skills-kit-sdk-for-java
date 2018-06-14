@@ -14,14 +14,12 @@
 package com.amazon.ask.builder;
 
 import com.amazon.ask.Skill;
-import com.amazon.ask.attributes.persistence.PersistenceAdapter;
+import com.amazon.ask.module.StandardSdkModule;
 import com.amazon.ask.attributes.persistence.impl.DynamoDbPersistenceAdapter;
 import com.amazon.ask.model.RequestEnvelope;
-import com.amazon.ask.model.services.ApiClient;
 import com.amazon.ask.services.ApacheHttpApiClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 
 import java.util.function.Function;
 
@@ -30,62 +28,36 @@ import java.util.function.Function;
  */
 public class StandardSkillBuilder extends SkillBuilder<StandardSkillBuilder> {
 
-    protected CloseableHttpClient customHttpClient;
-    protected AmazonDynamoDB customDynamoDBClient;
-    protected String tableName;
-    protected Boolean autoCreateTable;
-    protected Function<RequestEnvelope, String> partitionKeyGenerator;
+    private StandardSdkModule.Builder standardSdkModuleBuilder = StandardSdkModule.builder();
 
     public StandardSkillBuilder withHttpClient(CloseableHttpClient customHttpClient) {
-        this.customHttpClient = customHttpClient;
+        standardSdkModuleBuilder.withHttpClient(customHttpClient);
         return this;
     }
 
     public StandardSkillBuilder withTableName(String tableName) {
-        this.tableName = tableName;
+        standardSdkModuleBuilder.withTableName(tableName);
         return this;
     }
 
     public StandardSkillBuilder withAutoCreateTable(boolean autoCreateTable) {
-        this.autoCreateTable = autoCreateTable;
+        standardSdkModuleBuilder.withAutoCreateTable(autoCreateTable);
         return this;
     }
 
     public StandardSkillBuilder withPartitionKeyGenerator(Function<RequestEnvelope, String> partitionKeyGenerator) {
-        this.partitionKeyGenerator = partitionKeyGenerator;
+        standardSdkModuleBuilder.withPartitionKeyGenerator(partitionKeyGenerator);
         return this;
     }
 
     public StandardSkillBuilder withDynamoDbClient(AmazonDynamoDB customDynamoDBClient) {
-        this.customDynamoDBClient = customDynamoDBClient;
+        standardSdkModuleBuilder.withDynamoDbClient(customDynamoDBClient);
         return this;
     }
 
     protected SkillConfiguration.Builder getConfigBuilder() {
-        PersistenceAdapter persistenceAdapter = null;
-
-        if (tableName != null) {
-            DynamoDbPersistenceAdapter.Builder persistenceAdapterBuilder = DynamoDbPersistenceAdapter.builder()
-                    .withTableName(tableName);
-            if (autoCreateTable != null) {
-                persistenceAdapterBuilder.withAutoCreateTable(autoCreateTable);
-            }
-            if (partitionKeyGenerator != null) {
-                persistenceAdapterBuilder.withPartitionKeyGenerator(partitionKeyGenerator);
-            }
-            if (customDynamoDBClient != null) {
-                persistenceAdapterBuilder.withDynamoDbClient(customDynamoDBClient);
-            }
-            persistenceAdapter = persistenceAdapterBuilder.build();
-        }
-
-        ApiClient apiClient = ApacheHttpApiClient.custom()
-                .withHttpClient(customHttpClient != null ? customHttpClient : HttpClients.createDefault())
-                .build();
-
-        return super.getConfigBuilder()
-                .withApiClient(apiClient)
-                .withPersistenceAdapter(persistenceAdapter);
+        registerSdkModule(standardSdkModuleBuilder.build());
+        return super.getConfigBuilder();
     }
 
     public Skill build() {
