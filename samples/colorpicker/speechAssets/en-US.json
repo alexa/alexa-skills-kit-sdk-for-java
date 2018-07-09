@@ -42,6 +42,10 @@
             "tell me my favorite color",
             "tell me what my favorite color is"
           ]
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
         }
       ],
       "types": [
