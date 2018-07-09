@@ -16,6 +16,7 @@ package com.amazon.ask.colorpicker;
 import com.amazon.ask.Skill;
 import com.amazon.ask.SkillStreamHandler;
 import com.amazon.ask.Skills;
+import com.amazon.ask.colorpicker.handlers.FallbackIntentHandler;
 import com.amazon.ask.colorpicker.handlers.HelpIntentHandler;
 import com.amazon.ask.colorpicker.handlers.LaunchRequestHandler;
 import com.amazon.ask.colorpicker.handlers.SessionEndedRequestHandler;
@@ -33,7 +34,8 @@ public class ColorPickerStreamHandler extends SkillStreamHandler {
                         new LaunchRequestHandler(),
                         new CancelandStopIntentHandler(),
                         new SessionEndedRequestHandler(),
-                        new HelpIntentHandler())
+                        new HelpIntentHandler(),
+                        new FallbackIntentHandler())
                 // Add your skill id below
                 //.withSkillId("")
                 .build();
