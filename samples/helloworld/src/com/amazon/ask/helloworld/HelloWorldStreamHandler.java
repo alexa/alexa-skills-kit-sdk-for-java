@@ -21,6 +21,7 @@ import com.amazon.ask.helloworld.handlers.HelloWorldIntentHandler;
 import com.amazon.ask.helloworld.handlers.HelpIntentHandler;
 import com.amazon.ask.helloworld.handlers.SessionEndedRequestHandler;
 import com.amazon.ask.helloworld.handlers.LaunchRequestHandler;
+import com.amazon.ask.helloworld.handlers.FallbackIntentHandler;
 
 public class HelloWorldStreamHandler extends SkillStreamHandler {
 
@@ -31,7 +32,8 @@ public class HelloWorldStreamHandler extends SkillStreamHandler {
                         new HelloWorldIntentHandler(),
                         new HelpIntentHandler(),
                         new LaunchRequestHandler(),
-                        new SessionEndedRequestHandler())
+                        new SessionEndedRequestHandler(),
+                        new FallbackIntentHandler())
                 // Add your skill id below
                 //.withSkillId("")
                 .build();
