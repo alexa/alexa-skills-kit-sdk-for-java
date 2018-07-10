@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.Proxy;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -51,6 +52,7 @@ public class SpeechletServlet extends HttpServlet {
 
     private transient SpeechletV2 speechlet;
     private transient ServletSpeechletRequestHandler speechletRequestHandler;
+    private transient Proxy proxy = Proxy.NO_PROXY;
     private final boolean disableRequestSignatureCheck;
 
     public SpeechletServlet() {
@@ -86,7 +88,8 @@ public class SpeechletServlet extends HttpServlet {
                 // certificate.
                 SpeechletRequestSignatureVerifier.checkRequestSignature(serializedSpeechletRequest,
                         request.getHeader(Sdk.SIGNATURE_REQUEST_HEADER),
-                        request.getHeader(Sdk.SIGNATURE_CERTIFICATE_CHAIN_URL_REQUEST_HEADER));
+                        request.getHeader(Sdk.SIGNATURE_CERTIFICATE_CHAIN_URL_REQUEST_HEADER),
+                        proxy);
             }
 
             outputBytes =
@@ -111,6 +114,24 @@ public class SpeechletServlet extends HttpServlet {
             response.setContentLength(outputBytes.length);
             out.write(outputBytes);
         }
+    }
+
+    /**
+     * Returns the {@code Proxy} object that this servlet may use for Request Signature Verification if enabled.
+     *
+     * @return the {@code Proxy} associated with this servlet.
+     */
+    public Proxy getProxy() {
+        return proxy;
+    }
+
+    /**
+     * Sets a {@code Proxy} object that this servlet may use if Request Signature Verification is enabled.
+     *
+     * @param proxy the {@code Proxy} to associate with this servlet.
+     */
+    public void setProxy(Proxy proxy) {
+        this.proxy = proxy;
     }
 
     /**

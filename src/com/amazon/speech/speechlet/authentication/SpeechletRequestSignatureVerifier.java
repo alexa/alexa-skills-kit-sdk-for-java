@@ -16,6 +16,7 @@ package com.amazon.speech.speechlet.authentication;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -65,9 +66,11 @@ public final class SpeechletRequestSignatureVerifier {
      *            the signature for provided in the request header
      * @param signingCertificateChainUrl
      *            the certificate chain URL provided in the request header
+     * @param proxy
+     *            an HTTP Proxy for the certificate retrieval. {@code Proxy.NO_PROXY} can be used if no Proxy is required.
      */
     public static void checkRequestSignature(final byte[] serializedSpeechletRequest,
-            final String baseEncoded64Signature, final String signingCertificateChainUrl) {
+            final String baseEncoded64Signature, final String signingCertificateChainUrl, final Proxy proxy) {
         if ((baseEncoded64Signature == null) || (signingCertificateChainUrl == null)) {
             throw new SecurityException(
                     "Missing signature/certificate for the provided speechlet request");
@@ -83,7 +86,7 @@ public final class SpeechletRequestSignatureVerifier {
                  */
                 signingCertificate.checkValidity();
             } else {
-                signingCertificate = retrieveAndVerifyCertificateChain(signingCertificateChainUrl);
+                signingCertificate = retrieveAndVerifyCertificateChain(signingCertificateChainUrl, proxy);
 
                 // if certificate is valid, then add it to the cache
                 CERTIFICATE_CACHE.put(signingCertificateChainUrl, signingCertificate);
@@ -111,14 +114,17 @@ public final class SpeechletRequestSignatureVerifier {
      *
      * @param signingCertificateChainUrl
      *            the URL to retrieve the certificate chain from
+     * @param proxy
+     *            an HTTP Proxy for the certificate retrieval. {@code Proxy.NO_PROXY} can be used if no Proxy is required.
      * @return the certificate at the specified URL, if the certificate is valid
      * @throws CertificateException
      *             if the certificate cannot be retrieve or is invalid
      */
     public static X509Certificate retrieveAndVerifyCertificateChain(
-            final String signingCertificateChainUrl) throws CertificateException {
+            final String signingCertificateChainUrl,
+            final Proxy proxy) throws CertificateException {
         try (InputStream in =
-                getAndVerifySigningCertificateChainUrl(signingCertificateChainUrl).openStream()) {
+                getAndVerifySigningCertificateChainUrl(signingCertificateChainUrl).openConnection(proxy).getInputStream()) {
             CertificateFactory certificateFactory =
                     CertificateFactory.getInstance(Sdk.SIGNATURE_CERTIFICATE_TYPE);
             @SuppressWarnings("unchecked")
