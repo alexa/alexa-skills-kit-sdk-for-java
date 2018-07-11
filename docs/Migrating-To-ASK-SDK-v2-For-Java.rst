@@ -219,7 +219,7 @@ Response builder
 ----------------
 
 The response builder allows you to avoid manually writing helper
-functions to construct each element of ``SpeechletResponse``,.
+functions to construct each element of ``SpeechletResponse``.
 
 The following shows a snippet of the newAskResponse method taken from
 the SDK v1 sample.
