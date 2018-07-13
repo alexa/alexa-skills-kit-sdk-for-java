@@ -2,7 +2,9 @@ Migration Guide for ASK SDK v2 for Java
 =======================================
 
 This guide shows how to use Alexa Skills Kit SDK v2 for Java to migrate
-existing skills developed with the SDK v1 to v2.
+existing skills developed with the SDK v1 to v2. This version of SDK
+allows skill developers to create more robust skills, to organize the
+code better, and provides better core features which are outlined below!
 
 Adding the ASK SDK v2 to Your Project
 -------------------------------------
@@ -176,6 +178,10 @@ separated out into a different handler.
         }
    }
 
+To learn more about Request handlers, see `Request
+Handlers <https://alexa-skills-kit-sdk-for-java.readthedocs.io/en/latest/Request-Processing.html#request-handlers>`__
+in Technical Documentation.
+
 Attributes manager
 ------------------
 
@@ -215,11 +221,15 @@ table using attribute manager in the ``canHandle`` method. The
        return input.getResponseBuilder().build();
    }
 
+To learn more about interceptors, see `Request and Response
+interceptors <https://alexa-skills-kit-sdk-for-java.readthedocs.io/en/latest/Request-Processing.html#request-and-response-interceptors>`__
+in Technical Documentation.
+
 Response builder
 ----------------
 
 The response builder allows you to avoid manually writing helper
-functions to construct each element of ``SpeechletResponse``.
+functions to construct each element of ``SpeechletResponse``,.
 
 The following shows a snippet of the newAskResponse method taken from
 the SDK v1 sample.
@@ -249,9 +259,8 @@ the SDK v1 sample.
        return SpeechletResponse.newAskResponse(outputSpeech, reprompt);
    }
 
-With the response builder, in each request handler you construct the
-response within the ``handle`` method, which reduces the verbosity of
-your code.
+In the v2 SDK, you use the response builder to construct the response
+within the handle method,, which reduces the verbosity of your code.
 
 ::
 
@@ -261,6 +270,10 @@ your code.
                .withReprompt(repromptSpeech)
                .build();
    }
+
+To learn more about Response builder, see `Response
+Building <https://alexa-skills-kit-sdk-for-java.readthedocs.io/en/latest/Response-Building.html>`__
+in Technical Documentation.
 
 Exception handlers
 ------------------
@@ -292,6 +305,10 @@ following example shows a catch-all exception handler.
                    .build();
         }
    }
+
+To learn more about Exception handlers, see `Exception
+Handlers <https://alexa-skills-kit-sdk-for-java.readthedocs.io/en/latest/Request-Processing.html#exception-handlers>`__
+in Technical Documentation.
 
 Alexa service support
 ---------------------
@@ -352,7 +369,8 @@ ID for the AWS Lambda function.
        }
    }
 
-In the SDK v2, the following example shows how to configure request
+In SDK v2 the builder pattern is used to create your skill instance and
+register your handlers. Following example shows how to configure request
 handlers, exception handlers, and other handlers.
 
 ::
