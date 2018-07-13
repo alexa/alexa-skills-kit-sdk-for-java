@@ -5,6 +5,7 @@
 
     Setting-Up-The-ASK-SDK
     Developing-Your-First-Skill
+    Migrating-To-ASK-SDK-v2-For-Java
 
 ..  toctree::
     :caption: Technical Documentation
@@ -40,6 +41,11 @@ Maven project.
 
 Walks you through step-by-step instructions for building the Hello World
 sample.
+
+`Migrating To ASK SDK v2 For Java <Migrating-To-ASK-SDK-v2-For-Java.html>`__
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This guide will show you how to migrate an existing skill in v1 to v2 SDK.
 
 Technical Documentation
 -----------------------
