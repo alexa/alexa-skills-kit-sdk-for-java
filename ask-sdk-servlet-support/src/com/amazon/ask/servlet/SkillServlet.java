@@ -22,6 +22,7 @@ import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.net.Proxy;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,13 +60,14 @@ public class SkillServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(SkillServlet.class);
     private static final long serialVersionUID = 3257254794185762002L;
 
-    private transient Skill skill;
+    private transient final Skill skill;
     private transient final List<SkillServletVerifier> verifiers;
     private transient final Serializer serializer = new JacksonSerializer();
+    private transient Proxy proxy = Proxy.NO_PROXY;
 
     public SkillServlet(Skill skill) {
         List<SkillServletVerifier> defaultVerifiers = new ArrayList<>();
-        defaultVerifiers.add(new SkillRequestSignatureVerifier());
+        defaultVerifiers.add(new SkillRequestSignatureVerifier(proxy));
         Long timestampToleranceProperty = ServletUtils.getSystemPropertyAsLong(TIMESTAMP_TOLERANCE_SYSTEM_PROPERTY);
         defaultVerifiers.add(new SkillRequestTimestampVerifier(timestampToleranceProperty != null
                 ? timestampToleranceProperty : DEFAULT_TOLERANCE_MILLIS));
@@ -119,6 +121,15 @@ public class SkillServlet extends HttpServlet {
             log.error("Exception occurred in doPost, returning status code {}", statusCode, ex);
             response.sendError(statusCode, ex.getMessage());
         }
+    }
+
+    /**
+     * Sets a {@code Proxy} object that this servlet may use if Request Signature Verification is enabled.
+     *
+     * @param proxy the {@code Proxy} to associate with this servlet.
+     */
+    public void setProxy(Proxy proxy) {
+        this.proxy = proxy;
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {

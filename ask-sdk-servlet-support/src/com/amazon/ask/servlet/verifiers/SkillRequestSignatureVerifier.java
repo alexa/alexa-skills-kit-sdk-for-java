@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -50,6 +51,19 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
     private static final String VALID_SIGNING_CERT_CHAIN_URL_HOST_NAME = "s3.amazonaws.com";
     private static final String VALID_SIGNING_CERT_CHAIN_URL_PATH_PREFIX = "/echo.api/";
     private static final int UNSPECIFIED_SIGNING_CERT_CHAIN_URL_PORT_VALUE = -1;
+
+    private final Proxy proxy;
+
+    public SkillRequestSignatureVerifier() {
+        this(Proxy.NO_PROXY);
+    }
+
+    /**
+     * @param proxy proxy configuration for certificate retrieval
+     */
+    public SkillRequestSignatureVerifier(Proxy proxy) {
+        this.proxy = proxy;
+    }
 
     /**
      * Verifies the certificate authenticity using the configured TrustStore and the signature of
@@ -110,7 +124,7 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
     private X509Certificate retrieveAndVerifyCertificateChain(
             final String signingCertificateChainUrl) throws CertificateException {
         try (InputStream in =
-                getAndVerifySigningCertificateChainUrl(signingCertificateChainUrl).openStream()) {
+                getAndVerifySigningCertificateChainUrl(signingCertificateChainUrl).openConnection(proxy).getInputStream()) {
             CertificateFactory certificateFactory =
                     CertificateFactory.getInstance(ServletConstants.SIGNATURE_CERTIFICATE_TYPE);
             @SuppressWarnings("unchecked")
