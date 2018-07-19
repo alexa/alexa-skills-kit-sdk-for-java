@@ -38,6 +38,11 @@ public class SdkModuleContext {
         this.skillConfigBuilder = skillConfigBuilder;
     }
 
+    public SdkModuleContext addRequestMappers(List<RequestMapper> requestMapper) {
+        requestMapper.forEach(skillConfigBuilder::addRequestMapper);
+        return this;
+    }
+
     public SdkModuleContext addRequestMapper(RequestMapper requestMapper) {
         skillConfigBuilder.addRequestMapper(requestMapper);
         return this;
@@ -47,13 +52,20 @@ public class SdkModuleContext {
         return Collections.unmodifiableList(skillConfigBuilder.getRequestMappers());
     }
 
+    public SdkModuleContext addHandlerAdapters(List<HandlerAdapter> handlerAdapter) {
+        handlerAdapter.forEach(skillConfigBuilder::addHandlerAdapter);
+        return this;
+    }
+
     public SdkModuleContext addHandlerAdapter(HandlerAdapter handlerAdapter) {
         skillConfigBuilder.addHandlerAdapter(handlerAdapter);
         return this;
     }
 
     public List<HandlerAdapter> getHandlerAdapter() {
-        return Collections.unmodifiableList(skillConfigBuilder.getHandlerAdapters());
+        return skillConfigBuilder.getHandlerAdapters() == null
+            ? null
+            : Collections.unmodifiableList(skillConfigBuilder.getHandlerAdapters());
     }
 
     public SdkModuleContext addRequestInterceptor(RequestInterceptor requestInterceptor) {
@@ -62,7 +74,9 @@ public class SdkModuleContext {
     }
 
     public List<RequestInterceptor> getRequestInterceptors() {
-        return Collections.unmodifiableList(skillConfigBuilder.getRequestInterceptors());
+        return skillConfigBuilder.getRequestInterceptors() == null
+            ? null
+            : Collections.unmodifiableList(skillConfigBuilder.getRequestInterceptors());
     }
 
     public SdkModuleContext addResponseInterceptor(ResponseInterceptor responseInterceptor) {
@@ -71,7 +85,9 @@ public class SdkModuleContext {
     }
 
     public List<ResponseInterceptor> getResponseInterceptors() {
-        return Collections.unmodifiableList(skillConfigBuilder.getResponseInterceptors());
+        return skillConfigBuilder.getResponseInterceptors() == null
+            ? null
+            : Collections.unmodifiableList(skillConfigBuilder.getResponseInterceptors());
     }
 
     public SdkModuleContext setExceptionMapper(ExceptionMapper exceptionMapper) {
