@@ -13,10 +13,11 @@
 
 package com.amazon.ask.dispatcher.request.handler.impl;
 
+import com.amazon.ask.dispatcher.exception.ExceptionHandler;
+import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.dispatcher.request.handler.RequestHandlerChain;
 import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
 import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
-import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 
 import java.util.List;
 
@@ -26,8 +27,9 @@ import java.util.List;
 public class DefaultRequestHandlerChain extends GenericRequestHandlerChain {
 
     protected DefaultRequestHandlerChain(RequestHandler handler, List<RequestInterceptor> requestInterceptors,
-                                         List<ResponseInterceptor> responseInterceptors) {
-        super(handler, requestInterceptors, responseInterceptors);
+                                         List<ResponseInterceptor> responseInterceptors,
+                                         List<ExceptionHandler> exceptionHandlers) {
+        super(handler, requestInterceptors, responseInterceptors, exceptionHandlers);
     }
 
     public static Builder builder() {
@@ -51,7 +53,7 @@ public class DefaultRequestHandlerChain extends GenericRequestHandlerChain {
         }
 
         public DefaultRequestHandlerChain build() {
-            return new DefaultRequestHandlerChain(handler, requestInterceptors, responseInterceptors);
+            return new DefaultRequestHandlerChain(handler, requestInterceptors, responseInterceptors, exceptionHandlers);
         }
     }
 }

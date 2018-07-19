@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import com.amazon.ask.exception.AskSdkException;
 import com.amazon.ask.exception.UnhandledSkillException;
@@ -79,7 +78,7 @@ public class DefaultRequestDispatcher implements RequestDispatcher {
             Optional<ExceptionHandler> exceptionHandler = exceptionMapper != null
                     ? exceptionMapper.getHandler(input, e) : Optional.empty();
             if (exceptionHandler.isPresent()) {
-                logger.debug("[{}] Found suitable exception handler", requestId);
+                logger.debug("[{}] Found suitable global exception handler", requestId);
                 return exceptionHandler.get().handle(input, e);
             } else {
                 logger.debug("[{}] No suitable exception handler found", requestId);
@@ -88,7 +87,7 @@ public class DefaultRequestDispatcher implements RequestDispatcher {
         }
     }
 
-    private Optional<Response> doDispatch(HandlerInput input) {
+    private Optional<Response> doDispatch(HandlerInput input) throws Exception {
         Request request = input.getRequestEnvelope().getRequest();
         String requestId = request.getRequestId();
 
@@ -131,17 +130,31 @@ public class DefaultRequestDispatcher implements RequestDispatcher {
             throw new AskSdkException(message);
         }
 
-        // execute any request interceptors attached to the handler chain
-        for (RequestInterceptor requestInterceptor : handlerChain.get().getRequestInterceptors()) {
-            requestInterceptor.process(input);
+        Optional<Response> response;
+        try {
+            // execute any request interceptors attached to the handler chain
+            for (RequestInterceptor requestInterceptor : handlerChain.get().getRequestInterceptors()) {
+                requestInterceptor.process(input);
+            }
+
+            // invoke request handler using the adapter
+            response = handlerAdapter.execute(input, requestHandler);
+
+            // execute any response interceptors attached to the handler chain
+            for (ResponseInterceptor responseInterceptor : handlerChain.get().getResponseInterceptors()) {
+                responseInterceptor.process(input, response);
+            }
+        } catch (Exception e) {
+            return handlerChain.get().getExceptionHandlers().stream()
+                    .filter(exceptionHandler -> exceptionHandler.canHandle(input, e))
+                    .findFirst()
+                    .orElseThrow(() -> e).handle(input, e);
         }
 
-        // invoke request handler using the adapter
-        Optional<Response> response = handlerAdapter.execute(input, requestHandler);
-
-        // first execute any response interceptors attached to the handler chain, then any global ones
-        Stream.concat(handlerChain.get().getResponseInterceptors().stream(), responseInterceptors.stream())
-                .forEach(responseInterceptor -> responseInterceptor.process(input, response));
+        // execute any global response interceptors
+        for (ResponseInterceptor responseInterceptor : responseInterceptors) {
+            responseInterceptor.process(input, response);
+        }
 
         return response;
     }

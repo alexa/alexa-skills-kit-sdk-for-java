@@ -13,6 +13,7 @@
 
 package com.amazon.ask.dispatcher.request.handler;
 
+import com.amazon.ask.dispatcher.exception.ExceptionHandler;
 import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
 import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
 
@@ -30,8 +31,19 @@ public interface RequestHandlerChain {
      */
     Object getRequestHandler();
 
+    /**
+     * @return list of chain-level request interceptors
+     */
     List<RequestInterceptor> getRequestInterceptors();
 
+    /**
+     * @return list of chain-level response interceptors
+     */
     List<ResponseInterceptor> getResponseInterceptors();
+
+    /**
+     * @return list of chain-level exception handlers
+     */
+    List<ExceptionHandler> getExceptionHandlers();
 
 }
