@@ -149,7 +149,7 @@ public class DefaultRequestDispatcherTest {
     }
 
     @Test
-    public void exception_handler_returns_response() {
+    public void global_exception_handler_returns_response() {
         ExceptionHandler exceptionHandler = mock(ExceptionHandler.class);
         when(exceptionHandler.canHandle(any(), any())).thenReturn(true);
         when(exceptionHandler.handle(any(), any())).thenReturn(Optional.of(mockResponse));
@@ -173,7 +173,7 @@ public class DefaultRequestDispatcherTest {
     }
 
     @Test
-    public void exception_handler_returns_empty_output() {
+    public void global_exception_handler_returns_empty_output() {
         ExceptionHandler exceptionHandler = mock(ExceptionHandler.class);
         when(exceptionHandler.handle(any(), any())).thenReturn(Optional.empty());
 
@@ -192,6 +192,60 @@ public class DefaultRequestDispatcherTest {
         ArgumentCaptor<Throwable> throwableCaptor = ArgumentCaptor.forClass(Throwable.class);
         ArgumentCaptor<HandlerInput> handlerInputCaptor = ArgumentCaptor.forClass(HandlerInput.class);
         verify(exceptionHandler).handle(handlerInputCaptor.capture(), throwableCaptor.capture());
+
+        assertEquals(throwableCaptor.getValue(), e);
+        assertEquals(handlerInputCaptor.getValue().getRequestEnvelope(), handlerInput.getRequestEnvelope());
+    }
+
+    @Test
+    public void chain_level_exception_handler_returns_response() {
+        ExceptionHandler exceptionHandler = mock(ExceptionHandler.class);
+        when(exceptionHandler.canHandle(any(), any())).thenReturn(true);
+        when(exceptionHandler.handle(any(), any())).thenReturn(Optional.of(mockResponse));
+        when(mockHandlerChain.getExceptionHandlers()).thenReturn(Collections.singletonList(exceptionHandler));
+        dispatcher = DefaultRequestDispatcher.builder()
+                .addRequestMapper(mockMapper)
+                .addHandlerAdapter(mockAdapter)
+                .withExceptionMapper(DefaultExceptionMapper.builder().addExceptionHandler(exceptionHandler).build())
+                .build();
+        Exception e = new IllegalStateException();
+        when(mockAdapter.execute(any(HandlerInput.class), any(RequestHandler.class))).thenThrow(e);
+        Response output = dispatcher.dispatch(handlerInput).get();
+        assertEquals(output, mockResponse);
+        verify(exceptionHandler).canHandle(any(), any());
+
+        ArgumentCaptor<Throwable> throwableCaptor = ArgumentCaptor.forClass(Throwable.class);
+        ArgumentCaptor<HandlerInput> handlerInputCaptor = ArgumentCaptor.forClass(HandlerInput.class);
+        verify(exceptionHandler).handle(handlerInputCaptor.capture(), throwableCaptor.capture());
+
+        verify(mockExceptionMapper, never()).getHandler(any(), any());
+
+        assertEquals(throwableCaptor.getValue(), e);
+        assertEquals(handlerInputCaptor.getValue().getRequestEnvelope(), handlerInput.getRequestEnvelope());
+    }
+
+    @Test
+    public void chain_level_exception_handler_returns_empty_output() {
+        ExceptionHandler exceptionHandler = mock(ExceptionHandler.class);
+        when(exceptionHandler.canHandle(any(), any())).thenReturn(true);
+        when(exceptionHandler.handle(any(), any())).thenReturn(Optional.empty());
+        when(mockHandlerChain.getExceptionHandlers()).thenReturn(Collections.singletonList(exceptionHandler));
+        dispatcher = DefaultRequestDispatcher.builder()
+                .addRequestMapper(mockMapper)
+                .addHandlerAdapter(mockAdapter)
+                .withExceptionMapper(DefaultExceptionMapper.builder().addExceptionHandler(exceptionHandler).build())
+                .build();
+        Exception e = new IllegalStateException();
+        when(mockAdapter.execute(any(HandlerInput.class), any(RequestHandler.class))).thenThrow(e);
+        Optional<Response> output = dispatcher.dispatch(handlerInput);
+        assertEquals(output, Optional.empty());
+        verify(exceptionHandler).canHandle(any(), any());
+
+        ArgumentCaptor<Throwable> throwableCaptor = ArgumentCaptor.forClass(Throwable.class);
+        ArgumentCaptor<HandlerInput> handlerInputCaptor = ArgumentCaptor.forClass(HandlerInput.class);
+        verify(exceptionHandler).handle(handlerInputCaptor.capture(), throwableCaptor.capture());
+
+        verify(mockExceptionMapper, never()).getHandler(any(), any());
 
         assertEquals(throwableCaptor.getValue(), e);
         assertEquals(handlerInputCaptor.getValue().getRequestEnvelope(), handlerInput.getRequestEnvelope());
@@ -324,6 +378,8 @@ public class DefaultRequestDispatcherTest {
             verify(mockMapper, never()).getRequestHandlerChain(any());
             verify(mockAdapter, never()).supports(any());
             verify(mockAdapter, never()).execute(any(), any());
+            verify(mockHandlerChain, never()).getExceptionHandlers();
+            verify(mockExceptionMapper).getHandler(any(), any());
         }
     }
 
@@ -353,6 +409,8 @@ public class DefaultRequestDispatcherTest {
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter).supports(any());
             verify(mockAdapter, never()).execute(any(), any());
+            verify(mockHandlerChain).getExceptionHandlers();
+            verify(mockExceptionMapper).getHandler(any(), any());
         }
     }
 
@@ -382,6 +440,8 @@ public class DefaultRequestDispatcherTest {
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter).supports(any());
             verify(mockAdapter).execute(any(), any());
+            verify(mockHandlerChain).getExceptionHandlers();
+            verify(mockExceptionMapper).getHandler(any(), any());
         }
     }
 
@@ -411,6 +471,8 @@ public class DefaultRequestDispatcherTest {
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter).supports(any());
             verify(mockAdapter).execute(any(), any());
+            verify(mockHandlerChain).getExceptionHandlers();
+            verify(mockExceptionMapper).getHandler(any(), any());
         }
     }
 
@@ -440,6 +502,8 @@ public class DefaultRequestDispatcherTest {
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter).supports(any());
             verify(mockAdapter).execute(any(), any());
+            verify(mockHandlerChain, never()).getExceptionHandlers();
+            verify(mockExceptionMapper).getHandler(any(), any());
         }
     }
 

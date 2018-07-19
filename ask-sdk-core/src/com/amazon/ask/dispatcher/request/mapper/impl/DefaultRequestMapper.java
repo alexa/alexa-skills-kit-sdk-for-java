@@ -40,7 +40,7 @@ public class DefaultRequestMapper implements RequestMapper {
         return handlerChains.stream()
                 .filter(handlerChain -> handlerChain.getRequestHandler().canHandle(input))
                 .map(handlerChain -> (RequestHandlerChain) handlerChain)
-                .findAny();
+                .findFirst();
     }
 
     public static class Builder {
