@@ -25,6 +25,10 @@
           "how are you"
         ],
         "slots": []
+      },
+      {
+        "name": "AMAZON.FallbackIntent",
+        "samples": []
       }
     ],
     "invocationName": "hello world"
