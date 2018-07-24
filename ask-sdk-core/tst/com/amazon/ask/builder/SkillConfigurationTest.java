@@ -93,4 +93,26 @@ public class SkillConfigurationTest {
         assertEquals(skillId, config.getSkillId());
     }
 
+    @Test
+    public void set_get_custom_user_agent() {
+        String customUserAgent = "foo";
+        SkillConfiguration config = SkillConfiguration.builder().withCustomUserAgent(customUserAgent).build();
+        assertEquals(customUserAgent, config.getCustomUserAgent());
+    }
+
+    @Test
+    public void append_single_user_agent() {
+        String customUserAgent = "foo";
+        SkillConfiguration config = SkillConfiguration.builder().appendCustomUserAgent(customUserAgent).build();
+        assertEquals(customUserAgent, config.getCustomUserAgent());
+    }
+
+    @Test
+    public void append_multiple_user_agents() {
+        String customUserAgent1 = "foo";
+        String customUserAgent2 = "bar";
+        SkillConfiguration config = SkillConfiguration.builder().appendCustomUserAgent(customUserAgent1).appendCustomUserAgent(customUserAgent2).build();
+        assertEquals("foo bar", config.getCustomUserAgent());
+    }
+
 }

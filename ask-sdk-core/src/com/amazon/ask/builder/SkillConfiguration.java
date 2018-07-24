@@ -202,6 +202,11 @@ public class SkillConfiguration {
             return this;
         }
 
+        public Builder appendCustomUserAgent(String userAgent) {
+            customUserAgent = customUserAgent == null ? userAgent : customUserAgent + " " + userAgent;
+            return this;
+        }
+
         public String getCustomUserAgent() {
             return customUserAgent;
         }
