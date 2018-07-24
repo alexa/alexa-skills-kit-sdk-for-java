@@ -113,4 +113,9 @@ public class SdkModuleContext {
         return this;
     }
 
+    public SdkModuleContext appendCustomUserAgent(String customUserAgent) {
+        skillConfigBuilder.appendCustomUserAgent(customUserAgent);
+        return this;
+    }
+
 }
