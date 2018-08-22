@@ -27,20 +27,24 @@ import static org.slf4j.LoggerFactory.getLogger;
 /**
  * Manager for all skill attributes. This manager is passed to request handlers, request and response interceptors,
  * and exception handlers to expose attribute retrieval and saving operations.
- *
+ * <br><br>
  * Skill attributes can be stored on three levels:
- *
+ * <ul>
+ * <li>
  * Request: Request attributes only last within a single request processing lifecycle. Request attributes are initially
  *          empty when a request comes in, and are discarded once a response has been produced.
- *
+ * </li>
+ * <li>
  * Session: Session attributes persist throughout the lifespan of the current skill session. Session attributes are
  *          available for use with any in-session request. Any attributes set during the request processing lifecycle
  *          are sent back to the Alexa service and provided via the next request in the same session.
- *
+ * </li>
+ * <li>
  * Persistent: Persistent attributes persist beyond the lifecycle of the current session. How these attributes are
  *             stored, including key scope (user ID or device ID), TTL, and storage layer depends on skill configuration
  *             and/or the persistence adapter being used. If no persistence adapter is configured persistent attributes
  *             cannot be used.
+ * </li></ul>
  */
 public class AttributesManager {
 
