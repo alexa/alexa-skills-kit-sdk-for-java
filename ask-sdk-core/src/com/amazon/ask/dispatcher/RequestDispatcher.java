@@ -20,15 +20,17 @@ import com.amazon.ask.model.Response;
 import java.util.Optional;
 
 /**
- * Receives a request, dispatches to the customer's code and returns the output
+ * Receives a request, dispatches to customer handling code, and optionally returns a {@link Response}.
  */
 public interface RequestDispatcher {
 
     /**
-     * Dispatches an incoming request to the appropriate request handler and returns the output
+     * Dispatches an incoming request to the appropriate handling code and returns any output
      *
-     * @param input input to the dispatcher containing incoming request and other context
-     * @return output optionally containing a response
+     * @param input handler input containing the {@link com.amazon.ask.model.Request}, {@link com.amazon.ask.attributes.AttributesManager},
+     *              {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
+     *              and other utilities.
+     * @return output from handlers, which may contain a {@link Response}
      * @throws AskSdkException when an exception occurs during request processing
      */
     Optional<Response> dispatch(HandlerInput input) throws AskSdkException;

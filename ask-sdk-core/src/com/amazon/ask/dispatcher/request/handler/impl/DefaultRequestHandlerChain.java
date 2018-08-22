@@ -22,7 +22,7 @@ import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
 import java.util.List;
 
 /**
- * Default implementation of {@link RequestHandlerChain}
+ * Default implementation of {@link RequestHandlerChain}. Handlers are typed to {@link RequestHandler}.
  */
 public class DefaultRequestHandlerChain extends GenericRequestHandlerChain {
 
@@ -56,4 +56,5 @@ public class DefaultRequestHandlerChain extends GenericRequestHandlerChain {
             return new DefaultRequestHandlerChain(handler, requestInterceptors, responseInterceptors, exceptionHandlers);
         }
     }
+
 }

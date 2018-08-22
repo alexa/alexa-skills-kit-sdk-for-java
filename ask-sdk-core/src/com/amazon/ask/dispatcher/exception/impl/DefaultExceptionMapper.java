@@ -24,6 +24,8 @@ import java.util.Optional;
 
 /**
  * {@inheritDoc}
+ *
+ * This implementation accesses registered {@link ExceptionHandler} instances in the order they were provided.
  */
 public class DefaultExceptionMapper implements ExceptionMapper {
 

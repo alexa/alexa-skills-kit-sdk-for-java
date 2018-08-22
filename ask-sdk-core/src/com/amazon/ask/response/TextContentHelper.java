@@ -16,8 +16,9 @@ package com.amazon.ask.response;
 import com.amazon.ask.model.interfaces.display.TextContent;
 
 /**
- * Text Helper is responsible for building text content object in Alexa skills kit display interface
- **/
+ * A helper to assist in building {@link com.amazon.ask.model.interfaces.display.PlainText} and
+ * {@link com.amazon.ask.model.interfaces.display.RichText} content.
+ */
 public abstract class TextContentHelper {
 
     protected String primaryText;

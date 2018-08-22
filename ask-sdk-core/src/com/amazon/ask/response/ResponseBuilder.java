@@ -49,7 +49,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Helper to create response using ask-sdk-model as per Alexa Skills Kit interface
+ * A builder that can be used to construct a complete skill response containing speech, directives, etc.
  */
 public class ResponseBuilder {
 
@@ -70,7 +70,8 @@ public class ResponseBuilder {
     }
 
     /**
-     * Has Alexa say the provided speech to the user
+     * Sets {@link OutputSpeech} on the response. Speech is always wrapped in SSML tags.
+     *
      * @param speechText speech text
      * @return response builder
      */
@@ -82,7 +83,8 @@ public class ResponseBuilder {
     }
 
     /**
-     * Renders a simple card with the specified title and content
+     * Sets a simple {@link Card} on the response with the specified title and content.
+     *
      * @param cardTitle title for card
      * @param cardText text in the card
      * @return response builder
@@ -96,7 +98,8 @@ public class ResponseBuilder {
     }
 
     /**
-     * Renders a standard card with the specified title, content and image
+     * Sets a standard {@link Card} on the response with the specified title, content and image
+     *
      * @param cardTitle title for card
      * @param cardText text in the card
      * @param image image
@@ -112,7 +115,8 @@ public class ResponseBuilder {
     }
 
     /**
-     * Renders a link account card
+     * Sets a {@link LinkAccountCard} on the response.
+     *
      * @return response builder
      */
     public ResponseBuilder withLinkAccountCard() {
@@ -121,7 +125,8 @@ public class ResponseBuilder {
     }
 
     /**
-     * Renders an AskForPermissionsConsent card
+     * Sets a {@link AskForPermissionsConsentCard} card on the response.
+     *
      * @param permissions permission array
      * @return response builder
      */
@@ -133,7 +138,8 @@ public class ResponseBuilder {
     }
 
     /**
-     * Has alexa listen for speech from the user. If the user doesn't respond within 8 seconds, then has alexa reprompt with the provided reprompt speech
+     * Sets {@link Reprompt} speech on the response. Speech is always wrapped in SSML tags.
+     *
      * @param text reprompt text
      * @return response builder
      */
@@ -152,8 +158,9 @@ public class ResponseBuilder {
     }
 
     /**
-     * Sets shouldEndSession value to null/false/true
-     * @param shouldEndSession whether session should end or not
+     * Sets whether the session should end after this response.
+     *
+     * @param shouldEndSession whether session should end or not, or null
      * @return response builder
      */
     public ResponseBuilder withShouldEndSession(Boolean shouldEndSession) {
@@ -165,7 +172,8 @@ public class ResponseBuilder {
     }
 
     /**
-     * Adds a hint directive - show a hint on the screen of the echo show
+     * Adds a {@link HintDirective} to the response.
+     *
      * @param hintText hint text
      * @return response builder
      */
@@ -180,10 +188,11 @@ public class ResponseBuilder {
     }
 
     /**
-     * Adds a VideoApp play directive to play a video
-     * @param source Identifies the location of video content at a remote HTTPS location and video file must be hosted at an Internet-accessible HTTPS endpoint
+     * Adds a VideoApp {@link LaunchDirective} to the response to play a video.
+     *
+     * @param source location of video content at a remote HTTPS location
      * @param title title that can be displayed on VideoApp
-     * @param subtitle subtitle that can be displayed on videoApp
+     * @param subtitle subtitle that can be displayed on VideoApp
      * @return response builder
      */
     public ResponseBuilder addVideoAppLaunchDirective(String source, String title, String subtitle) {
@@ -205,7 +214,8 @@ public class ResponseBuilder {
     }
 
     /**
-     * Adds a Display RenderTemplate Directive
+     * Adds a Display {@link RenderTemplateDirective} to the response.
+     *
      * @param template display template
      * @return response builder
      */
@@ -217,7 +227,8 @@ public class ResponseBuilder {
     }
 
     /**
-     * Adds a Dialog delegate directive to response
+     * Adds a Dialog {@link DelegateDirective} to the response.
+     *
      * @param updatedIntent updated intent
      * @return response builder
      */
@@ -229,8 +240,9 @@ public class ResponseBuilder {
     }
 
     /**
-     * Adds a Dialog elicitSlot directive to response
-     * @param slotName name of slot
+     * Adds a Dialog {@link ElicitSlotDirective} to the response.
+     *
+     * @param slotName name of slot to elicit
      * @param updatedIntent updated intent
      * @return response builder
      */
@@ -243,8 +255,9 @@ public class ResponseBuilder {
     }
 
     /**
-     * Adds a Dialog confirmSlot directive to response
-     * @param slotName name of slot
+     * Adds a Dialog {@link ConfirmSlotDirective} to the response.
+     *
+     * @param slotName name of slot to elicit
      * @param updatedIntent updated intent
      * @return response builder
      */
@@ -257,7 +270,8 @@ public class ResponseBuilder {
     }
 
     /**
-     * Adds a Dialog confirmIntent directive to response
+     * Adds a Dialog {@link ConfirmIntentDirective} to the response.
+     *
      * @param updatedIntent updated intent
      * @return response builder
      */
@@ -269,7 +283,8 @@ public class ResponseBuilder {
     }
 
     /**
-     * Adds an AudioPlayer play directive
+     * Adds an AudioPlayer {@link PlayDirective} to the response.
+     *
      * @param playBehavior Describes playback behavior
      * @param offsetInMilliseconds The timestamp in the stream from which Alexa should begin playback
      * @param expectedPreviousToken A token that represents the expected previous stream
@@ -298,7 +313,8 @@ public class ResponseBuilder {
     }
 
     /**
-     * Adds an AudioPlayer Stop directive - Stops the current audio Playback
+     * Adds an AudioPlayer {@link StopDirective} to the response.
+     *
      * @return response builder
      */
     public ResponseBuilder addAudioPlayerStopDirective() {
@@ -307,8 +323,8 @@ public class ResponseBuilder {
     }
 
     /**
-     * Adds an AudioPlayer ClearQueue directive - clear the queue without stopping the currently playing stream,
-     * or clear the queue and stop any currently playing stream.
+     * Adds an AudioPlayer {@link ClearQueueDirective} to the response.
+     *
      * @param clearBehavior  Describes the clear queue behavior
      * @return response builder
      */
@@ -320,8 +336,9 @@ public class ResponseBuilder {
     }
 
     /**
-     * Helper method for adding directives to responses
-     * @param directive directive the directive send back to Alexa device
+     * Adds a given {@link Directive} to the response.
+     *
+     * @param directive directive to send with the response back to the Alexa device
      * @return response builder
      */
     public ResponseBuilder addDirective(Directive directive) {
@@ -332,7 +349,6 @@ public class ResponseBuilder {
 
         return this;
     }
-
 
     private boolean isVideoAppLaunchDirectivePresent() {
         if (directiveList == null || directiveList.isEmpty()) {

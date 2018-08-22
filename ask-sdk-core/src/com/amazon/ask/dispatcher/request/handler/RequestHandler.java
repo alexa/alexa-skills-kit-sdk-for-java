@@ -18,23 +18,28 @@ import com.amazon.ask.model.Response;
 import java.util.Optional;
 
 /**
- * Request handlers are responsible for taking a request and generating a response
+ * Request handlers are responsible for handling one or more types of incoming requests.
  */
 public interface RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request
+     * Returns true if the handler is capable of handling the current request and/or state
      *
-     * @param input request envelope containing request, context and state
-     * @return true if the handler can dispatch the current request
+     * @param input handler input containing the {@link com.amazon.ask.model.RequestEnvelope}, {@link com.amazon.ask.attributes.AttributesManager},
+     *              {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
+     *              and other utilities.
+     * @return true if the handler can handle the current request and/or state
      */
     boolean canHandle(HandlerInput input);
 
     /**
-     * Accepts an input and generates a response
+     * Handles the request. A {@link Response} should be returned by this method when processing an in-session request,
+     * but may be omitted for certain out of session requests.
      *
-     * @param input request envelope containing request, context and state
-     * @return an optional {@link Response} from the handler.
+     * @param input handler input containing the {@link com.amazon.ask.model.RequestEnvelope}, {@link com.amazon.ask.attributes.AttributesManager},
+     *              {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
+     *              and other utilities.
+     * @return an {@link Optional} that may contain a {@link Response} to be sent back by the skill
      */
     Optional<Response> handle(HandlerInput input);
 

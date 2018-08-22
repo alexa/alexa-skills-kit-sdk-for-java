@@ -21,9 +21,10 @@ import com.amazon.ask.model.Response;
 import java.util.Optional;
 
 /**
- * Handler adapter for {@link RequestHandler} handlers.
+ * {@link HandlerAdapter} implementation for {@link RequestHandler} implementations.
  */
 public class DefaultHandlerAdapter implements HandlerAdapter {
+
     @Override
     public boolean supports(Object handler) {
         return handler instanceof RequestHandler;
@@ -34,4 +35,5 @@ public class DefaultHandlerAdapter implements HandlerAdapter {
         RequestHandler requestHandler = (RequestHandler) handler;
         return requestHandler.handle(input);
     }
+
 }

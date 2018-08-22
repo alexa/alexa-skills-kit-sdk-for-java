@@ -17,7 +17,7 @@ import com.amazon.ask.model.interfaces.display.PlainText;
 import com.amazon.ask.model.interfaces.display.TextContent;
 
 /**
- * Responsible for building plain text content object using ask-sdk-model in Alexa skills kit display interface
+ * A helper to assist in building {@link PlainText} content.
  */
 public class PlainTextContentContentHelper extends TextContentHelper {
 

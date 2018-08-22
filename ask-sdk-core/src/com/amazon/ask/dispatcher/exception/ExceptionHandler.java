@@ -19,25 +19,31 @@ import com.amazon.ask.model.Response;
 import java.util.Optional;
 
 /**
- * Handles ones or more exception types and optionally produces a response.
+ * A handler for handling one or more types of exceptions thrown during the request processing lifecycle.
  */
 public interface ExceptionHandler {
 
     /**
-     * Returns true if the implementation can handle the specified throwable
+     * Returns true if this handler is capable of handling the current exception and/or state.
      *
-     * @param input handler input
+     * @param input handler input containing the {@link com.amazon.ask.model.RequestEnvelope}, {@link com.amazon.ask.attributes.AttributesManager},
+     *              {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
+     *              and other utilities.
      * @param throwable exception
-     * @return boolean
+     * @return true if this handler can handle the current exception and/or state
      */
     boolean canHandle(HandlerInput input, Throwable throwable);
 
     /**
-     * Handles the exception
+     * Handles the exception. A {@link Response} can optionally be returned to give the user a graceful error response.
+     * If no response is provided, the SDK will throw the original exception back to the container, resulting in an
+     * unhandled exception response to the end user.
      *
-     * @param input handler input
-     * @param throwable exception
-     * @return handler output
+     * @param input handler input containing the {@link com.amazon.ask.model.RequestEnvelope}, {@link com.amazon.ask.attributes.AttributesManager},
+     *              {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
+     *              and other utilities.
+     * @param throwable the exception that was originally thrown
+     * @return an {@link Optional} that may contain an error {@link Response} to be sent back by the skill
      */
     Optional<Response> handle(HandlerInput input, Throwable throwable);
 

@@ -17,7 +17,7 @@ import com.amazon.ask.model.interfaces.display.RichText;
 import com.amazon.ask.model.interfaces.display.TextContent;
 
 /**
- * Responsible for building rich text content object using ask-sdk-model in Alexa skills kit display interface
+ * A helper to assist in building {@link RichText} content.
  */
 public class RichContentTextContentHelper extends TextContentHelper {
 

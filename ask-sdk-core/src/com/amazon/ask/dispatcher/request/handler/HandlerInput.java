@@ -24,7 +24,12 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
- * Input to request handler.
+ * Input that is passed to all {@link RequestHandler}, {@link com.amazon.ask.dispatcher.exception.ExceptionHandler},
+ * {@link com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor}, and {@link com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor}.
+ *
+ * Contains the {@link com.amazon.ask.model.RequestEnvelope}, {@link com.amazon.ask.attributes.AttributesManager},
+ * {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
+ * and other useful utilities.
  */
 public class HandlerInput {
 
@@ -51,18 +56,42 @@ public class HandlerInput {
         return new Builder();
     }
 
+    /**
+     * Returns the {@link RequestEnvelope} of the incoming request.
+     *
+     * @return request envelope
+     */
     public RequestEnvelope getRequestEnvelope() {
         return requestEnvelope;
     }
 
+    /**
+     * Returns an {@link AttributesManager} which can be used to retrieve and store skill attributes.
+     *
+     * @return attributes manager
+     */
     public AttributesManager getAttributesManager() {
         return attributesManager;
     }
 
+    /**
+     * Optionally returns the container context. If this skill is running on AWS Lambda and using the standard
+     * Lambda SDK stream handler, this will return the AWS Lambda function context object. If this skill is running
+     * on other containers, the returned value is implementation specific.
+     *
+     * @return an {@link Optional} that may contain the container context
+     */
     public Optional<Object> getContext() {
         return Optional.ofNullable(context);
     }
 
+    /**
+     * Returns a {@link ServiceClientFactory} used to retrieve service client instances that can call Alexa APIs.
+     *
+     * @return service client factory
+     * @throws IllegalStateException if this method is called when an {@link com.amazon.ask.model.services.ApiClient} is
+     * not configured on this SDK instance.
+     */
     public ServiceClientFactory getServiceClientFactory() {
         if (serviceClientFactory == null) {
             throw new IllegalStateException("Attempting to use service client factory with no configured API client");
@@ -70,8 +99,20 @@ public class HandlerInput {
         return serviceClientFactory;
     }
 
+    /**
+     * Evaluates a {@link Predicate} against the current handler input state.
+     *
+     * @param predicate predicate to evaluate
+     * @return true if the predicates matches this input, false if not
+     */
     public boolean matches(Predicate<HandlerInput> predicate) { return predicate.test(this); }
 
+    /**
+     * Returns a {@link ResponseBuilder} that can be used to construct a complete skill response containing speech,
+     * directives, etc.
+     *
+     * @return response builder
+     */
     public ResponseBuilder getResponseBuilder() {
         return responseBuilder;
     }

@@ -19,15 +19,19 @@ import com.amazon.ask.dispatcher.request.handler.RequestHandlerChain;
 import java.util.Optional;
 
 /**
- * Routes the request to appropriate controller
+ * The request mapper is responsible for mapping an incoming request to a {@link RequestHandlerChain} containing
+ * a handler suitable for processing the request.
  */
 public interface RequestMapper {
 
     /**
-     * Routes the request to appropriate controller and retrieves request handler chains
+     * Finds a {@link RequestHandlerChain} containing a request handler that is suitable for the incoming request.
+     * An {@link Optional} empty is returned if no such handler can be located.
      *
-     * @param input input containing request envelope and other context
-     * @return optional request handler chain
+     * @param input handler input containing the {@link com.amazon.ask.model.RequestEnvelope}, {@link com.amazon.ask.attributes.AttributesManager},
+     *              {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
+     *              and other utilities.
+     * @return an {@link Optional} containing the request handler chain if one is located, or empty if not.
      */
     Optional<RequestHandlerChain> getRequestHandlerChain(HandlerInput input);
 

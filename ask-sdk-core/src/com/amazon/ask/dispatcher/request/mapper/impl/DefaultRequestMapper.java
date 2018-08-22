@@ -23,6 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * {@inheritDoc}
+ *
+ * This implementation accesses registered {@link DefaultRequestHandlerChain} instances in the order they were provided.
+ * Suitable chains are identified by calling canHandle on the attached {@link com.amazon.ask.dispatcher.request.handler.RequestHandler}.
+ */
 public class DefaultRequestMapper implements RequestMapper {
 
     protected final List<DefaultRequestHandlerChain> handlerChains;

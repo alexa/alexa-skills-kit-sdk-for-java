@@ -16,10 +16,18 @@ package com.amazon.ask.dispatcher.request.interceptor;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 
 /**
- * Request Interceptor contains the logic to execute before handler is called.
+ * Request interceptors are invoked immediately prior to execution of the request handler for an incoming request.
+ * Request interceptors can pass data and entities on to request handlers via the use of request attributes.
  */
 public interface RequestInterceptor {
 
+    /**
+     * Intercept the incoming request before the request handler is executed.
+     *
+     * @param input handler input containing the {@link com.amazon.ask.model.RequestEnvelope}, {@link com.amazon.ask.attributes.AttributesManager},
+     *              {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
+     *              and other utilities.
+     */
     void process(HandlerInput input);
 
 }

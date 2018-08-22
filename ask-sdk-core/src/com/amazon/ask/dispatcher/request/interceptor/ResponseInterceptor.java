@@ -19,10 +19,20 @@ import com.amazon.ask.model.Response;
 import java.util.Optional;
 
 /**
- * Response Interceptor contains the logic to be executed after handler returns.
+ * Response interceptors are invoked immediately after execution of the request handler. Because response interceptors
+ * have access to the output generated from execution of the request handler, they are ideal for tasks such as response
+ * sanitation and validation.
  */
 public interface ResponseInterceptor {
 
+    /**
+     * Intercept the output from the request handler after it is executed.
+     *
+     * @param input handler input containing the {@link com.amazon.ask.model.RequestEnvelope}, {@link com.amazon.ask.attributes.AttributesManager},
+     *              {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
+     *              and other utilities.
+     * @return an {@link Optional} that may contain a {@link Response} to be sent back by the skill
+     */
     void process(HandlerInput input, Optional<Response> response);
 
 }
