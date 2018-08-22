@@ -31,7 +31,7 @@ public interface ResponseInterceptor {
      * @param input handler input containing the {@link com.amazon.ask.model.RequestEnvelope}, {@link com.amazon.ask.attributes.AttributesManager},
      *              {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
      *              and other utilities.
-     * @return an {@link Optional} that may contain a {@link Response} to be sent back by the skill
+     * @param response an {@link Optional} that may contain a {@link Response} to be sent back by the skill
      */
     void process(HandlerInput input, Optional<Response> response);
 
