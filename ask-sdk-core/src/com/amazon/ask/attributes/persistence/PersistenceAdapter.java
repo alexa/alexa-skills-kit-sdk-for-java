@@ -19,12 +19,30 @@ import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.exception.PersistenceException;
 
 /**
- * Persistence adapter is responsible for storing and retrieving attributes from a persistence layer.
+ * Persistence adapters allow an {@link com.amazon.ask.attributes.AttributesManager} to store skill attributes to a
+ * persistence layer. The adapter encapsulates all initialization, get, and save logic specific to the persistence
+ * implementation.
  */
 public interface PersistenceAdapter {
 
+    /**
+     * Retrieves attributes from persistence. A {@link RequestEnvelope} is passed to the adapter so current request
+     * parameters can be used as an attribute key.
+     *
+     * @param envelope the current request envelope
+     * @return {@link Optional} containing existing attributes if they exist, or empty if not
+     * @throws PersistenceException if attributes could not be retrieved due to an error
+     */
     Optional<Map<String, Object>> getAttributes(RequestEnvelope envelope) throws PersistenceException;
 
+    /**
+     * Saves attributes to persistence. A {@link RequestEnvelope} is passed to the adapter so current request parameters
+     * can be used as an attribute key.
+     *
+     * @param envelope the current request envelope
+     * @param attributes attributes to persist
+     * @throws PersistenceException if attributes could not be saved due to an error
+     */
     void saveAttributes(RequestEnvelope envelope, Map<String, Object> attributes) throws PersistenceException;
 
 }

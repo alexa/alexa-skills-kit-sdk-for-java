@@ -13,6 +13,9 @@
 
 package com.amazon.ask.exception;
 
+/**
+ * Base SDK exception type thrown when an exception is encountered during SDK execution.
+ */
 public class AskSdkException extends RuntimeException {
 
     public AskSdkException(String message) {

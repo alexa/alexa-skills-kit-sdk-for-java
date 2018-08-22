@@ -34,7 +34,7 @@ import com.amazon.ask.util.UserAgentUtils;
 import java.util.Optional;
 
 /**
- * Top level container for request dispatcher which provides multiple builders for easy configuration
+ * Top level SDK entry point.
  */
 public class Skill {
 

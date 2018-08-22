@@ -20,6 +20,9 @@ import com.amazon.ask.model.interfaces.display.ElementSelectedRequest;
 
 import java.util.function.Predicate;
 
+/**
+ * A collection of built in Predicates that can be used to evaluate properties of an incoming {@link HandlerInput}.
+ */
 public class Predicates {
 
     /** Prevent instantiation */

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents the standard components needed to build a {@link com.amazon.ask.Skill}
+ * Represents the configured used to build a {@link com.amazon.ask.Skill} instance.
  */
 public class SkillConfiguration {
     protected final List<RequestMapper> requestMappers;

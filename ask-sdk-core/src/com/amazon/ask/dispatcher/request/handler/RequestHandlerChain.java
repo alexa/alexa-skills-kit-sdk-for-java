@@ -20,7 +20,7 @@ import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
 import java.util.List;
 
 /**
- * An interface containing the request handler and corresponding request/response interceptors.
+ * A handler chain contains a request handler and any associated request/response interceptors and exception handlers.
  */
 public interface RequestHandlerChain {
 

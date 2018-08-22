@@ -22,7 +22,12 @@ import com.amazon.ask.util.ValidationUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A generic {@link RequestHandlerChain}. This chain contains a generic request handler, and any chain specific
+ * request/response interceptors and exception handlers.
+ */
 public class GenericRequestHandlerChain implements RequestHandlerChain {
+
     protected final Object handler;
     protected final List<RequestInterceptor> requestInterceptors;
     protected final List<ResponseInterceptor> responseInterceptors;
@@ -117,4 +122,5 @@ public class GenericRequestHandlerChain implements RequestHandlerChain {
             return new GenericRequestHandlerChain(handler, requestInterceptors, responseInterceptors, exceptionHandlers);
         }
     }
+
 }

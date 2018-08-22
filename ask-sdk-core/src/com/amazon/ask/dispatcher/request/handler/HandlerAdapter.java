@@ -18,12 +18,12 @@ import com.amazon.ask.model.Response;
 import java.util.Optional;
 
 /**
- * Abstracts the handling of handling a request for specific types of handlers.
+ * An adapter that allows a {@link com.amazon.ask.dispatcher.RequestDispatcher} to invoke a type of request handler.
  */
 public interface HandlerAdapter {
 
     /**
-     * Returns true if the adapter supports the type of handler. Usually by type.
+     * Returns true if the adapter supports the type of handler.
      *
      * @param handler request handler
      * @return true if the adapter supports the type of handler
@@ -33,9 +33,11 @@ public interface HandlerAdapter {
     /**
      * Executes the request handler with the supplied input.
      *
-     * @param input input containing request envelope, handler context and forwarding target
+     * @param input handler input containing the {@link com.amazon.ask.model.RequestEnvelope}, {@link com.amazon.ask.attributes.AttributesManager},
+     *              {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
+     *              and other utilities.
      * @param handler request handler
-     * @return result of executing the request handler
+     * @return result of executing the request handler, optionally containing a {@link Response}
      */
     Optional<Response> execute(HandlerInput input, Object handler);
 

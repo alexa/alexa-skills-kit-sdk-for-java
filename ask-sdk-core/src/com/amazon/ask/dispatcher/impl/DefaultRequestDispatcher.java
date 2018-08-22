@@ -39,9 +39,16 @@ import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
- * Using a list of {@link RequestMapper} this class tries to find
- * a handler for a request, then delegates the invocation to a {@link HandlerAdapter} that
- * supports such a handler.
+ * {@inheritDoc}
+ *
+ * This implementation routes incoming requests to a {@link RequestMapper} to find a {@link RequestHandlerChain}.
+ * A {@link HandlerAdapter} is used to execute the discovered request handler type.
+ *
+ * {@link RequestInterceptor} and {@link ResponseInterceptor} instances may be configured globally on this dispatcher
+ * to be executed for all requests. Interceptors set on the {@link RequestHandlerChain} level are also supported.
+ *
+ * An {@link ExceptionMapper} is used to find exception handlers in the event of an unhandled exception during
+ * request processing.
  */
 public class DefaultRequestDispatcher implements RequestDispatcher {
     private static Logger logger = getLogger(DefaultRequestDispatcher.class);

@@ -13,6 +13,10 @@
 
 package com.amazon.ask.exception;
 
+/**
+ * Exception thrown when an exception is encountered while a {@link com.amazon.ask.attributes.persistence.PersistenceAdapter} is
+ * handling persistent attributes.
+ */
 public class PersistenceException extends AskSdkException {
 
     public PersistenceException(String message) {

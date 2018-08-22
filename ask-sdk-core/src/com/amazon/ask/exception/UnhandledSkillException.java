@@ -13,6 +13,9 @@
 
 package com.amazon.ask.exception;
 
+/**
+ * Exception thrown when an exception occurs that cannot be handled by an {@link com.amazon.ask.dispatcher.exception.ExceptionHandler}.
+ */
 public class UnhandledSkillException extends AskSdkException {
 
     public UnhandledSkillException(Throwable cause) {
