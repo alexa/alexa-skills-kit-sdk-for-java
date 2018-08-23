@@ -261,10 +261,21 @@ our cleanup logic.
 Implementing the SkillStreamHandler
 -----------------------------------
 
-The stream handler is the entry point for your AWS Lambda function. The
-following stream handler extends the SDK ``SkillStreamHandler`` class
-provided in the SDK, which routes all inbound requests to our skill. The
-``HelloWorldStreamHandler`` creates an SDK ``Skill`` instance configured
+The stream handler is the entry point for your AWS Lambda function. Every request made
+by an end user to Alexa which invokes your skill will pass through this class,
+into your configured ``Skill`` instance, and then be forwarded to the handler approrpiate for
+the request. Some examples might be a ``HelloWorldIntentHandler``, ``HelpIntentHandler``, or 
+a ``LaunchRequestHandler``. As part of the request handling process, request & response interceptors
+and exception handlers may also be invoked as needed and depending on your skill's configuration.
+
+The ``SkillStreamHandler`` is an SDK provided subclass of AWS Lambda's ``RequestStreamHandler`` that takes
+care of boilerplate logic for serializing and deserializing Alexa requests. This means that your
+skill's stream handler class only needs to extend the ``SkillStreamHandler`` and pass it a Skill instance
+configured with your handlers and other configuration. Once AWS Lambda is configured to use your stream
+handler class as its entry point, all requests will be routed through this Skill instance into the
+appropriate handlers.
+
+The following ``HelloWorldStreamHandler`` creates an SDK ``Skill`` instance configured
 with the request handlers we just created.
 
 ::
