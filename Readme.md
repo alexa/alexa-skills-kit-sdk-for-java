@@ -13,6 +13,11 @@ The ASK SDK for Java makes it easier for you to build highly engaging skills, by
 
 ## [SDK Documentation](https://alexa-skills-kit-sdk-for-java.readthedocs.io/en/latest/)
 
+## Models
+The SDK works on model classes rather than native Alexa JSON requests and
+responses. These model classes are generated using the Request, Response JSON
+schemas from the [developer docs](https://developer.amazon.com/docs/custom-skills/request-and-response-json-reference.html). The source code for the model classes can be found [here](https://github.com/alexa/alexa-apis-for-java).
+
 ## Samples
 ### [Hello World](https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.0.x/samples/helloworld)
   This code sample will allow you to hear a response from Alexa when you trigger it. It is a minimal sample to get you familiarized with the Alexa Skills Kit and AWS Lambda.
