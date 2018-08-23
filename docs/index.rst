@@ -18,6 +18,22 @@
     Managing-In-Skill-Purchases
     Javadoc Reference <http://ask-sdk-java-javadocs.s3-website-us-west-2.amazonaws.com/>
 
+.. toctree::
+   :caption: Additional Resources
+   :hidden:
+
+   SDK Issues and Feature Requests <https://github.com/alexa/alexa-skills-kit-sdk-for-java/issues>
+   Alexa Feature Requests <https://alexa.uservoice.com/forums/906892-alexa-skills-developer-voice-and-vote>
+   Alexa Developer Forums <https://forums.developer.amazon.com/spaces/165/index.html>
+
+.. toctree::
+   :caption: Other language ASK SDKs
+   :hidden:
+
+   NodeJS SDK <https://github.com/alexa/alexa-skills-kit-sdk-for-nodejs>
+   Python SDK <https://github.com/alexa-labs/alexa-skills-kit-sdk-for-python>
+    
+
 The ASK SDK for Java makes it easier for you to build highly engaging
 skills, by allowing you to spend more time on implementing features and
 less on writing boiler-plate code.
