@@ -165,7 +165,8 @@ Exception handlers are executed similarly to request handlers, where the
 SDK accesses handlers in the order in which they were provided to the
 ``Skill``.
 
-##Handler Input
+Handler Input
+------------------
 
 Request handlers, request and response interceptors, and exception
 handlers are all passed a HandlerInput instance when invoked. This class
