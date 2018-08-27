@@ -75,7 +75,8 @@ public final class DynamoDbPersistenceAdapter implements PersistenceAdapter {
         String partitionKey = partitionKeyGenerator.apply(envelope);
         GetItemRequest request = new GetItemRequest()
                 .withTableName(tableName)
-                .withKey(Collections.singletonMap(partitionKeyName, new AttributeValue().withS(partitionKey)));
+                .withKey(Collections.singletonMap(partitionKeyName, new AttributeValue().withS(partitionKey)))
+                .withConsistentRead(true);
         Map<String, AttributeValue> result = null;
         try {
             result = dynamoDb.getItem(request).getItem();
