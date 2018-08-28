@@ -1,4 +1,6 @@
-# Java Alexa Skills Kit SDK
+# **This version of the Alexa Skills Kit SDK is no longer supported. Please use the v2 release found [here](https://github.com/alexa/alexa-skills-kit-sdk-for-java)**
+
+# Java Alexa Skills Kit SDK v1 (DEPRECATED)
 
 ## Alexa Skills Kit Documentation
 The documentation for the Alexa Skills Kit is available on the [Amazon Apps and Services Developer Portal](https://developer.amazon.com/appsandservices/solutions/alexa/alexa-skills-kit/).
