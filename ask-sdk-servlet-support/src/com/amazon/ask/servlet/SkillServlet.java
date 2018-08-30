@@ -63,11 +63,10 @@ public class SkillServlet extends HttpServlet {
     private transient final Skill skill;
     private transient final List<SkillServletVerifier> verifiers;
     private transient final Serializer serializer = new JacksonSerializer();
-    private transient Proxy proxy = Proxy.NO_PROXY;
 
     public SkillServlet(Skill skill) {
         List<SkillServletVerifier> defaultVerifiers = new ArrayList<>();
-        defaultVerifiers.add(new SkillRequestSignatureVerifier(proxy));
+        defaultVerifiers.add(new SkillRequestSignatureVerifier(Proxy.NO_PROXY));
         Long timestampToleranceProperty = ServletUtils.getSystemPropertyAsLong(TIMESTAMP_TOLERANCE_SYSTEM_PROPERTY);
         defaultVerifiers.add(new SkillRequestTimestampVerifier(timestampToleranceProperty != null
                 ? timestampToleranceProperty : DEFAULT_TOLERANCE_MILLIS));
@@ -129,7 +128,9 @@ public class SkillServlet extends HttpServlet {
      * @param proxy the {@code Proxy} to associate with this servlet.
      */
     public void setProxy(Proxy proxy) {
-        this.proxy = proxy;
+        if (verifiers.removeIf(verifier -> verifier instanceof SkillRequestSignatureVerifier)) {
+            verifiers.add(new SkillRequestSignatureVerifier(proxy));
+        }
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {

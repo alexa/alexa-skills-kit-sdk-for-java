@@ -39,6 +39,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Collections;
@@ -49,7 +51,7 @@ import java.util.Date;
  * its behavior.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(SkillRequestSignatureVerifier.class)
+@PrepareForTest({SkillRequestSignatureVerifier.class, SkillServlet.class})
 public class SkillServletTest extends SkillServletTestBase {
     private static final String LOCALE = "en-US";
     private static Skill skill;
@@ -108,6 +110,18 @@ public class SkillServletTest extends SkillServletTestBase {
         servlet.doPost(invocation.request, invocation.response);
         byte[] output = invocation.output.toByteArray();
         assertTrue(output.length > 0);
+    }
+
+    @Test
+    public void custom_proxy_updates_signature_verifier() throws Exception {
+        SkillServlet servlet = new SkillServlet(skill);
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("10.0.0.1", 8080));
+        SkillRequestSignatureVerifier mockVerifier = mock(SkillRequestSignatureVerifier.class);
+        PowerMockito.whenNew(SkillRequestSignatureVerifier.class)
+                .withArguments(proxy)
+                .thenReturn(mockVerifier);
+        servlet.setProxy(proxy);
+        PowerMockito.verifyNew(SkillRequestSignatureVerifier.class).withArguments(proxy);
     }
 
 }
