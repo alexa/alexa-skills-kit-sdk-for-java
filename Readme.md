@@ -5,6 +5,10 @@
   <p align="center"><a href="https://travis-ci.org/alexa/alexa-skills-kit-sdk-for-java"><img src="https://travis-ci.org/alexa/alexa-skills-kit-sdk-for-java.png?branch=2.0.x"></a> <a href="https://alexa-skills-kit-sdk-for-java.readthedocs.io/en/latest/?badge=latest"><img src="https://readthedocs.org/projects/alexa-skills-kit-sdk-for-java/badge/?version=latest"></a></p>
   </p>
 The ASK SDK for Java makes it easier for you to build highly engaging skills, by allowing you to spend more time on implementing features and less on writing boiler-plate code.
+<br/><br/>
+<p align='center'>
+<a href='https://alexa-skills-kit-sdk-for-java.readthedocs.io/en/latest/Setting-Up-The-ASK-SDK.html'><img src='https://camo.githubusercontent.com/db9b9ce26327ad3bac57ec4daf0961a382d75790/68747470733a2f2f6d2e6d656469612d616d617a6f6e2e636f6d2f696d616765732f472f30312f6d6f62696c652d617070732f6465782f616c6578612f616c6578612d736b696c6c732d6b69742f7475746f7269616c732f67656e6572616c2f627574746f6e732f627574746f6e5f6765745f737461727465642e5f5454485f2e706e67'></a>
+</p>
 
 
 ## Latest Versions
