@@ -42,7 +42,7 @@ pull in the standard ASK SDK v2 for Java distribution:
    <dependency>
      <groupId>com.amazon.alexa</groupId>
      <artifactId>ask-sdk</artifactId>
-     <version>2.5.2</version>
+     <version>2.5.3</version>
    </dependency>
 
 Including individual SDK components
@@ -59,7 +59,7 @@ dependency closure, add only the modules that you need.
    <dependency>
      <groupId>com.amazon.alexa</groupId>
      <artifactId>ask-sdk-core</artifactId>
-     <version>2.5.2</version>
+     <version>2.5.3</version>
    </dependency>
 
 **AWS Lambda support module**
@@ -69,7 +69,7 @@ dependency closure, add only the modules that you need.
    <dependency>
      <groupId>com.amazon.alexa</groupId>
      <artifactId>ask-sdk-lambda-support</artifactId>
-     <version>2.5.2</version>
+     <version>2.5.3</version>
    </dependency>
 
 **Servlet support module**
@@ -79,7 +79,7 @@ dependency closure, add only the modules that you need.
    <dependency>
      <groupId>com.amazon.alexa</groupId>
      <artifactId>ask-sdk-servlet-support</artifactId>
-     <version>2.5.2</version>
+     <version>2.5.3</version>
    </dependency>
 
 **Amazon DynamoDB persistence adapter**
@@ -89,7 +89,7 @@ dependency closure, add only the modules that you need.
    <dependency>
      <groupId>com.amazon.alexa</groupId>
      <artifactId>ask-sdk-dynamodb-persistence-adapter</artifactId>
-     <version>2.5.2</version>
+     <version>2.5.3</version>
    </dependency>
 
 **Apache HTTPClient API client plugin**
@@ -99,7 +99,7 @@ dependency closure, add only the modules that you need.
    <dependency>
      <groupId>com.amazon.alexa</groupId>
      <artifactId>ask-sdk-apache-client</artifactId>
-     <version>2.5.2</version>
+     <version>2.5.3</version>
    </dependency>
 
 Next Steps
