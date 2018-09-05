@@ -55,7 +55,7 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
     private final Proxy proxy;
 
     public SkillRequestSignatureVerifier() {
-        this(Proxy.NO_PROXY);
+        this.proxy = null;
     }
 
     /**
@@ -124,7 +124,8 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
     private X509Certificate retrieveAndVerifyCertificateChain(
             final String signingCertificateChainUrl) throws CertificateException {
         try (InputStream in =
-                getAndVerifySigningCertificateChainUrl(signingCertificateChainUrl).openConnection(proxy).getInputStream()) {
+                proxy != null ? getAndVerifySigningCertificateChainUrl(signingCertificateChainUrl).openConnection(proxy).getInputStream()
+                : getAndVerifySigningCertificateChainUrl(signingCertificateChainUrl).openConnection().getInputStream()) {
             CertificateFactory certificateFactory =
                     CertificateFactory.getInstance(ServletConstants.SIGNATURE_CERTIFICATE_TYPE);
             @SuppressWarnings("unchecked")
