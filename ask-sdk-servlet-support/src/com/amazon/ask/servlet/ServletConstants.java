@@ -70,6 +70,6 @@ public final class ServletConstants {
     /**
      * Maximum allowed timestamp offset tolerance value in millis.
      */
-    public static final long MAXIMUM_TOLERANCE_MILLIS = 150000;
+    public static final long MAXIMUM_TOLERANCE_MILLIS = 3600000;
 
 }
