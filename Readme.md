@@ -39,6 +39,9 @@ schemas from the [developer docs](https://developer.amazon.com/docs/custom-skill
 ### [States Quiz](https://github.com/alexa/skill-sample-java-quiz-game)
   This tutorial will guide you in building a fully-featured skill. The skill features Built-In and Custom slots, as well as state management. The skill you build with this tutorial can be customized to build your own game.
 
+### [Airplane Facts](https://github.com/alexa/skill-sample-java-fact)
+ This tutorial will demonstrate how to write skills for Echo Show and Echo Spot in Java using the Alexa Skills Kit (ASK) SDK v2.
+
 ## Public Beta SDK
 The available [public beta version of the ASK SDK v2 for Java](https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.x_public-beta) may contain one or more Alexa features that are currently in public beta and not included in the production SDK version.
 
