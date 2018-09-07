@@ -66,7 +66,7 @@ public class SkillServlet extends HttpServlet {
 
     public SkillServlet(Skill skill) {
         List<SkillServletVerifier> defaultVerifiers = new ArrayList<>();
-        defaultVerifiers.add(new SkillRequestSignatureVerifier(Proxy.NO_PROXY));
+        defaultVerifiers.add(new SkillRequestSignatureVerifier());
         Long timestampToleranceProperty = ServletUtils.getSystemPropertyAsLong(TIMESTAMP_TOLERANCE_SYSTEM_PROPERTY);
         defaultVerifiers.add(new SkillRequestTimestampVerifier(timestampToleranceProperty != null
                 ? timestampToleranceProperty : DEFAULT_TOLERANCE_MILLIS));
