@@ -88,7 +88,7 @@ public class Skill {
 
         Optional<Response> response = requestDispatcher.dispatch(handlerInput);
         return ResponseEnvelope.builder()
-                .withResponse(response.orElse(null))
+                .withResponse(response != null ? response.orElse(null) : null)
                 .withSessionAttributes
                         (requestEnvelope.getSession() != null ? handlerInput.getAttributesManager().getSessionAttributes() : null)
                 .withVersion(SdkConstants.FORMAT_VERSION)
