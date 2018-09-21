@@ -41,6 +41,9 @@ schemas from the [developer docs](https://developer.amazon.com/docs/custom-skill
 
 ### [Airplane Facts](https://github.com/alexa/skill-sample-java-fact)
  This tutorial will demonstrate how to write skills for Echo Show and Echo Spot in Java using the Alexa Skills Kit (ASK) SDK v2.
+ 
+## Frameworks
+To discover frameworks built on top of the ASK SDK for Java, see https://github.com/alexa-labs/ask-sdk-frameworks-java.
 
 ## Public Beta SDK
 The available [public beta version of the ASK SDK v2 for Java](https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.x_public-beta) may contain one or more Alexa features that are currently in public beta and not included in the production SDK version.
@@ -48,7 +51,7 @@ The available [public beta version of the ASK SDK v2 for Java](https://github.co
 ## Other Language Alexa Skills Kit SDKs
 <a href="https://github.com/alexa/alexa-skills-kit-sdk-for-nodejs"><img src="https://github.com/konpa/devicon/blob/master/icons/nodejs/nodejs-original.svg?sanitize=true" width="25px" /> Alexa Skills Kit SDK for NodeJS</a>
 
-<a href="https://github.com/alexa-labs/alexa-skills-kit-sdk-for-python"><img src="https://github.com/konpa/devicon/blob/master/icons/python/python-original.svg?sanitize=true" width="25px" /> Alexa Skills Kit SDK for Python</a>
+<a href="https://github.com/alexa/alexa-skills-kit-sdk-for-python"><img src="https://github.com/konpa/devicon/blob/master/icons/python/python-original.svg?sanitize=true" width="25px" /> Alexa Skills Kit SDK for Python</a>
 
 ## Got Feedback?
 Request and vote for Alexa features [here](https://alexa.uservoice.com/forums/906892-alexa-skills-developer-voice-and-vote)!

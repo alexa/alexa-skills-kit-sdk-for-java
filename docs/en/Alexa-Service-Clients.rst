@@ -1,6 +1,5 @@
-=====
 Alexa Service Clients
-=====
+=====================
 
 Creating a service client instance
 ----------------------------------
@@ -18,12 +17,12 @@ that creates an instance of the ``DirectivesService`` client. Creating a
 service client instance is as simple as calling the appropriate factory
 method.
 
-::
+.. code:: java
 
    @Override
     public Optional<Response> handle(HandlerInput input) {
         DirectivesService directivesServices = input.getServiceClientFactory().getDirectivesService();    
-        directivesServices.enqueue(SendDirectiveRequest.*builder*().build());
+        directivesServices.enqueue(SendDirectiveRequest.builder().build());
         // other handler logic goes here
     }
 

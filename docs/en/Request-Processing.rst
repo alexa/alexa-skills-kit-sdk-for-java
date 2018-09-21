@@ -1,6 +1,5 @@
-=====
 Request Processing
-=====
+==================
 
 Request handlers
 ----------------
@@ -24,7 +23,7 @@ interface, which consists of two methods:
 The following example shows a request handler that is configured to
 handle the ``HelloWorldIntent``.
 
-::
+.. code:: java
 
    public class HelloWorldHandler implements RequestHandler {
        @Override
@@ -55,7 +54,7 @@ and attributes.
 The SDK calls the ``canHandle`` methods on its request handlers in the
 order in which they were provided to the Skill builder.
 
-::
+.. code:: java
 
    return Skills.standard()
        .addHandlers(new FooHandler(), new BarHandler(), new BazHandler())
@@ -88,7 +87,7 @@ void return type. Request interceptors have access to the
 the ``HandlerInput`` as well as the ``Optional<Response>`` produced by
 the ``RequestHandler``.
 
-::
+.. code:: java
 
    public class PersistenceSavingResponseInterceptor implements ResponseInterceptor {
        @Override
@@ -110,7 +109,7 @@ tasks such as response sanitization and validation.
 The following example shows how to register an interceptor with the SDK
 on the ``Skill`` builder:
 
-::
+.. code:: java
 
    return Skills.standard()
         .addHandlers(new FooHandler(), new BarHandler(), new BazHandler())
@@ -141,7 +140,7 @@ consisting of the following two methods:
 The following example shows an example exception handler that is
 configured to handle any exception of type ``AskSdkException``.
 
-::
+.. code:: java
 
    public class MyExecptionHandler implements ExceptionHandler {
        @Override
@@ -166,7 +165,7 @@ SDK accesses handlers in the order in which they were provided to the
 ``Skill``.
 
 Handler Input
-------------------
+-------------
 
 Request handlers, request and response interceptors, and exception
 handlers are all passed a HandlerInput instance when invoked. This class

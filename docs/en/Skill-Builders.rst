@@ -1,6 +1,5 @@
-=====
 Skill Builders
-=====
+==============
 
 The SDK includes two Skill builders that help you construct Skill
 instances.

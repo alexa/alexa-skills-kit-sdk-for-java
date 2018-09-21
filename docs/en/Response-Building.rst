@@ -1,9 +1,8 @@
-=====
 Response Building
-=====
+=================
 
 Response Builder
-------------------------------
+----------------
 
 The SDK includes helper methods for constructing responses. A
 ``Response`` may contain multiple elements, and the helper methods aid
@@ -35,13 +34,13 @@ Once you add the desired response elements, you can generate a
 The following example shows how to construct a response using
 ``ResponseBuilder`` helper methods.
 
-::
+.. code:: java
 
    @Override
     public Optional<Response> handle(HandlerInput input) {
         return input.getResponseBuilder()
-            .withSimpleCard("title", "cardText")
-            .withSpeech("foo")
-            .withReprompt("bar")
-            .build();
+                .withSimpleCard("title", "cardText")
+                .withSpeech("foo")
+                .withReprompt("bar")
+                .build();
     }

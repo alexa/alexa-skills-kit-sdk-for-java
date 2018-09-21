@@ -1,13 +1,12 @@
-=====
 Managing In-Skill Purchases
-=====
+===========================
 
 The ASK SDK for Java includes a service client and helper classes for
 discovering available and purchased in-skill products and for initiating
 purchase and cancellation requests from within a skill.
 
 In-Skill Purchase Service
-~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------
 
 The ASK SDK for Java provides a ``MonetizationServiceClient`` that
 invokes inSkillProducts API to retrieve all in-skill products associated
@@ -37,7 +36,7 @@ following methods are provided:
 | ``inSkillProductId`` specifies the in-skill product to be retrieved.
 
 getInSkillProducts()
-^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~
 
 The getInSkillProducts method retrieves all associated in-skill products
 for the current skill along with purchasability and entitlement status
@@ -45,25 +44,25 @@ for each product for the current skill and customer.
 
 .. code:: java
 
-   import com.amazon.ask.model.services.monetization.MonetizationServiceClient;
-   import com.amazon.ask.model.services.ServiceException;
-   import com.amazon.ask.model.services.monetization.InSkillProduct;
-   import com.amazon.ask.model.services.monetization.InSkillProductsResponse;
+    import com.amazon.ask.model.services.monetization.MonetizationServiceClient;
+    import com.amazon.ask.model.services.ServiceException;
+    import com.amazon.ask.model.services.monetization.InSkillProduct;
+    import com.amazon.ask.model.services.monetization.InSkillProductsResponse;
 
-   @Override
-   public Optional<Response> handle(HandlerInput input) {
-   try {
-         MonetizationServiceClient client = input.getServiceClientFactory().getMonetizationService();
-         String locale = input.getRequestEnvelope().getRequest().getLocale();
-
-         // To fetch all products
-         InSkillProductsResponse responseProducts = client.getInSkillProducts(locale, null, null, null, null, null);
-         System.out.println("There are " + responseProducts.getInSkillProducts().size() + " buyable products");
+    @Override
+    public Optional<Response> handle(HandlerInput input) {
+      try {
+        MonetizationServiceClient client = input.getServiceClientFactory().getMonetizationService();
+        String locale = input.getRequestEnvelope().getRequest().getLocale();
+        
+        // To fetch all products
+        InSkillProductsResponse responseProducts = client.getInSkillProducts(locale, null, null, null, null, null);
+        System.out.println("There are " + responseProducts.getInSkillProducts().size() + " buyable products");
 
      } catch (ServiceException e) {
-       System.out.println("Exception occurred in calling getInSkillProducts API. Error code: " + e.getStatusCode());
-     }
-   }
+        System.out.println("Exception occurred in calling getInSkillProducts API. Error code: " + e.getStatusCode());
+       }
+    }
 
 The API response contains an array of in-skill product records.
 
@@ -86,7 +85,7 @@ The API response contains an array of in-skill product records.
    }
 
 getInSkillProduct()
-^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~
 
 The getInSkillProduct method retrieves the product record for a single
 in-skill product identified by a productId.
@@ -100,20 +99,20 @@ in-skill product identified by a productId.
 
    @Override
    public Optional<Response> handle(HandlerInput input) {
-   try {
-         MonetizationServiceClient client = input.getServiceClientFactory().getMonetizationService();
-         String locale = input.getRequestEnvelope().getRequest().getLocale();
+    try {
+          MonetizationServiceClient client = input.getServiceClientFactory().getMonetizationService();
+          String locale = input.getRequestEnvelope().getRequest().getLocale();
 
-         // To fetch a specific in-skill product by product Id
-         String productId = "<your product id with the format 'amzn1.adg.product....'>";
-         InSkillProduct responseProduct = client.getInSkillProduct(locale, productId);
+          // To fetch a specific in-skill product by product Id
+          String productId = "<your product id with the format 'amzn1.adg.product....'>";
+          InSkillProduct responseProduct = client.getInSkillProduct(locale, productId);
 
-         if(responseProduct!=null) {
-           System.out.println("Found the product with ID" + productId);
-       }
-     } catch (ServiceException e) {
-       System.out.println("Exception occurred in calling getInSkillProduct API. Error code: " + e.getStatusCode());
-     }
+          if(responseProduct!=null) {
+            System.out.println("Found the product with ID" + productId);
+        }
+      } catch (ServiceException e) {
+          System.out.println("Exception occurred in calling getInSkillProduct API. Error code: " + e.getStatusCode());
+      }
    }
 
 The API response contains a single in-skill product record.
@@ -132,10 +131,10 @@ The API response contains a single in-skill product record.
 
 More information on these APIs and their usage for skill implementation
 is available here: `Add In-Skill Purchases to a Custom
-Skill <https://developer.amazon.com/docs/in-skill-purchase/add-isps-to-a-skill.html>`__
+Skill <https://developer.amazon.com/docs/in-skill-purchase/add-isps-to-a-skill.html>`__ .
 
 In-Skill Purchase Interface
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------
 
 The ASK SDK for Java provides the ``SendRequestDirective`` for skills to
 initiate in-skill purchase and cancellation requests through Alexa.
@@ -146,10 +145,10 @@ interface: + ``Upsell`` + ``Buy`` + ``Cancel``
 
 More details about these ``actions`` and recommended usecases is
 available here: `Add In-Skill Purchases to a Custom
-Skill <https://developer.amazon.com/docs/in-skill-purchase/add-isps-to-a-skill.html>`__
+Skill <https://developer.amazon.com/docs/in-skill-purchase/add-isps-to-a-skill.html>`__ .
 
 Upsell
-^^^^^^
+~~~~~~
 
 Skills should initiate the Upsell action to present an in-skill
 contextually when the user did not explicitly ask for it. E.g. During or
@@ -184,7 +183,7 @@ user before presenting the pricing offer.
    return response;
 
 Buy
-^^^
+~~
 
 Skills should initiate the Buy action when a customer asks to buy a
 specific in-skill product. A productId is required to initiate the Buy
@@ -215,7 +214,7 @@ action.
    return response;
 
 Cancel
-^^^^^^
+~~~~~~
 
 Skills should initiate the Cancel action when a customer asks to cancel
 an existing entitlement or Subscription for a supported in-skill
