@@ -1,6 +1,5 @@
-=====
 Setting up the ASK SDK for Java
-=====
+===============================
 
 This guide describes how to use the ASK SDK v2 for Java in your project.
 

@@ -1,6 +1,5 @@
-=====
 Skill Attributes
-=====
+================
 
 Attributes
 ----------
@@ -72,7 +71,7 @@ directly with attributes needed by your skill.
 The following example shows how you can retrieve and save persistent
 attributes.
 
-::
+.. code:: java
 
    @Override
    public boolean canHandle(HandlerInput input) {

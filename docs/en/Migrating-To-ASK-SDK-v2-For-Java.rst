@@ -47,7 +47,7 @@ All the helper function implementations such as ``getWelcomeResponse``,
 ``getAskResponse``, and ``getHelpResponse`` have been omitted because
 they are mentioned in a section on the response builder.
 
-::
+.. code:: java
 
    public class HelloWorldSpeechlet implements SpeechletV2 {
        private static final Logger log = LoggerFactory.getLogger(HelloWorldSpeechlet.class);
@@ -106,7 +106,7 @@ they are mentioned in a section on the response builder.
 In the SDK v2, each onLaunch, onSessionEnded, and ontIntent case is
 separated out into a different handler.
 
-::
+.. code:: java
 
    public class LaunchRequestHandler implements RequestHandler {
          @Override
@@ -125,7 +125,7 @@ separated out into a different handler.
          }
    }
 
-::
+.. code:: java
 
    public class HelloWorldIntentHandler implements RequestHandler {
          @Override
@@ -143,7 +143,7 @@ separated out into a different handler.
          }
    }
 
-::
+.. code:: java
 
    public class HelpIntentHandler implements RequestHandler {
         @Override
@@ -162,7 +162,7 @@ separated out into a different handler.
         }
    }
 
-::
+.. code:: java
 
    public class SessionEndedRequestHandler implements RequestHandler {
 
@@ -204,7 +204,7 @@ example shows how to retrieve a persistent attribute from a DynamoDB
 table using attribute manager in the ``canHandle`` method. The
 ``handle`` method shows how to set a persistent attribute.
 
-::
+.. code:: java
 
    @Override
    public boolean canHandle(HandlerInput input) {
@@ -234,7 +234,7 @@ functions to construct each element of ``SpeechletResponse``,.
 The following shows a snippet of the newAskResponse method taken from
 the SDK v1 sample.
 
-::
+.. code:: java
 
    private SpeechletResponse newAskResponse(String stringOutput, boolean isOutputSsml,
            String repromptText, boolean isRepromptSsml) {
@@ -247,7 +247,7 @@ the SDK v1 sample.
            ((PlainTextOutputSpeech) outputSpeech).setText(stringOutput);
        }
 
-   if (isRepromptSsml) {
+       if (isRepromptSsml) {
            repromptOutputSpeech = new SsmlOutputSpeech();
            ((SsmlOutputSpeech) repromptOutputSpeech).setSsml(repromptText);
        } else {
@@ -262,7 +262,7 @@ the SDK v1 sample.
 In the v2 SDK, you use the response builder to construct the response
 within the handle method,, which reduces the verbosity of your code.
 
-::
+.. code:: java
 
    public Optional<Response> handle(HandlerInput input) {
        return input.getResponseBuilder()
@@ -287,7 +287,7 @@ can create exception handlers for specific exception types, or a single
 exception handler that operates globally for all exceptions. The
 following example shows a catch-all exception handler.
 
-::
+.. code:: java
 
    public class GenericExceptionHandler implements ExceptionHandler {
        private static Logger LOG = getLogger(SessionEndedRequestHandler.class);
@@ -323,7 +323,7 @@ The following snippet shows how to get a device address in the SDK v1,
 taken from `Device Address
 sample <https://github.com/alexa/skill-samples-java/blob/master/address/src/com/amazon/asksdk/address/DeviceAddressSpeechlet.java>`__.
 
-::
+.. code:: java
 
    SystemState systemState = getSystemState(speechletRequestEnvelope.getContext());
    String apiAccessToken = systemState.getApiAccessToken();
@@ -338,7 +338,7 @@ sample <https://github.com/alexa/skill-samples-java/blob/master/address/src/com/
 In the SDK v2, you can get a device address using less code, and there
 is no need to implement ``AlexaDeviceAddressClient``.
 
-::
+.. code:: java
 
    DeviceAddressServiceClient deviceAddressServiceClient = input.getServiceClientFactory().getDeviceAddressService();
    String deviceId = input.getRequestEnvelope().getContext().getSystem().getDevice().getDeviceId();
@@ -350,7 +350,7 @@ Stream Handler
 ``RequestSpeechletStreamHandler`` in the SDK v1 mainly added the skill
 ID for the AWS Lambda function.
 
-::
+.. code:: java
 
    public class DeviceAddressSpeechletRequestStreamHandler extends SpeechletRequestStreamHandler {
        private static final Set<String> supportedApplicationIds;
@@ -373,7 +373,7 @@ In SDK v2 the builder pattern is used to create your skill instance and
 register your handlers. Following example shows how to configure request
 handlers, exception handlers, and other handlers.
 
-::
+.. code:: java
 
    public class DeviceAddressStreamHandler extends SkillStreamHandler {
        private static Skill getSkill() {

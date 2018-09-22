@@ -1,6 +1,5 @@
-=====
 Developing Your First Skill
-=====
+===========================
 
 This guide walks you through developing your first skill with the ASK
 SDK v2 for Java.
@@ -32,7 +31,7 @@ invoked when the skill receives a ``LaunchRequest``. The
 ``LaunchRequest`` event occurs when the skill is invoked without a
 specific intent.
 
-::
+.. code:: java
 
    package com.amazon.ask.helloworld.handlers;
      
@@ -75,7 +74,7 @@ HelloWorldIntent handler
 The following code example shows how to configure a handler to be
 invoked when the skill receives the ``HelloWorldIntent``.
 
-::
+.. code:: java
 
    package com.amazon.ask.helloworld.handlers;
      
@@ -117,7 +116,7 @@ invoked when the skill receives the `built in
 intent <https://developer.amazon.com/docs/custom-skills/standard-built-in-intents.html#available-standard-built-in-intents>`__
 ``AMAZON.HelpIntent``.
 
-::
+.. code:: java
 
    package com.amazon.ask.helloworld.handlers;
 
@@ -158,7 +157,7 @@ be triggered by built in intents. But in this case, we decided to use a
 single handler to respond to two different intents, Amazon.CancelIntent
 and Amazon.StopIntent.
 
-::
+.. code:: java
 
    package com.amazon.ask.helloworld.handlers;
 
@@ -195,7 +194,7 @@ invoked when the skill receives the `built in
 intent <https://developer.amazon.com/docs/custom-skills/standard-built-in-intents.html#available-standard-built-in-intents>`__
 ``AMAZON.FallbackIntent``. Please note that this intent is only available in English (US) currently.
 
-::
+.. code:: java
 
    package com.amazon.ask.helloworld.handlers;
 
@@ -232,7 +231,7 @@ Despite not being able to send a response back after receiving a
 SessionEndedRequest, this handler gives us a good place for us to put
 our cleanup logic.
 
-::
+.. code:: java
 
    package com.amazon.ask.helloworld.handlers;
 
@@ -278,7 +277,7 @@ appropriate handlers.
 The following ``HelloWorldStreamHandler`` creates an SDK ``Skill`` instance configured
 with the request handlers we just created.
 
-::
+.. code:: java
 
    package com.amazon.ask.helloworld;
 
@@ -296,7 +295,12 @@ with the request handlers we just created.
      
          private static Skill getSkill() {
              return Skills.standard()
-                     .addRequestHandlers(new CancelandStopIntentHandler(), new HelloWorldIntentHandler(), new HelpIntentHandler(), new LaunchRequestHandler(), new SessionEndedRequestHandler())
+                     .addRequestHandlers(
+                            new CancelandStopIntentHandler(), 
+                            new HelloWorldIntentHandler(), 
+                            new HelpIntentHandler(), 
+                            new LaunchRequestHandler(), 
+                            new SessionEndedRequestHandler())
                      .build();
          }
      
