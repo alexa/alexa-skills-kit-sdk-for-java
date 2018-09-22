@@ -2,7 +2,7 @@
   <img src="https://m.media-amazon.com/images/G/01/mobile-apps/dex/avs/docs/ux/branding/mark1._TTH_.png">
   <br/>
   <h1 align="center">Alexa Skills Kit SDK for Java</h1>
-  <p align="center"><a href="https://travis-ci.org/alexa/alexa-skills-kit-sdk-for-java"><img src="https://travis-ci.org/alexa/alexa-skills-kit-sdk-for-java.png?branch=2.0.x"></a> <a href="https://alexa-skills-kit-sdk-for-java.readthedocs.io/en/latest/?badge=latest"><img src="https://readthedocs.org/projects/alexa-skills-kit-sdk-for-java/badge/?version=latest"></a></p>
+  <p align="center"><a href="https://travis-ci.org/alexa/alexa-skills-kit-sdk-for-java"><img src="https://travis-ci.org/alexa/alexa-skills-kit-sdk-for-java.png?branch=2.0.x"></a></p>
   </p>
 The ASK SDK for Java makes it easier for you to build highly engaging skills, by allowing you to spend more time on implementing features and less on writing boiler-plate code.
 <br/><br/>
@@ -20,6 +20,13 @@ The ASK SDK for Java makes it easier for you to build highly engaging skills, by
 |[ask-sdk-servlet-support](./ask-sdk-servlet-support)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-servlet-support/2.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-servlet-support)| 
 |[ask-sdk-dynamodb-persistence-adapter](./ask-sdk-dynamodb-persistence-adapter)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-dynamodb-persistence-adapter/2.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-dynamodb-persistence-adapter)| 
 |[ask-sdk-apache-client](./ask-sdk-apache-client)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-apache-client/2.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-apache-client)| 
+
+## Technical Documentation
+
+| Language | Documentation |
+| -------- | ------------- |
+| [English](https://alexa-skills-kit-sdk-for-java.readthedocs.io/en/latest/) | [![Documentation Status](https://readthedocs.org/projects/alexa-skills-kit-sdk-for-java/badge/?version=latest)](https://alexa-skills-kit-sdk-for-java.readthedocs.io/en/latest/?badge=latest) |
+| [日本語](https://alexa-skills-kit-sdk-for-java.readthedocs.io/ja/latest) | [![Documentation Status](https://readthedocs.org/projects/ask-sdk-for-java-ja/badge/?version=latest)](https://alexa-skills-kit-sdk-for-java.readthedocs.io/ja/latest/?badge=latest) |
 
 ## [SDK Documentation](https://alexa-skills-kit-sdk-for-java.readthedocs.io/en/latest/)
 
