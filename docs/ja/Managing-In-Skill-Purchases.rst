@@ -16,7 +16,7 @@ ASK SDK for Javaには、inSkillProducts APIを呼び出す ``MonetizationServic
 | ``locale`` は、``input.getRequestEnvelope().getRequest().getLocale()`` のリクエストから取得できます。
 | ``purchasableFilter`` には、すべてのスキル内商品を取得する場合は ``null`` 、課金可能かどうかに関する応答をフィルターする場合はPURCHASABLEまたはNOT_PURCHASABLEを指定できます。
 | ``entitledFilter`` には、すべてのスキル内商品を取得する場合は ``null`` 、エンタイトルメントのステータスに関する応答をフィルターする場合はENTITLEDまたはNOT_ENTITLEDを指定できます。
-| ``productType`` には、すべてのタイプのスキル内商品を取得する場合は ``null`` 、商品タイプでフィルターする場合はENTITLEMENTまたはSUBSCRIPTIONを指定できます。
+| ``productType`` には、すべてのタイプのスキル内商品を取得する場合は ``null`` 、商品タイプでフィルターする場合はENTITLEMENTまたはCONSUMABLEまたはSUBSCRIPTIONを指定できます。
 | ``nextToken`` は複数ページのクエリーの場合は必須です。 ``maxResults`` ではスキルでAPI呼び出しごとに取得されるレコードの数を制御できます。デフォルトのページサイズは100レコードです。
 | ``inSkillProductId`` には取得するスキル内商品を指定します。
 
@@ -60,7 +60,9 @@ API応答にはスキル内商品レコードの配列が含まれます。
                 "name": "<locale specific product name as defined by the developer>",
                 "summary": "<locale specific product summary, as provided by the developer>",
                 "entitled": "ENTITLED",              // Or NOT_ENTITLED
-                "purchasable": "PURCHASABLE"         // Or NOT_PURCHASABLE
+                "purchasable": "PURCHASABLE",        // Or NOT_PURCHASABLE
+                "purchaseMode": "TEST"               // Or LIVE
+                "activeEntitlementCount": 1
             }
         ],
         "isTruncated": true,
@@ -108,7 +110,9 @@ API応答には単一のスキル内商品レコードが含まれます。
         "name": "<locale specific product name as defined by the developer>",
         "summary": "<locale specific product summary, as provided by the developer>",
         "entitled": "ENTITLED",              // Or NOT_ENTITLED
-        "purchasable": "PURCHASABLE"         // Or NOT_PURCHASABLE
+        "purchasable": "PURCHASABLE",        // Or NOT_PURCHASABLE
+        "purchaseMode": "TEST"               // Or LIVE
+        "activeEntitlementCount": 1
     }
 
 スキル実装でのこれらのAPIとその使い方の詳細については、こちらをご覧ください。 `カスタムスキルへのスキル内課金の追加 <https://developer.amazon.com/docs/in-skill-purchase/add-isps-to-a-skill.html>`__ 。
