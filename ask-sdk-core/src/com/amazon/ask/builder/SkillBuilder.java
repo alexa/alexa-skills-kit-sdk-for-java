@@ -14,102 +14,29 @@
 package com.amazon.ask.builder;
 
 import com.amazon.ask.Skill;
+import com.amazon.ask.builder.impl.AbstractSkillBuilder;
 import com.amazon.ask.attributes.persistence.PersistenceAdapter;
-import com.amazon.ask.dispatcher.exception.ExceptionHandler;
-import com.amazon.ask.dispatcher.exception.ExceptionMapper;
-import com.amazon.ask.dispatcher.exception.impl.DefaultExceptionMapper;
-import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
-import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
+import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
-import com.amazon.ask.dispatcher.request.handler.impl.DefaultHandlerAdapter;
-import com.amazon.ask.dispatcher.request.handler.impl.DefaultRequestHandlerChain;
-import com.amazon.ask.dispatcher.request.mapper.impl.DefaultRequestMapper;
+import com.amazon.ask.model.Response;
 import com.amazon.ask.model.services.ApiClient;
-import com.amazon.ask.module.SdkModuleContext;
 import com.amazon.ask.module.SdkModule;
+import com.amazon.ask.module.SdkModuleContext;
+import com.amazon.ask.request.handler.adapter.impl.BaseHandlerAdapter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-public class SkillBuilder<T extends SkillBuilder<T>> {
+public class SkillBuilder<T extends SkillBuilder<T>> extends AbstractSkillBuilder<HandlerInput, Optional<Response>, T> {
 
-    protected final List<RequestHandler> requestHandlers;
-    protected final List<ExceptionHandler> exceptionHandlers;
-    protected final List<RequestInterceptor> requestInterceptors;
-    protected final List<ResponseInterceptor> responseInterceptors;
     protected final List<SdkModule> sdkModules;
     protected PersistenceAdapter persistenceAdapter;
     protected ApiClient apiClient;
     protected String skillId;
 
     public SkillBuilder() {
-        this.requestHandlers = new ArrayList<>();
-        this.exceptionHandlers = new ArrayList<>();
-        this.requestInterceptors = new ArrayList<>();
-        this.responseInterceptors = new ArrayList<>();
         this.sdkModules = new ArrayList<>();
-    }
-
-    public T addRequestHandler(RequestHandler handler) {
-        addRequestHandlers(handler);
-        return getThis();
-    }
-
-    public T addRequestHandlers(List<RequestHandler> handlers) {
-        addRequestHandlers(handlers.toArray(new RequestHandler[handlers.size()]));
-        return getThis();
-    }
-
-    public T addRequestHandlers(RequestHandler... handlers) {
-        requestHandlers.addAll(Arrays.asList(handlers));
-        return getThis();
-    }
-
-    public T addRequestInterceptor(RequestInterceptor interceptor) {
-        addRequestInterceptors(interceptor);
-        return getThis();
-    }
-
-    public T addRequestInterceptors(List<RequestInterceptor> interceptors) {
-        addRequestInterceptors(interceptors.toArray(new RequestInterceptor[interceptors.size()]));
-        return getThis();
-    }
-
-    public T addRequestInterceptors(RequestInterceptor... interceptors) {
-        requestInterceptors.addAll(Arrays.asList(interceptors));
-        return getThis();
-    }
-
-    public T addResponseInterceptor(ResponseInterceptor interceptor) {
-        addResponseInterceptors(interceptor);
-        return getThis();
-    }
-
-    public T addResponseInterceptors(List<ResponseInterceptor> interceptors) {
-        addResponseInterceptors(interceptors.toArray(new ResponseInterceptor[interceptors.size()]));
-        return getThis();
-    }
-
-    public T addResponseInterceptors(ResponseInterceptor... interceptors) {
-        responseInterceptors.addAll(Arrays.asList(interceptors));
-        return getThis();
-    }
-
-    public T addExceptionHandler(ExceptionHandler handler) {
-        addExceptionHandlers(handler);
-        return getThis();
-    }
-
-    public T addExceptionHandlers(List<ExceptionHandler> handlers) {
-        addExceptionHandlers(handlers.toArray(new ExceptionHandler[handlers.size()]));
-        return getThis();
-    }
-
-    public T addExceptionHandlers(ExceptionHandler... handler) {
-        exceptionHandlers.addAll(Arrays.asList(handler));
-        return getThis();
     }
 
     public T withPersistenceAdapter(PersistenceAdapter persistenceAdapter) {
@@ -140,28 +67,13 @@ public class SkillBuilder<T extends SkillBuilder<T>> {
     protected SkillConfiguration.Builder getConfigBuilder() {
         SkillConfiguration.Builder skillConfigBuilder = SkillConfiguration.builder();
 
+        super.populateConfig(skillConfigBuilder);
+
         if (!requestHandlers.isEmpty()) {
-            List<DefaultRequestHandlerChain> requestHandlerChains = requestHandlers.stream()
-                    .map(handler -> DefaultRequestHandlerChain.builder()
-                            .withRequestHandler(handler).build())
-                    .collect(Collectors.toList());
-
-            skillConfigBuilder.addRequestMapper(DefaultRequestMapper.builder()
-                    .withRequestHandlerChains(requestHandlerChains)
-                    .build())
-                    .addHandlerAdapter(new DefaultHandlerAdapter());
+            skillConfigBuilder.addHandlerAdapter(new BaseHandlerAdapter<>(RequestHandler.class));
         }
 
-        if (!exceptionHandlers.isEmpty()) {
-            ExceptionMapper exceptionMapper = DefaultExceptionMapper.builder()
-                    .withExceptionHandlers(exceptionHandlers)
-                    .build();
-            skillConfigBuilder.withExceptionMapper(exceptionMapper);
-        }
-
-        skillConfigBuilder.withRequestInterceptors(requestInterceptors)
-                .withResponseInterceptors(responseInterceptors)
-                .withPersistenceAdapter(persistenceAdapter)
+        skillConfigBuilder.withPersistenceAdapter(persistenceAdapter)
                 .withApiClient(apiClient)
                 .withSkillId(skillId);
 

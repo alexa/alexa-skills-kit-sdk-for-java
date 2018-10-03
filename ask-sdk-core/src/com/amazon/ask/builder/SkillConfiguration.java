@@ -13,71 +13,63 @@
 
 package com.amazon.ask.builder;
 
-import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
-import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
-import com.amazon.ask.model.services.ApiClient;
 import com.amazon.ask.attributes.persistence.PersistenceAdapter;
-import com.amazon.ask.dispatcher.exception.ExceptionMapper;
-import com.amazon.ask.dispatcher.request.handler.HandlerAdapter;
-import com.amazon.ask.dispatcher.request.mapper.RequestMapper;
+import com.amazon.ask.builder.impl.AbstractSkillConfiguration;
+import com.amazon.ask.dispatcher.request.handler.HandlerInput;
+import com.amazon.ask.model.Response;
+import com.amazon.ask.model.services.ApiClient;
+import com.amazon.ask.request.exception.mapper.GenericExceptionMapper;
+import com.amazon.ask.request.handler.adapter.GenericHandlerAdapter;
+import com.amazon.ask.request.interceptor.GenericRequestInterceptor;
+import com.amazon.ask.request.interceptor.GenericResponseInterceptor;
+import com.amazon.ask.request.mapper.GenericRequestMapper;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Represents the configured used to build a {@link com.amazon.ask.Skill} instance.
  */
-public class SkillConfiguration {
-    protected final List<RequestMapper> requestMappers;
-    protected final List<HandlerAdapter> handlerAdapters;
-    protected final List<RequestInterceptor> requestInterceptors;
-    protected final List<ResponseInterceptor> responseInterceptors;
-    protected final ExceptionMapper exceptionMapper;
-    protected final PersistenceAdapter persistenceAdapter;
-    protected final ApiClient apiClient;
+public class SkillConfiguration extends AbstractSkillConfiguration<HandlerInput, Optional<Response>> implements CustomSkillConfiguration {
+
     protected final String customUserAgent;
     protected final String skillId;
+    protected final PersistenceAdapter persistenceAdapter;
+    protected final ApiClient apiClient;
 
-    protected SkillConfiguration(List<RequestMapper> requestMappers, List<HandlerAdapter> handlerAdapters,
-                                 ExceptionMapper exceptionMapper, PersistenceAdapter persistenceAdapter, ApiClient apiClient,
+    protected SkillConfiguration(List<GenericRequestMapper<HandlerInput, Optional<Response>>> requestMappers,
+                                 List<GenericHandlerAdapter<HandlerInput, Optional<Response>>> handlerAdapters,
+                                 GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper,
+                                 PersistenceAdapter persistenceAdapter, ApiClient apiClient,
                                  String customUserAgent, String skillId) {
         this(requestMappers, handlerAdapters, null, null, exceptionMapper,
                 persistenceAdapter, apiClient, customUserAgent, skillId);
     }
 
-    protected SkillConfiguration(List<RequestMapper> requestMappers, List<HandlerAdapter> handlerAdapters,
-                                 List<RequestInterceptor> requestInterceptors, List<ResponseInterceptor> responseInterceptors,
-                                 ExceptionMapper exceptionMapper, PersistenceAdapter persistenceAdapter, ApiClient apiClient,
+    protected SkillConfiguration(List<GenericRequestMapper<HandlerInput, Optional<Response>>> requestMappers,
+                                 List<GenericHandlerAdapter<HandlerInput, Optional<Response>>> handlerAdapters,
+                                 List<GenericRequestInterceptor<HandlerInput>> requestInterceptors,
+                                 List<GenericResponseInterceptor<HandlerInput, Optional<Response>>> responseInterceptors,
+                                 GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper,
+                                 PersistenceAdapter persistenceAdapter, ApiClient apiClient,
                                  String customUserAgent, String skillId) {
-        this.requestMappers = requestMappers;
-        this.handlerAdapters = handlerAdapters;
-        this.requestInterceptors = requestInterceptors;
-        this.responseInterceptors = responseInterceptors;
-        this.exceptionMapper = exceptionMapper;
-        this.persistenceAdapter = persistenceAdapter;
-        this.apiClient = apiClient;
+        super(requestMappers, handlerAdapters, requestInterceptors, responseInterceptors, exceptionMapper);
         this.customUserAgent = customUserAgent;
         this.skillId = skillId;
+        this.persistenceAdapter = persistenceAdapter;
+        this.apiClient = apiClient;
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
-    public List<RequestMapper> getRequestMappers() {
-        return requestMappers;
+    public String getCustomUserAgent() {
+        return customUserAgent;
     }
 
-    public List<HandlerAdapter> getHandlerAdapters() {
-        return handlerAdapters;
-    }
-
-    public List<RequestInterceptor> getRequestInterceptors() { return requestInterceptors; }
-
-    public List<ResponseInterceptor> getResponseInterceptors() { return responseInterceptors; }
-
-    public ExceptionMapper getExceptionMapper() {
-        return exceptionMapper;
+    public String getSkillId() {
+        return skillId;
     }
 
     public PersistenceAdapter getPersistenceAdapter() {
@@ -88,104 +80,19 @@ public class SkillConfiguration {
         return apiClient;
     }
 
-    public String getCustomUserAgent() { return customUserAgent; }
-
-    public String getSkillId() { return skillId; }
-
-    public static final class Builder {
-        private List<RequestMapper> requestMappers;
-        private List<HandlerAdapter> handlerAdapters;
-        private List<RequestInterceptor> requestInterceptors;
-        private List<ResponseInterceptor> responseInterceptors;
-        private ExceptionMapper exceptionMapper;
+    public static final class Builder extends AbstractSkillConfiguration.Builder<HandlerInput, Optional<Response>, Builder> {
         private PersistenceAdapter persistenceAdapter;
         private ApiClient apiClient;
         private String customUserAgent;
         private String skillId;
 
-        private Builder() {
-        }
-
-        public Builder addRequestMapper(RequestMapper requestMapper) {
-            if (requestMappers == null) {
-                requestMappers = new ArrayList<>();
-            }
-            requestMappers.add(requestMapper);
-            return this;
-        }
-
-        public Builder withRequestMappers(List<RequestMapper> requestMappers) {
-            this.requestMappers = requestMappers;
-            return this;
-        }
-
-        public List<RequestMapper> getRequestMappers() {
-            return requestMappers;
-        }
-
-        public Builder addHandlerAdapter(HandlerAdapter handlerAdapter) {
-            if (handlerAdapters == null) {
-                handlerAdapters = new ArrayList<>();
-            }
-            handlerAdapters.add(handlerAdapter);
-            return this;
-        }
-
-        public Builder withHandlerAdapters(List<HandlerAdapter> handlerAdapters) {
-            this.handlerAdapters = handlerAdapters;
-            return this;
-        }
-
-        public List<HandlerAdapter> getHandlerAdapters() {
-            return handlerAdapters;
-        }
-
-        public Builder addRequestInterceptor(RequestInterceptor requestInterceptor) {
-            if (requestInterceptors == null) {
-                requestInterceptors = new ArrayList<>();
-            }
-            requestInterceptors.add(requestInterceptor);
-            return this;
-        }
-
-        public Builder withRequestInterceptors(List<RequestInterceptor> requestInterceptors) {
-            this.requestInterceptors = requestInterceptors;
-            return this;
-        }
-
-        public List<RequestInterceptor> getRequestInterceptors() {
-            return requestInterceptors;
-        }
-
-        public Builder addResponseInterceptor(ResponseInterceptor responseInterceptor) {
-            if (responseInterceptors == null) {
-                this.responseInterceptors = new ArrayList<>();
-            }
-            responseInterceptors.add(responseInterceptor);
-            return this;
-        }
-
-        public Builder withResponseInterceptors(List<ResponseInterceptor> responseInterceptors) {
-            this.responseInterceptors = responseInterceptors;
-            return this;
-        }
-
-        public List<ResponseInterceptor> getResponseInterceptors() {
-            return responseInterceptors;
-        }
-
-        public Builder withExceptionMapper(ExceptionMapper exceptionMapper) {
-            this.exceptionMapper = exceptionMapper;
-            return this;
-        }
-
-        public ExceptionMapper getExceptionMapper() {
-            return exceptionMapper;
-        }
-
         public Builder withPersistenceAdapter(PersistenceAdapter persistenceAdapter) {
             this.persistenceAdapter = persistenceAdapter;
             return this;
+        }
+
+        public PersistenceAdapter getPersistenceAdapter() {
+            return persistenceAdapter;
         }
 
         public Builder withApiClient(ApiClient apiClient) {
@@ -225,9 +132,6 @@ public class SkillConfiguration {
                     exceptionMapper, persistenceAdapter, apiClient, customUserAgent, skillId);
         }
 
-        public PersistenceAdapter getPersistenceAdapter() {
-            return persistenceAdapter;
-        }
 
     }
 }

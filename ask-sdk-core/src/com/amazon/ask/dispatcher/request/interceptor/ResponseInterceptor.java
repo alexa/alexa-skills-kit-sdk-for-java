@@ -15,6 +15,7 @@ package com.amazon.ask.dispatcher.request.interceptor;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.model.Response;
+import com.amazon.ask.request.interceptor.GenericResponseInterceptor;
 
 import java.util.Optional;
 
@@ -23,16 +24,4 @@ import java.util.Optional;
  * have access to the output generated from execution of the request handler, they are ideal for tasks such as response
  * sanitation and validation.
  */
-public interface ResponseInterceptor {
-
-    /**
-     * Intercept the output from the request handler after it is executed.
-     *
-     * @param input handler input containing the {@link com.amazon.ask.model.RequestEnvelope}, {@link com.amazon.ask.attributes.AttributesManager},
-     *              {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
-     *              and other utilities.
-     * @param response an {@link Optional} that may contain a {@link Response} to be sent back by the skill
-     */
-    void process(HandlerInput input, Optional<Response> response);
-
-}
+public interface ResponseInterceptor extends GenericResponseInterceptor<HandlerInput, Optional<Response>> {}

@@ -14,33 +14,11 @@
 package com.amazon.ask.dispatcher.request.handler;
 
 import com.amazon.ask.model.Response;
+import com.amazon.ask.request.handler.GenericRequestHandler;
 
 import java.util.Optional;
 
 /**
  * Request handlers are responsible for handling one or more types of incoming requests.
  */
-public interface RequestHandler {
-
-    /**
-     * Returns true if the handler is capable of handling the current request and/or state
-     *
-     * @param input handler input containing the {@link com.amazon.ask.model.RequestEnvelope}, {@link com.amazon.ask.attributes.AttributesManager},
-     *              {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
-     *              and other utilities.
-     * @return true if the handler can handle the current request and/or state
-     */
-    boolean canHandle(HandlerInput input);
-
-    /**
-     * Handles the request. A {@link Response} should be returned by this method when processing an in-session request,
-     * but may be omitted for certain out of session requests.
-     *
-     * @param input handler input containing the {@link com.amazon.ask.model.RequestEnvelope}, {@link com.amazon.ask.attributes.AttributesManager},
-     *              {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
-     *              and other utilities.
-     * @return an {@link Optional} that may contain a {@link Response} to be sent back by the skill
-     */
-    Optional<Response> handle(HandlerInput input);
-
-}
+public interface RequestHandler extends GenericRequestHandler<HandlerInput, Optional<Response>> {}

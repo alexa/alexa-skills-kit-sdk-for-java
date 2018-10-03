@@ -15,19 +15,23 @@ package com.amazon.ask.builder;
 
 import com.amazon.ask.attributes.persistence.impl.DynamoDbPersistenceAdapter;
 import com.amazon.ask.dispatcher.exception.ExceptionHandler;
-import com.amazon.ask.dispatcher.exception.ExceptionMapper;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.dispatcher.request.handler.impl.DefaultHandlerAdapter;
-import com.amazon.ask.dispatcher.request.mapper.RequestMapper;
-import com.amazon.ask.dispatcher.request.mapper.impl.DefaultRequestMapper;
 import com.amazon.ask.model.Intent;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.RequestEnvelope;
+import com.amazon.ask.model.Response;
+import com.amazon.ask.request.exception.mapper.GenericExceptionMapper;
+import com.amazon.ask.request.handler.adapter.impl.BaseHandlerAdapter;
+import com.amazon.ask.request.mapper.GenericRequestMapper;
+import com.amazon.ask.request.mapper.impl.BaseRequestMapper;
 import com.amazon.ask.services.ApacheHttpApiClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Optional;
 
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
@@ -54,8 +58,8 @@ public class StandardSkillBuilderTest {
         when(mockRequestHandler.canHandle(any())).thenReturn(true);
         builder.addRequestHandler(mockRequestHandler);
         SkillConfiguration configuration = builder.getConfigBuilder().build();
-        RequestMapper mapper = configuration.getRequestMappers().get(0);
-        assertTrue(mapper instanceof DefaultRequestMapper);
+        GenericRequestMapper<HandlerInput, Optional<Response>> mapper = configuration.getRequestMappers().get(0);
+        assertTrue(mapper instanceof BaseRequestMapper);
         assertEquals(mockRequestHandler, mapper.getRequestHandlerChain(getInputForIntent("FooIntent")).get().getRequestHandler());
     }
 
@@ -65,9 +69,11 @@ public class StandardSkillBuilderTest {
         builder.addRequestHandler(mockRequestHandler);
         builder.addExceptionHandler(mockExceptionHandler);
         SkillConfiguration configuration = builder.getConfigBuilder().build();
-        ExceptionMapper exceptionMapper = configuration.getExceptionMapper();
+        GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper = configuration.getExceptionMapper();
+        IntentRequest request = IntentRequest.builder().build();
         assertEquals(mockExceptionHandler, exceptionMapper.getHandler(HandlerInput.builder()
-                .withRequestEnvelope(RequestEnvelope.builder().build()).build(), new Exception()).get());
+                .withRequest(request)
+                .withRequestEnvelope(RequestEnvelope.builder().withRequest(request).build()).build(), new Exception()).get());
     }
 
     @Test
@@ -75,7 +81,7 @@ public class StandardSkillBuilderTest {
         builder.addRequestHandler(mockRequestHandler);
         SkillConfiguration configuration = builder.getConfigBuilder().build();
         assertEquals(1, configuration.getHandlerAdapters().size());
-        assertTrue(configuration.getHandlerAdapters().get(0) instanceof DefaultHandlerAdapter);
+        assertTrue(configuration.getHandlerAdapters().get(0) instanceof BaseHandlerAdapter);
     }
 
     @Test

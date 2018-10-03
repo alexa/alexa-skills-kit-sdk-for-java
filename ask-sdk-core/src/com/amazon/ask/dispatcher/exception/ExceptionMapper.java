@@ -15,6 +15,8 @@ package com.amazon.ask.dispatcher.exception;
 
 import com.amazon.ask.dispatcher.impl.DefaultRequestDispatcher;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
+import com.amazon.ask.model.Response;
+import com.amazon.ask.request.exception.mapper.GenericExceptionMapper;
 
 import java.util.Optional;
 
@@ -23,17 +25,5 @@ import java.util.Optional;
  * The exception mapper contains one or more exception handlers. Handlers are accessed through the mapper to attempt to
  * find a handler that is compatible with the current exception.
  */
-public interface ExceptionMapper {
-
-    /**
-     * Returns a suitable exception handler to dispatch the specified exception, if one exists.
-     *
-     * @param input handler input containing the {@link com.amazon.ask.model.RequestEnvelope}, {@link com.amazon.ask.attributes.AttributesManager},
-     *              {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
-     *              and other utilities.
-     * @param throwable the exception that was originally thrown
-     * @return optional exception handler if found, else an empty result
-     */
-    Optional<ExceptionHandler> getHandler(HandlerInput input, Throwable throwable);
-
-}
+@Deprecated
+public interface ExceptionMapper extends GenericExceptionMapper<HandlerInput, Optional<Response>> {}

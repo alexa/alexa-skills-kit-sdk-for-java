@@ -14,10 +14,12 @@
 package com.amazon.ask.dispatcher.exception.impl;
 
 import com.amazon.ask.dispatcher.exception.ExceptionHandler;
+import com.amazon.ask.request.exception.handler.GenericExceptionHandler;
+import com.amazon.ask.request.exception.mapper.impl.BaseExceptionMapper;
 import com.amazon.ask.dispatcher.exception.ExceptionMapper;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
+import com.amazon.ask.model.Response;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -27,62 +29,19 @@ import java.util.Optional;
  *
  * This implementation accesses registered {@link ExceptionHandler} instances in the order they were provided.
  */
-public class DefaultExceptionMapper implements ExceptionMapper {
+@Deprecated
+public class DefaultExceptionMapper extends BaseExceptionMapper<HandlerInput, Optional<Response>> implements ExceptionMapper {
 
-    protected final List<ExceptionHandler> exceptionHandlers;
-
-    protected DefaultExceptionMapper(List<ExceptionHandler> exceptionHandlers) {
-        this.exceptionHandlers = exceptionHandlers;
+    protected DefaultExceptionMapper(List<GenericExceptionHandler<HandlerInput, Optional<Response>>> exceptionHandlers) {
+        super(exceptionHandlers);
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
-    @Override
-    public Optional<ExceptionHandler> getHandler(HandlerInput handlerInput, Throwable ex) {
-        //if it is a reflection exception, unwrap it to get the real cause
-        Throwable exception = ex instanceof ReflectiveOperationException ? ex.getCause() : ex;
-
-        //give the exception handlers a chance to dispatch this error
-        for (ExceptionHandler exceptionHandler : exceptionHandlers) {
-            if (exceptionHandler.canHandle(handlerInput, exception)) {
-                return Optional.of(exceptionHandler);
-            }
-        }
-        return Optional.empty();
-    }
-
-    public static final class Builder {
-        private List<ExceptionHandler> exceptionHandlers;
-
+    public static final class Builder extends BaseExceptionMapper.Builder<HandlerInput, Optional<Response>, Builder> {
         private Builder() {
-        }
-
-        /**
-         * List of exception handlers to use in the handler chain. Handlers will accessed in the order
-         * determined by the list.
-         *
-         * @param exceptionHandlers list of exception handlers
-         * @return builder
-         */
-        public Builder withExceptionHandlers(List<ExceptionHandler> exceptionHandlers) {
-            this.exceptionHandlers = exceptionHandlers;
-            return this;
-        }
-
-        /**
-         * Adds an exception handler to the end of the handler chain.
-         *
-         * @param handler handler to add
-         * @return builder
-         */
-        public Builder addExceptionHandler(ExceptionHandler handler) {
-            if (exceptionHandlers == null) {
-                this.exceptionHandlers = new ArrayList<>();
-            }
-            exceptionHandlers.add(handler);
-            return this;
         }
 
         public DefaultExceptionMapper build() {

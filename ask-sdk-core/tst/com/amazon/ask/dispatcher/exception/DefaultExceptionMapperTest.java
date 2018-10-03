@@ -14,6 +14,7 @@
 package com.amazon.ask.dispatcher.exception;
 
 import com.amazon.ask.dispatcher.exception.impl.DefaultExceptionMapper;
+import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import org.junit.Test;
@@ -26,7 +27,11 @@ import static org.mockito.Mockito.when;
 
 public class DefaultExceptionMapperTest {
 
-    private HandlerInput handlerInput = HandlerInput.builder().withRequestEnvelope(RequestEnvelope.builder().build()).build();
+    private HandlerInput handlerInput = HandlerInput.builder()
+            .withRequestEnvelope(RequestEnvelope.builder()
+                    .withRequest(IntentRequest.builder().build())
+                    .build())
+            .build();
 
     @Test
     public void no_matching_exception_handler_returns_optional_empty() {

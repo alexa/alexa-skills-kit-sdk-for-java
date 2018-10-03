@@ -13,45 +13,43 @@
 
 package com.amazon.ask.dispatcher.request.handler.impl;
 
-import com.amazon.ask.dispatcher.exception.ExceptionHandler;
-import com.amazon.ask.dispatcher.request.handler.RequestHandler;
+import com.amazon.ask.request.exception.handler.GenericExceptionHandler;
+import com.amazon.ask.request.handler.GenericRequestHandler;
+import com.amazon.ask.request.handler.chain.impl.BaseRequestHandlerChain;
+import com.amazon.ask.request.interceptor.GenericRequestInterceptor;
+import com.amazon.ask.request.interceptor.GenericResponseInterceptor;
+import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandlerChain;
-import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
-import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
+import com.amazon.ask.model.Response;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Default implementation of {@link RequestHandlerChain}. Handlers are typed to {@link RequestHandler}.
  */
-public class DefaultRequestHandlerChain extends GenericRequestHandlerChain {
+@Deprecated
+public class DefaultRequestHandlerChain extends BaseRequestHandlerChain<HandlerInput, Optional<Response>> implements RequestHandlerChain {
 
-    protected DefaultRequestHandlerChain(RequestHandler handler, List<RequestInterceptor> requestInterceptors,
-                                         List<ResponseInterceptor> responseInterceptors,
-                                         List<ExceptionHandler> exceptionHandlers) {
+    protected DefaultRequestHandlerChain(GenericRequestHandler<HandlerInput, Optional<Response>> handler, List<GenericRequestInterceptor<HandlerInput>> requestInterceptors,
+                                         List<GenericResponseInterceptor<HandlerInput, Optional<Response>>> responseInterceptors,
+                                         List<GenericExceptionHandler<HandlerInput, Optional<Response>>> exceptionHandlers) {
         super(handler, requestInterceptors, responseInterceptors, exceptionHandlers);
+    }
+
+    @Override
+    public com.amazon.ask.dispatcher.request.handler.RequestHandler getRequestHandler() {
+        return (com.amazon.ask.dispatcher.request.handler.RequestHandler)handler;
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
-    @Override
-    public RequestHandler getRequestHandler() {
-        return (RequestHandler)handler;
-    }
-
-    public static final class Builder extends GenericRequestHandlerChain.Builder<Builder> {
-        private RequestHandler handler;
+    public static final class Builder extends BaseRequestHandlerChain.Builder<HandlerInput, Optional<Response>, Builder> {
 
         private Builder() {
         }
-
-        public Builder withRequestHandler(RequestHandler handler) {
-            this.handler = handler;
-            return this;
-        }
-
         public DefaultRequestHandlerChain build() {
             return new DefaultRequestHandlerChain(handler, requestInterceptors, responseInterceptors, exceptionHandlers);
         }

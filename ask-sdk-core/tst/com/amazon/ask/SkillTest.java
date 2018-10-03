@@ -38,6 +38,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -54,7 +55,7 @@ public class SkillTest {
         mockAdapter = mock(HandlerAdapter.class);
         mockExceptionMapper = mock(ExceptionMapper.class);
         RequestHandlerChain chain = mock(RequestHandlerChain.class);
-        when(mockRequestMapper.getRequestHandlerChain(any())).thenReturn(Optional.of(chain));
+        doReturn(Optional.of(chain)).when(mockRequestMapper).getRequestHandlerChain(any());
 
         SkillConfiguration skillConfiguration = SkillConfiguration.builder()
                 .withRequestMappers(Collections.singletonList(mockRequestMapper))

@@ -13,37 +13,12 @@
 
 package com.amazon.ask.dispatcher.request.handler;
 
-import com.amazon.ask.dispatcher.exception.ExceptionHandler;
-import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
-import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
+import com.amazon.ask.model.Response;
+import com.amazon.ask.request.handler.chain.GenericRequestHandlerChain;
 
-import java.util.List;
+import java.util.Optional;
 
 /**
  * A handler chain contains a request handler and any associated request/response interceptors and exception handlers.
  */
-public interface RequestHandlerChain {
-
-    /**
-     * Returns the request handler
-     *
-     * @return request handler
-     */
-    Object getRequestHandler();
-
-    /**
-     * @return list of chain-level request interceptors
-     */
-    List<RequestInterceptor> getRequestInterceptors();
-
-    /**
-     * @return list of chain-level response interceptors
-     */
-    List<ResponseInterceptor> getResponseInterceptors();
-
-    /**
-     * @return list of chain-level exception handlers
-     */
-    List<ExceptionHandler> getExceptionHandlers();
-
-}
+public interface RequestHandlerChain extends GenericRequestHandlerChain<HandlerInput, Optional<Response>> {}

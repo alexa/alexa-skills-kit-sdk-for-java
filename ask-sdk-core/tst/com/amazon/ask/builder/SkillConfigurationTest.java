@@ -13,18 +13,24 @@
 
 package com.amazon.ask.builder;
 
+import com.amazon.ask.dispatcher.request.handler.HandlerAdapter;
 import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
 import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
+import com.amazon.ask.request.handler.adapter.GenericHandlerAdapter;
+import com.amazon.ask.request.interceptor.GenericRequestInterceptor;
+import com.amazon.ask.request.interceptor.GenericResponseInterceptor;
+import com.amazon.ask.dispatcher.request.handler.HandlerInput;
+import com.amazon.ask.model.Response;
 import com.amazon.ask.model.services.ApiClient;
 import com.amazon.ask.attributes.persistence.PersistenceAdapter;
 import com.amazon.ask.dispatcher.exception.ExceptionMapper;
-import com.amazon.ask.dispatcher.request.handler.HandlerAdapter;
 import com.amazon.ask.dispatcher.request.mapper.RequestMapper;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -46,21 +52,21 @@ public class SkillConfigurationTest {
 
     @Test
     public void get_handler_adapters() {
-        List<HandlerAdapter> handlerAdapters = Collections.singletonList(mock(HandlerAdapter.class));
+        List<GenericHandlerAdapter<HandlerInput, Optional<Response>>> handlerAdapters = Collections.singletonList(mock(HandlerAdapter.class));
         SkillConfiguration config = SkillConfiguration.builder().withHandlerAdapters(handlerAdapters).build();
         assertEquals(handlerAdapters, config.getHandlerAdapters());
     }
 
     @Test
     public void get_request_interceptors() {
-        List<RequestInterceptor> requestInterceptors = Collections.singletonList(mock(RequestInterceptor.class));
+        List<GenericRequestInterceptor<HandlerInput>> requestInterceptors = Collections.singletonList(mock(RequestInterceptor.class));
         SkillConfiguration config = SkillConfiguration.builder().withRequestInterceptors(requestInterceptors).build();
         assertEquals(requestInterceptors, config.getRequestInterceptors());
     }
 
     @Test
     public void get_response_interceptors() {
-        List<ResponseInterceptor> responseInterceptors = Collections.singletonList(mock(ResponseInterceptor.class));
+        List<GenericResponseInterceptor<HandlerInput, Optional<Response>>> responseInterceptors = Collections.singletonList(mock(ResponseInterceptor.class));
         SkillConfiguration config = SkillConfiguration.builder().withResponseInterceptors(responseInterceptors).build();
         assertEquals(responseInterceptors, config.getResponseInterceptors());
     }
@@ -91,28 +97,6 @@ public class SkillConfigurationTest {
         String skillId = "fooSkillId";
         SkillConfiguration config = SkillConfiguration.builder().withSkillId(skillId).build();
         assertEquals(skillId, config.getSkillId());
-    }
-
-    @Test
-    public void set_get_custom_user_agent() {
-        String customUserAgent = "foo";
-        SkillConfiguration config = SkillConfiguration.builder().withCustomUserAgent(customUserAgent).build();
-        assertEquals(customUserAgent, config.getCustomUserAgent());
-    }
-
-    @Test
-    public void append_single_user_agent() {
-        String customUserAgent = "foo";
-        SkillConfiguration config = SkillConfiguration.builder().appendCustomUserAgent(customUserAgent).build();
-        assertEquals(customUserAgent, config.getCustomUserAgent());
-    }
-
-    @Test
-    public void append_multiple_user_agents() {
-        String customUserAgent1 = "foo";
-        String customUserAgent2 = "bar";
-        SkillConfiguration config = SkillConfiguration.builder().appendCustomUserAgent(customUserAgent1).appendCustomUserAgent(customUserAgent2).build();
-        assertEquals("foo bar", config.getCustomUserAgent());
     }
 
 }
