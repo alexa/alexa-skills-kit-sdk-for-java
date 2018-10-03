@@ -35,7 +35,7 @@
   <dependencies>
     <dependency>
       <groupId>com.amazon.alexa</groupId>
-      <artifactId>alexa-sdk-runtime</artifactId>
+      <artifactId>ask-sdk-runtime</artifactId>
       <version>2.6.1</version>
     </dependency>
     <dependency>

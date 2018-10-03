@@ -13,10 +13,10 @@
 
 package com.amazon.ask;
 
-import com.amazon.ask.model.RequestEnvelope;
-import com.amazon.ask.model.ResponseEnvelope;
-import com.amazon.ask.model.services.Serializer;
-import com.amazon.ask.util.JacksonSerializer;
+import com.amazon.ask.exception.AskSdkException;
+import com.amazon.ask.request.impl.BaseSkillRequest;
+import com.amazon.ask.response.SkillResponse;
+import com.amazon.ask.util.ValidationUtils;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import org.apache.commons.io.IOUtils;
@@ -24,7 +24,9 @@ import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * This class provides the handler required when hosting the service as an AWS Lambda function.
@@ -42,12 +44,14 @@ import java.nio.charset.StandardCharsets;
  * <strong>Handler</strong>.
  */
 public abstract class SkillStreamHandler implements RequestStreamHandler {
-    private final Skill skill;
-    private final Serializer serializer;
+    private final List<AlexaSkill> skills;
 
-    public SkillStreamHandler(Skill skill) {
-        this.skill = skill;
-        this.serializer = new JacksonSerializer();
+    public SkillStreamHandler(AlexaSkill skill) {
+        this.skills = Collections.singletonList(ValidationUtils.assertNotNull(skill, "skill"));
+    }
+
+    public SkillStreamHandler(AlexaSkill... skills) {
+        this.skills = Arrays.asList(ValidationUtils.assertNotEmpty(skills, "skills"));
     }
 
     /**
@@ -62,8 +66,16 @@ public abstract class SkillStreamHandler implements RequestStreamHandler {
      */
     @Override
     public final void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
-        RequestEnvelope requestEnvelope = serializer.deserialize(input, RequestEnvelope.class);
-        ResponseEnvelope response = skill.invoke(requestEnvelope);
-        serializer.serialize(response, output);
+        byte[] inputBytes = IOUtils.toByteArray(input);
+        for (AlexaSkill skill : skills) {
+            SkillResponse response = skill.execute(new BaseSkillRequest(inputBytes));
+            if (response != null) {
+                if (response.isPresent()) {
+                    response.writeTo(output);
+                }
+                return;
+            }
+        }
+        throw new AskSdkException("Could not find a skill to handle the incoming request");
     }
 }

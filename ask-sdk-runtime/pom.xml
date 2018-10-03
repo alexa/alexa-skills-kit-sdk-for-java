@@ -6,7 +6,7 @@
       <version>2.6.1</version>
     </parent>
     <groupId>com.amazon.alexa</groupId>
-    <artifactId>alexa-sdk-runtime</artifactId>
+    <artifactId>ask-sdk-runtime</artifactId>
     <packaging>jar</packaging>
     <version>2.6.1</version>
     <name>Alexa SDK for Java Runtime</name>
