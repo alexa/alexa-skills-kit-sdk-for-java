@@ -42,7 +42,7 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-dynamodb</artifactId>
-      <version>1.11.301</version>
+      <version>1.11.420</version>
     </dependency>
     <dependency>
       <groupId>org.powermock</groupId>

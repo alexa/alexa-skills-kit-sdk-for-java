@@ -17,23 +17,18 @@ import com.amazon.ask.dispatcher.request.handler.HandlerAdapter;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
+import com.amazon.ask.request.handler.adapter.impl.BaseHandlerAdapter;
 
 import java.util.Optional;
 
 /**
  * {@link HandlerAdapter} implementation for {@link RequestHandler} implementations.
  */
-public class DefaultHandlerAdapter implements HandlerAdapter {
+@Deprecated
+public class DefaultHandlerAdapter extends BaseHandlerAdapter<HandlerInput, Optional<Response>, RequestHandler> implements HandlerAdapter {
 
-    @Override
-    public boolean supports(Object handler) {
-        return handler instanceof RequestHandler;
-    }
-
-    @Override
-    public Optional<Response> execute(HandlerInput input, Object handler) {
-        RequestHandler requestHandler = (RequestHandler) handler;
-        return requestHandler.handle(input);
+    public DefaultHandlerAdapter() {
+        super(RequestHandler.class);
     }
 
 }

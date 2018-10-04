@@ -15,16 +15,19 @@ package com.amazon.ask.module;
 
 import com.amazon.ask.attributes.persistence.PersistenceAdapter;
 import com.amazon.ask.builder.SkillConfiguration;
-import com.amazon.ask.dispatcher.exception.ExceptionMapper;
-import com.amazon.ask.dispatcher.request.handler.HandlerAdapter;
-import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
-import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
-import com.amazon.ask.dispatcher.request.mapper.RequestMapper;
+import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.exception.AskSdkException;
+import com.amazon.ask.model.Response;
 import com.amazon.ask.model.services.ApiClient;
+import com.amazon.ask.request.exception.mapper.GenericExceptionMapper;
+import com.amazon.ask.request.handler.adapter.GenericHandlerAdapter;
+import com.amazon.ask.request.interceptor.GenericRequestInterceptor;
+import com.amazon.ask.request.interceptor.GenericResponseInterceptor;
+import com.amazon.ask.request.mapper.GenericRequestMapper;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Context object passed to {@link SdkModule} implementations during module setup.
@@ -38,59 +41,59 @@ public class SdkModuleContext {
         this.skillConfigBuilder = skillConfigBuilder;
     }
 
-    public SdkModuleContext addRequestMappers(List<RequestMapper> requestMapper) {
+    public SdkModuleContext addRequestMappers(List<GenericRequestMapper<HandlerInput, Optional<Response>>> requestMapper) {
         requestMapper.forEach(skillConfigBuilder::addRequestMapper);
         return this;
     }
 
-    public SdkModuleContext addRequestMapper(RequestMapper requestMapper) {
+    public SdkModuleContext addRequestMapper(GenericRequestMapper<HandlerInput, Optional<Response>> requestMapper) {
         skillConfigBuilder.addRequestMapper(requestMapper);
         return this;
     }
 
-    public List<RequestMapper> getRequestMappers() {
+    public List<GenericRequestMapper<HandlerInput, Optional<Response>>> getRequestMappers() {
         return Collections.unmodifiableList(skillConfigBuilder.getRequestMappers());
     }
 
-    public SdkModuleContext addHandlerAdapters(List<HandlerAdapter> handlerAdapter) {
+    public SdkModuleContext addHandlerAdapters(List<GenericHandlerAdapter<HandlerInput, Optional<Response>>> handlerAdapter) {
         handlerAdapter.forEach(skillConfigBuilder::addHandlerAdapter);
         return this;
     }
 
-    public SdkModuleContext addHandlerAdapter(HandlerAdapter handlerAdapter) {
+    public SdkModuleContext addHandlerAdapter(GenericHandlerAdapter<HandlerInput, Optional<Response>> handlerAdapter) {
         skillConfigBuilder.addHandlerAdapter(handlerAdapter);
         return this;
     }
 
-    public List<HandlerAdapter> getHandlerAdapter() {
+    public List<GenericHandlerAdapter<HandlerInput, Optional<Response>>> getHandlerAdapter() {
         return skillConfigBuilder.getHandlerAdapters() == null
-            ? null
-            : Collections.unmodifiableList(skillConfigBuilder.getHandlerAdapters());
+                ? null
+                : Collections.unmodifiableList(skillConfigBuilder.getHandlerAdapters());
     }
 
-    public SdkModuleContext addRequestInterceptor(RequestInterceptor requestInterceptor) {
+    public SdkModuleContext addRequestInterceptor(GenericRequestInterceptor<HandlerInput> requestInterceptor) {
         skillConfigBuilder.addRequestInterceptor(requestInterceptor);
         return this;
     }
 
-    public List<RequestInterceptor> getRequestInterceptors() {
+    public List<GenericRequestInterceptor<HandlerInput>> getRequestInterceptors() {
         return skillConfigBuilder.getRequestInterceptors() == null
-            ? null
-            : Collections.unmodifiableList(skillConfigBuilder.getRequestInterceptors());
+                ? null
+                : Collections.unmodifiableList(skillConfigBuilder.getRequestInterceptors());
     }
 
-    public SdkModuleContext addResponseInterceptor(ResponseInterceptor responseInterceptor) {
+    public SdkModuleContext addResponseInterceptor(GenericResponseInterceptor<HandlerInput, Optional<Response>> responseInterceptor) {
         skillConfigBuilder.addResponseInterceptor(responseInterceptor);
         return this;
     }
 
-    public List<ResponseInterceptor> getResponseInterceptors() {
+    public List<GenericResponseInterceptor<HandlerInput, Optional<Response>>> getResponseInterceptors() {
         return skillConfigBuilder.getResponseInterceptors() == null
-            ? null
-            : Collections.unmodifiableList(skillConfigBuilder.getResponseInterceptors());
+                ? null
+                : Collections.unmodifiableList(skillConfigBuilder.getResponseInterceptors());
     }
 
-    public SdkModuleContext setExceptionMapper(ExceptionMapper exceptionMapper) {
+    public SdkModuleContext setExceptionMapper(GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper) {
         skillConfigBuilder.withExceptionMapper(exceptionMapper);
         return this;
     }
@@ -110,11 +113,6 @@ public class SdkModuleContext {
                     "module attempting to override previously set value.");
         }
         skillConfigBuilder.withApiClient(apiClient);
-        return this;
-    }
-
-    public SdkModuleContext appendCustomUserAgent(String customUserAgent) {
-        skillConfigBuilder.appendCustomUserAgent(customUserAgent);
         return this;
     }
 

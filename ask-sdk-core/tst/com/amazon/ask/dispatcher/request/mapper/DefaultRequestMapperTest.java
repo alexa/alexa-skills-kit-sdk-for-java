@@ -13,15 +13,16 @@
 
 package com.amazon.ask.dispatcher.request.mapper;
 
+import com.amazon.ask.request.handler.chain.GenericRequestHandlerChain;
 import com.amazon.ask.dispatcher.request.mapper.impl.DefaultRequestMapper;
 import com.amazon.ask.model.Intent;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.RequestEnvelope;
+import com.amazon.ask.model.Response;
 import com.amazon.ask.model.events.skillevents.SkillEnabledRequest;
 import com.amazon.ask.dispatcher.request.handler.impl.DefaultRequestHandlerChain;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
-import com.amazon.ask.dispatcher.request.handler.RequestHandlerChain;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -44,7 +45,7 @@ public class DefaultRequestMapperTest {
     @Test
     public void no_handler_registered_for_intent() {
         IntentRequest request = IntentRequest.builder().withIntent(Intent.builder().withName("FooIntent").build()).withRequestId(UUID.randomUUID().toString()).build();
-        RequestEnvelope envelope = RequestEnvelope.<IntentRequest>builder().withRequest(request).build();
+        RequestEnvelope envelope = RequestEnvelope.builder().withRequest(request).build();
         HandlerInput input = HandlerInput.builder().withRequestEnvelope(envelope).build();
         ArgumentCaptor<HandlerInput> captor = ArgumentCaptor.forClass(HandlerInput.class);
         RequestHandler handler = mock(RequestHandler.class);
@@ -52,7 +53,7 @@ public class DefaultRequestMapperTest {
         DefaultRequestMapper mapper = DefaultRequestMapper.builder()
                 .addRequestHandlerChain(getHandlerChain(handler))
                 .build();
-        Optional<RequestHandlerChain> handlerOptional = mapper.getRequestHandlerChain(input);
+        Optional<GenericRequestHandlerChain<HandlerInput, Optional<Response>>> handlerOptional = mapper.getRequestHandlerChain(input);
         assertEquals(handlerOptional, Optional.empty());
         assertTrue(captor.getValue().getRequestEnvelope().getRequest() instanceof IntentRequest);
     }
@@ -60,7 +61,7 @@ public class DefaultRequestMapperTest {
     @Test
     public void no_handler_registered_for_event() {
         SkillEnabledRequest request = SkillEnabledRequest.builder().build();
-        RequestEnvelope envelope = RequestEnvelope.<SkillEnabledRequest>builder().withRequest(request).build();
+        RequestEnvelope envelope = RequestEnvelope.builder().withRequest(request).build();
         HandlerInput input = HandlerInput.builder().withRequestEnvelope(envelope).build();
         ArgumentCaptor<HandlerInput> captor = ArgumentCaptor.forClass(HandlerInput.class);
         RequestHandler handler = mock(RequestHandler.class);
@@ -68,7 +69,7 @@ public class DefaultRequestMapperTest {
         DefaultRequestMapper mapper = DefaultRequestMapper.builder()
                 .addRequestHandlerChain(getHandlerChain(handler))
                 .build();
-        Optional<RequestHandlerChain> handlerOptional = mapper.getRequestHandlerChain(input);
+        Optional<GenericRequestHandlerChain<HandlerInput, Optional<Response>>> handlerOptional = mapper.getRequestHandlerChain(input);
         assertEquals(handlerOptional, Optional.empty());
         assertTrue(captor.getValue().getRequestEnvelope().getRequest() instanceof SkillEnabledRequest);
     }
@@ -76,7 +77,7 @@ public class DefaultRequestMapperTest {
     @Test
     public void handler_registered_for_intent() {
         IntentRequest request = IntentRequest.builder().withIntent(Intent.builder().withName("fooIntent").build()).withRequestId(UUID.randomUUID().toString()).build();
-        RequestEnvelope envelope = RequestEnvelope.<IntentRequest>builder().withRequest(request).build();
+        RequestEnvelope envelope = RequestEnvelope.builder().withRequest(request).build();
         HandlerInput input = HandlerInput.builder().withRequestEnvelope(envelope).build();
         ArgumentCaptor<HandlerInput> captor = ArgumentCaptor.forClass(HandlerInput.class);
         RequestHandler handler = mock(RequestHandler.class);
@@ -84,7 +85,7 @@ public class DefaultRequestMapperTest {
         DefaultRequestMapper mapper = DefaultRequestMapper.builder()
                 .addRequestHandlerChain(getHandlerChain(handler))
                 .build();
-        Optional<RequestHandlerChain> handlerOptional = mapper.getRequestHandlerChain(input);
+        Optional<GenericRequestHandlerChain<HandlerInput, Optional<Response>>> handlerOptional = mapper.getRequestHandlerChain(input);
         assertEquals(handlerOptional.get().getRequestHandler(), handler);
         assertTrue(captor.getValue().getRequestEnvelope().getRequest() instanceof IntentRequest);
     }
@@ -92,7 +93,7 @@ public class DefaultRequestMapperTest {
     @Test
     public void handler_registered_for_event() {
         SkillEnabledRequest request = SkillEnabledRequest.builder().build();
-        RequestEnvelope envelope = RequestEnvelope.<SkillEnabledRequest>builder().withRequest(request).build();
+        RequestEnvelope envelope = RequestEnvelope.builder().withRequest(request).build();
         HandlerInput input = HandlerInput.builder().withRequestEnvelope(envelope).build();
         ArgumentCaptor<HandlerInput> captor = ArgumentCaptor.forClass(HandlerInput.class);
         RequestHandler handler = mock(RequestHandler.class);
@@ -100,7 +101,7 @@ public class DefaultRequestMapperTest {
         DefaultRequestMapper mapper = DefaultRequestMapper.builder()
                 .addRequestHandlerChain(getHandlerChain(handler))
                 .build();
-        Optional<RequestHandlerChain> handlerOptional = mapper.getRequestHandlerChain(input);
+        Optional<GenericRequestHandlerChain<HandlerInput, Optional<Response>>> handlerOptional = mapper.getRequestHandlerChain(input);
         assertEquals(handlerOptional.get().getRequestHandler(), handler);
         assertTrue(captor.getValue().getRequestEnvelope().getRequest() instanceof SkillEnabledRequest);
     }
@@ -121,7 +122,7 @@ public class DefaultRequestMapperTest {
                                 .build())
                         .build())
                 .build();
-        Optional<RequestHandlerChain> result = mapper.getRequestHandlerChain(handlerInput);
+        Optional<GenericRequestHandlerChain<HandlerInput, Optional<Response>>> result = mapper.getRequestHandlerChain(handlerInput);
         assertEquals(handler, result.get().getRequestHandler());
     }
 

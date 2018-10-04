@@ -14,25 +14,13 @@
 package com.amazon.ask.dispatcher;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
-import com.amazon.ask.exception.AskSdkException;
 import com.amazon.ask.model.Response;
+import com.amazon.ask.request.dispatcher.GenericRequestDispatcher;
 
 import java.util.Optional;
 
 /**
  * Receives a request, dispatches to customer handling code, and optionally returns a {@link Response}.
  */
-public interface RequestDispatcher {
-
-    /**
-     * Dispatches an incoming request to the appropriate handling code and returns any output
-     *
-     * @param input handler input containing the {@link com.amazon.ask.model.Request}, {@link com.amazon.ask.attributes.AttributesManager},
-     *              {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
-     *              and other utilities.
-     * @return output from handlers, which may contain a {@link Response}
-     * @throws AskSdkException when an exception occurs during request processing
-     */
-    Optional<Response> dispatch(HandlerInput input) throws AskSdkException;
-
-}
+@Deprecated
+public interface RequestDispatcher extends GenericRequestDispatcher<HandlerInput, Optional<Response>> {}

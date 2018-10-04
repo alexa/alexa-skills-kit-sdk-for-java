@@ -11,15 +11,22 @@
     the specific language governing permissions and limitations under the License.
  */
 
-package com.amazon.ask.exception;
+package com.amazon.ask.request.impl;
 
-/**
- * Exception thrown when an exception occurs that cannot be handled by an {@link com.amazon.ask.dispatcher.exception.ExceptionHandler}.
- */
-public class UnhandledSkillException extends AskSdkException {
+import com.amazon.ask.request.SkillRequest;
+import com.amazon.ask.util.ValidationUtils;
 
-    public UnhandledSkillException(Throwable cause) {
-        super("Unhandled exception", cause);
+public class BaseSkillRequest implements SkillRequest {
+
+    private final byte[] payload;
+
+    public BaseSkillRequest(byte[] payload) {
+        this.payload = ValidationUtils.assertNotNull(payload, "payload");
+    }
+
+    @Override
+    public byte[] getRawRequest() {
+        return payload;
     }
 
 }

@@ -13,6 +13,7 @@
 
 package com.amazon.ask.util;
 
+import com.amazon.ask.util.ValidationUtils;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -116,7 +117,6 @@ public class ValidationUtilsTest {
     public void assertNotEmpty_EmptyArray_ThrowsException() {
         ValidationUtils.assertNotEmpty(new String[0], "array");
     }
-
 
 
 }

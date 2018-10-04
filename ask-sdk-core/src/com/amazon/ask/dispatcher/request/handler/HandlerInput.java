@@ -13,14 +13,14 @@
 
 package com.amazon.ask.dispatcher.request.handler;
 
-import com.amazon.ask.model.RequestEnvelope;
-import com.amazon.ask.attributes.persistence.PersistenceAdapter;
+import com.amazon.ask.request.exception.handler.impl.AbstractHandlerInput;
 import com.amazon.ask.attributes.AttributesManager;
-import com.amazon.ask.response.ResponseBuilder;
+import com.amazon.ask.attributes.persistence.PersistenceAdapter;
+import com.amazon.ask.model.Request;
+import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.services.ServiceClientFactory;
-import com.amazon.ask.util.ValidationUtils;
+import com.amazon.ask.response.ResponseBuilder;
 
-import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -31,20 +31,18 @@ import java.util.function.Predicate;
  * {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
  * and other useful utilities.
  */
-public class HandlerInput {
+public class HandlerInput extends AbstractHandlerInput<Request> {
 
     protected final RequestEnvelope requestEnvelope;
-    protected final Object context;
     protected final AttributesManager attributesManager;
     protected final ServiceClientFactory serviceClientFactory;
     protected final ResponseBuilder responseBuilder;
 
     protected HandlerInput(RequestEnvelope requestEnvelope, PersistenceAdapter persistenceAdapter,
                            Object context, ServiceClientFactory serviceClientFactory) {
-        this.requestEnvelope = ValidationUtils.assertNotNull(requestEnvelope, "requestEnvelope");
+        super(requestEnvelope.getRequest(), context);
+        this.requestEnvelope = requestEnvelope;
         this.serviceClientFactory = serviceClientFactory;
-        this.context = context;
-
         this.attributesManager = AttributesManager.builder()
                 .withRequestEnvelope(requestEnvelope)
                 .withPersistenceAdapter(persistenceAdapter)
@@ -72,17 +70,6 @@ public class HandlerInput {
      */
     public AttributesManager getAttributesManager() {
         return attributesManager;
-    }
-
-    /**
-     * Optionally returns the container context. If this skill is running on AWS Lambda and using the standard
-     * Lambda SDK stream handler, this will return the AWS Lambda function context object. If this skill is running
-     * on other containers, the returned value is implementation specific.
-     *
-     * @return an {@link Optional} that may contain the container context
-     */
-    public Optional<Object> getContext() {
-        return Optional.ofNullable(context);
     }
 
     /**
@@ -117,10 +104,9 @@ public class HandlerInput {
         return responseBuilder;
     }
 
-    public static final class Builder {
+    public static final class Builder extends AbstractHandlerInput.Builder<Request, Builder> {
         private RequestEnvelope requestEnvelope;
         private PersistenceAdapter persistenceAdapter;
-        private Object context;
         private ServiceClientFactory serviceClientFactory;
 
         private Builder() {
@@ -133,11 +119,6 @@ public class HandlerInput {
 
         public Builder withPersistenceAdapter(PersistenceAdapter persistenceAdapter) {
             this.persistenceAdapter = persistenceAdapter;
-            return this;
-        }
-
-        public Builder withContext(Object context) {
-            this.context = context;
             return this;
         }
 

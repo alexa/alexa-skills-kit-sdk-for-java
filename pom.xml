@@ -28,6 +28,7 @@
   </scm>
 
   <modules>
+    <module>ask-sdk-runtime</module>
     <module>ask-sdk-core</module>
     <module>ask-sdk-lambda-support</module>
     <module>ask-sdk-servlet-support</module>

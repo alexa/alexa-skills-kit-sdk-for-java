@@ -13,19 +13,21 @@
 
 package com.amazon.ask.module;
 
-import com.amazon.ask.Skill;
+import com.amazon.ask.AlexaSkill;
 import com.amazon.ask.builder.SkillBuilder;
-import com.amazon.ask.builder.SkillConfiguration;
+import com.amazon.ask.builder.GenericSkillConfiguration;
 
 /**
  * An interface for SDK extensions that can be registered on the {@link SkillBuilder} when setting up
- * a {@link Skill} instance.
+ * a {@link AlexaSkill} instance.
  */
 public interface SdkModule {
 
     /**
      * Method called by the {@link SkillBuilder} when .build() is called. Allows this module to configure
-     * itself as part of {@link SkillConfiguration} building.
+     * itself as part of {@link GenericSkillConfiguration} building.
+     *
+     * @param context context passed to module to configure itself
      */
     void setupModule(SdkModuleContext context);
 

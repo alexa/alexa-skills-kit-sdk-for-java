@@ -13,20 +13,6 @@
 
 package com.amazon.ask;
 
-import com.amazon.ask.exception.AskSdkException;
-import com.amazon.ask.model.LaunchRequest;
-import com.amazon.ask.model.RequestEnvelope;
-import com.amazon.ask.model.Response;
-import com.amazon.ask.model.ResponseEnvelope;
-import com.amazon.ask.model.ui.OutputSpeech;
-import com.amazon.ask.model.ui.PlainTextOutputSpeech;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -36,48 +22,87 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
+import com.amazon.ask.exception.AskSdkException;
+import com.amazon.ask.request.SkillRequest;
+import com.amazon.ask.response.SkillResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+
+import static org.mockito.Matchers.any;
+import static org.junit.Assert.assertArrayEquals;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+
 public class SkillStreamHandlerTest {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    private static final RequestEnvelope TEST_REQUEST_ENVELOPE =
-            RequestEnvelope.builder()
-                    .withRequest(LaunchRequest.builder()
-                            .withRequestId("rId")
-                            .withLocale("en-US")
-                            .build())
-                    .build();
+    private TestRequest testRequest;
+    private TestResponse testResponse;
+    private SkillResponse<TestResponse> skillResponse;
 
-    private Skill skill;
+    private AlexaSkill<TestRequest, TestResponse> skill;
 
     @Before
     public void setup() {
-        skill = mock(Skill.class);
+        skill = mock(AlexaSkill.class);
+        testRequest = new TestRequest();
+        testRequest.setRequest("request");
+        testResponse = new TestResponse();
+        testResponse.setResponse("response");
+        skillResponse = mock(SkillResponse.class);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void null_skill_throws_exception() {
+        new TestSkillStreamHandler((AlexaSkill)null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void null_skills_throws_exception() {
+        new TestSkillStreamHandler(new AlexaSkill[]{});
     }
 
     @Test
-    public void handleRequest_with_valid_request_response_not_null() throws IOException {
-        OutputSpeech outputSpeech = PlainTextOutputSpeech.builder().withText("Foo").build();
-        when(skill.invoke(TEST_REQUEST_ENVELOPE)).thenReturn(ResponseEnvelope.builder().withResponse(Response.builder().withOutputSpeech(outputSpeech).build()).build());
-
-        String output = getHandlerOutput(TEST_REQUEST_ENVELOPE);
-        assertFalse(output.isEmpty());
+    public void skill_called_with_expected_request() throws IOException {
+        when(skillResponse.isPresent()).thenReturn(true);
+        ArgumentCaptor<SkillRequest> captor = ArgumentCaptor.forClass(SkillRequest.class);
+        when(skill.execute(captor.capture())).thenReturn(skillResponse);
+        getHandlerOutput(testRequest);
+        SkillRequest skillRequest = captor.getValue();
+        assertArrayEquals(skillRequest.getRawRequest(), OBJECT_MAPPER.writeValueAsBytes(testRequest));
     }
 
-    @Test(expected = AskSdkException.class)
-    public void handleRequest_unable_to_deserialize_throws_exception() throws IOException {
-        getHandlerOutput("foo");
+    @Test (expected = AskSdkException.class)
+    public void no_skill_can_handle_incoming_request_throws_exception() throws IOException {
+        when(skill.execute(any())).thenReturn(null);
+        getHandlerOutput(testRequest);
     }
 
     @Test
-    public void expected_request_passed_in() throws IOException {
-        ArgumentCaptor<RequestEnvelope> captor = ArgumentCaptor.forClass(RequestEnvelope.class);
-        when(skill.invoke(captor.capture())).thenReturn(ResponseEnvelope.builder().build());
-        getHandlerOutput(TEST_REQUEST_ENVELOPE);
-        assertEquals(captor.getValue(), TEST_REQUEST_ENVELOPE);
+    public void skill_response_present_writes_to_stream() throws IOException {
+        when(skillResponse.isPresent()).thenReturn(true);
+        when(skill.execute(any())).thenReturn(skillResponse);
+        getHandlerOutput(testRequest);
+        verify(skillResponse).writeTo(any());
+    }
+
+    @Test
+    public void skill_response_not_present_does_not_write_to_stream() throws IOException {
+        when(skillResponse.isPresent()).thenReturn(false);
+        when(skill.execute(any())).thenReturn(skillResponse);
+        getHandlerOutput(testRequest);
+        verify(skillResponse, never()).writeTo(any());
     }
 
     private final class TestSkillStreamHandler extends SkillStreamHandler {
-        public TestSkillStreamHandler() {
+        public TestSkillStreamHandler(AlexaSkill skill) {
             super(skill);
+        }
+
+        public TestSkillStreamHandler(AlexaSkill... skills) {
+            super(skills);
         }
     }
 
@@ -86,7 +111,7 @@ public class SkillStreamHandlerTest {
         InputStream is = new ByteArrayInputStream(json);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
-        SkillStreamHandler streamHandler = new TestSkillStreamHandler();
+        SkillStreamHandler streamHandler = new TestSkillStreamHandler(skill);
 
         streamHandler.handleRequest(is, os, null);
         String output = new String(os.toByteArray(), Charset.defaultCharset());

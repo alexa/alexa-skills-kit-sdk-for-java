@@ -13,23 +13,26 @@
 
 package com.amazon.ask.dispatcher;
 
-import com.amazon.ask.dispatcher.impl.DefaultRequestDispatcher;
-import com.amazon.ask.model.IntentRequest;
-import com.amazon.ask.model.RequestEnvelope;
-import com.amazon.ask.model.Response;
-import com.amazon.ask.dispatcher.exception.impl.DefaultExceptionMapper;
-import com.amazon.ask.dispatcher.exception.ExceptionHandler;
-import com.amazon.ask.dispatcher.exception.ExceptionMapper;
-import com.amazon.ask.dispatcher.request.handler.HandlerAdapter;
-import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandlerChain;
 import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
 import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
 import com.amazon.ask.dispatcher.request.mapper.RequestMapper;
+import com.amazon.ask.request.handler.chain.GenericRequestHandlerChain;
+import com.amazon.ask.request.interceptor.GenericRequestInterceptor;
+import com.amazon.ask.request.interceptor.GenericResponseInterceptor;
+import com.amazon.ask.request.mapper.GenericRequestMapper;
+import com.amazon.ask.dispatcher.exception.ExceptionHandler;
+import com.amazon.ask.dispatcher.exception.ExceptionMapper;
+import com.amazon.ask.dispatcher.exception.impl.DefaultExceptionMapper;
+import com.amazon.ask.dispatcher.impl.DefaultRequestDispatcher;
+import com.amazon.ask.dispatcher.request.handler.HandlerAdapter;
+import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.exception.AskSdkException;
 import com.amazon.ask.exception.UnhandledSkillException;
-
+import com.amazon.ask.model.IntentRequest;
+import com.amazon.ask.model.RequestEnvelope;
+import com.amazon.ask.model.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -44,6 +47,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -54,16 +58,15 @@ import static org.mockito.Mockito.when;
 public class DefaultRequestDispatcherTest {
 
     private RequestHandler mockHandler;
-    private RequestHandlerChain mockHandlerChain;
+    private GenericRequestHandlerChain<HandlerInput, Optional<Response>> mockHandlerChain;
     private HandlerAdapter mockAdapter;
-    private RequestMapper mockMapper;
+    private GenericRequestMapper<HandlerInput, Optional<Response>> mockMapper;
     private ExceptionMapper mockExceptionMapper;
     private Response mockResponse;
-    private Optional<Response> mockOutput;
     private DefaultRequestDispatcher dispatcher;
     private HandlerInput handlerInput;
-    private List<RequestInterceptor> requestInterceptors;
-    private List<ResponseInterceptor> responseInterceptors;
+    private List<GenericRequestInterceptor<HandlerInput>> requestInterceptors;
+    private List<GenericResponseInterceptor<HandlerInput, Optional<Response>>> responseInterceptors;
 
     @Before
     public void setup() {
@@ -73,11 +76,10 @@ public class DefaultRequestDispatcherTest {
         mockHandler = mock(RequestHandler.class);
         mockHandlerChain = mock(RequestHandlerChain.class);
         when(mockHandlerChain.getRequestHandler()).thenReturn(mockHandler);
-        when(mockMapper.getRequestHandlerChain(any(HandlerInput.class))).thenReturn(Optional.of(mockHandlerChain));
+        doReturn(Optional.of(mockHandlerChain)).when(mockMapper).getRequestHandlerChain(any(HandlerInput.class));
         mockResponse = Response.builder().build();
-        mockOutput = Optional.of(mockResponse);
         mockExceptionMapper = mock(ExceptionMapper.class);
-        when(mockAdapter.execute(any(HandlerInput.class), any(RequestHandler.class))).thenReturn(mockOutput);
+        when(mockAdapter.execute(any(HandlerInput.class), any(RequestHandler.class))).thenReturn(Optional.of(mockResponse));
         requestInterceptors = new ArrayList<>();
         responseInterceptors = new ArrayList<>();
         dispatcher = DefaultRequestDispatcher.builder()
@@ -149,7 +151,7 @@ public class DefaultRequestDispatcherTest {
     }
 
     @Test
-    public void global_exception_handler_returns_response() {
+    public void exception_handler_returns_response() {
         ExceptionHandler exceptionHandler = mock(ExceptionHandler.class);
         when(exceptionHandler.canHandle(any(), any())).thenReturn(true);
         when(exceptionHandler.handle(any(), any())).thenReturn(Optional.of(mockResponse));
@@ -173,12 +175,12 @@ public class DefaultRequestDispatcherTest {
     }
 
     @Test
-    public void global_exception_handler_returns_empty_output() {
+    public void exception_handler_returns_empty_output() {
         ExceptionHandler exceptionHandler = mock(ExceptionHandler.class);
         when(exceptionHandler.handle(any(), any())).thenReturn(Optional.empty());
 
         ExceptionMapper exceptionMapper = mock(ExceptionMapper.class);
-        when(exceptionMapper.getHandler(any(), any())).thenReturn(Optional.of(exceptionHandler));
+        doReturn(Optional.of(exceptionHandler)).when(exceptionMapper).getHandler(any(), any());
         dispatcher = DefaultRequestDispatcher.builder()
                 .addRequestMapper(mockMapper)
                 .addHandlerAdapter(mockAdapter)
@@ -192,60 +194,6 @@ public class DefaultRequestDispatcherTest {
         ArgumentCaptor<Throwable> throwableCaptor = ArgumentCaptor.forClass(Throwable.class);
         ArgumentCaptor<HandlerInput> handlerInputCaptor = ArgumentCaptor.forClass(HandlerInput.class);
         verify(exceptionHandler).handle(handlerInputCaptor.capture(), throwableCaptor.capture());
-
-        assertEquals(throwableCaptor.getValue(), e);
-        assertEquals(handlerInputCaptor.getValue().getRequestEnvelope(), handlerInput.getRequestEnvelope());
-    }
-
-    @Test
-    public void chain_level_exception_handler_returns_response() {
-        ExceptionHandler exceptionHandler = mock(ExceptionHandler.class);
-        when(exceptionHandler.canHandle(any(), any())).thenReturn(true);
-        when(exceptionHandler.handle(any(), any())).thenReturn(Optional.of(mockResponse));
-        when(mockHandlerChain.getExceptionHandlers()).thenReturn(Collections.singletonList(exceptionHandler));
-        dispatcher = DefaultRequestDispatcher.builder()
-                .addRequestMapper(mockMapper)
-                .addHandlerAdapter(mockAdapter)
-                .withExceptionMapper(DefaultExceptionMapper.builder().addExceptionHandler(exceptionHandler).build())
-                .build();
-        Exception e = new IllegalStateException();
-        when(mockAdapter.execute(any(HandlerInput.class), any(RequestHandler.class))).thenThrow(e);
-        Response output = dispatcher.dispatch(handlerInput).get();
-        assertEquals(output, mockResponse);
-        verify(exceptionHandler).canHandle(any(), any());
-
-        ArgumentCaptor<Throwable> throwableCaptor = ArgumentCaptor.forClass(Throwable.class);
-        ArgumentCaptor<HandlerInput> handlerInputCaptor = ArgumentCaptor.forClass(HandlerInput.class);
-        verify(exceptionHandler).handle(handlerInputCaptor.capture(), throwableCaptor.capture());
-
-        verify(mockExceptionMapper, never()).getHandler(any(), any());
-
-        assertEquals(throwableCaptor.getValue(), e);
-        assertEquals(handlerInputCaptor.getValue().getRequestEnvelope(), handlerInput.getRequestEnvelope());
-    }
-
-    @Test
-    public void chain_level_exception_handler_returns_empty_output() {
-        ExceptionHandler exceptionHandler = mock(ExceptionHandler.class);
-        when(exceptionHandler.canHandle(any(), any())).thenReturn(true);
-        when(exceptionHandler.handle(any(), any())).thenReturn(Optional.empty());
-        when(mockHandlerChain.getExceptionHandlers()).thenReturn(Collections.singletonList(exceptionHandler));
-        dispatcher = DefaultRequestDispatcher.builder()
-                .addRequestMapper(mockMapper)
-                .addHandlerAdapter(mockAdapter)
-                .withExceptionMapper(DefaultExceptionMapper.builder().addExceptionHandler(exceptionHandler).build())
-                .build();
-        Exception e = new IllegalStateException();
-        when(mockAdapter.execute(any(HandlerInput.class), any(RequestHandler.class))).thenThrow(e);
-        Optional<Response> output = dispatcher.dispatch(handlerInput);
-        assertEquals(output, Optional.empty());
-        verify(exceptionHandler).canHandle(any(), any());
-
-        ArgumentCaptor<Throwable> throwableCaptor = ArgumentCaptor.forClass(Throwable.class);
-        ArgumentCaptor<HandlerInput> handlerInputCaptor = ArgumentCaptor.forClass(HandlerInput.class);
-        verify(exceptionHandler).handle(handlerInputCaptor.capture(), throwableCaptor.capture());
-
-        verify(mockExceptionMapper, never()).getHandler(any(), any());
 
         assertEquals(throwableCaptor.getValue(), e);
         assertEquals(handlerInputCaptor.getValue().getRequestEnvelope(), handlerInput.getRequestEnvelope());
@@ -275,7 +223,7 @@ public class DefaultRequestDispatcherTest {
         RequestInterceptor globalInterceptor = mock(RequestInterceptor.class);
         RequestInterceptor chainInterceptor = mock(RequestInterceptor.class);
         requestInterceptors.add(globalInterceptor);
-        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainInterceptor));
+        doReturn(Collections.singletonList(chainInterceptor)).when(mockHandlerChain).getRequestInterceptors();
         dispatcher.dispatch(handlerInput);
         InOrder inOrder = inOrder(globalInterceptor, chainInterceptor, mockAdapter);
         inOrder.verify(globalInterceptor).process(handlerInput);
@@ -288,12 +236,12 @@ public class DefaultRequestDispatcherTest {
         ResponseInterceptor globalInterceptor = mock(ResponseInterceptor.class);
         ResponseInterceptor chainInterceptor = mock(ResponseInterceptor.class);
         responseInterceptors.add(globalInterceptor);
-        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainInterceptor));
+        doReturn(Collections.singletonList(chainInterceptor)).when(mockHandlerChain).getResponseInterceptors();
         dispatcher.dispatch(handlerInput);
         InOrder inOrder = inOrder(globalInterceptor, chainInterceptor, mockAdapter);
         inOrder.verify(mockAdapter).execute(any(), any());
-        inOrder.verify(chainInterceptor).process(handlerInput, mockOutput);
-        inOrder.verify(globalInterceptor).process(handlerInput, mockOutput);
+        inOrder.verify(chainInterceptor).process(handlerInput, Optional.of(mockResponse));
+        inOrder.verify(globalInterceptor).process(handlerInput, Optional.of(mockResponse));
     }
 
     @Test
@@ -301,12 +249,13 @@ public class DefaultRequestDispatcherTest {
         RequestInterceptor globalRequestInterceptor = mock(RequestInterceptor.class);
         RequestInterceptor chainRequestInterceptor = mock(RequestInterceptor.class);
         requestInterceptors.add(globalRequestInterceptor);
-        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainRequestInterceptor));
+        doReturn(Collections.singletonList(chainRequestInterceptor)).when(mockHandlerChain).getRequestInterceptors();
+
 
         ResponseInterceptor globalResponseInterceptor = mock(ResponseInterceptor.class);
         ResponseInterceptor chainResponseInterceptor = mock(ResponseInterceptor.class);
         responseInterceptors.add(globalResponseInterceptor);
-        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
+        doReturn(Collections.singletonList(chainResponseInterceptor)).when(mockHandlerChain).getResponseInterceptors();
 
         when(mockMapper.getRequestHandlerChain(any())).thenReturn(Optional.empty());
         when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
@@ -316,8 +265,8 @@ public class DefaultRequestDispatcherTest {
         } catch (UnhandledSkillException ex) {
             verify(globalRequestInterceptor).process(handlerInput);
             verify(chainRequestInterceptor, never()).process(handlerInput);
-            verify(chainResponseInterceptor, never()).process(handlerInput, mockOutput);
-            verify(globalResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(chainResponseInterceptor, never()).process(handlerInput, Optional.of(mockResponse));
+            verify(globalResponseInterceptor, never()).process(handlerInput, Optional.of(mockResponse));
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter, never()).supports(any());
             verify(mockAdapter, never()).execute(any(), any());
@@ -329,12 +278,12 @@ public class DefaultRequestDispatcherTest {
         RequestInterceptor globalRequestInterceptor = mock(RequestInterceptor.class);
         RequestInterceptor chainRequestInterceptor = mock(RequestInterceptor.class);
         requestInterceptors.add(globalRequestInterceptor);
-        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainRequestInterceptor));
+        doReturn(Collections.singletonList(chainRequestInterceptor)).when(mockHandlerChain).getRequestInterceptors();
 
         ResponseInterceptor globalResponseInterceptor = mock(ResponseInterceptor.class);
         ResponseInterceptor chainResponseInterceptor = mock(ResponseInterceptor.class);
         responseInterceptors.add(globalResponseInterceptor);
-        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
+        doReturn(Collections.singletonList(chainResponseInterceptor)).when(mockHandlerChain).getResponseInterceptors();
 
         when(mockAdapter.supports(any())).thenReturn(false);
         when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
@@ -344,8 +293,8 @@ public class DefaultRequestDispatcherTest {
         } catch (UnhandledSkillException ex) {
             verify(globalRequestInterceptor).process(handlerInput);
             verify(chainRequestInterceptor, never()).process(handlerInput);
-            verify(chainResponseInterceptor, never()).process(handlerInput, mockOutput);
-            verify(globalResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(chainResponseInterceptor, never()).process(handlerInput, Optional.of(mockResponse));
+            verify(globalResponseInterceptor, never()).process(handlerInput, Optional.of(mockResponse));
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter).supports(any());
             verify(mockAdapter, never()).execute(any(), any());
@@ -357,12 +306,12 @@ public class DefaultRequestDispatcherTest {
         RequestInterceptor globalRequestInterceptor = mock(RequestInterceptor.class);
         RequestInterceptor chainRequestInterceptor = mock(RequestInterceptor.class);
         requestInterceptors.add(globalRequestInterceptor);
-        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainRequestInterceptor));
+        doReturn(Collections.singletonList(chainRequestInterceptor)).when(mockHandlerChain).getRequestInterceptors();
 
         ResponseInterceptor globalResponseInterceptor = mock(ResponseInterceptor.class);
         ResponseInterceptor chainResponseInterceptor = mock(ResponseInterceptor.class);
         responseInterceptors.add(globalResponseInterceptor);
-        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
+        doReturn(Collections.singletonList(chainResponseInterceptor)).when(mockHandlerChain).getResponseInterceptors();
 
         Exception e = new IllegalStateException();
         doThrow(e).when(globalRequestInterceptor).process(any());
@@ -373,13 +322,11 @@ public class DefaultRequestDispatcherTest {
         } catch (UnhandledSkillException ex) {
             verify(globalRequestInterceptor).process(handlerInput);
             verify(chainRequestInterceptor, never()).process(handlerInput);
-            verify(chainResponseInterceptor, never()).process(handlerInput, mockOutput);
-            verify(globalResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(chainResponseInterceptor, never()).process(handlerInput, Optional.of(mockResponse));
+            verify(globalResponseInterceptor, never()).process(handlerInput, Optional.of(mockResponse));
             verify(mockMapper, never()).getRequestHandlerChain(any());
             verify(mockAdapter, never()).supports(any());
             verify(mockAdapter, never()).execute(any(), any());
-            verify(mockHandlerChain, never()).getExceptionHandlers();
-            verify(mockExceptionMapper).getHandler(any(), any());
         }
     }
 
@@ -388,12 +335,12 @@ public class DefaultRequestDispatcherTest {
         RequestInterceptor globalRequestInterceptor = mock(RequestInterceptor.class);
         RequestInterceptor chainRequestInterceptor = mock(RequestInterceptor.class);
         requestInterceptors.add(globalRequestInterceptor);
-        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainRequestInterceptor));
+        doReturn(Collections.singletonList(chainRequestInterceptor)).when(mockHandlerChain).getRequestInterceptors();
 
         ResponseInterceptor globalResponseInterceptor = mock(ResponseInterceptor.class);
         ResponseInterceptor chainResponseInterceptor = mock(ResponseInterceptor.class);
         responseInterceptors.add(globalResponseInterceptor);
-        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
+        doReturn(Collections.singletonList(chainResponseInterceptor)).when(mockHandlerChain).getResponseInterceptors();
 
         Exception e = new IllegalStateException();
         doThrow(e).when(chainRequestInterceptor).process(any());
@@ -404,13 +351,11 @@ public class DefaultRequestDispatcherTest {
         } catch (UnhandledSkillException ex) {
             verify(globalRequestInterceptor).process(handlerInput);
             verify(chainRequestInterceptor).process(handlerInput);
-            verify(chainResponseInterceptor, never()).process(handlerInput, mockOutput);
-            verify(globalResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(chainResponseInterceptor, never()).process(handlerInput, Optional.of(mockResponse));
+            verify(globalResponseInterceptor, never()).process(handlerInput, Optional.of(mockResponse));
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter).supports(any());
             verify(mockAdapter, never()).execute(any(), any());
-            verify(mockHandlerChain).getExceptionHandlers();
-            verify(mockExceptionMapper).getHandler(any(), any());
         }
     }
 
@@ -419,12 +364,12 @@ public class DefaultRequestDispatcherTest {
         RequestInterceptor globalRequestInterceptor = mock(RequestInterceptor.class);
         RequestInterceptor chainRequestInterceptor = mock(RequestInterceptor.class);
         requestInterceptors.add(globalRequestInterceptor);
-        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainRequestInterceptor));
+        doReturn(Collections.singletonList(chainRequestInterceptor)).when(mockHandlerChain).getRequestInterceptors();
 
         ResponseInterceptor globalResponseInterceptor = mock(ResponseInterceptor.class);
         ResponseInterceptor chainResponseInterceptor = mock(ResponseInterceptor.class);
         responseInterceptors.add(globalResponseInterceptor);
-        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
+        doReturn(Collections.singletonList(chainResponseInterceptor)).when(mockHandlerChain).getResponseInterceptors();
 
         Exception e = new IllegalStateException();
         when(mockAdapter.execute(any(HandlerInput.class), any(RequestHandler.class))).thenThrow(e);
@@ -435,13 +380,11 @@ public class DefaultRequestDispatcherTest {
         } catch (UnhandledSkillException ex) {
             verify(globalRequestInterceptor).process(handlerInput);
             verify(chainRequestInterceptor).process(handlerInput);
-            verify(chainResponseInterceptor, never()).process(handlerInput, mockOutput);
-            verify(globalResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(chainResponseInterceptor, never()).process(handlerInput, Optional.of(mockResponse));
+            verify(globalResponseInterceptor, never()).process(handlerInput, Optional.of(mockResponse));
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter).supports(any());
             verify(mockAdapter).execute(any(), any());
-            verify(mockHandlerChain).getExceptionHandlers();
-            verify(mockExceptionMapper).getHandler(any(), any());
         }
     }
 
@@ -450,12 +393,12 @@ public class DefaultRequestDispatcherTest {
         RequestInterceptor globalRequestInterceptor = mock(RequestInterceptor.class);
         RequestInterceptor chainRequestInterceptor = mock(RequestInterceptor.class);
         requestInterceptors.add(globalRequestInterceptor);
-        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainRequestInterceptor));
+        doReturn(Collections.singletonList(chainRequestInterceptor)).when(mockHandlerChain).getRequestInterceptors();
 
         ResponseInterceptor globalResponseInterceptor = mock(ResponseInterceptor.class);
         ResponseInterceptor chainResponseInterceptor = mock(ResponseInterceptor.class);
         responseInterceptors.add(globalResponseInterceptor);
-        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
+        doReturn(Collections.singletonList(chainResponseInterceptor)).when(mockHandlerChain).getResponseInterceptors();
 
         Exception e = new IllegalStateException();
         doThrow(e).when(chainResponseInterceptor).process(any(), any());
@@ -466,13 +409,11 @@ public class DefaultRequestDispatcherTest {
         } catch (UnhandledSkillException ex) {
             verify(globalRequestInterceptor).process(handlerInput);
             verify(chainRequestInterceptor).process(handlerInput);
-            verify(chainResponseInterceptor).process(handlerInput, mockOutput);
-            verify(globalResponseInterceptor, never()).process(handlerInput, mockOutput);
+            verify(chainResponseInterceptor).process(handlerInput, Optional.of(mockResponse));
+            verify(globalResponseInterceptor, never()).process(handlerInput, Optional.of(mockResponse));
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter).supports(any());
             verify(mockAdapter).execute(any(), any());
-            verify(mockHandlerChain).getExceptionHandlers();
-            verify(mockExceptionMapper).getHandler(any(), any());
         }
     }
 
@@ -481,12 +422,12 @@ public class DefaultRequestDispatcherTest {
         RequestInterceptor globalRequestInterceptor = mock(RequestInterceptor.class);
         RequestInterceptor chainRequestInterceptor = mock(RequestInterceptor.class);
         requestInterceptors.add(globalRequestInterceptor);
-        when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainRequestInterceptor));
+        doReturn(Collections.singletonList(chainRequestInterceptor)).when(mockHandlerChain).getRequestInterceptors();
 
         ResponseInterceptor globalResponseInterceptor = mock(ResponseInterceptor.class);
         ResponseInterceptor chainResponseInterceptor = mock(ResponseInterceptor.class);
         responseInterceptors.add(globalResponseInterceptor);
-        when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
+        doReturn(Collections.singletonList(chainResponseInterceptor)).when(mockHandlerChain).getResponseInterceptors();
 
         Exception e = new IllegalStateException();
         doThrow(e).when(globalResponseInterceptor).process(any(), any());
@@ -497,13 +438,11 @@ public class DefaultRequestDispatcherTest {
         } catch (UnhandledSkillException ex) {
             verify(globalRequestInterceptor).process(handlerInput);
             verify(chainRequestInterceptor).process(handlerInput);
-            verify(chainResponseInterceptor).process(handlerInput, mockOutput);
-            verify(globalResponseInterceptor).process(handlerInput, mockOutput);
+            verify(chainResponseInterceptor).process(handlerInput, Optional.of(mockResponse));
+            verify(globalResponseInterceptor).process(handlerInput, Optional.of(mockResponse));
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter).supports(any());
             verify(mockAdapter).execute(any(), any());
-            verify(mockHandlerChain, never()).getExceptionHandlers();
-            verify(mockExceptionMapper).getHandler(any(), any());
         }
     }
 

@@ -13,13 +13,13 @@
 
 package com.amazon.ask.dispatcher.request.mapper.impl;
 
-import com.amazon.ask.dispatcher.request.handler.HandlerInput;
-import com.amazon.ask.dispatcher.request.handler.RequestHandlerChain;
-import com.amazon.ask.dispatcher.request.mapper.RequestMapper;
 import com.amazon.ask.dispatcher.request.handler.impl.DefaultRequestHandlerChain;
-import com.amazon.ask.util.ValidationUtils;
+import com.amazon.ask.request.handler.chain.impl.BaseRequestHandlerChain;
+import com.amazon.ask.request.mapper.impl.BaseRequestMapper;
+import com.amazon.ask.dispatcher.request.handler.HandlerInput;
+import com.amazon.ask.dispatcher.request.mapper.RequestMapper;
+import com.amazon.ask.model.Response;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,43 +29,17 @@ import java.util.Optional;
  * This implementation accesses registered {@link DefaultRequestHandlerChain} instances in the order they were provided.
  * Suitable chains are identified by calling canHandle on the attached {@link com.amazon.ask.dispatcher.request.handler.RequestHandler}.
  */
-public class DefaultRequestMapper implements RequestMapper {
+@Deprecated
+public class DefaultRequestMapper extends BaseRequestMapper<HandlerInput, Optional<Response>> implements RequestMapper {
 
-    protected final List<DefaultRequestHandlerChain> handlerChains;
-
-    protected DefaultRequestMapper(List<DefaultRequestHandlerChain> handlerChains) {
-        this.handlerChains = ValidationUtils.assertNotEmpty(handlerChains, "handlerChains");
+    protected DefaultRequestMapper(List<BaseRequestHandlerChain<HandlerInput, Optional<Response>>> handlerChains) {
+        super(handlerChains);
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
+    public static Builder builder() { return new Builder(); }
 
-    @Override
-    public Optional<RequestHandlerChain> getRequestHandlerChain(HandlerInput input) {
-        return handlerChains.stream()
-                .filter(handlerChain -> handlerChain.getRequestHandler().canHandle(input))
-                .map(handlerChain -> (RequestHandlerChain) handlerChain)
-                .findFirst();
-    }
-
-    public static class Builder {
-        private List<DefaultRequestHandlerChain> handlerChains;
-
+    public static class Builder extends BaseRequestMapper.Builder<HandlerInput, Optional<Response>, Builder>{
         private Builder() {
-        }
-
-        public Builder withRequestHandlerChains(List<DefaultRequestHandlerChain> handlerChains) {
-            this.handlerChains = handlerChains;
-            return this;
-        }
-
-        public Builder addRequestHandlerChain(DefaultRequestHandlerChain handlerChain) {
-            if (handlerChains == null) {
-                handlerChains = new ArrayList<>();
-            }
-            handlerChains.add(handlerChain);
-            return this;
         }
 
         public DefaultRequestMapper build() {

@@ -166,7 +166,9 @@ public class AttributesManagerTest {
     @Test (expected = IllegalStateException.class)
     public void persistence_not_enabled_throws_exception_on_retrieve() {
         HandlerInput input = HandlerInput.builder()
-                .withRequestEnvelope(RequestEnvelope.builder().build())
+                .withRequestEnvelope(RequestEnvelope.builder()
+                        .withRequest(IntentRequest.builder().build())
+                        .build())
                 .withPersistenceAdapter(null).build();
         input.getAttributesManager().getPersistentAttributes();
     }
@@ -174,7 +176,9 @@ public class AttributesManagerTest {
     @Test (expected = IllegalStateException.class)
     public void persistence_not_enabled_throws_exception_on_set() {
         HandlerInput input = HandlerInput.builder()
-                .withRequestEnvelope(RequestEnvelope.builder().build())
+                .withRequestEnvelope(RequestEnvelope.builder()
+                        .withRequest(IntentRequest.builder().build())
+                        .build())
                 .withPersistenceAdapter(null).build();
         input.getAttributesManager().setPersistentAttributes(Collections.emptyMap());
     }
