@@ -26,6 +26,8 @@ public interface SdkModule {
     /**
      * Method called by the {@link SkillBuilder} when .build() is called. Allows this module to configure
      * itself as part of {@link GenericSkillConfiguration} building.
+     *
+     * @param context context passed to module to configure itself
      */
     void setupModule(SdkModuleContext context);
 

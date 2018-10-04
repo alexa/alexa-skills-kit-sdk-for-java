@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Default implementation of {@link RequestHandlerChain}. Handlers are typed to {@link RequestHandler}.
+ * Default implementation of {@link RequestHandlerChain}. Handlers are typed to {@link GenericRequestHandler}.
  */
 @Deprecated
 public class DefaultRequestHandlerChain extends BaseRequestHandlerChain<HandlerInput, Optional<Response>> implements RequestHandlerChain {
