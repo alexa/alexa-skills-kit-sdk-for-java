@@ -6,6 +6,7 @@
     Setting-Up-The-ASK-SDK
     Developing-Your-First-Skill
     Migrating-To-ASK-SDK-v2-For-Java
+    SDK-Supported-Alexa-Capabilities
 
 ..  toctree::
     :caption: Technical Documentation
@@ -62,6 +63,12 @@ sample.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This guide will show you how to migrate an existing skill in v1 to v2 SDK.
+
+`SDK Supported Alexa Capabilities <SDK-Supported-Alexa-Capabilities.html>`_
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Provides a list of Alexa capabilities, that are supported in the ASK SDK.
+
 
 Technical Documentation
 -----------------------
