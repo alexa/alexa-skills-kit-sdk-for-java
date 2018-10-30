@@ -114,13 +114,14 @@ public class SkillServletTest extends SkillServletTestBase {
 
     @Test
     public void custom_proxy_updates_signature_verifier() throws Exception {
-        SkillServlet servlet = new SkillServlet(skill);
         Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("10.0.0.1", 8080));
         SkillRequestSignatureVerifier mockVerifier = mock(SkillRequestSignatureVerifier.class);
         PowerMockito.whenNew(SkillRequestSignatureVerifier.class)
-                .withArguments(proxy)
+                .withAnyArguments()
                 .thenReturn(mockVerifier);
+        SkillServlet servlet = new SkillServlet(skill);
         servlet.setProxy(proxy);
+        PowerMockito.verifyNew(SkillRequestSignatureVerifier.class).withNoArguments();
         PowerMockito.verifyNew(SkillRequestSignatureVerifier.class).withArguments(proxy);
     }
 
