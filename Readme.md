@@ -83,6 +83,7 @@ schemas from the [developer docs](https://developer.amazon.com/docs/custom-skill
 
 
 ### Preview
+* [APL](https://developer.amazon.com/blogs/alexa/post/1dee3fa0-8c5f-4179-ab7a-74545ead24ce/introducing-the-alexa-presentation-language-preview)
 * [Connections](https://developer.amazon.com/blogs/alexa/post/7b332b32-893e-4cad-be07-a5877efcbbb4/skill-connections-preview-now-skills-can-work-together-to-help-customers-get-more-done)
  
 ## Frameworks
