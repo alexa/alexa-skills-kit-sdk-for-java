@@ -17,6 +17,8 @@ import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Request;
 import com.amazon.ask.model.interfaces.display.ElementSelectedRequest;
+import com.amazon.ask.request.viewport.ViewportUtils;
+import com.amazon.ask.request.viewport.ViewportProfile;
 
 import java.util.function.Predicate;
 
@@ -113,6 +115,10 @@ public class Predicates {
     public static Predicate<HandlerInput> persistentAttribute(String key, Object value) {
         return i -> i.getAttributesManager().getPersistentAttributes().containsKey(key)
                 && value.equals(i.getAttributesManager().getPersistentAttributes().get(key));
+    }
+
+    public static Predicate<HandlerInput> viewportProfile(ViewportProfile viewportProfile) {
+        return i -> viewportProfile.equals(ViewportUtils.getViewportProfile(i.getRequestEnvelope()));
     }
 
 }

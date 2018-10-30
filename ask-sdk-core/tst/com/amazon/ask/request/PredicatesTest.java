@@ -15,6 +15,7 @@ package com.amazon.ask.request;
 
 import com.amazon.ask.attributes.AttributesManager;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
+import com.amazon.ask.model.Context;
 import com.amazon.ask.model.Intent;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.LaunchRequest;
@@ -24,8 +25,12 @@ import com.amazon.ask.model.Session;
 import com.amazon.ask.model.SessionEndedRequest;
 import com.amazon.ask.model.Slot;
 import com.amazon.ask.model.interfaces.display.ElementSelectedRequest;
+import com.amazon.ask.model.interfaces.viewport.Shape;
+import com.amazon.ask.model.interfaces.viewport.ViewportState;
+import com.amazon.ask.request.viewport.ViewportProfile;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Map;
 
@@ -179,6 +184,18 @@ public class PredicatesTest {
         assertTrue(slotValue("foo", "bar").test(input));
     }
 
+    @Test
+    public void viewport_profile_predicate_matching_viewport_profile_returns_true() {
+        HandlerInput input = getInputWithViewport();
+        assertTrue(viewportProfile(ViewportProfile.HUB_ROUND_SMALL).test(input));
+    }
+
+    @Test
+    public void viewport_profile_predicate_non_matching_viewport_profile_returns_false() {
+        HandlerInput input = getInputWithViewport();
+        assertFalse(viewportProfile(ViewportProfile.MOBILE_LANDSCAPE_MEDIUM).test(input));
+    }
+
     private HandlerInput getInputWithSessionAttributes(Map<String, Object> attributes, boolean inSessionRequest) {
         AttributesManager manager = mock(AttributesManager.class);
         when(manager.getSessionAttributes()).thenReturn(attributes);
@@ -211,6 +228,20 @@ public class PredicatesTest {
     private HandlerInput getInputForRequest(Request request) {
         HandlerInput input = mock(HandlerInput.class);
         RequestEnvelope envelope = RequestEnvelope.builder().withRequest(request).build();
+        when(input.getRequestEnvelope()).thenReturn(envelope);
+        return input;
+    }
+
+    private HandlerInput getInputWithViewport() {
+        ViewportState viewportState = ViewportState.builder()
+                .withShape(Shape.ROUND)
+                .withDpi(BigDecimal.valueOf(160))
+                .withCurrentPixelHeight(BigDecimal.valueOf(300))
+                .withCurrentPixelWidth(BigDecimal.valueOf(300))
+                .build();
+
+        HandlerInput input = mock(HandlerInput.class);
+        RequestEnvelope envelope = RequestEnvelope.builder().withContext(Context.builder().withViewport(viewportState).build()).build();
         when(input.getRequestEnvelope()).thenReturn(envelope);
         return input;
     }
