@@ -20,7 +20,7 @@ following methods are provided:
    getInSkillProduct(String locale, String inSkillProductId) 
 
 | ``locale`` can be retrieved from the request at
-  ``input.getRequestEnvelope().getRequest().getLocale()``.
+  ``LaunchRequest request = (LaunchRequest) input.getRequestEnvelope().getRequest(); String locale = request.getLocale();``.
 | ``purchasableFilter`` can be provided as ``null`` to retrieve all
   in-skill products and as PURCHASABLE or NOT_PURCHASABLE to filter the
   response on purchasability.
@@ -53,8 +53,10 @@ for each product for the current skill and customer.
     public Optional<Response> handle(HandlerInput input) {
       try {
         MonetizationServiceClient client = input.getServiceClientFactory().getMonetizationService();
-        String locale = input.getRequestEnvelope().getRequest().getLocale();
-        
+
+        LaunchRequest request = (LaunchRequest) input.getRequestEnvelope().getRequest();
+        String locale = request.getLocale();
+
         // To fetch all products
         InSkillProductsResponse responseProducts = client.getInSkillProducts(locale, null, null, null, null, null);
         System.out.println("There are " + responseProducts.getInSkillProducts().size() + " buyable products");
@@ -103,7 +105,9 @@ in-skill product identified by a productId.
    public Optional<Response> handle(HandlerInput input) {
     try {
           MonetizationServiceClient client = input.getServiceClientFactory().getMonetizationService();
-          String locale = input.getRequestEnvelope().getRequest().getLocale();
+
+          LaunchRequest request = (LaunchRequest) input.getRequestEnvelope().getRequest();
+          String locale = request.getLocale();
 
           // To fetch a specific in-skill product by product Id
           String productId = "<your product id with the format 'amzn1.adg.product....'>";

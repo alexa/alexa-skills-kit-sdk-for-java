@@ -13,7 +13,7 @@ ASK SDK for Javaには、inSkillProducts APIを呼び出す ``MonetizationServic
     getInSkillProducts(String locale, String purchasableFilter, String entitledFilter,  String productType, String nextToken, BigDecimal maxResults)
     getInSkillProduct(String locale, String inSkillProductId)
 
-| ``locale`` は、``input.getRequestEnvelope().getRequest().getLocale()`` のリクエストから取得できます。
+| ``locale`` は、``LaunchRequest request = (LaunchRequest) input.getRequestEnvelope().getRequest(); String locale = request.getLocale();`` のリクエストから取得できます。
 | ``purchasableFilter`` には、すべてのスキル内商品を取得する場合は ``null`` 、課金可能かどうかに関する応答をフィルターする場合はPURCHASABLEまたはNOT_PURCHASABLEを指定できます。
 | ``entitledFilter`` には、すべてのスキル内商品を取得する場合は ``null`` 、エンタイトルメントのステータスに関する応答をフィルターする場合はENTITLEDまたはNOT_ENTITLEDを指定できます。
 | ``productType`` には、すべてのタイプのスキル内商品を取得する場合は ``null`` 、商品タイプでフィルターする場合はENTITLEMENTまたはCONSUMABLEまたはSUBSCRIPTIONを指定できます。
@@ -36,7 +36,8 @@ getInSkillProductsメソッドは、現在のスキルに関連付けられて�
     public Optional<Response> handle(HandlerInput input) {
         try {
             MonetizationServiceClient client = input.getServiceClientFactory().getMonetizationService();
-            String locale = input.getRequestEnvelope().getRequest().getLocale();
+            LaunchRequest request = (LaunchRequest) input.getRequestEnvelope().getRequest();
+            String locale = request.getLocale();
 
             // To fetch all products
             InSkillProductsResponse responseProducts = client.getInSkillProducts(locale, null, null, null, null, null);
@@ -85,7 +86,8 @@ getInSkillProductメソッドは製品IDで識別される単一のスキル内�
     public Optional<Response> handle(HandlerInput input) {
         try {
             MonetizationServiceClient client = input.getServiceClientFactory().getMonetizationService();
-            String locale = input.getRequestEnvelope().getRequest().getLocale();
+            LaunchRequest request = (LaunchRequest) input.getRequestEnvelope().getRequest();
+            String locale = request.getLocale();
 
             // To fetch a specific in-skill product by product Id
             String productId = "<your product id with the format 'amzn1.adg.product....'>";
