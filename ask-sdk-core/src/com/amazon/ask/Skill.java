@@ -14,6 +14,7 @@
 package com.amazon.ask;
 
 import com.amazon.ask.builder.CustomSkillConfiguration;
+import com.amazon.ask.builder.SkillConfiguration;
 
 /**
  * Top level SDK entry point.
@@ -21,6 +22,10 @@ import com.amazon.ask.builder.CustomSkillConfiguration;
 public class Skill extends CustomSkill {
 
     public Skill(CustomSkillConfiguration config) {
+        super(config);
+    }
+    
+    public Skill(SkillConfiguration config) {
         super(config);
     }
 
