@@ -16,6 +16,7 @@ package com.amazon.ask.response;
 import com.amazon.ask.model.Directive;
 import com.amazon.ask.model.Intent;
 import com.amazon.ask.model.Response;
+import com.amazon.ask.model.canfulfill.CanFulfillIntent;
 import com.amazon.ask.model.dialog.ConfirmIntentDirective;
 import com.amazon.ask.model.dialog.ConfirmSlotDirective;
 import com.amazon.ask.model.dialog.DelegateDirective;
@@ -58,6 +59,7 @@ public class ResponseBuilder {
     protected List<Directive> directiveList;
     protected Boolean shouldEndSession;
     protected Reprompt reprompt;
+    protected CanFulfillIntent canFulfillIntent;
 
     public Optional<Response> build() {
         return Optional.of(Response.builder()
@@ -65,6 +67,7 @@ public class ResponseBuilder {
                 .withCard(card)
                 .withReprompt(reprompt)
                 .withDirectives(directiveList)
+                .withCanFulfillIntent(canFulfillIntent)
                 .withShouldEndSession(shouldEndSession)
                 .build());
     }
@@ -347,6 +350,16 @@ public class ResponseBuilder {
         }
         directiveList.add(directive);
 
+        return this;
+    }
+
+    /**
+     * Helper method for adding canFulfillIntent to response
+     * @param canFulfillIntent
+     * @return response builder
+     */
+    public ResponseBuilder withCanFulfillIntent(CanFulfillIntent canFulfillIntent) {
+        this.canFulfillIntent = canFulfillIntent;
         return this;
     }
 

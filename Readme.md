@@ -85,12 +85,10 @@ schemas from the [developer docs](https://developer.amazon.com/docs/custom-skill
 ### Preview
 * [APL](https://developer.amazon.com/blogs/alexa/post/1dee3fa0-8c5f-4179-ab7a-74545ead24ce/introducing-the-alexa-presentation-language-preview)
 * [Connections](https://developer.amazon.com/blogs/alexa/post/7b332b32-893e-4cad-be07-a5877efcbbb4/skill-connections-preview-now-skills-can-work-together-to-help-customers-get-more-done)
+* [Name-free Interactions](https://developer.amazon.com/docs/custom-skills/understand-name-free-interaction-for-custom-skills.html)
  
 ## Frameworks
 To discover frameworks built on top of the ASK SDK for Java, see https://github.com/alexa-labs/ask-sdk-frameworks-java.
-
-## Public Beta SDK
-The available [public beta version of the ASK SDK v2 for Java](https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.x_public-beta) may contain one or more Alexa features that are currently in public beta and not included in the production SDK version.
 
 ## Other Language Alexa Skills Kit SDKs
 <a href="https://github.com/alexa/alexa-skills-kit-sdk-for-nodejs"><img src="https://github.com/konpa/devicon/blob/master/icons/nodejs/nodejs-original.svg?sanitize=true" width="25px" /> Alexa Skills Kit SDK for NodeJS</a>

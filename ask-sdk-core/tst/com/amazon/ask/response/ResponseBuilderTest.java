@@ -18,6 +18,11 @@ import com.amazon.ask.model.IntentConfirmationStatus;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
 import com.amazon.ask.model.SlotConfirmationStatus;
+import com.amazon.ask.model.canfulfill.CanFulfillIntent;
+import com.amazon.ask.model.canfulfill.CanFulfillIntentValues;
+import com.amazon.ask.model.canfulfill.CanFulfillSlot;
+import com.amazon.ask.model.canfulfill.CanFulfillSlotValues;
+import com.amazon.ask.model.canfulfill.CanUnderstandSlotValues;
 import com.amazon.ask.model.dialog.ConfirmIntentDirective;
 import com.amazon.ask.model.dialog.ConfirmSlotDirective;
 import com.amazon.ask.model.dialog.DelegateDirective;
@@ -527,6 +532,27 @@ public class ResponseBuilderTest {
                 .build();
         Optional<Response> responseWithBuilder = builder
                 .withSpeech(null)
+                .build();
+        assertEquals(responseWithBuilder.get(), response);
+    }
+
+    @Test
+    public void build_response_with_canFulfillIntent() {
+        CanFulfillSlot soundSlot = CanFulfillSlot.builder()
+                .withCanUnderstand(CanUnderstandSlotValues.YES)
+                .withCanFulfill(CanFulfillSlotValues.YES)
+                .build();
+        CanFulfillIntent skillQueryResponse = CanFulfillIntent.builder()
+                .withCanFulfill(CanFulfillIntentValues.YES)
+                .putSlotsItem("Sound", soundSlot)
+                .build();
+
+        Response response = Response.builder()
+                .withCanFulfillIntent(skillQueryResponse)
+                .build();
+
+        Optional<Response> responseWithBuilder = builder
+                .withCanFulfillIntent(skillQueryResponse)
                 .build();
         assertEquals(responseWithBuilder.get(), response);
     }
