@@ -86,6 +86,17 @@ public class ResponseBuilder {
     }
 
     /**
+     * Sets a {@link Card} object on the response.
+     *
+     * @param card card object
+     * @return response builder
+     */
+    public ResponseBuilder withCard(Card card) {
+        this.card = card;
+        return this;
+    }
+
+    /**
      * Sets a simple {@link Card} on the response with the specified title and content.
      *
      * @param cardTitle title for card
