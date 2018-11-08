@@ -496,6 +496,23 @@ public class ResponseBuilderTest {
     }
 
     @Test
+    public void build_response_with_card() {
+        SimpleCard simpleCard = SimpleCard.builder()
+                .withTitle("fooTitle")
+                .withContent("fooContent")
+                .build();
+
+        Response response = Response.builder()
+                .withCard(simpleCard)
+                .build();
+
+        Optional<Response> responseWithBuilder = builder
+                .withCard(simpleCard)
+                .build();
+        assertEquals(responseWithBuilder.get(), response);
+    }
+
+    @Test
     public void build_response_with_link_account_card() {
         Response response = Response.builder()
                 .withCard(LinkAccountCard.builder().build())
