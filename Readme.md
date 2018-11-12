@@ -49,6 +49,9 @@ schemas from the [developer docs](https://developer.amazon.com/docs/custom-skill
 ### [Airplane Facts](https://github.com/alexa/skill-sample-java-fact)
  This tutorial will demonstrate how to write skills for Echo Show and Echo Spot in Java using the Alexa Skills Kit (ASK) SDK v2.
  
+### [Pager Karaoke](https://github.com/alexa-labs/skill-sample-java-pager-karaoke)
+This tutorial demonstrates 3 features of APL: the [Pager Component](https://developer.amazon.com/docs/alexa-presentation-language/apl-pager.html), [SpeakItem Command](https://developer.amazon.com/docs/alexa-presentation-language/apl-commands-components.html), and accessing [device characteristics](https://developer.amazon.com/docs/alexa-presentation-language/apl-viewport-characteristics.html) in the skill code.
+ 
 ## Alexa Capabilities supported by SDK
 
 * [Amazon Pay](https://developer.amazon.com/docs/amazon-pay/integrate-skill-with-amazon-pay.html)
