@@ -16,6 +16,7 @@ package com.amazon.ask.colorpicker.handlers;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
+import com.amazon.ask.response.ResponseBuilder;
 
 import java.util.Optional;
 
@@ -35,8 +36,11 @@ public class WhatsMyColorIntentHandler implements RequestHandler {
         String speechText;
         String favoriteColor = (String) input.getAttributesManager().getSessionAttributes().get(COLOR_KEY);
 
+        boolean isAskResponse = false;
+
         if (favoriteColor != null && !favoriteColor.isEmpty()) {
             speechText = String.format("Your favorite color is %s. Goodbye.", favoriteColor);
+            isAskResponse = true;
         } else {
             // Since the user's favorite color is not set render an error message.
             speechText =
@@ -44,9 +48,14 @@ public class WhatsMyColorIntentHandler implements RequestHandler {
                             + "red";
         }
 
-        return input.getResponseBuilder()
-                .withSpeech(speechText)
-                .withSimpleCard("ColorSession", speechText)
-                .build();
+        ResponseBuilder responseBuilder = input.getResponseBuilder();
+        responseBuilder.withSimpleCard("ColorSession", speechText)
+                .withSpeech(speechText);
+
+        if(!isAskResponse) {
+            responseBuilder.withShouldEndSession(false);
+        }
+
+        return responseBuilder.build();
     }
 }

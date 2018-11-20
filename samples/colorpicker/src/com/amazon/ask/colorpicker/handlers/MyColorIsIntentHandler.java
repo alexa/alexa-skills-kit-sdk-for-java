@@ -20,7 +20,6 @@ import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Request;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
-import com.amazon.ask.response.ResponseBuilder;
 
 import java.util.Collections;
 import java.util.Map;
@@ -43,16 +42,14 @@ public class MyColorIsIntentHandler implements RequestHandler {
         Intent intent = intentRequest.getIntent();
         Map<String, Slot> slots = intent.getSlots();
 
-        // Get the color slot from the list of slots.
-        Slot favoriteColorSlot = slots.get(COLOR_SLOT);
+        // Get the color slot value from the user input.
+        String favoriteColor = slots.get(COLOR_SLOT).getValue();
 
         String speechText, repromptText;
-        boolean isAskResponse = false;
 
         // Check for favorite color and create output to user.
-        if (favoriteColorSlot != null) {
+        if (favoriteColor != null) {
             // Store the user's favorite color in the Session and create response.
-            String favoriteColor = favoriteColorSlot.getValue();
             input.getAttributesManager().setSessionAttributes(Collections.singletonMap(COLOR_KEY, favoriteColor));
 
             speechText =
@@ -67,21 +64,14 @@ public class MyColorIsIntentHandler implements RequestHandler {
             repromptText =
                     "I'm not sure what your favorite color is. You can tell me your favorite "
                             + "color by saying, my color is red";
-            isAskResponse = true;
         }
-
-        ResponseBuilder responseBuilder = input.getResponseBuilder();
-
-        responseBuilder.withSimpleCard("ColorSession", speechText)
+        
+        return input.getResponseBuilder()
+                .withSimpleCard("ColorSession", speechText)
                 .withSpeech(speechText)
-                .withShouldEndSession(false);
-
-        if (isAskResponse) {
-            responseBuilder.withShouldEndSession(false)
-                    .withReprompt(repromptText);
-        }
-
-        return responseBuilder.build();
+                .withReprompt(repromptText)
+                .withShouldEndSession(false)
+                .build();
     }
 
 }
