@@ -13,9 +13,10 @@
     :hidden:
 
     Request-Processing
-    Skill-attributes
+    Skill-Attributes
     Alexa-Service-Clients
     Response-Building
+    Skill-Builders
     Managing-In-Skill-Purchases
     Javadoc Reference <http://ask-sdk-java-javadocs.s3-website-us-west-2.amazonaws.com/>
 
@@ -32,7 +33,7 @@
    :hidden:
 
    NodeJS SDK <https://github.com/alexa/alexa-skills-kit-sdk-for-nodejs>
-   Python SDK <https://github.com/alexa-labs/alexa-skills-kit-sdk-for-python>
+   Python SDK <https://github.com/alexa/alexa-skills-kit-sdk-for-python>
     
 
 The ASK SDK for Java makes it easier for you to build highly engaging
@@ -47,24 +48,24 @@ document covers.
 Guides
 ------
 
-`Setting Up The ASK SDK <Setting-Up-The-ASK-SDK.html>`__
+`Setting Up The ASK SDK <Setting-Up-The-ASK-SDK.rst>`__
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This guide will show you how to include the SDK as a dependency in your
 Maven project.
 
-`Developing Your First Skill <Developing-Your-First-Skill.html>`__
+`Developing Your First Skill <Developing-Your-First-Skill.rst>`__
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Walks you through step-by-step instructions for building the Hello World
 sample.
 
-`Migrating To ASK SDK v2 For Java <Migrating-To-ASK-SDK-v2-For-Java.html>`__
+`Migrating To ASK SDK v2 For Java <Migrating-To-ASK-SDK-v2-For-Java.rst>`__
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This guide will show you how to migrate an existing skill in v1 to v2 SDK.
 
-`SDK Supported Alexa Capabilities <SDK-Supported-Alexa-Capabilities.html>`_
+`SDK Supported Alexa Capabilities <SDK-Supported-Alexa-Capabilities.rst>`_
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Provides a list of Alexa capabilities, that are supported in the ASK SDK.
@@ -73,7 +74,7 @@ Provides a list of Alexa capabilities, that are supported in the ASK SDK.
 Technical Documentation
 -----------------------
 
-`Request Processing <Request-Processing.html>`__
+`Request Processing <Request-Processing.rst>`__
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Covers how you can build request handlers to handle incoming requests,
@@ -81,31 +82,31 @@ exception handlers to handle errors in your skill, and use request and
 response interceptors to perform tasks before or after handler
 execution.
 
-`Skill Attributes <Skill-Attributes.html>`__
+`Skill Attributes <Skill-Attributes.rst>`__
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Covers how skill attributes can be used on three different scopes
 (request, session and persistent), to store and retrieve skill data.
 
-`Alexa Service Clients <Alexa-Service-Clients.html>`__
+`Alexa Service Clients <Alexa-Service-Clients.rst>`__
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Covers how service clients can be used by your skill to access Alexa
 APIs.
 
-`Response Building <Response-Building.html>`__
+`Response Building <Response-Building.rst>`__
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Covers how the Response Builder can be used to easily compose multiple
 elements, like text, cards and audio, into a single response.
 
-`Skill Builders <Skill-Builders.html>`__
+`Skill Builders <Skill-Builders.rst>`__
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Describes how to use Skill builders to easily create a configured
 instance of the SDK.
 
-`Managing In-Skill Purchases <Managing-In-Skill-Purchases.html>`__
+`Managing In-Skill Purchases <Managing-In-Skill-Purchases.rst>`__
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Covers how you can manage in-skill products and the purchase experience
