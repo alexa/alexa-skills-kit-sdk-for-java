@@ -30,7 +30,7 @@ public class LaunchRequestHandler implements RequestHandler {
 
     @Override
     public Optional<Response> handle(HandlerInput input) {
-        String speechText = "Welcome to the Alexa Skills Kit sample. Please tell me your favorite color by saying, my favorite color is red";
+        String speechText = "Welcome to the Alexa Skills Kit sample. Please tell me your favorite color by saying, my favorite color is red.";
         String repromptText = "Please tell me your favorite color by saying, my favorite color is red";
         return input.getResponseBuilder()
                 .withSimpleCard("ColorSession", speechText)

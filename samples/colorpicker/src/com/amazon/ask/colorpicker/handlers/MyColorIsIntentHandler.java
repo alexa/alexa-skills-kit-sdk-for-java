@@ -20,7 +20,6 @@ import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Request;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.Slot;
-import com.amazon.ask.response.ResponseBuilder;
 
 import java.util.Collections;
 import java.util.Map;
@@ -43,14 +42,14 @@ public class MyColorIsIntentHandler implements RequestHandler {
         Intent intent = intentRequest.getIntent();
         Map<String, Slot> slots = intent.getSlots();
 
-        // Get the color slot from the list of slots.
+        // Get the color slot from user input.
         Slot favoriteColorSlot = slots.get(COLOR_SLOT);
-
         String speechText, repromptText;
-        boolean isAskResponse = false;
 
         // Check for favorite color and create output to user.
-        if (favoriteColorSlot != null) {
+        if(favoriteColorSlot != null
+            && favoriteColorSlot.getResolutions() != null
+            && favoriteColorSlot.getResolutions().toString().contains("ER_SUCCESS_MATCH")) {
             // Store the user's favorite color in the Session and create response.
             String favoriteColor = favoriteColorSlot.getValue();
             input.getAttributesManager().setSessionAttributes(Collections.singletonMap(COLOR_KEY, favoriteColor));
@@ -62,26 +61,20 @@ public class MyColorIsIntentHandler implements RequestHandler {
                     "You can ask me your favorite color by saying, what's my favorite color?";
 
         } else {
-            // Render an error since we don't know what the users favorite color is.
-            speechText = "I'm not sure what your favorite color is, please try again";
+            // Render an error since user input is out of list of color defined in interaction model.
+            speechText = "Please provide a valid color, your options are green, blue, purple, red, orange and yellow. " +
+                    "Please try again.";
             repromptText =
                     "I'm not sure what your favorite color is. You can tell me your favorite "
-                            + "color by saying, my color is red";
-            isAskResponse = true;
+                            + "color by saying, my color is red.";
         }
 
-        ResponseBuilder responseBuilder = input.getResponseBuilder();
-
-        responseBuilder.withSimpleCard("ColorSession", speechText)
+        return input.getResponseBuilder()
+                .withSimpleCard("ColorSession", speechText)
                 .withSpeech(speechText)
-                .withShouldEndSession(false);
-
-        if (isAskResponse) {
-            responseBuilder.withShouldEndSession(false)
-                    .withReprompt(repromptText);
-        }
-
-        return responseBuilder.build();
+                .withReprompt(repromptText)
+                .withShouldEndSession(false)
+                .build();
     }
 
 }
