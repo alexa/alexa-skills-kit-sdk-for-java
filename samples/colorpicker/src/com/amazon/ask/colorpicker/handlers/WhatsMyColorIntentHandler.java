@@ -35,18 +35,23 @@ public class WhatsMyColorIntentHandler implements RequestHandler {
         String speechText;
         String favoriteColor = (String) input.getAttributesManager().getSessionAttributes().get(COLOR_KEY);
 
+        boolean noAnswerProvided = false;
+
         if (favoriteColor != null && !favoriteColor.isEmpty()) {
             speechText = String.format("Your favorite color is %s. Goodbye.", favoriteColor);
         } else {
             // Since the user's favorite color is not set render an error message.
             speechText =
                     "I'm not sure what your favorite color is. You can say, my favorite color is "
-                            + "red";
+                            + "red.";
+            noAnswerProvided = true;
         }
 
         return input.getResponseBuilder()
-                .withSpeech(speechText)
                 .withSimpleCard("ColorSession", speechText)
+                .withSpeech(speechText)
+                .withShouldEndSession(!noAnswerProvided)
                 .build();
+
     }
 }
