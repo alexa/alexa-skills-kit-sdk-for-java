@@ -53,6 +53,16 @@ public final class ServletConstants {
             "SignatureCertChainUrl";
 
     /**
+     * The name of the system property that can be used to disable request signature verification.
+     * This feature verifies the certificate authenticity using the configured TrustStore and the
+     * signature of the skill request, and will throw a {@link SecurityException} if the signature
+     * does not pass verification. This feature should only be disabled in testing scenarios and
+     * never in a production environment.
+     */
+    public static final String DISABLE_REQUEST_SIGNATURE_CHECK_SYSTEM_PROPERTY =
+            "com.amazon.ask.servlet.disableRequestSignatureCheck";
+
+    /**
      * The name of the system property that can be used to configure the timestamp tolerance (in
      * millis) of the {@link SkillServlet}. Requests with timestamps outside of this inclusive tolerance range,
      * either in the past or future, are rejected. If this property is not provided the default value,
