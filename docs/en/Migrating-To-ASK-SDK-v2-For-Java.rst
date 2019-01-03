@@ -103,7 +103,7 @@ they are mentioned in a section on the response builder.
        ...
    }  
 
-In the SDK v2, each onLaunch, onSessionEnded, and ontIntent case is
+In the SDK v2, each onLaunch, onSessionEnded, and onIntent case is
 separated out into a different handler.
 
 .. code:: java
