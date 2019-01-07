@@ -89,9 +89,6 @@ This tutorial demonstrates 3 features of APL: the [Pager Component](https://deve
 * [APL](https://developer.amazon.com/blogs/alexa/post/1dee3fa0-8c5f-4179-ab7a-74545ead24ce/introducing-the-alexa-presentation-language-preview)
 * [Connections](https://developer.amazon.com/blogs/alexa/post/7b332b32-893e-4cad-be07-a5877efcbbb4/skill-connections-preview-now-skills-can-work-together-to-help-customers-get-more-done)
 * [Name-free Interactions](https://developer.amazon.com/docs/custom-skills/understand-name-free-interaction-for-custom-skills.html)
- 
-## Frameworks
-To discover frameworks built on top of the ASK SDK for Java, see https://github.com/alexa-labs/ask-sdk-frameworks-java.
 
 ## Other Language Alexa Skills Kit SDKs
 <a href="https://github.com/alexa/alexa-skills-kit-sdk-for-nodejs"><img src="https://github.com/konpa/devicon/blob/master/icons/nodejs/nodejs-original.svg?sanitize=true" width="25px" /> Alexa Skills Kit SDK for NodeJS</a>
