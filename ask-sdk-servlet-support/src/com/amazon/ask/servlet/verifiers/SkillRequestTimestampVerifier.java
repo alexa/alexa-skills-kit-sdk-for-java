@@ -16,8 +16,11 @@ package com.amazon.ask.servlet.verifiers;
 import com.amazon.ask.model.Request;
 import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.servlet.ServletConstants;
+import com.amazon.ask.util.ValidationUtils;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.concurrent.TimeUnit;
 
 import static com.amazon.ask.servlet.ServletConstants.MAXIMUM_TOLERANCE_MILLIS;
 
@@ -53,6 +56,19 @@ public class SkillRequestTimestampVerifier implements SkillServletVerifier {
             throw new IllegalArgumentException("A negative tolerance is not supported");
         }
         this.toleranceInMilliseconds = toleranceInMilliseconds;
+    }
+
+    /**
+     * Constructs a new timestamp verifier with the provided tolerance and timeUnit.
+     *
+     * @param tolerance
+     *            the tolerance of this verifier must be non-negative and less than
+     *            {@value ServletConstants#MAXIMUM_TOLERANCE_MILLIS} after converting to milliseconds.
+     * @param timeUnit
+     *            {@link TimeUnit} must be non-null.
+     */
+    public SkillRequestTimestampVerifier(long tolerance, TimeUnit timeUnit) {
+        this(ValidationUtils.assertNotNull(timeUnit, "timeUnit").toMillis(tolerance));
     }
 
     /**
