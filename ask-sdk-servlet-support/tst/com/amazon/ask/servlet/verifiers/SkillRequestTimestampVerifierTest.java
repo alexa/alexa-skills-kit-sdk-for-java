@@ -16,26 +16,40 @@ package com.amazon.ask.servlet.verifiers;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.LaunchRequest;
 import com.amazon.ask.model.RequestEnvelope;
-import com.amazon.ask.servlet.verifiers.SkillRequestTimestampVerifier;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static com.amazon.ask.servlet.ServletConstants.MAXIMUM_TOLERANCE_MILLIS;
 import static org.mockito.Mockito.mock;
 
+@RunWith(Parameterized.class)
 public class SkillRequestTimestampVerifierTest {
 
+    private SkillRequestTimestampVerifier verifier;
+
     private static final long TOLERANCE_IN_MILLIS = 2000;
-    private static final SkillRequestTimestampVerifier verifier =
-            new SkillRequestTimestampVerifier(TOLERANCE_IN_MILLIS);
 
     private static HttpServletRequest mockServletRequest;
     private static byte[] serializedRequestEnvelope;
+
+    public SkillRequestTimestampVerifierTest(SkillRequestTimestampVerifier verifier) {
+        this.verifier = verifier;
+    }
+
+    @Parameterized.Parameters
+    public static Collection verifiers() {
+        return Arrays.asList(new SkillRequestTimestampVerifier(TOLERANCE_IN_MILLIS), new SkillRequestTimestampVerifier(TOLERANCE_IN_MILLIS / 1000, TimeUnit.SECONDS));
+    }
 
     @BeforeClass
     public static void setUp() {
@@ -96,6 +110,16 @@ public class SkillRequestTimestampVerifierTest {
     @Test(expected = SecurityException.class)
     public void verify_nullTimestamp_throws_exception() {
         verifier.verify(mockServletRequest, serializedRequestEnvelope, RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build());
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void construct_withNullTimeUnit_throwsIllegalArgumentException() {
+        new SkillRequestTimestampVerifier(TOLERANCE_IN_MILLIS / 1000, null);
+    }
+
+    @Test(expected = SecurityException.class)
+    public void verify_withGreaterRequestTimeDelta_throws_exception() {
+        verifier.verify(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(new Date(System.currentTimeMillis() + TOLERANCE_IN_MILLIS + 200)));
     }
 
     private RequestEnvelope getRequestEnvelope(Date timestamp) {
