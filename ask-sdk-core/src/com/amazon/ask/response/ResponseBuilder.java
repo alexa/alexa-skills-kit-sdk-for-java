@@ -79,8 +79,20 @@ public class ResponseBuilder {
      * @return response builder
      */
     public ResponseBuilder withSpeech(String speechText) {
+        return withSpeech(speechText, null);
+    }
+
+    /**
+     * Sets {@link OutputSpeech} on the response. Speech is always wrapped in SSML tags.
+     *
+     * @param speechText speech text
+     * @param playBehavior determines the queuing and playback of this output speech
+     * @return response builder
+     */
+    public ResponseBuilder withSpeech(String speechText, com.amazon.ask.model.ui.PlayBehavior playBehavior) {
         this.speech = SsmlOutputSpeech.builder()
                 .withSsml("<speak>" + trimOutputSpeech(speechText) + "</speak>")
+                .withPlayBehavior(playBehavior)
                 .build();
         return this;
     }
@@ -158,9 +170,21 @@ public class ResponseBuilder {
      * @return response builder
      */
     public ResponseBuilder withReprompt(String text) {
+        return withReprompt(text, null);
+    }
+
+    /**
+     * Sets {@link Reprompt} speech on the response. Speech is always wrapped in SSML tags.
+     *
+     * @param text reprompt text
+     * @param playBehavior determines the queuing and playback of this output speech
+     * @return response builder
+     */
+    public ResponseBuilder withReprompt(String text, com.amazon.ask.model.ui.PlayBehavior playBehavior) {
         this.reprompt = Reprompt.builder()
                 .withOutputSpeech(SsmlOutputSpeech.builder()
                         .withSsml("<speak>" + trimOutputSpeech(text) + "</speak>")
+                        .withPlayBehavior(playBehavior)
                         .build())
                 .build();
 

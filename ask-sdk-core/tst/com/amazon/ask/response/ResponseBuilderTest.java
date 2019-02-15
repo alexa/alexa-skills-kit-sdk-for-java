@@ -123,6 +123,37 @@ public class ResponseBuilderTest {
     }
 
     @Test
+    public void build_response_with_speech_and_playbehavior() {
+        Response response = Response.builder()
+                .withOutputSpeech(SsmlOutputSpeech.builder()
+                        .withSsml("<speak>" + "foo" + "</speak>")
+                        .withPlayBehavior(com.amazon.ask.model.ui.PlayBehavior.ENQUEUE)
+                        .build())
+                .build();
+        Optional<Response> responseWithBuilder = builder
+                .withSpeech("foo", com.amazon.ask.model.ui.PlayBehavior.ENQUEUE)
+                .build();
+        assertEquals(responseWithBuilder.get(), response);
+    }
+
+    @Test
+    public void build_response_with_reprompt_and_playbehavior() {
+        Response response = Response.builder()
+                .withReprompt(Reprompt.builder()
+                    .withOutputSpeech(SsmlOutputSpeech.builder()
+                            .withSsml("<speak>" + "foo" + "</speak>")
+                            .withPlayBehavior(com.amazon.ask.model.ui.PlayBehavior.ENQUEUE)
+                            .build())
+                        .build())
+                .withShouldEndSession(false)
+                .build();
+        Optional<Response> responseWithBuilder = builder
+                .withReprompt("foo", com.amazon.ask.model.ui.PlayBehavior.ENQUEUE)
+                .build();
+        assertEquals(responseWithBuilder.get(), response);
+    }
+
+    @Test
     public void build_response_with_video_directive_with_reprompt_before() {
         Optional<Response> responseWithBuilder = builder
                 .withReprompt("fooReprompt")
