@@ -8,7 +8,8 @@ Request handlers are responsible for handling one or more types of
 incoming requests.
 
 You can create request handlers by implementing the ``RequestHandler``
-interface, which consists of two methods:
+interface, or a typed request handler interface, both of which consist of two
+methods:
 
 -  ``canHandle``, which is called by the SDK to determine if the given
    handler is capable of processing the incoming request. This method
@@ -20,39 +21,128 @@ interface, which consists of two methods:
    handler. This method contains the handler’s request processing logic,
    and returns an optional ``Response``.
 
+
+Typed request handlers
+^^^^^^^^^
+Request handler interfaces for each SDK supported request type (e.g.
+IntentRequest, LaunchRequest, SkillEnabledRequest) are available and
+provide a type safe way of writing handlers for a particular type of request.
+When using the generic ``RequestHandler`` interface you must do a type check, then
+cast to work against a particular request type. The typed handlers eliminate
+this requirement and handle the type checking for you. For example, a handler
+implementing the ``LaunchRequestHandler`` interface will only be invoked if the
+incoming request is a ``LaunchRequest``.
+
+A list of the currently available type specific request handlers is available `here
+<https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.0.x/ask-sdk-core/src/com/amazon/ask/dispatcher/request/handler/impl>`_.
+
 The following example shows a request handler that is configured to
-handle the ``HelloWorldIntent``.
+handle the ``HelloWorldIntent``. As you can see, the handler implements the
+``IntentRequestHandler`` interface since we are going to be handling an intent request.
 
 .. code:: java
 
-   public class HelloWorldHandler implements RequestHandler {
+   public class HelloWorldIntentHandler implements IntentRequestHandler {
        @Override
-       public boolean canHandle(HandlerInput input) {
-           return input.matches(Predicates.intentName("HelloWorldIntent"));
+       public boolean canHandle(HandlerInput input, IntentRequest intentRequest) {
+           return intentRequest.getIntent().getName().equals("HelloWorldIntent");
        }
 
        @Override
-       public Optional<Response> handle(HandlerInput input) {
+       public Optional<Response> handle(HandlerInput input, IntentRequest intentRequest) {
            String speechText = "Hello world";
+
+           Intent intent = intentRequest.getIntent();
+           String intentName = intent.getName();
+
            return input.getResponseBuilder()
                    .withSpeech(speechText)
-                   .withSimpleCard("HelloWorld", speechText)
+                   .withSimpleCard(intentName, speechText)
                    .build();
        }
    }
 
-The handler’s ``canHandle`` method is configured to detect if the
-incoming request is an ``IntentRequest`` with the expected intent name,
-and then return true if the intent name is ``HelloWorldIntent``. A basic
-“Hello world” response is then generated and returned by the ``handle``
-method.
+This type of handler will only be invoked if the incoming request is an
+``IntentRequest``. The handler’s ``canHandle`` method is configured to check the
+request's intent name, and then return true if the intent name is
+``HelloWorldIntent``. A basic “Hello world” response is then generated and
+returned by the ``handle`` method. By modifiying the ``canHandle`` condition,
+you can choose to make this handler more granular (for example, by inspecting
+Intent slot values), or more generic by returning true for any
+``IntentRequest``.
 
-The SDK includes a set of prebuilt canHandle predicates that make it
-easy to evaluate common conditions, such as intent name, slot values,
-and attributes.
+Generic request handlers
+^^^^^^^^^
+The generic ``RequestHandler`` interface can be used when you want to handle
+multiple request types, useful if you have a similar code path across different
+types of requests.
 
-The SDK calls the ``canHandle`` methods on its request handlers in the
-order in which they were provided to the Skill builder.
+The following example shows a request handler that is configured to
+handle an incoming ``SkillEnabledRequest`` or ``SkillDisabledRequest``.
+
+.. code:: java
+
+   public class SkillEventsHandler implements RequestHandler {
+       @Override
+       public boolean canHandle(HandlerInput input) {
+           return input.getRequest() instanceof SkillEnabledRequest 
+                   || input.getRequest() instanceof SkillDisabledRequest;
+       }
+
+       @Override
+       public Optional<Response> handle(HandlerInput input) {
+            logger.info("A skill event was recieved");
+
+            if (input.getRequest() instanceof SkillEnabledRequest) {
+                SkillEnabledRequest request = (SkillEnabledRequest) input.getRequest();
+                logger.info("User enabled the skill at {}", request.getEventCreationTime());
+            }
+
+            if (input.getRequest() instanceof SkillDisabledRequest) {
+                SkillDisabledRequest request = (SkillDisabledRequest) input.getRequest();
+                logger.info("User disabled the skill at {}", request.getEventCreationTime());
+            }
+       }
+   }
+
+CanHandle Predicates
+^^^^^^^^^
+The SDK includes a set of prebuilt canHandle predicates that make it easy to
+evaluate common conditions, such as intent name, slot values, and attributes.
+These make it simpler and more concise to write complex ``canHandle``
+conditional logic. A list of the available Preciates provided with the SDK is
+available `here
+<https://github.com/alexa/alexa-skills-kit-sdk-for-java/blob/2.0.x/ask-sdk-core/src/com/amazon/ask/request/Predicates.java>`_.
+
+For example, the above sample handler for a HelloWorld intent can have its
+CanHandle condition simplified by using Predicates:
+
+.. code:: java
+
+    @Override
+    public boolean canHandle(HandlerInput input, IntentRequest intentRequest) {
+        return input.matches(Predicates.intentName("HelloWorldIntent"));
+    }
+
+Likewise, the generic RequestHandler example showing a handler for both
+``SkillEnabledRequest`` or ``SkillDisabledRequest`` would look like this:
+
+.. code:: java
+
+    @Override
+    public boolean canHandle(HandlerInput input) {
+        return input.matches(Predicates.requestType(SkillEnabledRequest.class)
+            .or(Predicates.requestType(SkillDisabledRequest.class)));
+    }
+
+Handler processing order
+^^^^^^^^^
+The SDK calls the ``canHandle`` methods on its request handlers in the order in
+which they were provided to the Skill builder. You can implement as may request
+handlers as you like for a skill, including multiple handlers for the same type
+of request (e.g. multiple handlers implementing ``IntentRequestHandler``). In
+this case, the SDK will access these handlers in the order they were registered
+and utilize the handler that's ``canHandle`` method returns ``true`` first.
 
 .. code:: java
 
