@@ -2,8 +2,10 @@ package com.amazon.ask;
 
 import com.amazon.ask.impl.AbstractSkill;
 import com.amazon.ask.model.services.Serializer;
+import com.amazon.ask.request.UnmarshalledRequest;
 import com.amazon.ask.request.dispatcher.GenericRequestDispatcher;
 import com.amazon.ask.request.dispatcher.impl.BaseRequestDispatcher;
+import com.amazon.ask.request.impl.BaseUnmarshalledRequest;
 import com.amazon.ask.util.JacksonSerializer;
 import com.amazon.ask.util.impl.JacksonJsonMarshaller;
 import com.amazon.ask.util.impl.JacksonJsonUnmarshaller;
@@ -20,6 +22,7 @@ import com.amazon.ask.model.services.DefaultApiConfiguration;
 import com.amazon.ask.model.services.ServiceClientFactory;
 import com.amazon.ask.util.SdkConstants;
 import com.amazon.ask.util.UserAgentUtils;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Optional;
 
@@ -49,17 +52,31 @@ public class CustomSkill extends AbstractSkill<RequestEnvelope, ResponseEnvelope
         this.skillId = configuration.getSkillId();
     }
 
+    /**
+     * @deprecated
+     */
     public ResponseEnvelope invoke(RequestEnvelope requestEnvelope) {
         return invoke(requestEnvelope, null);
     }
 
     /**
+     * @deprecated
+     */
+    public ResponseEnvelope invoke(RequestEnvelope requestEnvelope, Object context) {
+        return invoke(new BaseUnmarshalledRequest<>(requestEnvelope, null), context);
+    }
+
+    /**
      * Invokes the dispatcher to handler the request envelope and construct the handler input
-     * @param requestEnvelope request envelope
+     * @param unmarshalledRequest unmarshalled output from {@link JacksonJsonUnmarshaller}, containing a
+     *                            {@link RequestEnvelope} and a JSON representation of the request.
      * @param context context
      * @return optional request envelope
      */
-    public ResponseEnvelope invoke(RequestEnvelope requestEnvelope, Object context) {
+    protected ResponseEnvelope invoke(UnmarshalledRequest<RequestEnvelope> unmarshalledRequest, Object context) {
+        RequestEnvelope requestEnvelope = unmarshalledRequest.getUnmarshalledRequest();
+        JsonNode requestEnvelopeJson = unmarshalledRequest.getRequestJson();
+
         if (skillId != null && !requestEnvelope.getContext().getSystem().getApplication().getApplicationId().equals(skillId)) {
             throw new AskSdkException("AlexaSkill ID verification failed.");
         }
@@ -73,6 +90,7 @@ public class CustomSkill extends AbstractSkill<RequestEnvelope, ResponseEnvelope
                 .withPersistenceAdapter(persistenceAdapter)
                 .withContext(context)
                 .withServiceClientFactory(factory)
+                .withRequestEnvelopeJson(requestEnvelopeJson)
                 .build();
 
         Optional<Response> response = requestDispatcher.dispatch(handlerInput);

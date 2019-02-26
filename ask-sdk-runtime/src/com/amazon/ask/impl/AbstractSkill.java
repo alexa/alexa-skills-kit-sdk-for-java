@@ -15,6 +15,7 @@ package com.amazon.ask.impl;
 
 import com.amazon.ask.AlexaSkill;
 import com.amazon.ask.request.SkillRequest;
+import com.amazon.ask.request.UnmarshalledRequest;
 import com.amazon.ask.response.SkillResponse;
 import com.amazon.ask.response.impl.BaseSkillResponse;
 import com.amazon.ask.util.JsonMarshaller;
@@ -41,7 +42,7 @@ public abstract class AbstractSkill<Request, Response> implements AlexaSkill<Req
 
     @Override
     public SkillResponse<Response> execute(SkillRequest request, Object context) {
-        Optional<Request> deserializedRequest = unmarshaller.unmarshall(request.getRawRequest());
+        Optional<UnmarshalledRequest<Request>> deserializedRequest = unmarshaller.unmarshall(request.getRawRequest());
         if (!deserializedRequest.isPresent()) {
             return null;
         }
@@ -49,6 +50,6 @@ public abstract class AbstractSkill<Request, Response> implements AlexaSkill<Req
         return new BaseSkillResponse<>(marshaller, response);
     }
 
-    protected abstract Response invoke(Request request, Object context);
+    protected abstract Response invoke(UnmarshalledRequest<Request> unmarshalledRequest, Object context);
 
 }

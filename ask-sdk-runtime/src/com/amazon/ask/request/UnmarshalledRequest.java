@@ -11,19 +11,26 @@
     the specific language governing permissions and limitations under the License.
  */
 
-package com.amazon.ask.util;
+package com.amazon.ask.request;
 
-import com.amazon.ask.request.UnmarshalledRequest;
-
-import java.util.Optional;
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * Unmarshalls a given type from JSON.
- *
- * @param <Type> type to unmarshall
+ * Output from a {@link com.amazon.ask.util.JsonUnmarshaller}.
+ * @param <Type> unmarshalled type
  */
-public interface JsonUnmarshaller<Type> {
+public interface UnmarshalledRequest<Type> {
 
-    Optional<UnmarshalledRequest<Type>> unmarshall(byte[] in);
+    /**
+     * Returns the unmarshalled request
+     * @return unmarshalled request
+     */
+    Type getUnmarshalledRequest();
+
+    /**
+     * Returns the raw request as a {@link JsonNode}
+     * @return JSON representation of request
+     */
+    JsonNode getRequestJson();
 
 }
