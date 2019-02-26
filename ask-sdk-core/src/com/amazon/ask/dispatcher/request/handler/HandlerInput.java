@@ -20,6 +20,8 @@ import com.amazon.ask.model.Request;
 import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.services.ServiceClientFactory;
 import com.amazon.ask.response.ResponseBuilder;
+import com.amazon.ask.util.ValidationUtils;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.function.Predicate;
 
@@ -37,10 +39,11 @@ public class HandlerInput extends AbstractHandlerInput<Request> {
     protected final AttributesManager attributesManager;
     protected final ServiceClientFactory serviceClientFactory;
     protected final ResponseBuilder responseBuilder;
+    protected final JsonNode requestEnvelopeJson;
 
     protected HandlerInput(RequestEnvelope requestEnvelope, PersistenceAdapter persistenceAdapter,
-                           Object context, ServiceClientFactory serviceClientFactory) {
-        super(requestEnvelope.getRequest(), context);
+                           Object context, ServiceClientFactory serviceClientFactory, JsonNode requestEnvelopeJson) {
+        super(ValidationUtils.assertNotNull(requestEnvelope, "request envelope").getRequest(), context);
         this.requestEnvelope = requestEnvelope;
         this.serviceClientFactory = serviceClientFactory;
         this.attributesManager = AttributesManager.builder()
@@ -48,6 +51,7 @@ public class HandlerInput extends AbstractHandlerInput<Request> {
                 .withPersistenceAdapter(persistenceAdapter)
                 .build();
         this.responseBuilder = new ResponseBuilder();
+        this.requestEnvelopeJson = requestEnvelopeJson;
     }
 
     public static Builder builder() {
@@ -71,6 +75,13 @@ public class HandlerInput extends AbstractHandlerInput<Request> {
     public AttributesManager getAttributesManager() {
         return attributesManager;
     }
+
+    /**
+     * Returns a {@link JsonNode} representation of the incoming Request Envelope.
+     *
+     * @return JSON request envelope representation
+     */
+    public JsonNode getRequestEnvelopeJson() { return requestEnvelopeJson; }
 
     /**
      * Returns a {@link ServiceClientFactory} used to retrieve service client instances that can call Alexa APIs.
@@ -108,6 +119,7 @@ public class HandlerInput extends AbstractHandlerInput<Request> {
         private RequestEnvelope requestEnvelope;
         private PersistenceAdapter persistenceAdapter;
         private ServiceClientFactory serviceClientFactory;
+        private JsonNode requestEnvelopeJson;
 
         private Builder() {
         }
@@ -127,8 +139,13 @@ public class HandlerInput extends AbstractHandlerInput<Request> {
             return this;
         }
 
+        public Builder withRequestEnvelopeJson(JsonNode requestEnvelopeJson) {
+            this.requestEnvelopeJson = requestEnvelopeJson;
+            return this;
+        }
+
         public HandlerInput build() {
-            return new HandlerInput(requestEnvelope, persistenceAdapter, context, serviceClientFactory);
+            return new HandlerInput(requestEnvelope, persistenceAdapter, context, serviceClientFactory, requestEnvelopeJson);
         }
     }
 
