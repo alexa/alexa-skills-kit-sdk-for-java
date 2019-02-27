@@ -14,6 +14,8 @@
 package com.amazon.ask.util.impl;
 
 import com.amazon.ask.exception.AskSdkException;
+import com.amazon.ask.request.UnmarshalledRequest;
+import com.amazon.ask.request.impl.BaseUnmarshalledRequest;
 import com.amazon.ask.util.JsonUnmarshaller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,13 +41,14 @@ public class JacksonJsonUnmarshaller<Type> implements JsonUnmarshaller<Type> {
     }
 
     @Override
-    public Optional<Type> unmarshall(byte[] in) {
+    public Optional<UnmarshalledRequest<Type>> unmarshall(byte[] in) {
         try {
             JsonNode json = MAPPER.readTree(in);
             if (!json.has(requiredField)) {
                 return Optional.empty();
             }
-            return Optional.of(MAPPER.treeToValue(json, outputType));
+            UnmarshalledRequest<Type> unmarshalledRequest = new BaseUnmarshalledRequest<>(MAPPER.treeToValue(json, outputType), json);
+            return Optional.of(unmarshalledRequest);
         } catch (IOException e) {
             throw new AskSdkException("Deserialization error", e);
         }

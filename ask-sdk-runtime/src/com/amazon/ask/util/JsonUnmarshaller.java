@@ -13,6 +13,8 @@
 
 package com.amazon.ask.util;
 
+import com.amazon.ask.request.UnmarshalledRequest;
+
 import java.util.Optional;
 
 /**
@@ -22,6 +24,6 @@ import java.util.Optional;
  */
 public interface JsonUnmarshaller<Type> {
 
-    Optional<Type> unmarshall(byte[] in);
+    Optional<UnmarshalledRequest<Type>> unmarshall(byte[] in);
 
 }
