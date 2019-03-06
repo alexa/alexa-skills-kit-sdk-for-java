@@ -22,7 +22,7 @@ The ASK SDK for Java makes it easier for you to build highly engaging skills, by
 |[ask-sdk-dynamodb-persistence-adapter](./ask-sdk-dynamodb-persistence-adapter)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-dynamodb-persistence-adapter/2.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-dynamodb-persistence-adapter)| 
 |[ask-sdk-apache-client](./ask-sdk-apache-client)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-apache-client/2.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-apache-client)| 
 
-## Alexa Features supported by SDK
+## Alexa Features Supported by SDK
 
 - [Amazon Pay](https://developer.amazon.com/docs/amazon-pay/integrate-skill-with-amazon-pay.html)
 - [Audio Player](https://developer.amazon.com/docs/custom-skills/audioplayer-interface-reference.html)
