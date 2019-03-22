@@ -21,6 +21,39 @@ methods:
    handler. This method contains the handler’s request processing logic,
    and returns an optional ``Response``.
 
+Generic request handlers
+^^^^^^^^^
+The generic ``RequestHandler`` interface can be used when you want to handle
+multiple request types, useful if you have a similar code path across different
+types of requests.
+
+The following example shows a request handler that is configured to
+handle an incoming ``SkillEnabledRequest`` or ``SkillDisabledRequest``.
+
+.. code:: java
+
+   public class SkillEventsHandler implements RequestHandler {
+       @Override
+       public boolean canHandle(HandlerInput input) {
+           return input.getRequest() instanceof SkillEnabledRequest
+                   || input.getRequest() instanceof SkillDisabledRequest;
+       }
+
+       @Override
+       public Optional<Response> handle(HandlerInput input) {
+            logger.info("A skill event was recieved");
+
+            if (input.getRequest() instanceof SkillEnabledRequest) {
+                SkillEnabledRequest request = (SkillEnabledRequest) input.getRequest();
+                logger.info("User enabled the skill at {}", request.getEventCreationTime());
+            }
+
+            if (input.getRequest() instanceof SkillDisabledRequest) {
+                SkillDisabledRequest request = (SkillDisabledRequest) input.getRequest();
+                logger.info("User disabled the skill at {}", request.getEventCreationTime());
+            }
+       }
+   }
 
 Typed request handlers
 ^^^^^^^^^
@@ -70,40 +103,6 @@ returned by the ``handle`` method. By modifiying the ``canHandle`` condition,
 you can choose to make this handler more granular (for example, by inspecting
 Intent slot values), or more generic by returning true for any
 ``IntentRequest``.
-
-Generic request handlers
-^^^^^^^^^
-The generic ``RequestHandler`` interface can be used when you want to handle
-multiple request types, useful if you have a similar code path across different
-types of requests.
-
-The following example shows a request handler that is configured to
-handle an incoming ``SkillEnabledRequest`` or ``SkillDisabledRequest``.
-
-.. code:: java
-
-   public class SkillEventsHandler implements RequestHandler {
-       @Override
-       public boolean canHandle(HandlerInput input) {
-           return input.getRequest() instanceof SkillEnabledRequest 
-                   || input.getRequest() instanceof SkillDisabledRequest;
-       }
-
-       @Override
-       public Optional<Response> handle(HandlerInput input) {
-            logger.info("A skill event was recieved");
-
-            if (input.getRequest() instanceof SkillEnabledRequest) {
-                SkillEnabledRequest request = (SkillEnabledRequest) input.getRequest();
-                logger.info("User enabled the skill at {}", request.getEventCreationTime());
-            }
-
-            if (input.getRequest() instanceof SkillDisabledRequest) {
-                SkillDisabledRequest request = (SkillDisabledRequest) input.getRequest();
-                logger.info("User disabled the skill at {}", request.getEventCreationTime());
-            }
-       }
-   }
 
 CanHandle Predicates
 ^^^^^^^^^
