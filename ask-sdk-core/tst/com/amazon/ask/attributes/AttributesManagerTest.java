@@ -238,6 +238,37 @@ public class AttributesManagerTest {
         assertEquals(attributes, attributesCaptor.getValue());
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void delete_throws_exception_if_no_persistence_adapter() {
+        HandlerInput input = HandlerInput.builder()
+                .withRequestEnvelope(RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build())
+                .build();
+        input.getAttributesManager().deletePersistentAttributes();
+    }
+
+    @Test
+    public void delete_noop_if_persistence_attributes_not_retrieved() {
+        PersistenceAdapter persistenceAdapter = mock(PersistenceAdapter.class);
+        when(persistenceAdapter.getAttributes(any())).thenReturn(Optional.of(Collections.singletonMap("Foo", "Bar")));
+        HandlerInput input = HandlerInput.builder()
+                .withRequestEnvelope(RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build())
+                .withPersistenceAdapter(persistenceAdapter).build();
+        input.getAttributesManager().deletePersistentAttributes();
+        verify(persistenceAdapter, never()).deleteAttributes(any());
+    }
+
+    @Test
+    public void delete_calls_persistence_manager_if_attributes_retrieved() {
+        PersistenceAdapter persistenceAdapter = mock(PersistenceAdapter.class);
+        when(persistenceAdapter.getAttributes(any())).thenReturn(Optional.of(Collections.singletonMap("Foo", "Bar")));
+        HandlerInput input = HandlerInput.builder()
+                .withRequestEnvelope(RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build())
+                .withPersistenceAdapter(persistenceAdapter).build();
+        input.getAttributesManager().getPersistentAttributes();
+        input.getAttributesManager().deletePersistentAttributes();
+        verify(persistenceAdapter).deleteAttributes(any(RequestEnvelope.class));
+    }
+
 
     private RequestEnvelope getRequestEnvelopeWithAttributes(Map<String, Object> attributes) {
         return RequestEnvelope.builder().withSession(Session.builder().withAttributes(attributes).build()).build();

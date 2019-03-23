@@ -18,9 +18,12 @@ import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.attributes.persistence.PersistenceAdapter;
 import org.slf4j.Logger;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -185,6 +188,23 @@ public class AttributesManager {
         }
         if (persistenceAttributesSet) {
             persistenceAdapter.saveAttributes(requestEnvelope, persistentAttributes);
+        }
+    }
+
+    /**
+     * Deletes the persistent attributes from the persistence layer. An exception is thrown if this method is called when a
+     * {@link PersistenceAdapter} is not configured on the SDK.
+     *
+     * @throws IllegalStateException if no {@link PersistenceAdapter} is configured
+     */
+    public void deletePersistentAttributes() {
+        if (persistenceAdapter == null) {
+            throw new IllegalStateException("Attempting to delete persistence attributes without a configured persistence adapter");
+        }
+        if (persistenceAttributesSet) {
+            persistenceAdapter.deleteAttributes(requestEnvelope);
+            persistentAttributes = null;
+            persistenceAttributesSet = false;
         }
     }
 

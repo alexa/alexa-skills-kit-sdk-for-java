@@ -24,6 +24,7 @@ import com.amazonaws.services.dynamodbv2.model.AmazonDynamoDBException;
 import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
+import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
 import com.amazonaws.services.dynamodbv2.model.GetItemRequest;
 import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
 import com.amazonaws.services.dynamodbv2.model.KeyType;
@@ -104,6 +105,21 @@ public final class DynamoDbPersistenceAdapter implements PersistenceAdapter {
             throw new PersistenceException(String.format("Table %s does not exist or is in the process of being created", tableName), e);
         } catch (AmazonDynamoDBException e) {
             throw new PersistenceException("Failed to save attributes to DynamoDB", e);
+        }
+    }
+
+    @Override
+    public void deleteAttributes(RequestEnvelope envelope) throws PersistenceException {
+        String partitionKey = partitionKeyGenerator.apply(envelope);
+        DeleteItemRequest deleteItemRequest = new DeleteItemRequest()
+                .withTableName(tableName)
+                .withKey(getItem(partitionKey, getAttributes(envelope).get()));
+        try {
+            dynamoDb.deleteItem(deleteItemRequest);
+        } catch (ResourceNotFoundException e) {
+            throw new PersistenceException(String.format("Table %s does not exist", tableName), e);
+        } catch (AmazonDynamoDBException e) {
+            throw new PersistenceException("Failed to delete attributes from DynamoDB", e);
         }
     }
 

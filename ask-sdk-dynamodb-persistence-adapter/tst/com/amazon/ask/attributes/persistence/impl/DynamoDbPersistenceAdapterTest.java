@@ -22,6 +22,7 @@ import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
 import com.amazonaws.services.dynamodbv2.model.CreateTableResult;
+import com.amazonaws.services.dynamodbv2.model.DeleteItemRequest;
 import com.amazonaws.services.dynamodbv2.model.GetItemRequest;
 import com.amazonaws.services.dynamodbv2.model.GetItemResult;
 import com.amazonaws.services.dynamodbv2.model.KeySchemaElement;
@@ -146,6 +147,35 @@ public class DynamoDbPersistenceAdapterTest {
         when(mockDdb.putItem(any())).thenThrow(new AmazonDynamoDBException(""));
         PersistenceAdapter adapter = DynamoDbPersistenceAdapter.builder().withTableName("foo").withDynamoDbClient(mockDdb).withPartitionKeyGenerator(mockKeyGenerator).build();
         adapter.saveAttributes(requestEnvelope, attr);
+    }
+
+    @Test
+    public void delete_attributes_calls_ddb() {
+        Map<String, AttributeValue> item = new HashMap<>();
+        item.put("attributes", new AttributeValue().withM(Collections.singletonMap("FooKey", new AttributeValue().withS("FooValue"))));
+        when(mockDdb.getItem(any())).thenReturn(new GetItemResult().withItem(item));
+        PersistenceAdapter adapter = DynamoDbPersistenceAdapter.builder()
+                .withTableName("foo")
+                .withDynamoDbClient(mockDdb)
+                .withPartitionKeyGenerator(mockKeyGenerator)
+                .build();
+        adapter.deleteAttributes(requestEnvelope);
+        ArgumentCaptor<DeleteItemRequest> deleteItemRequestCaptor = ArgumentCaptor.forClass(DeleteItemRequest.class);
+        verify(mockDdb, times(1)).deleteItem(deleteItemRequestCaptor.capture());
+        DeleteItemRequest request = deleteItemRequestCaptor.getValue();
+        assertEquals(request.getTableName(), "foo");
+        assertEquals(request.getKey().get("attributes"), new AttributeValue().withM(Collections.singletonMap("FooKey", new AttributeValue().withS("FooValue"))));
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void delete_attributes_exception_wrapped_in_persistence_exception() {
+        Map<String, AttributeValue> item = new HashMap<>();
+        item.put("attributes", new AttributeValue().withM(Collections.singletonMap("FooKey", new AttributeValue().withS("FooValue"))));
+        when(mockDdb.getItem(any())).thenReturn(new GetItemResult().withItem(item));
+        when(mockKeyGenerator.apply(requestEnvelope)).thenReturn("bar");
+        when(mockDdb.deleteItem(any())).thenThrow(new AmazonDynamoDBException(""));
+        PersistenceAdapter adapter = DynamoDbPersistenceAdapter.builder().withTableName("foo").withDynamoDbClient(mockDdb).withPartitionKeyGenerator(mockKeyGenerator).build();
+        adapter.deleteAttributes(requestEnvelope);
     }
 
     @Test

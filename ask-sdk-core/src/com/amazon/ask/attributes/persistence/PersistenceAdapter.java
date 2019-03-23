@@ -45,4 +45,13 @@ public interface PersistenceAdapter {
      */
     void saveAttributes(RequestEnvelope envelope, Map<String, Object> attributes) throws PersistenceException;
 
+    /**
+     * Deletes attributes from persistence. A {@link RequestEnvelope} is passed to the adapter so current request parameters
+     * can be used as an attribute key.
+     *
+     * @param envelope the current request envelope.
+     * @throws PersistenceException if attributes could not be deleted due to an error.
+     */
+    void deleteAttributes(RequestEnvelope envelope) throws PersistenceException;
+
 }
