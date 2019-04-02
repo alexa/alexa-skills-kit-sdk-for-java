@@ -1,0 +1,2654 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "assistent für minecraft",
+      "intents": [
+        {
+          "name": "RecipeIntent",
+          "slots": [
+            {
+              "name": "Item",
+              "type": "LIST_OF_ITEMS"
+            }
+          ],
+          "samples": [
+            "wie kann ich ein {Item} bauen",
+            "wie kann ich eine {Item} bauen",
+            "wie kann ich einen {Item} bauen",
+            "wie kann ich {Item} bauen",
+            "wie kann ich ein {Item} craften",
+            "wie kann ich eine {Item} craften",
+            "wie kann ich einen {Item} craften",
+            "wie kann ich {Item} craften",
+            "wie kann ich ein {Item} bekommen",
+            "wie kann ich eine {Item} bekommen",
+            "wie kann ich einen {Item} bekommen",
+            "wie kann ich {Item} bekommen",
+            "wie kann ich ein {Item} machen",
+            "wie kann ich eine {Item} machen",
+            "wie kann ich einen {Item} machen",
+            "wie kann ich {Item} machen",
+            "wie kannst du ein {Item} bauen",
+            "wie kannst du eine {Item} bauen",
+            "wie kannst du einen {Item} bauen",
+            "wie kannst du {Item} bauen",
+            "wie kannst du ein {Item} craften",
+            "wie kannst du eine {Item} craften",
+            "wie kannst du einen {Item} craften",
+            "wie kannst du {Item} craften",
+            "wie kannst du ein {Item} bekommen",
+            "wie kannst du eine {Item} bekommen",
+            "wie kannst du einen {Item} bekommen",
+            "wie kannst du {Item} bekommen",
+            "wie kannst du ein {Item} machen",
+            "wie kannst du eine {Item} machen",
+            "wie kannst du einen {Item} machen",
+            "wie kannst du {Item} machen",
+            "wie baue ich ein {Item}",
+            "wie baue ich eine {Item}",
+            "wie baue ich einen {Item}",
+            "wie baue ich {Item}",
+            "wie crafte ich ein {Item}",
+            "wie crafte ich eine {Item}",
+            "wie crafte ich einen {Item}",
+            "wie crafte ich {Item}",
+            "wie bekomme ich ein {Item}",
+            "wie bekomme ich eine {Item}",
+            "wie bekomme ich einen {Item}",
+            "wie bekomme ich {Item}",
+            "wie mache ich ein {Item}",
+            "wie mache ich eine {Item}",
+            "wie mache ich einen {Item}",
+            "wie mache ich {Item}",
+            "wie baust du ein {Item}",
+            "wie baust du eine {Item}",
+            "wie baust du einen {Item}",
+            "wie baust du {Item}",
+            "wie craftest du ein {Item}",
+            "wie craftest du eine {Item}",
+            "wie craftest du einen {Item}",
+            "wie craftest du {Item}",
+            "wie bekommst du ein {Item}",
+            "wie bekommst du eine {Item}",
+            "wie bekommst du einen {Item}",
+            "wie bekommst du {Item}",
+            "wie machst du ein {Item}",
+            "wie machst du eine {Item}",
+            "wie machst du einen {Item}",
+            "wie machst du {Item}",
+            "wie wird ein {Item} gebaut",
+            "wie wird eine {Item} gebaut",
+            "wie wird ein {Item} gecraftet",
+            "wie wird eine {Item} gecraftet",
+            "wie wird ein {Item} gemacht",
+            "wie wird eine {Item} gemacht",
+            "wie wird {Item} gebaut",
+            "wie wird {Item} gecraftet",
+            "wie wird {Item} gemacht",
+            "Rezept für ein {Item}",
+            "Rezept für eine {Item}",
+            "Rezept für einen {Item}",
+            "Rezept für {Item}",
+            "Rezepte für ein {Item}",
+            "Rezepte für eine {Item}",
+            "Rezepte für einen {Item}",
+            "Rezepte für {Item}",
+            "was sind die Zutaten für ein {Item}",
+            "was sind die Zutaten für eine {Item}",
+            "was sind die Zutaten für einen {Item}",
+            "was sind die Zutaten für {Item}",
+            "was brauche ich für ein {Item}",
+            "was brauche ich für eine {Item}",
+            "was brauche ich für einen {Item}",
+            "was brauche ich für {Item}",
+            "was brauche ich zum Bau eines {Item}",
+            "was brauche ich zum Bau einer {Item}",
+            "was brauche ich zum Bau von {Item}",
+            "was brauche ich zum Craften eines {Item}",
+            "was brauche ich zum Craften einer {Item}",
+            "was brauche ich zum Craften von {Item}",
+            "was muss ich für ein {Item} bekommen",
+            "was muss ich für eine {Item} bekommen",
+            "was muss ich für einen {Item} bekommen",
+            "was muss ich für {Item} bekommen",
+            "was muss ich zum Bau eines {Item} besorgen",
+            "was muss ich zum Bau einer {Item} besorgen",
+            "was muss ich zum Bau von {Item} besorgen",
+            "was muss ich zum Craften eines {Item} besorgen",
+            "was muss ich zum Craften einer {Item} besorgen",
+            "was muss ich zum Craften von {Item} besorgen",
+            "was muss ich zum Herstellen eines {Item} besorgen",
+            "was muss ich zum Herstellen einer {Item} besorgen",
+            "was muss ich zum Herstellen von {Item} besorgen",
+            "was muss ich zum Bau eines {Item} haben",
+            "was muss ich zum Bau einer {Item} haben",
+            "was muss ich zum Bau von {Item} haben",
+            "was muss ich zum Craften eines {Item} haben",
+            "was muss ich zum Craften einer {Item} haben",
+            "was muss ich zum Craften von {Item} haben",
+            "was muss ich zum Herstellen eines {Item} haben",
+            "was muss ich zum Herstellen einer {Item} haben",
+            "was muss ich zum Herstellen von {Item} haben",
+            "was brauche ich zum Herstellen eines {Item}",
+            "was brauche ich zum Herstellen einer {Item}",
+            "was brauche ich zum Herstellen von {Item}",
+            "was brauche ich für ein {Item}",
+            "was brauche ich für eine {Item}",
+            "was brauche ich für einen {Item}",
+            "was brauche ich für {Item}",
+            "welche Zutaten brauche ich zum Bau eines {Item}",
+            "welche Zutaten brauche ich zum Bau einer {Item}",
+            "welche Zutaten brauche ich zum Bau von {Item}",
+            "welche Zutaten brauche ich zum Craften eines {Item}",
+            "welche Zutaten brauche ich zum Craften einer {Item}",
+            "welche Zutaten brauche ich zum Craften von {Item}",
+            "welche Zutaten brauche ich zum Herstellen eines {Item}",
+            "welche Zutaten brauche ich zum Herstellen einer {Item}",
+            "welche Zutaten brauche ich zum Herstellen von {Item}",
+            "was ist in einem {Item}",
+            "was ist in einer {Item}",
+            "was ist in {Item}",
+            "was ist das Rezept für ein {Item}",
+            "was ist das Rezept für eine {Item}",
+            "was ist das Rezept für einen {Item}",
+            "was ist das Rezept für {Item}",
+            "was ist in {Item}",
+            "was ist in einem {Item}",
+            "was ist in einer {Item}",
+            "was ist in {Item}",
+            "welches Rezept für ein {Item}",
+            "welches Rezept für eine {Item}",
+            "welches Rezept für einen {Item}",
+            "welches Rezept für {Item}",
+            "wie soll {Item} gecraftet werden",
+            "wie soll ein {Item} gecraftet werden",
+            "wie soll eine {Item} gecraftet werden",
+            "wie soll ein {Item} gemacht werden",
+            "wie soll eine {Item} gemacht werden",
+            "wie soll {Item} gemacht werden",
+            "wie soll ein {Item} gebaut werden",
+            "wie soll eine {Item} gebaut werden",
+            "wie soll {Item} gebaut werden",
+            "wie soll ein {Item} bezogen werden",
+            "wie soll eine {Item} bezogen werden",
+            "wie soll {Item} bezogen werden"
+          ]
+        },
+        {
+          "name": "AMAZON.RepeatIntent"
+        },
+        {
+          "name": "AMAZON.HelpIntent"
+        },
+        {
+          "name": "AMAZON.StopIntent"
+        },
+        {
+          "name": "AMAZON.CancelIntent"
+        }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "name": {
+                "value": "Schneegolem"
+              }
+            },
+            {
+              "name": {
+                "value": "Quarzsäule"
+              }
+            },
+            {
+              "name": {
+                "value": "Feuerwerksrakete"
+              }
+            },
+            {
+              "name": {
+                "value": "Kaninchenragout"
+              }
+            },
+            {
+              "name": {
+                "value": "Kessel"
+              }
+            },
+            {
+              "name": {
+                "value": "Steinschaufel"
+              }
+            },
+            {
+              "name": {
+                "value": "Roter Teppich"
+              }
+            },
+            {
+              "name": {
+                "value": "Buch und Feder"
+              }
+            },
+            {
+              "name": {
+                "value": "Rahmen"
+              }
+            },
+            {
+              "name": {
+                "value": "Karte"
+              }
+            },
+            {
+              "name": {
+                "value": "Klebriger Kolben"
+              }
+            },
+            {
+              "name": {
+                "value": "Brot"
+              }
+            },
+            {
+              "name": {
+                "value": "Holzspitzhacke"
+              }
+            },
+            {
+              "name": {
+                "value": "Schere"
+              }
+            },
+            {
+              "name": {
+                "value": "Rohes Rindfleisch"
+              }
+            },
+            {
+              "name": {
+                "value": "Glatter roter Sandstein"
+              }
+            },
+            {
+              "name": {
+                "value": "Prismarinkristalle"
+              }
+            },
+            {
+              "name": {
+                "value": "Eichenholzstufe"
+              }
+            },
+            {
+              "name": {
+                "value": "Holzschwert"
+              }
+            },
+            {
+              "name": {
+                "value": "Treppe"
+              }
+            },
+            {
+              "name": {
+                "value": "Tropenholzzaun"
+              }
+            },
+            {
+              "name": {
+                "value": "Aktivierungsschiene"
+              }
+            },
+            {
+              "name": {
+                "value": "Ackerboden"
+              }
+            },
+            {
+              "name": {
+                "value": "Golderz"
+              }
+            },
+            {
+              "name": {
+                "value": "Andesit"
+              }
+            },
+            {
+              "name": {
+                "value": "Roter Farbstoff"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisenaxt"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellblauer Farbstoff"
+              }
+            },
+            {
+              "name": {
+                "value": "Grauer Farbstoff"
+              }
+            },
+            {
+              "name": {
+                "value": "Blau gefärbte Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Eiserne Pferderüstung"
+              }
+            },
+            {
+              "name": {
+                "value": "Rot gefärbte Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Ziegeltreppe"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldene Hose"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarzeichenzauntor"
+              }
+            },
+            {
+              "name": {
+                "value": "Witherschädel"
+              }
+            },
+            {
+              "name": {
+                "value": "Spinnenauge"
+              }
+            },
+            {
+              "name": {
+                "value": "Magenta gefärbtes Glas"
+              }
+            },
+            {
+              "name": {
+                "value": "Braun gefärbte Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Kürbiskuchen"
+              }
+            },
+            {
+              "name": {
+                "value": "Schneeball"
+              }
+            },
+            {
+              "name": {
+                "value": "Jukebox"
+              }
+            },
+            {
+              "name": {
+                "value": "Sand"
+              }
+            },
+            {
+              "name": {
+                "value": "Toter Busch"
+              }
+            },
+            {
+              "name": {
+                "value": "Ziegelstufe"
+              }
+            },
+            {
+              "name": {
+                "value": "Seerosenblatt"
+              }
+            },
+            {
+              "name": {
+                "value": "Lederhose"
+              }
+            },
+            {
+              "name": {
+                "value": "Bemooste Bruchsteinmauer"
+              }
+            },
+            {
+              "name": {
+                "value": "Schallplatte 11"
+              }
+            },
+            {
+              "name": {
+                "value": "Violett gefärbte Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Magenta gefärbte Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Schallplatte Mall"
+              }
+            },
+            {
+              "name": {
+                "value": "Tropenholz"
+              }
+            },
+            {
+              "name": {
+                "value": "Diamantaxt"
+              }
+            },
+            {
+              "name": {
+                "value": "Leere Karte"
+              }
+            },
+            {
+              "name": {
+                "value": "Steindruckplatte"
+              }
+            },
+            {
+              "name": {
+                "value": "Falltür"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldstiefel"
+              }
+            },
+            {
+              "name": {
+                "value": "Schallplatte Stall"
+              }
+            },
+            {
+              "name": {
+                "value": "Redstone-Kabel"
+              }
+            },
+            {
+              "name": {
+                "value": "Kolben"
+              }
+            },
+            {
+              "name": {
+                "value": "Weiß gefärbtes Glas"
+              }
+            },
+            {
+              "name": {
+                "value": "Antriebslore"
+              }
+            },
+            {
+              "name": {
+                "value": "Zucker"
+              }
+            },
+            {
+              "name": {
+                "value": "Kettenhemd"
+              }
+            },
+            {
+              "name": {
+                "value": "Feder"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellblau gefärbtes Glas"
+              }
+            },
+            {
+              "name": {
+                "value": "Eichenholzzaun"
+              }
+            },
+            {
+              "name": {
+                "value": "Steinspitzhacke"
+              }
+            },
+            {
+              "name": {
+                "value": "Rosa Teppich"
+              }
+            },
+            {
+              "name": {
+                "value": "Monsterspawner"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldene Karotte"
+              }
+            },
+            {
+              "name": {
+                "value": "Stock"
+              }
+            },
+            {
+              "name": {
+                "value": "Diamantblock"
+              }
+            },
+            {
+              "name": {
+                "value": "Grün gefärbtes Glas"
+              }
+            },
+            {
+              "name": {
+                "value": "Gebratenes Hühnchen"
+              }
+            },
+            {
+              "name": {
+                "value": "Schallplatte 13"
+              }
+            },
+            {
+              "name": {
+                "value": "Holzfalltür"
+              }
+            },
+            {
+              "name": {
+                "value": "Eichenzauntor"
+              }
+            },
+            {
+              "name": {
+                "value": "Werkbank"
+              }
+            },
+            {
+              "name": {
+                "value": "Netherquarzerz"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldschwert"
+              }
+            },
+            {
+              "name": {
+                "value": "Grau gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellblau gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Diamantstiefel"
+              }
+            },
+            {
+              "name": {
+                "value": "Steinhacke"
+              }
+            },
+            {
+              "name": {
+                "value": "Steinkohle"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarzeichenlaub"
+              }
+            },
+            {
+              "name": {
+                "value": "TNT"
+              }
+            },
+            {
+              "name": {
+                "value": "Ziegel"
+              }
+            },
+            {
+              "name": {
+                "value": "Kartoffel"
+              }
+            },
+            {
+              "name": {
+                "value": "Oranger Teppich"
+              }
+            },
+            {
+              "name": {
+                "value": "Tintenbeutel"
+              }
+            },
+            {
+              "name": {
+                "value": "Redstone"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarzeichenholz"
+              }
+            },
+            {
+              "name": {
+                "value": "Diorit"
+              }
+            },
+            {
+              "name": {
+                "value": "Grau gefärbtes Glas"
+              }
+            },
+            {
+              "name": {
+                "value": "Tropenholzzauntor"
+              }
+            },
+            {
+              "name": {
+                "value": "Magenta Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Erde"
+              }
+            },
+            {
+              "name": {
+                "value": "Rüstungsständer"
+              }
+            },
+            {
+              "name": {
+                "value": "Gebratener Fisch"
+              }
+            },
+            {
+              "name": {
+                "value": "Hebel"
+              }
+            },
+            {
+              "name": {
+                "value": "Leine"
+              }
+            },
+            {
+              "name": {
+                "value": "Gebratenes Kaninchen"
+              }
+            },
+            {
+              "name": {
+                "value": "Tropenholztreppe"
+              }
+            },
+            {
+              "name": {
+                "value": "Trichterlore"
+              }
+            },
+            {
+              "name": {
+                "value": "Fermentiertes Spinnenauge"
+              }
+            },
+            {
+              "name": {
+                "value": "Roher Fisch"
+              }
+            },
+            {
+              "name": {
+                "value": "Braun gefärbtes Glas"
+              }
+            },
+            {
+              "name": {
+                "value": "Schild"
+              }
+            },
+            {
+              "name": {
+                "value": "Trichter"
+              }
+            },
+            {
+              "name": {
+                "value": "Lohenrute"
+              }
+            },
+            {
+              "name": {
+                "value": "Redstone-Komparator"
+              }
+            },
+            {
+              "name": {
+                "value": "Knochen"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldene Pferderüstung"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldbeinschutz"
+              }
+            },
+            {
+              "name": {
+                "value": "Schiene"
+              }
+            },
+            {
+              "name": {
+                "value": "Weizenkörner"
+              }
+            },
+            {
+              "name": {
+                "value": "Birkenholzzaun"
+              }
+            },
+            {
+              "name": {
+                "value": "Violett gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldharnisch:"
+              }
+            },
+            {
+              "name": {
+                "value": "Lederstiefel"
+              }
+            },
+            {
+              "name": {
+                "value": "Diamantschaufel"
+              }
+            },
+            {
+              "name": {
+                "value": "Roter Sand"
+              }
+            },
+            {
+              "name": {
+                "value": "Ranken"
+              }
+            },
+            {
+              "name": {
+                "value": "Glasflasche"
+              }
+            },
+            {
+              "name": {
+                "value": "Redstone-Erz"
+              }
+            },
+            {
+              "name": {
+                "value": "Smaragdblock"
+              }
+            },
+            {
+              "name": {
+                "value": "Granit"
+              }
+            },
+            {
+              "name": {
+                "value": "Braune Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldener Apfel"
+              }
+            },
+            {
+              "name": {
+                "value": "Birkenlaub"
+              }
+            },
+            {
+              "name": {
+                "value": "Weiße Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Violetter Teppich"
+              }
+            },
+            {
+              "name": {
+                "value": "Gebrannter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Zombieschädel"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisenfalltür"
+              }
+            },
+            {
+              "name": {
+                "value": "Blumentopf"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisenerz"
+              }
+            },
+            {
+              "name": {
+                "value": "Tropenholzstufe"
+              }
+            },
+            {
+              "name": {
+                "value": "Birkenholzstufe"
+              }
+            },
+            {
+              "name": {
+                "value": "Tropenholztür"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldaxt"
+              }
+            },
+            {
+              "name": {
+                "value": "Packeis"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellblauer Teppich"
+              }
+            },
+            {
+              "name": {
+                "value": "Spender"
+              }
+            },
+            {
+              "name": {
+                "value": "Truhe"
+              }
+            },
+            {
+              "name": {
+                "value": "Rohes Hühnchen"
+              }
+            },
+            {
+              "name": {
+                "value": "Roher Lachs"
+              }
+            },
+            {
+              "name": {
+                "value": "Haken"
+              }
+            },
+            {
+              "name": {
+                "value": "Eichenholztreppe"
+              }
+            },
+            {
+              "name": {
+                "value": "Befehlsblocklore"
+              }
+            },
+            {
+              "name": {
+                "value": "Enderauge"
+              }
+            },
+            {
+              "name": {
+                "value": "Kohleblock"
+              }
+            },
+            {
+              "name": {
+                "value": "Netherstern"
+              }
+            },
+            {
+              "name": {
+                "value": "Kies"
+              }
+            },
+            {
+              "name": {
+                "value": "Blaue Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Netherquarz"
+              }
+            },
+            {
+              "name": {
+                "value": "Verrottetes Fleisch"
+              }
+            },
+            {
+              "name": {
+                "value": "Magenta Teppich"
+              }
+            },
+            {
+              "name": {
+                "value": "Weiß gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Birkenholzzauntor"
+              }
+            },
+            {
+              "name": {
+                "value": "Karotten"
+              }
+            },
+            {
+              "name": {
+                "value": "Violetter Farbstoff"
+              }
+            },
+            {
+              "name": {
+                "value": "Lapislazuliblock"
+              }
+            },
+            {
+              "name": {
+                "value": "Obsidian"
+              }
+            },
+            {
+              "name": {
+                "value": "Schallplatte Mellohi"
+              }
+            },
+            {
+              "name": {
+                "value": "Graue Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Redstonetruhe"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellgrau gefärbte Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisenspitzhacke"
+              }
+            },
+            {
+              "name": {
+                "value": "Roter Pilz"
+              }
+            },
+            {
+              "name": {
+                "value": "Kugelfisch"
+              }
+            },
+            {
+              "name": {
+                "value": "Smaragd"
+              }
+            },
+            {
+              "name": {
+                "value": "Holzschaufel"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldhelm"
+              }
+            },
+            {
+              "name": {
+                "value": "Melone"
+              }
+            },
+            {
+              "name": {
+                "value": "Tonblock"
+              }
+            },
+            {
+              "name": {
+                "value": "Amboss"
+              }
+            },
+            {
+              "name": {
+                "value": "Tageslichtsensor"
+              }
+            },
+            {
+              "name": {
+                "value": "Sandstein"
+              }
+            },
+            {
+              "name": {
+                "value": "Lederjacke"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarz gefärbtes Glas"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellgrün gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "TNT-Lore"
+              }
+            },
+            {
+              "name": {
+                "value": "Uhr"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarzer Teppich"
+              }
+            },
+            {
+              "name": {
+                "value": "Kakao"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldbarren"
+              }
+            },
+            {
+              "name": {
+                "value": "Steinziegelstufe"
+              }
+            },
+            {
+              "name": {
+                "value": "Clownfisch"
+              }
+            },
+            {
+              "name": {
+                "value": "Kürbiskerne"
+              }
+            },
+            {
+              "name": {
+                "value": "Bemooster Steinziegel"
+              }
+            },
+            {
+              "name": {
+                "value": "Spinnennetz"
+              }
+            },
+            {
+              "name": {
+                "value": "Milcheimer"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisenhelm"
+              }
+            },
+            {
+              "name": {
+                "value": "Gelb gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellgrau gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Diamant"
+              }
+            },
+            {
+              "name": {
+                "value": "Steinschwert"
+              }
+            },
+            {
+              "name": {
+                "value": "Bruchsteintreppe"
+              }
+            },
+            {
+              "name": {
+                "value": "Bett"
+              }
+            },
+            {
+              "name": {
+                "value": "Birkenholz"
+              }
+            },
+            {
+              "name": {
+                "value": "Quarzstufe"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwamm"
+              }
+            },
+            {
+              "name": {
+                "value": "Skelettschädel"
+              }
+            },
+            {
+              "name": {
+                "value": "Eimer"
+              }
+            },
+            {
+              "name": {
+                "value": "Diamantschwert"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldschaufel"
+              }
+            },
+            {
+              "name": {
+                "value": "Fichtenholztreppe"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisengitter"
+              }
+            },
+            {
+              "name": {
+                "value": "Rohes Kaninchen"
+              }
+            },
+            {
+              "name": {
+                "value": "Gelber Teppich"
+              }
+            },
+            {
+              "name": {
+                "value": "Karottenrute"
+              }
+            },
+            {
+              "name": {
+                "value": "Rohes Schweinefleisch"
+              }
+            },
+            {
+              "name": {
+                "value": "Ofen"
+              }
+            },
+            {
+              "name": {
+                "value": "Netherziegelzaun"
+              }
+            },
+            {
+              "name": {
+                "value": "Zaun"
+              }
+            },
+            {
+              "name": {
+                "value": "Diamantene Pferderüstung"
+              }
+            },
+            {
+              "name": {
+                "value": "Rote Sandsteinstufe"
+              }
+            },
+            {
+              "name": {
+                "value": "Birkenholzbrett"
+              }
+            },
+            {
+              "name": {
+                "value": "Grundgestein"
+              }
+            },
+            {
+              "name": {
+                "value": "Sattel"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellgrauer Farbstoff"
+              }
+            },
+            {
+              "name": {
+                "value": "Tropenbaumlaub"
+              }
+            },
+            {
+              "name": {
+                "value": "Schallplatte Blocks"
+              }
+            },
+            {
+              "name": {
+                "value": "Kürbis"
+              }
+            },
+            {
+              "name": {
+                "value": "Ofenkartoffel"
+              }
+            },
+            {
+              "name": {
+                "value": "Leder"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellgrauer Teppich"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisenstiefel"
+              }
+            },
+            {
+              "name": {
+                "value": "Endstein"
+              }
+            },
+            {
+              "name": {
+                "value": "Kettenhose"
+              }
+            },
+            {
+              "name": {
+                "value": "Hasenpfote"
+              }
+            },
+            {
+              "name": {
+                "value": "Glas"
+              }
+            },
+            {
+              "name": {
+                "value": "Stein"
+              }
+            },
+            {
+              "name": {
+                "value": "Prismarin"
+              }
+            },
+            {
+              "name": {
+                "value": "Kompass"
+              }
+            },
+            {
+              "name": {
+                "value": "Grün gefärbte Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldhose"
+              }
+            },
+            {
+              "name": {
+                "value": "Befehlsblock"
+              }
+            },
+            {
+              "name": {
+                "value": "Werfer"
+              }
+            },
+            {
+              "name": {
+                "value": "Giftige Kartoffel"
+              }
+            },
+            {
+              "name": {
+                "value": "Apfel"
+              }
+            },
+            {
+              "name": {
+                "value": "Rote Blume"
+              }
+            },
+            {
+              "name": {
+                "value": "Magenta Farbstoff"
+              }
+            },
+            {
+              "name": {
+                "value": "Brauner Teppich"
+              }
+            },
+            {
+              "name": {
+                "value": "Prismarinscherbe"
+              }
+            },
+            {
+              "name": {
+                "value": "Redstone-Block"
+              }
+            },
+            {
+              "name": {
+                "value": "Gelb gefärbte Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Löwenzahngelb"
+              }
+            },
+            {
+              "name": {
+                "value": "Akazienholztreppe"
+              }
+            },
+            {
+              "name": {
+                "value": "Sandsteinstufe"
+              }
+            },
+            {
+              "name": {
+                "value": "Grauer Teppich"
+              }
+            },
+            {
+              "name": {
+                "value": "Polierter Granit"
+              }
+            },
+            {
+              "name": {
+                "value": "Lore"
+              }
+            },
+            {
+              "name": {
+                "value": "Braun gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Türkis gefärbte Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Buch"
+              }
+            },
+            {
+              "name": {
+                "value": "Güterlore"
+              }
+            },
+            {
+              "name": {
+                "value": "Akaziensetzling"
+              }
+            },
+            {
+              "name": {
+                "value": "Papier"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldharnisch"
+              }
+            },
+            {
+              "name": {
+                "value": "Türkis gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Pilzsuppe"
+              }
+            },
+            {
+              "name": {
+                "value": "Netherziegel"
+              }
+            },
+            {
+              "name": {
+                "value": "Magmacreme"
+              }
+            },
+            {
+              "name": {
+                "value": "Schnee"
+              }
+            },
+            {
+              "name": {
+                "value": "Oranger Farbstoff"
+              }
+            },
+            {
+              "name": {
+                "value": "Trank"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellgrün gefärbte Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Weiß gefärbte Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Boot"
+              }
+            },
+            {
+              "name": {
+                "value": "Dunkler Prismarin"
+              }
+            },
+            {
+              "name": {
+                "value": "Eichenholztür"
+              }
+            },
+            {
+              "name": {
+                "value": "Eichenholz"
+              }
+            },
+            {
+              "name": {
+                "value": "Rote Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Gebratenes Hammelfleisch"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarzeichenholzzaun"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisentür"
+              }
+            },
+            {
+              "name": {
+                "value": "Gemälde"
+              }
+            },
+            {
+              "name": {
+                "value": "Fichtennadeln"
+              }
+            },
+            {
+              "name": {
+                "value": "Rosa gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Akazienholzstufe"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarzeichenholzstufe"
+              }
+            },
+            {
+              "name": {
+                "value": "Gemeißelter Sandstein"
+              }
+            },
+            {
+              "name": {
+                "value": "Eichenholzbrett"
+              }
+            },
+            {
+              "name": {
+                "value": "Gebratener Lachs"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisenschaufel"
+              }
+            },
+            {
+              "name": {
+                "value": "Zaubertisch"
+              }
+            },
+            {
+              "name": {
+                "value": "Redstone-Verstärker"
+              }
+            },
+            {
+              "name": {
+                "value": "Schallplatte Far"
+              }
+            },
+            {
+              "name": {
+                "value": "Grüner Teppich"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisenbarren"
+              }
+            },
+            {
+              "name": {
+                "value": "Orange Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Tropenbaumsetzling"
+              }
+            },
+            {
+              "name": {
+                "value": "Steinstufe"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellblau gefärbte Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Türkiser Farbstoff"
+              }
+            },
+            {
+              "name": {
+                "value": "Steak"
+              }
+            },
+            {
+              "name": {
+                "value": "Orange gefärbtes Glas"
+              }
+            },
+            {
+              "name": {
+                "value": "Blau gefärbtes Glas"
+              }
+            },
+            {
+              "name": {
+                "value": "Fichtenholzzaun"
+              }
+            },
+            {
+              "name": {
+                "value": "Kohle"
+              }
+            },
+            {
+              "name": {
+                "value": "Kartoffeln"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellgrau gefärbtes Glas"
+              }
+            },
+            {
+              "name": {
+                "value": "Zauntor"
+              }
+            },
+            {
+              "name": {
+                "value": "Ei"
+              }
+            },
+            {
+              "name": {
+                "value": "Fichtenholzbrett"
+              }
+            },
+            {
+              "name": {
+                "value": "Orange gefärbte Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Akazienholz"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellgraue Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Strohballen"
+              }
+            },
+            {
+              "name": {
+                "value": "Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Schüssel"
+              }
+            },
+            {
+              "name": {
+                "value": "Lederkappe"
+              }
+            },
+            {
+              "name": {
+                "value": "Rosa gefärbte Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Diamantbrustpanzer"
+              }
+            },
+            {
+              "name": {
+                "value": "Grau gefärbte Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Schneemann"
+              }
+            },
+            {
+              "name": {
+                "value": "Diamanterz"
+              }
+            },
+            {
+              "name": {
+                "value": "Banner"
+              }
+            },
+            {
+              "name": {
+                "value": "Steinaxt"
+              }
+            },
+            {
+              "name": {
+                "value": "Feuerwerksstern"
+              }
+            },
+            {
+              "name": {
+                "value": "Netherwarze"
+              }
+            },
+            {
+              "name": {
+                "value": "Rot gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Quarzblock"
+              }
+            },
+            {
+              "name": {
+                "value": "Mohn"
+              }
+            },
+            {
+              "name": {
+                "value": "Akazienholzzaun"
+              }
+            },
+            {
+              "name": {
+                "value": "Kaktus"
+              }
+            },
+            {
+              "name": {
+                "value": "Fichtenholztür"
+              }
+            },
+            {
+              "name": {
+                "value": "Schallplatte Cat"
+              }
+            },
+            {
+              "name": {
+                "value": "Feuerzeug"
+              }
+            },
+            {
+              "name": {
+                "value": "Schleimball"
+              }
+            },
+            {
+              "name": {
+                "value": "Gebratenes Schweinefleisch"
+              }
+            },
+            {
+              "name": {
+                "value": "Polierter Andesit"
+              }
+            },
+            {
+              "name": {
+                "value": "Prismarinziegel"
+              }
+            },
+            {
+              "name": {
+                "value": "Wither"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellgrüner Farbstoff"
+              }
+            },
+            {
+              "name": {
+                "value": "Blauer Teppich"
+              }
+            },
+            {
+              "name": {
+                "value": "Tür"
+              }
+            },
+            {
+              "name": {
+                "value": "Stolperdraht"
+              }
+            },
+            {
+              "name": {
+                "value": "Türkiser Teppich"
+              }
+            },
+            {
+              "name": {
+                "value": "Polierter Diorit"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisenblock"
+              }
+            },
+            {
+              "name": {
+                "value": "Akazienlaub"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarzeichensetzling"
+              }
+            },
+            {
+              "name": {
+                "value": "Diamantenhacke"
+              }
+            },
+            {
+              "name": {
+                "value": "Löwenzahn"
+              }
+            },
+            {
+              "name": {
+                "value": "Lapislazuli"
+              }
+            },
+            {
+              "name": {
+                "value": "Zuckerrohr"
+              }
+            },
+            {
+              "name": {
+                "value": "Birkenholztür"
+              }
+            },
+            {
+              "name": {
+                "value": "Kaktusgrün"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldblock"
+              }
+            },
+            {
+              "name": {
+                "value": "Glatter Sandstein"
+              }
+            },
+            {
+              "name": {
+                "value": "Magenta gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Notenblock"
+              }
+            },
+            {
+              "name": {
+                "value": "Schnee-Block"
+              }
+            },
+            {
+              "name": {
+                "value": "Kreaturenschädel"
+              }
+            },
+            {
+              "name": {
+                "value": "Diamantbeinschutz"
+              }
+            },
+            {
+              "name": {
+                "value": "Roter Sandstein"
+              }
+            },
+            {
+              "name": {
+                "value": "Orange gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Schleimblock"
+              }
+            },
+            {
+              "name": {
+                "value": "Bücherregal"
+              }
+            },
+            {
+              "name": {
+                "value": "Kuchen"
+              }
+            },
+            {
+              "name": {
+                "value": "Holzknopf"
+              }
+            },
+            {
+              "name": {
+                "value": "Gemeißelter Quarzblock"
+              }
+            },
+            {
+              "name": {
+                "value": "Steinknopf"
+              }
+            },
+            {
+              "name": {
+                "value": "Glowstonestaub"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellgrün gefärbtes Glas"
+              }
+            },
+            {
+              "name": {
+                "value": "Bruchsteinmauer"
+              }
+            },
+            {
+              "name": {
+                "value": "Namensschild"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarzpulver"
+              }
+            },
+            {
+              "name": {
+                "value": "Lohenstaub"
+              }
+            },
+            {
+              "name": {
+                "value": "Braustand"
+              }
+            },
+            {
+              "name": {
+                "value": "Fackel"
+              }
+            },
+            {
+              "name": {
+                "value": "Gelbe Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Schallplatte Wait"
+              }
+            },
+            {
+              "name": {
+                "value": "Glitzernde Melone"
+              }
+            },
+            {
+              "name": {
+                "value": "Netherrack"
+              }
+            },
+            {
+              "name": {
+                "value": "Holzstufe"
+              }
+            },
+            {
+              "name": {
+                "value": "Netherziegeltreppe"
+              }
+            },
+            {
+              "name": {
+                "value": "Eis"
+              }
+            },
+            {
+              "name": {
+                "value": "Großer Farn"
+              }
+            },
+            {
+              "name": {
+                "value": "Netherziegelstufe"
+              }
+            },
+            {
+              "name": {
+                "value": "Fichtenholzstufe"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisenhacke"
+              }
+            },
+            {
+              "name": {
+                "value": "Farn"
+              }
+            },
+            {
+              "name": {
+                "value": "Seelaterne"
+              }
+            },
+            {
+              "name": {
+                "value": "Keks"
+              }
+            },
+            {
+              "name": {
+                "value": "Melonenkerne"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldklumpen"
+              }
+            },
+            {
+              "name": {
+                "value": "Diamanthelm"
+              }
+            },
+            {
+              "name": {
+                "value": "Fichtenholzzauntor"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldhacke"
+              }
+            },
+            {
+              "name": {
+                "value": "Akazienholzbrett"
+              }
+            },
+            {
+              "name": {
+                "value": "Diamantspitzhacke"
+              }
+            },
+            {
+              "name": {
+                "value": "Lapislazulierz"
+              }
+            },
+            {
+              "name": {
+                "value": "Rohes Hammelfleisch"
+              }
+            },
+            {
+              "name": {
+                "value": "Quarztreppe"
+              }
+            },
+            {
+              "name": {
+                "value": "Ziegelstein-Block"
+              }
+            },
+            {
+              "name": {
+                "value": "Bruchsteinstufe"
+              }
+            },
+            {
+              "name": {
+                "value": "Smaragderz"
+              }
+            },
+            {
+              "name": {
+                "value": "Gelbe Blume"
+              }
+            },
+            {
+              "name": {
+                "value": "Kürbislaternen"
+              }
+            },
+            {
+              "name": {
+                "value": "Rot gefärbtes Glas"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisenbeinschutz"
+              }
+            },
+            {
+              "name": {
+                "value": "Rosa gefärbtes Glas"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarzer Farbstoff"
+              }
+            },
+            {
+              "name": {
+                "value": "Holzhacke"
+              }
+            },
+            {
+              "name": {
+                "value": "Violett gefärbtes Glas"
+              }
+            },
+            {
+              "name": {
+                "value": "Sensorschiene"
+              }
+            },
+            {
+              "name": {
+                "value": "Türkise Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisenbrustpanzer"
+              }
+            },
+            {
+              "name": {
+                "value": "Bruchstein"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarzeichenholztreppe"
+              }
+            },
+            {
+              "name": {
+                "value": "Creeperkopf"
+              }
+            },
+            {
+              "name": {
+                "value": "Karotte"
+              }
+            },
+            {
+              "name": {
+                "value": "Kaninchenfell"
+              }
+            },
+            {
+              "name": {
+                "value": "Gras"
+              }
+            },
+            {
+              "name": {
+                "value": "Schallplatte Strad"
+              }
+            },
+            {
+              "name": {
+                "value": "Birkensetzlinge"
+              }
+            },
+            {
+              "name": {
+                "value": "Moosstein"
+              }
+            },
+            {
+              "name": {
+                "value": "Rosa Farbstoff"
+              }
+            },
+            {
+              "name": {
+                "value": "Redstone-Fackel"
+              }
+            },
+            {
+              "name": {
+                "value": "Grün gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Hohes Gras"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarze Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Weizen"
+              }
+            },
+            {
+              "name": {
+                "value": "Enderperle"
+              }
+            },
+            {
+              "name": {
+                "value": "Angel"
+              }
+            },
+            {
+              "name": {
+                "value": "Knochenmehl"
+              }
+            },
+            {
+              "name": {
+                "value": "Quarz"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarzeichenholzbrett"
+              }
+            },
+            {
+              "name": {
+                "value": "Antriebsschiene"
+              }
+            },
+            {
+              "name": {
+                "value": "Leuchtfeuer"
+              }
+            },
+            {
+              "name": {
+                "value": "Blau gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarzeichenholztür"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisengolem"
+              }
+            },
+            {
+              "name": {
+                "value": "Fichtenholz"
+              }
+            },
+            {
+              "name": {
+                "value": "Rosa Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Feuerkugel"
+              }
+            },
+            {
+              "name": {
+                "value": "Akazienholztür"
+              }
+            },
+            {
+              "name": {
+                "value": "Schallplatte Chirp"
+              }
+            },
+            {
+              "name": {
+                "value": "Eichenlaub"
+              }
+            },
+            {
+              "name": {
+                "value": "Pfeil"
+              }
+            },
+            {
+              "name": {
+                "value": "Holzaxt"
+              }
+            },
+            {
+              "name": {
+                "value": "Glasscheibe"
+              }
+            },
+            {
+              "name": {
+                "value": "Endertruhe"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellblaue Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Faden"
+              }
+            },
+            {
+              "name": {
+                "value": "Rote Sandsteintreppe"
+              }
+            },
+            {
+              "name": {
+                "value": "Violette Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarz gefärbter Ton"
+              }
+            },
+            {
+              "name": {
+                "value": "Verzaubertes Buch"
+              }
+            },
+            {
+              "name": {
+                "value": "Knopf"
+              }
+            },
+            {
+              "name": {
+                "value": "Hellgrüne Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Grobe Erde"
+              }
+            },
+            {
+              "name": {
+                "value": "Ghastträne"
+              }
+            },
+            {
+              "name": {
+                "value": "Seelensand"
+              }
+            },
+            {
+              "name": {
+                "value": "Brauner Pilz"
+              }
+            },
+            {
+              "name": {
+                "value": "Kettenhaube"
+              }
+            },
+            {
+              "name": {
+                "value": "Beschriebenes Buch"
+              }
+            },
+            {
+              "name": {
+                "value": "Fichtensetzling"
+              }
+            },
+            {
+              "name": {
+                "value": "Eichensetzling"
+              }
+            },
+            {
+              "name": {
+                "value": "Nachtlichtsensor"
+              }
+            },
+            {
+              "name": {
+                "value": "Sandsteintreppe"
+              }
+            },
+            {
+              "name": {
+                "value": "Redstone-Lampe"
+              }
+            },
+            {
+              "name": {
+                "value": "Glowstone"
+              }
+            },
+            {
+              "name": {
+                "value": "Holzdruckplatte"
+              }
+            },
+            {
+              "name": {
+                "value": "Holzkohle"
+              }
+            },
+            {
+              "name": {
+                "value": "Kettenstiefel"
+              }
+            },
+            {
+              "name": {
+                "value": "Leiter"
+              }
+            },
+            {
+              "name": {
+                "value": "Bemooster Bruchstein"
+              }
+            },
+            {
+              "name": {
+                "value": "Goldspitzhacke"
+              }
+            },
+            {
+              "name": {
+                "value": "Akazienholzzauntor"
+              }
+            },
+            {
+              "name": {
+                "value": "Birkenholztreppe"
+              }
+            },
+            {
+              "name": {
+                "value": "Schallplatte Ward"
+              }
+            },
+            {
+              "name": {
+                "value": "Schallplatte"
+              }
+            },
+            {
+              "name": {
+                "value": "Verzauberter goldener Apfel"
+              }
+            },
+            {
+              "name": {
+                "value": "Weißer Teppich"
+              }
+            },
+            {
+              "name": {
+                "value": "Eisenschwert"
+              }
+            },
+            {
+              "name": {
+                "value": "Gemeißelter roter Sandstein"
+              }
+            },
+            {
+              "name": {
+                "value": "Steinziegeltreppe"
+              }
+            },
+            {
+              "name": {
+                "value": "Druckplatte"
+              }
+            },
+            {
+              "name": {
+                "value": "Tropenholzbrett"
+              }
+            },
+            {
+              "name": {
+                "value": "Grüne Wolle"
+              }
+            },
+            {
+              "name": {
+                "value": "Bogen"
+              }
+            },
+            {
+              "name": {
+                "value": "Feuerstein"
+              }
+            },
+            {
+              "name": {
+                "value": "Schwarz gefärbte Glasscheibe"
+              }
+            }
+          ],
+          "name": "LIST_OF_ITEMS"
+        }
+      ]
+    }
+  }
+}
