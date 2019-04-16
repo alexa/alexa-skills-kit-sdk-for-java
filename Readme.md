@@ -71,6 +71,13 @@ This code sample will allow you to hear a response from Alexa when you trigger i
 ### [Color Picker](https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.0.x/samples/colorpicker)
 This is a step-up in functionality from Hello World. It allows you to capture input from your user and demonstrates the use of Slots.
 
+### [How To](https://github.com/alexa/skill-sample-java-how-to)
+This sample will walk first-time Alexa skill developers through all the required steps involved in creating a parameter-based skill using a template called ‘Minecraft Helper’. Ask how to craft an item in the game Minecraft, and this skill will give you instructions. The skill showcases:
+
+- Custom slot type: demonstrates using custom slot types to handle a finite set of known values
+- Dialog and Session state: Handles two models, both a one-shot ask and tell model, and a multi-turn dialog model.
+- Usage of ResourceBundle to handle internalization
+
 ## Tutorials
 ### [States Quiz](https://github.com/alexa/skill-sample-java-quiz-game)
 This tutorial will guide you in building a fully-featured skill. The skill features Built-In and Custom slots, as well as state management. The skill you build with this tutorial can be customized to build your own game.
