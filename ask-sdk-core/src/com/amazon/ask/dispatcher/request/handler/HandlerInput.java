@@ -13,6 +13,8 @@
 
 package com.amazon.ask.dispatcher.request.handler;
 
+import com.amazon.ask.exception.template.TemplateFactoryException;
+import com.amazon.ask.model.Response;
 import com.amazon.ask.request.exception.handler.impl.AbstractHandlerInput;
 import com.amazon.ask.attributes.AttributesManager;
 import com.amazon.ask.attributes.persistence.PersistenceAdapter;
@@ -22,7 +24,10 @@ import com.amazon.ask.model.services.ServiceClientFactory;
 import com.amazon.ask.response.ResponseBuilder;
 import com.amazon.ask.util.ValidationUtils;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.amazon.ask.response.template.TemplateFactory;
 
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -40,9 +45,11 @@ public class HandlerInput extends AbstractHandlerInput<Request> {
     protected final ServiceClientFactory serviceClientFactory;
     protected final ResponseBuilder responseBuilder;
     protected final JsonNode requestEnvelopeJson;
+    protected final TemplateFactory<HandlerInput, Response> templateFactory;
 
     protected HandlerInput(RequestEnvelope requestEnvelope, PersistenceAdapter persistenceAdapter,
-                           Object context, ServiceClientFactory serviceClientFactory, JsonNode requestEnvelopeJson) {
+                           Object context, ServiceClientFactory serviceClientFactory,
+                           JsonNode requestEnvelopeJson, TemplateFactory<HandlerInput, Response> templateFactory) {
         super(ValidationUtils.assertNotNull(requestEnvelope, "request envelope").getRequest(), context);
         this.requestEnvelope = requestEnvelope;
         this.serviceClientFactory = serviceClientFactory;
@@ -52,10 +59,27 @@ public class HandlerInput extends AbstractHandlerInput<Request> {
                 .build();
         this.responseBuilder = new ResponseBuilder();
         this.requestEnvelopeJson = requestEnvelopeJson;
+        this.templateFactory = templateFactory;
     }
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    /**
+     * Generate {@link Response} using skill response template and injecting data.
+     * Response template contains response components including but not limited to
+     * {@link com.amazon.ask.model.ui.OutputSpeech}, {@link com.amazon.ask.model.ui.Card}, {@link com.amazon.ask.model.Directive} and {@link com.amazon.ask.model.canfulfill.CanFulfillIntent}
+     * and placeholders for injecting data.
+     * Injecting data provides component values to be injected into template.
+     *
+     * @param responseTemplateName name of response template
+     * @param dataMap a map that contains injecting data
+     * @return skill response
+     * @throws TemplateFactoryException if fail to load or render template using provided {@link com.amazon.ask.response.template.loader.TemplateLoader} or {@link com.amazon.ask.response.template.renderer.TemplateRenderer}
+     */
+    public Optional<Response> generateTemplateResponse(String responseTemplateName, Map<String, Object> dataMap) throws TemplateFactoryException {
+        return Optional.of(templateFactory.processTemplate(responseTemplateName, dataMap, this));
     }
 
     /**
@@ -120,6 +144,7 @@ public class HandlerInput extends AbstractHandlerInput<Request> {
         private PersistenceAdapter persistenceAdapter;
         private ServiceClientFactory serviceClientFactory;
         private JsonNode requestEnvelopeJson;
+        private TemplateFactory templateFactory;
 
         private Builder() {
         }
@@ -144,8 +169,13 @@ public class HandlerInput extends AbstractHandlerInput<Request> {
             return this;
         }
 
+        public Builder withTemplateFactory(TemplateFactory templateFactory) {
+            this.templateFactory = templateFactory;
+            return this;
+        }
+
         public HandlerInput build() {
-            return new HandlerInput(requestEnvelope, persistenceAdapter, context, serviceClientFactory, requestEnvelopeJson);
+            return new HandlerInput(requestEnvelope, persistenceAdapter, context, serviceClientFactory, requestEnvelopeJson, templateFactory);
         }
     }
 

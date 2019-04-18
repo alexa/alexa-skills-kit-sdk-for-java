@@ -13,16 +13,24 @@ import com.amazon.ask.attributes.persistence.PersistenceAdapter;
 import com.amazon.ask.builder.CustomSkillConfiguration;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.exception.AskSdkException;
+import com.amazon.ask.impl.AbstractSkill;
 import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.ResponseEnvelope;
 import com.amazon.ask.model.services.ApiClient;
 import com.amazon.ask.model.services.ApiConfiguration;
 import com.amazon.ask.model.services.DefaultApiConfiguration;
+import com.amazon.ask.model.services.Serializer;
 import com.amazon.ask.model.services.ServiceClientFactory;
+import com.amazon.ask.request.dispatcher.GenericRequestDispatcher;
+import com.amazon.ask.request.dispatcher.impl.BaseRequestDispatcher;
+import com.amazon.ask.response.template.TemplateFactory;
+import com.amazon.ask.util.JacksonSerializer;
 import com.amazon.ask.util.SdkConstants;
 import com.amazon.ask.util.UserAgentUtils;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.amazon.ask.util.impl.JacksonJsonMarshaller;
+import com.amazon.ask.util.impl.JacksonJsonUnmarshaller;
 
 import java.util.Optional;
 
@@ -34,6 +42,7 @@ public class CustomSkill extends AbstractSkill<RequestEnvelope, ResponseEnvelope
     protected final Serializer serializer;
     protected final String customUserAgent;
     protected final String skillId;
+    protected final TemplateFactory<HandlerInput, Response> templateFactory;
 
     public CustomSkill(CustomSkillConfiguration configuration) {
         super(JacksonJsonUnmarshaller.withTypeBinding(RequestEnvelope.class, "request"),
@@ -50,6 +59,7 @@ public class CustomSkill extends AbstractSkill<RequestEnvelope, ResponseEnvelope
         this.serializer = new JacksonSerializer();
         this.customUserAgent = configuration.getCustomUserAgent();
         this.skillId = configuration.getSkillId();
+        this.templateFactory = configuration.getTemplateFactory();
     }
 
     public ResponseEnvelope invoke(RequestEnvelope requestEnvelope) {
@@ -75,7 +85,7 @@ public class CustomSkill extends AbstractSkill<RequestEnvelope, ResponseEnvelope
             throw new AskSdkException("AlexaSkill ID verification failed.");
         }
 
-        ServiceClientFactory factory = apiClient != null ? ServiceClientFactory.builder()
+        ServiceClientFactory serviceClientFactory = apiClient != null ? ServiceClientFactory.builder()
                 .withDefaultApiConfiguration(getApiConfiguration(requestEnvelope))
                 .build() : null;
 
@@ -83,8 +93,9 @@ public class CustomSkill extends AbstractSkill<RequestEnvelope, ResponseEnvelope
                 .withRequestEnvelope(requestEnvelope)
                 .withPersistenceAdapter(persistenceAdapter)
                 .withContext(context)
-                .withServiceClientFactory(factory)
                 .withRequestEnvelopeJson(requestEnvelopeJson)
+                .withServiceClientFactory(serviceClientFactory)
+                .withTemplateFactory(templateFactory)
                 .build();
 
         Optional<Response> response = requestDispatcher.dispatch(handlerInput);
@@ -107,6 +118,5 @@ public class CustomSkill extends AbstractSkill<RequestEnvelope, ResponseEnvelope
                 .withSerializer(serializer)
                 .build();
     }
-
 
 }

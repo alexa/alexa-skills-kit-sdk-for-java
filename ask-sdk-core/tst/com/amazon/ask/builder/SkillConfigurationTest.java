@@ -25,6 +25,9 @@ import com.amazon.ask.model.services.ApiClient;
 import com.amazon.ask.attributes.persistence.PersistenceAdapter;
 import com.amazon.ask.dispatcher.exception.ExceptionMapper;
 import com.amazon.ask.dispatcher.request.mapper.RequestMapper;
+import com.amazon.ask.response.template.TemplateFactory;
+import com.amazon.ask.response.template.loader.TemplateLoader;
+import com.amazon.ask.response.template.renderer.TemplateRenderer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -93,10 +96,17 @@ public class SkillConfigurationTest {
     }
 
     @Test
-    public void get_skillId() {
+    public void get_skill_id() {
         String skillId = "fooSkillId";
         SkillConfiguration config = SkillConfiguration.builder().withSkillId(skillId).build();
         assertEquals(skillId, config.getSkillId());
+    }
+
+    @Test
+    public void get_template_loaders() {
+        TemplateFactory templateFactory = mock(TemplateFactory.class);
+        SkillConfiguration config = SkillConfiguration.builder().withTemplateFactory(templateFactory).build();
+        assertEquals(config.getTemplateFactory(), templateFactory);
     }
 
 }

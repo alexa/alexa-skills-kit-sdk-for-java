@@ -23,7 +23,11 @@ import com.amazon.ask.request.handler.adapter.GenericHandlerAdapter;
 import com.amazon.ask.request.interceptor.GenericRequestInterceptor;
 import com.amazon.ask.request.interceptor.GenericResponseInterceptor;
 import com.amazon.ask.request.mapper.GenericRequestMapper;
+import com.amazon.ask.response.template.TemplateFactory;
+import com.amazon.ask.response.template.loader.TemplateLoader;
+import com.amazon.ask.response.template.renderer.TemplateRenderer;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,14 +40,18 @@ public class SkillConfiguration extends AbstractSkillConfiguration<HandlerInput,
     protected final String skillId;
     protected final PersistenceAdapter persistenceAdapter;
     protected final ApiClient apiClient;
+    protected final TemplateFactory<HandlerInput, Response> templateFactory;
 
     protected SkillConfiguration(List<GenericRequestMapper<HandlerInput, Optional<Response>>> requestMappers,
                                  List<GenericHandlerAdapter<HandlerInput, Optional<Response>>> handlerAdapters,
                                  GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper,
-                                 PersistenceAdapter persistenceAdapter, ApiClient apiClient,
-                                 String customUserAgent, String skillId) {
+                                 PersistenceAdapter persistenceAdapter,
+                                 ApiClient apiClient,
+                                 String customUserAgent,
+                                 String skillId,
+                                 TemplateFactory<HandlerInput, Response> templateFactory) {
         this(requestMappers, handlerAdapters, null, null, exceptionMapper,
-                persistenceAdapter, apiClient, customUserAgent, skillId);
+                persistenceAdapter, apiClient, customUserAgent, skillId, templateFactory);
     }
 
     protected SkillConfiguration(List<GenericRequestMapper<HandlerInput, Optional<Response>>> requestMappers,
@@ -51,13 +59,17 @@ public class SkillConfiguration extends AbstractSkillConfiguration<HandlerInput,
                                  List<GenericRequestInterceptor<HandlerInput>> requestInterceptors,
                                  List<GenericResponseInterceptor<HandlerInput, Optional<Response>>> responseInterceptors,
                                  GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper,
-                                 PersistenceAdapter persistenceAdapter, ApiClient apiClient,
-                                 String customUserAgent, String skillId) {
+                                 PersistenceAdapter persistenceAdapter,
+                                 ApiClient apiClient,
+                                 String customUserAgent,
+                                 String skillId,
+                                 TemplateFactory<HandlerInput, Response> templateFactory) {
         super(requestMappers, handlerAdapters, requestInterceptors, responseInterceptors, exceptionMapper);
         this.customUserAgent = customUserAgent;
         this.skillId = skillId;
         this.persistenceAdapter = persistenceAdapter;
         this.apiClient = apiClient;
+        this.templateFactory = templateFactory;
     }
 
     public static Builder builder() {
@@ -80,11 +92,19 @@ public class SkillConfiguration extends AbstractSkillConfiguration<HandlerInput,
         return apiClient;
     }
 
+    public TemplateFactory<HandlerInput, Response> getTemplateFactory() {
+        return templateFactory;
+    }
+
     public static final class Builder extends AbstractSkillConfiguration.Builder<HandlerInput, Optional<Response>, Builder> {
         private PersistenceAdapter persistenceAdapter;
         private ApiClient apiClient;
         private String customUserAgent;
         private String skillId;
+        private TemplateFactory<HandlerInput, Response> templateFactory;
+
+        public Builder() {
+        }
 
         public Builder withPersistenceAdapter(PersistenceAdapter persistenceAdapter) {
             this.persistenceAdapter = persistenceAdapter;
@@ -127,11 +147,19 @@ public class SkillConfiguration extends AbstractSkillConfiguration<HandlerInput,
             return skillId;
         }
 
-        public SkillConfiguration build() {
-            return new SkillConfiguration(requestMappers, handlerAdapters, requestInterceptors, responseInterceptors,
-                    exceptionMapper, persistenceAdapter, apiClient, customUserAgent, skillId);
+        public Builder withTemplateFactory(TemplateFactory<HandlerInput, Response> templateFactory) {
+            this.templateFactory = templateFactory;
+            return this;
         }
 
+        public TemplateFactory<HandlerInput, Response> getTemplateFactory() {
+            return templateFactory;
+        }
 
+        public SkillConfiguration build() {
+            return new SkillConfiguration(requestMappers, handlerAdapters, requestInterceptors, responseInterceptors,
+                    exceptionMapper, persistenceAdapter, apiClient, customUserAgent, skillId, templateFactory);
+        }
     }
+
 }
