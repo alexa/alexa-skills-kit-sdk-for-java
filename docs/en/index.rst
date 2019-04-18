@@ -18,6 +18,7 @@
     Response-Building
     Skill-Builders
     Managing-In-Skill-Purchases
+    Servlet-Support
     Javadoc Reference <http://ask-sdk-java-javadocs.s3-website-us-west-2.amazonaws.com/>
 
 .. toctree::
@@ -111,6 +112,11 @@ instance of the SDK.
 
 Covers how you can manage in-skill products and the purchase experience
 in your skills.
+
+`Servlet support <Servlet-Support.html>`__
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Describes how to host a skill as a web service.
 
 `Javadoc Reference <http://ask-sdk-java-javadocs.s3-website-us-west-2.amazonaws.com>`__
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
