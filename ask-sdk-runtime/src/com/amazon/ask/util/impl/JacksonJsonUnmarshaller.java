@@ -40,11 +40,15 @@ public class JacksonJsonUnmarshaller<Type> implements JsonUnmarshaller<Type> {
         return new JacksonJsonUnmarshaller<>(outputType, requiredField);
     }
 
+    public static <Output> JacksonJsonUnmarshaller<Output> withTypeBinding(Class<Output> outputType) {
+        return new JacksonJsonUnmarshaller<>(outputType, null);
+    }
+
     @Override
     public Optional<UnmarshalledRequest<Type>> unmarshall(byte[] in) {
         try {
             JsonNode json = MAPPER.readTree(in);
-            if (!json.has(requiredField)) {
+            if (requiredField != null && !json.has(requiredField)) {
                 return Optional.empty();
             }
             UnmarshalledRequest<Type> unmarshalledRequest = new BaseUnmarshalledRequest<>(MAPPER.treeToValue(json, outputType), json);

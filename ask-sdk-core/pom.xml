@@ -60,6 +60,14 @@
   <build>
     <sourceDirectory>src</sourceDirectory>
     <testSourceDirectory>tst</testSourceDirectory>
+    <testResources>
+      <testResource>
+        <directory>tst</directory>
+        <excludes>
+          <exclude>**/*.java</exclude>
+        </excludes>
+      </testResource>
+    </testResources>
     <pluginManagement>
       <plugins>
         <plugin>

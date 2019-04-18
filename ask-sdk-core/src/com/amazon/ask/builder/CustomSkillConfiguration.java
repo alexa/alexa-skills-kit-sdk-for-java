@@ -17,6 +17,7 @@ import com.amazon.ask.attributes.persistence.PersistenceAdapter;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.services.ApiClient;
+import com.amazon.ask.response.template.TemplateFactory;
 
 import java.util.Optional;
 
@@ -29,5 +30,7 @@ public interface CustomSkillConfiguration extends GenericSkillConfiguration<Hand
     PersistenceAdapter getPersistenceAdapter();
 
     ApiClient getApiClient();
+
+    TemplateFactory<HandlerInput, Response> getTemplateFactory();
 
 }

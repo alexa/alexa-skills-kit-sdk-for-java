@@ -20,7 +20,6 @@ import com.amazon.ask.attributes.persistence.PersistenceAdapter;
 import com.amazon.ask.dispatcher.exception.ExceptionHandler;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
-import com.amazon.ask.dispatcher.request.handler.impl.DefaultHandlerAdapter;
 import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
 import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
 import com.amazon.ask.model.Intent;
@@ -30,6 +29,9 @@ import com.amazon.ask.model.Response;
 import com.amazon.ask.model.services.ApiClient;
 import com.amazon.ask.module.SdkModule;
 import com.amazon.ask.module.SdkModuleContext;
+import com.amazon.ask.response.template.TemplateFactory;
+import com.amazon.ask.response.template.loader.TemplateLoader;
+import com.amazon.ask.response.template.renderer.TemplateRenderer;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,12 +50,14 @@ public class SkillBuilderTest {
     private CustomSkillBuilder builder;
     private RequestHandler mockRequestHandler;
     private ExceptionHandler mockExceptionHandler;
+    private TemplateFactory mockTemplateFactory;
 
     @Before
     public void setup() {
         builder = new CustomSkillBuilder();
         mockRequestHandler = mock(RequestHandler.class);
         mockExceptionHandler = mock(ExceptionHandler.class);
+        mockTemplateFactory = mock(TemplateFactory.class);
     }
 
     @Test
@@ -146,6 +150,20 @@ public class SkillBuilderTest {
         builder.registerSdkModule(mockModule);
         builder.build();
         verify(mockModule).setupModule(any(SdkModuleContext.class));
+    }
+
+    @Test
+    public void template_factory_used() {
+        builder.withTemplateFactory(mockTemplateFactory);
+        SkillConfiguration config = builder.getConfigBuilder().build();
+        assertEquals(config.getTemplateFactory(), mockTemplateFactory);
+    }
+
+    @Test
+    public void template_factory_null() {
+        builder.withTemplateFactory(null);
+        SkillConfiguration config = builder.getConfigBuilder().build();
+        assertNull(config.getTemplateFactory());
     }
 
     private HandlerInput getInputForIntent(String intentName) {

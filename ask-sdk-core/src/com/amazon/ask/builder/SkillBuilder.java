@@ -14,8 +14,8 @@
 package com.amazon.ask.builder;
 
 import com.amazon.ask.Skill;
-import com.amazon.ask.builder.impl.AbstractSkillBuilder;
 import com.amazon.ask.attributes.persistence.PersistenceAdapter;
+import com.amazon.ask.builder.impl.AbstractSkillBuilder;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
 import com.amazon.ask.model.Response;
@@ -23,6 +23,7 @@ import com.amazon.ask.model.services.ApiClient;
 import com.amazon.ask.module.SdkModule;
 import com.amazon.ask.module.SdkModuleContext;
 import com.amazon.ask.request.handler.adapter.impl.BaseHandlerAdapter;
+import com.amazon.ask.response.template.TemplateFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ public class SkillBuilder<T extends SkillBuilder<T>> extends AbstractSkillBuilde
     protected PersistenceAdapter persistenceAdapter;
     protected ApiClient apiClient;
     protected String skillId;
+    protected TemplateFactory<HandlerInput, Response> templateFactory;
 
     public SkillBuilder() {
         this.sdkModules = new ArrayList<>();
@@ -59,6 +61,11 @@ public class SkillBuilder<T extends SkillBuilder<T>> extends AbstractSkillBuilde
         return getThis();
     }
 
+    public T withTemplateFactory(TemplateFactory templateFactory) {
+        this.templateFactory = templateFactory;
+        return getThis();
+    }
+
     @SuppressWarnings("unchecked")
     private T getThis() {
         return (T) this;
@@ -75,7 +82,8 @@ public class SkillBuilder<T extends SkillBuilder<T>> extends AbstractSkillBuilde
 
         skillConfigBuilder.withPersistenceAdapter(persistenceAdapter)
                 .withApiClient(apiClient)
-                .withSkillId(skillId);
+                .withSkillId(skillId)
+                .withTemplateFactory(templateFactory);
 
         SdkModuleContext sdkModuleContext = new SdkModuleContext(skillConfigBuilder);
         for (SdkModule sdkModule : sdkModules) {
