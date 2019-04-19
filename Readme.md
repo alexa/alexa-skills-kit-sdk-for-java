@@ -78,6 +78,14 @@ This sample will walk first-time Alexa skill developers through all the required
 - Dialog and Session state: Handles two models, both a one-shot ask and tell model, and a multi-turn dialog model.
 - Usage of ResourceBundle to handle internalization
 
+### [City Guide](https://github.com/alexa/skill-sample-java-city-guide)
+Template for a local recommendations skill. Alexa uses the data that you provide to offer recommendations according to the user stated preferences. This Skill showcases:
+
+- Custom slot type: demonstrates using custom slot types to handle a finite set of known values
+- Dialog and Session state: Handles two models, both a one-shot ask and tell model, and a multi-turn dialog model.
+- Usage of ResourceBundle to handle internalization
+- Calling external APIs from the skill.
+
 ## Tutorials
 ### [States Quiz](https://github.com/alexa/skill-sample-java-quiz-game)
 This tutorial will guide you in building a fully-featured skill. The skill features Built-In and Custom slots, as well as state management. The skill you build with this tutorial can be customized to build your own game.
