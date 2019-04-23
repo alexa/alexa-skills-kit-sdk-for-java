@@ -70,12 +70,6 @@ The template loader interface loads template content from data storage. The SDK 
 
 To use ``LocalTemplateFileLoader``, you must provide the directory path and the file extension for the template files. If you host your skill on AWS Lambda, you must include the template files as resources in the skill project JAR, and you must configure the resource directory in your Maven POM.
 
-**Template directory structure**
-
-The following screenshot of an example skill shows the template directory structure containing FreeMarker template files:
-
-.. image:: images/template_directory_structure.png
-
 **Maven resource configuration**
 ::
 
