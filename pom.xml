@@ -34,7 +34,7 @@
     <module>ask-sdk-servlet-support</module>
     <module>ask-sdk-dynamodb-persistence-adapter</module>
     <module>ask-sdk-apache-client</module>
-    <module>ask-sdk-freemarker-renderer</module>
+    <module>ask-sdk-freemarker</module>
     <module>ask-sdk</module>
   </modules>
 
