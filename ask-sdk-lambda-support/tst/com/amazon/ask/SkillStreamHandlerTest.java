@@ -26,12 +26,14 @@ import com.amazon.ask.exception.AskSdkException;
 import com.amazon.ask.request.SkillRequest;
 import com.amazon.ask.response.SkillResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.amazonaws.services.lambda.runtime.Context;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
 import static org.mockito.Matchers.any;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -41,6 +43,7 @@ public class SkillStreamHandlerTest {
     private TestRequest testRequest;
     private TestResponse testResponse;
     private SkillResponse<TestResponse> skillResponse;
+    private Context testContext;
 
     private AlexaSkill<TestRequest, TestResponse> skill;
 
@@ -52,6 +55,7 @@ public class SkillStreamHandlerTest {
         testResponse = new TestResponse();
         testResponse.setResponse("response");
         skillResponse = mock(SkillResponse.class);
+        testContext = mock(Context.class);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -68,22 +72,32 @@ public class SkillStreamHandlerTest {
     public void skill_called_with_expected_request() throws IOException {
         when(skillResponse.isPresent()).thenReturn(true);
         ArgumentCaptor<SkillRequest> captor = ArgumentCaptor.forClass(SkillRequest.class);
-        when(skill.execute(captor.capture())).thenReturn(skillResponse);
+        when(skill.execute(captor.capture(), any())).thenReturn(skillResponse);
         getHandlerOutput(testRequest);
         SkillRequest skillRequest = captor.getValue();
         assertArrayEquals(skillRequest.getRawRequest(), OBJECT_MAPPER.writeValueAsBytes(testRequest));
     }
 
+    @Test
+    public void lambda_context_passed_to_skill() throws IOException {
+        when(skillResponse.isPresent()).thenReturn(true);
+        ArgumentCaptor<Context> captor = ArgumentCaptor.forClass(Context.class);
+        when(skill.execute(any(), captor.capture())).thenReturn(skillResponse);
+        getHandlerOutput(testRequest);
+        Context requestContext = captor.getValue();
+        assertEquals(requestContext, testContext);
+    }
+
     @Test (expected = AskSdkException.class)
     public void no_skill_can_handle_incoming_request_throws_exception() throws IOException {
-        when(skill.execute(any())).thenReturn(null);
+        when(skill.execute(any(), any())).thenReturn(null);
         getHandlerOutput(testRequest);
     }
 
     @Test
     public void skill_response_present_writes_to_stream() throws IOException {
         when(skillResponse.isPresent()).thenReturn(true);
-        when(skill.execute(any())).thenReturn(skillResponse);
+        when(skill.execute(any(), any())).thenReturn(skillResponse);
         getHandlerOutput(testRequest);
         verify(skillResponse).writeTo(any());
     }
@@ -91,7 +105,7 @@ public class SkillStreamHandlerTest {
     @Test
     public void skill_response_not_present_does_not_write_to_stream() throws IOException {
         when(skillResponse.isPresent()).thenReturn(false);
-        when(skill.execute(any())).thenReturn(skillResponse);
+        when(skill.execute(any(), any())).thenReturn(skillResponse);
         getHandlerOutput(testRequest);
         verify(skillResponse, never()).writeTo(any());
     }
@@ -113,7 +127,7 @@ public class SkillStreamHandlerTest {
 
         SkillStreamHandler streamHandler = new TestSkillStreamHandler(skill);
 
-        streamHandler.handleRequest(is, os, null);
+        streamHandler.handleRequest(is, os, testContext);
         String output = new String(os.toByteArray(), Charset.defaultCharset());
         return output;
     }
