@@ -26,8 +26,7 @@ import com.amazon.ask.attributes.persistence.PersistenceAdapter;
 import com.amazon.ask.dispatcher.exception.ExceptionMapper;
 import com.amazon.ask.dispatcher.request.mapper.RequestMapper;
 import com.amazon.ask.response.template.TemplateFactory;
-import com.amazon.ask.response.template.loader.TemplateLoader;
-import com.amazon.ask.response.template.renderer.TemplateRenderer;
+import com.amazon.ask.util.CustomUserAgent;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -109,4 +108,10 @@ public class SkillConfigurationTest {
         assertEquals(config.getTemplateFactory(), templateFactory);
     }
 
+    @Test
+    public void get_custom_user_agent() {
+        TemplateFactory templateFactory = mock(TemplateFactory.class);
+        SkillConfiguration config = SkillConfiguration.builder().withTemplateFactory(templateFactory).build();
+        assertEquals(config.getCustomUserAgent(), CustomUserAgent.TEMPLATE_RESOLVER.getUserAgent());
+    }
 }
