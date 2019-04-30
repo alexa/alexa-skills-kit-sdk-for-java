@@ -24,10 +24,8 @@ import com.amazon.ask.request.interceptor.GenericRequestInterceptor;
 import com.amazon.ask.request.interceptor.GenericResponseInterceptor;
 import com.amazon.ask.request.mapper.GenericRequestMapper;
 import com.amazon.ask.response.template.TemplateFactory;
-import com.amazon.ask.response.template.loader.TemplateLoader;
-import com.amazon.ask.response.template.renderer.TemplateRenderer;
+import com.amazon.ask.util.CustomUserAgent;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -148,6 +146,7 @@ public class SkillConfiguration extends AbstractSkillConfiguration<HandlerInput,
         }
 
         public Builder withTemplateFactory(TemplateFactory<HandlerInput, Response> templateFactory) {
+            withCustomUserAgent(CustomUserAgent.TEMPLATE_RESOLVER.getUserAgent());
             this.templateFactory = templateFactory;
             return this;
         }
