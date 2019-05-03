@@ -19,6 +19,7 @@ import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Session;
 import com.amazon.ask.model.Slot;
 import com.amazon.ask.model.SupportedInterfaces;
+import com.amazon.ask.model.User;
 import com.amazon.ask.util.ValidationUtils;
 
 import java.util.Map;
@@ -206,6 +207,25 @@ public class RequestHelper {
             throw new IllegalArgumentException("The provided request doesn't contain a session");
         }
         return session.getNew();
+    }
+
+    /**
+     * Returns the userId.
+     *
+     * The method retrieves the userId from the input request's session. More information can be found here :
+     * https://developer.amazon.com/docs/custom-skills/request-and-response-json-reference.html#session-object
+     *
+     * This method returns an {@link IllegalArgumentException} if the request is not an in-session request.
+     *
+     * @return an {@link Optional} containing the userId if the request is a valid in-session request and userId exists,
+     * else an empty {@link Optional}
+     */
+    public Optional<String> getUserId() {
+        Session session = handlerInput.getRequestEnvelope().getSession();
+        if (session == null) {
+            throw new IllegalArgumentException("The provided request doesn't contain a session");
+        }
+        return Optional.ofNullable(session.getUser()).map(User::getUserId);
     }
 
     private static <T> T castRequestType(HandlerInput input, Class<T> targetType) {
