@@ -164,6 +164,26 @@ public class RequestHelperTest {
         assertTrue(RequestHelper.forHandlerInput(getHandlerInputForRequest(testIntentRequest)).isNewSession());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void get_user_id_throws_exception_no_session_in_request() {
+        RequestHelper.forHandlerInput(getHandlerInputForRequest(testIntentRequest)).getUserId();
+    }
+
+    @Test
+    public void get_user_id_returns_empty_when_no_user_id() {
+        assertEquals(RequestHelper.forHandlerInput(getHandlerInputForRequest(testIntentRequest, Session.builder().build())).getUserId(), Optional.empty());
+        assertEquals(RequestHelper.forHandlerInput(getHandlerInputForRequest(testIntentRequest, Session.builder().withUser(User.builder().build()).build())).getUserId(), Optional.empty());
+    }
+
+    @Test
+    public void get_user_id_returns_id_when_valid_session() {
+        final String userId = "userId";
+        assertEquals(RequestHelper.forHandlerInput(getHandlerInputForRequest(testIntentRequest, Session.builder()
+                .withUser(User.builder().withUserId(userId).build())
+                .build()))
+                .getUserId(), Optional.of(userId));
+    }
+
     private HandlerInput getHandlerInputForRequest(Request request) {
         return getHandlerInputForRequest(request, null);
     }
