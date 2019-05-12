@@ -210,22 +210,16 @@ public class RequestHelper {
     }
 
     /**
-     * Returns the userId.
+     * Returns the userId in the request.
      *
-     * The method retrieves the userId from the input request's session. More information can be found here :
+     * The method retrieves the userId from the input request's context. This value uniquely identifies the user and
+     * is generally used as input for some Alexa-specific API calls. More information can be found here :
      * https://developer.amazon.com/docs/custom-skills/request-and-response-json-reference.html#session-object
      *
-     * This method returns an {@link IllegalArgumentException} if the request is not an in-session request.
-     *
-     * @return an {@link Optional} containing the userId if the request is a valid in-session request and userId exists,
-     * else an empty {@link Optional}
+     * @return an {@link Optional} containing the userId if the userId exists, else an empty {@link Optional}
      */
     public Optional<String> getUserId() {
-        Session session = handlerInput.getRequestEnvelope().getSession();
-        if (session == null) {
-            throw new IllegalArgumentException("The provided request doesn't contain a session");
-        }
-        return Optional.ofNullable(session.getUser()).map(User::getUserId);
+        return Optional.ofNullable(handlerInput.getRequestEnvelope().getContext().getSystem().getUser()).map(User::getUserId);
     }
 
     private static <T> T castRequestType(HandlerInput input, Class<T> targetType) {
