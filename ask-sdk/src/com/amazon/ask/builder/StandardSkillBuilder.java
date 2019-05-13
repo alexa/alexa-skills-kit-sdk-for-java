@@ -55,6 +55,11 @@ public class StandardSkillBuilder extends SkillBuilder<StandardSkillBuilder> {
         return this;
     }
 
+    public StandardSkillBuilder withTemplateDirectoryPath(String templateDirectoryPath) {
+        standardSdkModuleBuilder.withTemplateDirectoryPath(templateDirectoryPath);
+        return this;
+    }
+
     protected SkillConfiguration.Builder getConfigBuilder() {
         registerSdkModule(standardSdkModuleBuilder.build());
         return super.getConfigBuilder();

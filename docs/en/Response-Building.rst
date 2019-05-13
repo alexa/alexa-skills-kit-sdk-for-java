@@ -106,12 +106,26 @@ To use the ``FreeMarkerTemplateRenderer``, you must add a dependency on ``ask-sd
       <version>${version}</version>
     </dependency>
 
-Example Usage of the Template Factory
+Example Usage of Template Factory
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following example shows how to configure the ``BaseTemplateFactory`` using the default ``LocalTemplateFileLoader`` and ``ConcurrentLRUTemplateCache`` to construct a skill response with a FreeMarker template.
+The following example shows the basic setup of Template Factory. Skill Developer provides just the root path of the templates and the SDK would generate a default implementation of Template Factory.
 
-**Configure Template Factory with Template Loader and Template Renderer to Skill Builder**
+.. code:: java
+
+    private static Skill getSkill() {
+
+        // Build Skill
+        return Skills.standard()
+                .withTemplateDirectoryPath("/com/amazon/ask/example/")
+                .addRequestHandlers(
+                        new LaunchRequestHandler(),
+                        ... ...
+                        new SessionEndedRequestHandler())
+                .build();
+    }
+
+Alternatively, a Skill Developer can provide a custom implementation of Template Factory.
 
 .. code:: java
 
@@ -138,6 +152,29 @@ The following example shows how to configure the ``BaseTemplateFactory`` using t
 
         // Build Skill
         return Skills.standard()
+                .withTemplateFactory(templateFactory)
+                .addRequestHandlers(
+                        new LaunchRequestHandler(),
+                        ... ...
+                        new SessionEndedRequestHandler())
+                .build();
+    }
+
+If the Skill Developer provides both the templates' directory path and a custom Template Factory object, an exception is thrown.
+
+.. code:: java
+
+    private static Skill getSkill() {
+
+        // Build loader and renderer and pass it to Template Factory.
+        TemplateFactory templateFactory = BaseTemplateFactory.builder()
+                .withTemplateRenderer(renderer)
+                .addTemplateLoader(loader)
+                .build();
+
+        // throws exception.
+        return Skills.standard()
+                .withTemplateDirectoryPath("/com/amazon/ask/example/")
                 .withTemplateFactory(templateFactory)
                 .addRequestHandlers(
                         new LaunchRequestHandler(),

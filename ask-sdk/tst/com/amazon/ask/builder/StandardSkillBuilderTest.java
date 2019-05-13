@@ -26,6 +26,7 @@ import com.amazon.ask.request.exception.mapper.GenericExceptionMapper;
 import com.amazon.ask.request.handler.adapter.impl.BaseHandlerAdapter;
 import com.amazon.ask.request.mapper.GenericRequestMapper;
 import com.amazon.ask.request.mapper.impl.BaseRequestMapper;
+import com.amazon.ask.response.template.TemplateFactory;
 import com.amazon.ask.services.ApacheHttpApiClient;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import org.junit.Before;
@@ -36,6 +37,7 @@ import java.util.Optional;
 import static junit.framework.TestCase.assertNull;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -103,6 +105,21 @@ public class StandardSkillBuilderTest {
         builder.addRequestHandler(mockRequestHandler);
         SkillConfiguration configuration = builder.getConfigBuilder().build();
         assertTrue(configuration.getApiClient() instanceof ApacheHttpApiClient);
+    }
+
+    @Test
+    public void template_factory_not_used_if_template_directory_path_not_provided() {
+        builder.addRequestHandler(mockRequestHandler);
+        SkillConfiguration configuration = builder.getConfigBuilder().build();
+        assertNull(configuration.getTemplateFactory());
+    }
+
+    @Test
+    public void template_factory_is_used_if_template_directory_path_is_provided() {
+        builder.addRequestHandler(mockRequestHandler);
+        SkillConfiguration configuration = builder.withTemplateDirectoryPath("path").getConfigBuilder().build();
+        assertNotNull(configuration.getTemplateFactory());
+        assertTrue(configuration.getTemplateFactory() instanceof TemplateFactory);
     }
 
     private HandlerInput getInputForIntent(String intentName) {
