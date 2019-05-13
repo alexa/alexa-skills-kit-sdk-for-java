@@ -164,24 +164,27 @@ public class RequestHelperTest {
         assertTrue(RequestHelper.forHandlerInput(getHandlerInputForRequest(testIntentRequest)).isNewSession());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void get_user_id_throws_exception_no_session_in_request() {
-        RequestHelper.forHandlerInput(getHandlerInputForRequest(testIntentRequest)).getUserId();
-    }
-
     @Test
     public void get_user_id_returns_empty_when_no_user_id() {
-        assertEquals(RequestHelper.forHandlerInput(getHandlerInputForRequest(testIntentRequest, Session.builder().build())).getUserId(), Optional.empty());
-        assertEquals(RequestHelper.forHandlerInput(getHandlerInputForRequest(testIntentRequest, Session.builder().withUser(User.builder().build()).build())).getUserId(), Optional.empty());
+        assertEquals(RequestHelper.forHandlerInput(getHandlerInputForRequest(testIntentRequest)).getUserId(), Optional.empty());
     }
 
     @Test
-    public void get_user_id_returns_id_when_valid_session() {
-        final String userId = "userId";
-        assertEquals(RequestHelper.forHandlerInput(getHandlerInputForRequest(testIntentRequest, Session.builder()
-                .withUser(User.builder().withUserId(userId).build())
-                .build()))
-                .getUserId(), Optional.of(userId));
+    public void get_user_id_returns_id_when_user_id_is_present() {
+        final Context context = Context.builder()
+                .withSystem(SystemState.builder()
+                        .withUser(User.builder()
+                                .withUserId("userId").build())
+                        .build())
+                .build();
+        final RequestEnvelope requestEnvelope = RequestEnvelope.builder()
+                .withRequest(testIntentRequest)
+                .withContext(context)
+                .build();
+        final HandlerInput input = HandlerInput.builder()
+                .withRequestEnvelope(requestEnvelope)
+                .build();
+        assertEquals(RequestHelper.forHandlerInput(input).getUserId(), Optional.of("userId"));
     }
 
     private HandlerInput getHandlerInputForRequest(Request request) {
@@ -198,5 +201,4 @@ public class RequestHelperTest {
                 .withRequestEnvelope(testRequestEnvelope)
                 .build();
     }
-
 }
