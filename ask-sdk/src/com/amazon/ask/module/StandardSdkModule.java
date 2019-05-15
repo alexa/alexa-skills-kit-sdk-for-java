@@ -15,7 +15,15 @@ package com.amazon.ask.module;
 
 import com.amazon.ask.attributes.persistence.impl.DynamoDbPersistenceAdapter;
 import com.amazon.ask.model.RequestEnvelope;
+import com.amazon.ask.model.Response;
+import com.amazon.ask.response.template.TemplateFactory;
+import com.amazon.ask.response.template.impl.BaseTemplateFactory;
+import com.amazon.ask.response.template.loader.TemplateLoader;
+import com.amazon.ask.response.template.loader.impl.LocalTemplateFileLoader;
+import com.amazon.ask.response.template.renderer.TemplateRenderer;
+import com.amazon.ask.response.template.renderer.impl.FreeMarkerTemplateRenderer;
 import com.amazon.ask.services.ApacheHttpApiClient;
+import com.amazon.ask.util.impl.JacksonJsonUnmarshaller;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -29,16 +37,19 @@ public class StandardSdkModule implements SdkModule {
 
     protected ApacheHttpApiClient apiClient;
     protected DynamoDbPersistenceAdapter persistenceAdapter;
+    protected TemplateFactory templateFactory;
 
-    public StandardSdkModule(ApacheHttpApiClient apiClient, DynamoDbPersistenceAdapter persistenceAdapter) {
+    public StandardSdkModule(ApacheHttpApiClient apiClient, DynamoDbPersistenceAdapter persistenceAdapter, TemplateFactory templateFactory) {
         this.apiClient = apiClient;
         this.persistenceAdapter = persistenceAdapter;
+        this.templateFactory = templateFactory;
     }
 
     @Override
     public void setupModule(SdkModuleContext context) {
         context.setApiClient(apiClient);
         context.setPersistenceAdapter(persistenceAdapter);
+        context.setTemplateFactory(templateFactory);
     }
 
     public static Builder builder() {
@@ -54,6 +65,7 @@ public class StandardSdkModule implements SdkModule {
         protected String tableName;
         protected Boolean autoCreateTable;
         protected Function<RequestEnvelope, String> partitionKeyGenerator;
+        protected String templateDirectoryPath;
 
         public Builder withHttpClient(CloseableHttpClient customHttpClient) {
             this.customHttpClient = customHttpClient;
@@ -80,8 +92,14 @@ public class StandardSdkModule implements SdkModule {
             return this;
         }
 
+        public Builder withTemplateDirectoryPath(String templateDirectoryPath) {
+            this.templateDirectoryPath = templateDirectoryPath;
+            return this;
+        }
+
         public StandardSdkModule build() {
             DynamoDbPersistenceAdapter persistenceAdapter = null;
+            TemplateFactory templateFactory = null;
 
             if (tableName != null) {
                 DynamoDbPersistenceAdapter.Builder persistenceAdapterBuilder = DynamoDbPersistenceAdapter.builder()
@@ -101,7 +119,18 @@ public class StandardSdkModule implements SdkModule {
             ApacheHttpApiClient apiClient = ApacheHttpApiClient.custom()
                     .withHttpClient(customHttpClient != null ? customHttpClient : HttpClients.createDefault())
                     .build();
-            return new StandardSdkModule(apiClient, persistenceAdapter);
+
+            if(templateDirectoryPath != null) {
+                final TemplateLoader loader = LocalTemplateFileLoader.builder()
+                        .withDirectoryPath(templateDirectoryPath)
+                        .withFileExtension("ftl")
+                        .build();
+                final JacksonJsonUnmarshaller jacksonJsonUnmarshaller = JacksonJsonUnmarshaller.withTypeBinding(Response.class);
+                final TemplateRenderer renderer = FreeMarkerTemplateRenderer.builder().withUnmarshaller(jacksonJsonUnmarshaller).build();
+                templateFactory = BaseTemplateFactory.builder().addTemplateLoader(loader).withTemplateRenderer(renderer).build();
+            }
+
+            return new StandardSdkModule(apiClient, persistenceAdapter, templateFactory);
         }
 
     }

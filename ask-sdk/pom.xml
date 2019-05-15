@@ -60,6 +60,11 @@
       <version>2.17.2</version>
     </dependency>
     <dependency>
+      <groupId>com.amazon.alexa</groupId>
+      <artifactId>ask-sdk-freemarker</artifactId>
+      <version>2.17.2</version>
+    </dependency>
+    <dependency>
       <groupId>org.powermock</groupId>
       <artifactId>powermock-api-mockito</artifactId>
       <version>1.7.3</version>

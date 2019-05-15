@@ -24,6 +24,7 @@ import com.amazon.ask.request.handler.adapter.GenericHandlerAdapter;
 import com.amazon.ask.request.interceptor.GenericRequestInterceptor;
 import com.amazon.ask.request.interceptor.GenericResponseInterceptor;
 import com.amazon.ask.request.mapper.GenericRequestMapper;
+import com.amazon.ask.response.template.TemplateFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -113,6 +114,15 @@ public class SdkModuleContext {
                     "module attempting to override previously set value.");
         }
         skillConfigBuilder.withApiClient(apiClient);
+        return this;
+    }
+
+    public SdkModuleContext setTemplateFactory(TemplateFactory templateFactory) {
+        if (skillConfigBuilder.getTemplateFactory() != null) {
+            throw new AskSdkException("Conflicting Template factory configuration: " +
+                    "module attempting to override previously set value.");
+        }
+        skillConfigBuilder.withTemplateFactory(templateFactory);
         return this;
     }
 
