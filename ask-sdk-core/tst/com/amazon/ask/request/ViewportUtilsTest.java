@@ -57,6 +57,16 @@ public class ViewportUtilsTest {
     }
 
     @Test
+    public void echo_show_5_maps_to_hub_landscape_small() {
+        ViewportState viewportState = getViewportState("EchoShow5");
+        RequestEnvelope requestEnvelope = RequestEnvelope.builder()
+                .withContext(Context.builder().withViewport(viewportState).build())
+                .build();
+        ViewportProfile profile = ViewportUtils.getViewportProfile(requestEnvelope);
+        assertEquals(profile, ViewportProfile.HUB_LANDSCAPE_SMALL);
+    }
+ 
+    @Test
     public void vox_landscape_maps_to_mobile_landscape_small() {
         ViewportState viewportState = getViewportState("VoxLandscape");
         RequestEnvelope requestEnvelope = RequestEnvelope.builder()
@@ -205,6 +215,13 @@ public class ViewportUtilsTest {
                     .withShape(Shape.RECTANGLE)
                     .withDpi(BigDecimal.valueOf(320))
                     .withCurrentPixelHeight(BigDecimal.valueOf(600))
+                    .withCurrentPixelWidth(BigDecimal.valueOf(960))
+                    .build();
+        } else if (device.equals("EchoShow5")) {
+            return ViewportState.builder()
+                    .withShape(Shape.RECTANGLE)
+                    .withDpi(BigDecimal.valueOf(160))
+                    .withCurrentPixelHeight(BigDecimal.valueOf(480))
                     .withCurrentPixelWidth(BigDecimal.valueOf(960))
                     .build();
         }
