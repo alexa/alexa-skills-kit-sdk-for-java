@@ -38,6 +38,13 @@ public class ViewportUtils {
         } else if (shape == Shape.RECTANGLE &&
                 orientation == Orientation.LANDSCAPE &&
                 getSize(currentPixelWidth).ordinal() <= Size.MEDIUM.ordinal() &&
+                getSize(currentPixelHeight).ordinal() <= Size.XSMALL.ordinal() &&
+                getDensity(dpi) == Density.LOW) {
+            return ViewportProfile.HUB_LANDSCAPE_SMALL;
+ 
+        } else if (shape == Shape.RECTANGLE &&
+                orientation == Orientation.LANDSCAPE &&
+                getSize(currentPixelWidth).ordinal() <= Size.MEDIUM.ordinal() &&
                 getSize(currentPixelHeight).ordinal() <= Size.SMALL.ordinal() &&
                 getDensity(dpi) == Density.LOW) {
             return ViewportProfile.HUB_LANDSCAPE_MEDIUM;

@@ -15,6 +15,7 @@ package com.amazon.ask.request.viewport;
 
 public enum ViewportProfile {
     HUB_ROUND_SMALL,
+    HUB_LANDSCAPE_SMALL,
     HUB_LANDSCAPE_MEDIUM,
     HUB_LANDSCAPE_LARGE,
     MOBILE_LANDSCAPE_SMALL,
