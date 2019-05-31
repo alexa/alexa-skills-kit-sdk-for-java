@@ -283,11 +283,13 @@ public class BaseRequestDispatcherTest {
         GenericResponseInterceptor chainInterceptor = mock(GenericResponseInterceptor.class);
         responseInterceptors.add(globalInterceptor);
         when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainInterceptor));
+        when(globalInterceptor.processResponse(mockInput, mockOutput)).thenReturn(mockOutput);
+        when(chainInterceptor.processResponse(mockInput, mockOutput)).thenReturn(mockOutput);
         dispatcher.dispatch(mockInput);
         InOrder inOrder = inOrder(globalInterceptor, chainInterceptor, mockAdapter);
         inOrder.verify(mockAdapter).execute(any(), any());
-        inOrder.verify(chainInterceptor).process(mockInput, mockOutput);
-        inOrder.verify(globalInterceptor).process(mockInput, mockOutput);
+        inOrder.verify(chainInterceptor).processResponse(mockInput, mockOutput);
+        inOrder.verify(globalInterceptor).processResponse(mockInput, mockOutput);
     }
 
     @Test
@@ -310,8 +312,8 @@ public class BaseRequestDispatcherTest {
         } catch (AskSdkException ex) {
             verify(globalRequestInterceptor).process(mockInput);
             verify(chainRequestInterceptor, never()).process(mockInput);
-            verify(chainResponseInterceptor, never()).process(mockInput, mockOutput);
-            verify(globalResponseInterceptor, never()).process(mockInput, mockOutput);
+            verify(chainResponseInterceptor, never()).processResponse(mockInput, mockOutput);
+            verify(globalResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter, never()).supports(any());
             verify(mockAdapter, never()).execute(any(), any());
@@ -338,8 +340,8 @@ public class BaseRequestDispatcherTest {
         } catch (AskSdkException ex) {
             verify(globalRequestInterceptor).process(mockInput);
             verify(chainRequestInterceptor, never()).process(mockInput);
-            verify(chainResponseInterceptor, never()).process(mockInput, mockOutput);
-            verify(globalResponseInterceptor, never()).process(mockInput, mockOutput);
+            verify(chainResponseInterceptor, never()).processResponse(mockInput, mockOutput);
+            verify(globalResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter).supports(any());
             verify(mockAdapter, never()).execute(any(), any());
@@ -367,8 +369,8 @@ public class BaseRequestDispatcherTest {
         } catch (AskSdkException ex) {
             verify(globalRequestInterceptor).process(mockInput);
             verify(chainRequestInterceptor, never()).process(mockInput);
-            verify(chainResponseInterceptor, never()).process(mockInput, mockOutput);
-            verify(globalResponseInterceptor, never()).process(mockInput, mockOutput);
+            verify(chainResponseInterceptor, never()).processResponse(mockInput, mockOutput);
+            verify(globalResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(mockMapper, never()).getRequestHandlerChain(any());
             verify(mockAdapter, never()).supports(any());
             verify(mockAdapter, never()).execute(any(), any());
@@ -398,8 +400,8 @@ public class BaseRequestDispatcherTest {
         } catch (AskSdkException ex) {
             verify(globalRequestInterceptor).process(mockInput);
             verify(chainRequestInterceptor).process(mockInput);
-            verify(chainResponseInterceptor, never()).process(mockInput, mockOutput);
-            verify(globalResponseInterceptor, never()).process(mockInput, mockOutput);
+            verify(chainResponseInterceptor, never()).processResponse(mockInput, mockOutput);
+            verify(globalResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter).supports(any());
             verify(mockAdapter, never()).execute(any(), any());
@@ -429,8 +431,8 @@ public class BaseRequestDispatcherTest {
         } catch (AskSdkException ex) {
             verify(globalRequestInterceptor).process(mockInput);
             verify(chainRequestInterceptor).process(mockInput);
-            verify(chainResponseInterceptor, never()).process(mockInput, mockOutput);
-            verify(globalResponseInterceptor, never()).process(mockInput, mockOutput);
+            verify(chainResponseInterceptor, never()).processResponse(mockInput, mockOutput);
+            verify(globalResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter).supports(any());
             verify(mockAdapter).execute(any(), any());
@@ -452,7 +454,7 @@ public class BaseRequestDispatcherTest {
         when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
 
         Exception e = new IllegalStateException();
-        doThrow(e).when(chainResponseInterceptor).process(any(), any());
+        doThrow(e).when(chainResponseInterceptor).processResponse(any(), any());
         when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
         try {
             dispatcher.dispatch(mockInput);
@@ -460,8 +462,8 @@ public class BaseRequestDispatcherTest {
         } catch (AskSdkException ex) {
             verify(globalRequestInterceptor).process(mockInput);
             verify(chainRequestInterceptor).process(mockInput);
-            verify(chainResponseInterceptor).process(mockInput, mockOutput);
-            verify(globalResponseInterceptor, never()).process(mockInput, mockOutput);
+            verify(chainResponseInterceptor).processResponse(mockInput, mockOutput);
+            verify(globalResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter).supports(any());
             verify(mockAdapter).execute(any(), any());
@@ -483,7 +485,8 @@ public class BaseRequestDispatcherTest {
         when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
 
         Exception e = new IllegalStateException();
-        doThrow(e).when(globalResponseInterceptor).process(any(), any());
+        when(chainResponseInterceptor.processResponse(mockInput, mockOutput)).thenReturn(mockOutput);
+        doThrow(e).when(globalResponseInterceptor).processResponse(any(), any());
         when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
         try {
             dispatcher.dispatch(mockInput);
@@ -491,8 +494,8 @@ public class BaseRequestDispatcherTest {
         } catch (AskSdkException ex) {
             verify(globalRequestInterceptor).process(mockInput);
             verify(chainRequestInterceptor).process(mockInput);
-            verify(chainResponseInterceptor).process(mockInput, mockOutput);
-            verify(globalResponseInterceptor).process(mockInput, mockOutput);
+            verify(chainResponseInterceptor).processResponse(mockInput, mockOutput);
+            verify(globalResponseInterceptor).processResponse(mockInput, mockOutput);
             verify(mockMapper).getRequestHandlerChain(any());
             verify(mockAdapter).supports(any());
             verify(mockAdapter).execute(any(), any());

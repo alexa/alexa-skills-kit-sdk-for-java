@@ -29,6 +29,18 @@ public interface GenericResponseInterceptor<Input, Output> {
      * @param input handler input
      * @param response handler output
      */
-    void process(Input input, Output response);
+    default void process(Input input, Output response) {}
+
+    /**
+     * Intercept the output from the request handler after it is executed and return an updated response.
+     *
+     * @param input handler input
+     * @param response handler output
+     * @return updated response
+     */
+    default Output processResponse(Input input, Output response) {
+        process(input, response);
+        return response;
+    }
 
 }

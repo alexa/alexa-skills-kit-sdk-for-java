@@ -133,7 +133,7 @@ public class BaseRequestDispatcher<Input, Output> implements GenericRequestDispa
 
             // execute any response interceptors attached to the handler chain
             for (GenericResponseInterceptor<Input, Output> responseInterceptor : handlerChain.get().getResponseInterceptors()) {
-                responseInterceptor.process(input, response);
+                response = responseInterceptor.processResponse(input, response);
             }
         } catch (Exception e) {
             return handlerChain.get().getExceptionHandlers().stream()
@@ -144,7 +144,7 @@ public class BaseRequestDispatcher<Input, Output> implements GenericRequestDispa
 
         // execute any global response interceptors
         for (GenericResponseInterceptor<Input, Output> responseInterceptor : responseInterceptors) {
-            responseInterceptor.process(input, response);
+            response = responseInterceptor.processResponse(input, response);
         }
 
         return response;
