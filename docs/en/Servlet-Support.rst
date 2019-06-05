@@ -11,7 +11,7 @@ see
 `Host a Custom Skill as a Web Service <https://developer.amazon.com/docs/custom-skills/host-a-custom-skill-as-a-web-service.html>`__
 in the Alexa Skills Kit technical documentation.
 
-ASD SDK Servlet Support
+ASK SDK Servlet Support
 -----------------------
 
 The Alexa Skills Kit SDK (ASK SDK) for Java provides boilerplate code for
@@ -64,4 +64,4 @@ Usage
     }
 
 Sample skill with servlet support can be found
-`here <https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.0.x/samples/helloworldservlet>`__
+`here <https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.0.x/samples/helloworldservlet>`__.
