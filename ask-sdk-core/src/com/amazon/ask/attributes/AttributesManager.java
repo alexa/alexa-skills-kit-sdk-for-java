@@ -201,11 +201,9 @@ public class AttributesManager {
         if (persistenceAdapter == null) {
             throw new IllegalStateException("Attempting to delete persistence attributes without a configured persistence adapter");
         }
-        if (persistenceAttributesSet) {
-            persistenceAdapter.deleteAttributes(requestEnvelope);
-            persistentAttributes = null;
-            persistenceAttributesSet = false;
-        }
+        persistenceAdapter.deleteAttributes(requestEnvelope);
+        persistentAttributes = null;
+        persistenceAttributesSet = false;
     }
 
     public static final class Builder {
