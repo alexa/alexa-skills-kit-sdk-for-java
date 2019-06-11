@@ -247,24 +247,12 @@ public class AttributesManagerTest {
     }
 
     @Test
-    public void delete_noop_if_persistence_attributes_not_retrieved() {
+    public void delete_calls_persistence_manager() {
         PersistenceAdapter persistenceAdapter = mock(PersistenceAdapter.class);
         when(persistenceAdapter.getAttributes(any())).thenReturn(Optional.of(Collections.singletonMap("Foo", "Bar")));
         HandlerInput input = HandlerInput.builder()
                 .withRequestEnvelope(RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build())
                 .withPersistenceAdapter(persistenceAdapter).build();
-        input.getAttributesManager().deletePersistentAttributes();
-        verify(persistenceAdapter, never()).deleteAttributes(any());
-    }
-
-    @Test
-    public void delete_calls_persistence_manager_if_attributes_retrieved() {
-        PersistenceAdapter persistenceAdapter = mock(PersistenceAdapter.class);
-        when(persistenceAdapter.getAttributes(any())).thenReturn(Optional.of(Collections.singletonMap("Foo", "Bar")));
-        HandlerInput input = HandlerInput.builder()
-                .withRequestEnvelope(RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build())
-                .withPersistenceAdapter(persistenceAdapter).build();
-        input.getAttributesManager().getPersistentAttributes();
         input.getAttributesManager().deletePersistentAttributes();
         verify(persistenceAdapter).deleteAttributes(any(RequestEnvelope.class));
     }

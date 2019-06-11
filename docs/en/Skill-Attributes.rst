@@ -58,6 +58,8 @@ instance with a ``PersistenceAdapter``. Calls to the
 an ``IllegalStateException`` if a ``PersistenceAdapter`` has not been
 configured. Call ``savePersistentAttributes()`` on the
 ``AttributesManager`` to save any changes back to the persistence layer.
+Call ``deletePersistentAttributes()`` on the ``AttributesManager`` to
+delete the attributes from persistence layer.
 
 AttributesManager
 -----------------
