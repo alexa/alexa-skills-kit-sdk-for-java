@@ -86,6 +86,9 @@ Template for a local recommendations skill. Alexa uses the data that you provide
 - Usage of ResourceBundle to handle internalization
 - Calling external APIs from the skill.
 
+### [Movie Quotes](https://github.com/alexa/skill-sample-java-movie-quotes-quiz)
+This Alexa sample skill is a basic Movie Quotes Quiz skill that makes use of Template Resolver feature of the Java SDK. A user can open up the skill, select a movie from a list, and then hear partial quotes from the selected movie. Then, they have to complete the quote.
+
 ## Tutorials
 ### [States Quiz](https://github.com/alexa/skill-sample-java-quiz-game)
 This tutorial will guide you in building a fully-featured skill. The skill features Built-In and Custom slots, as well as state management. The skill you build with this tutorial can be customized to build your own game.
