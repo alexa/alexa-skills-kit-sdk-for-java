@@ -68,6 +68,36 @@ greeting response with response objects such as Speech, Card, and
 Reprompt which you can find more information
 `here <https://developer.amazon.com/docs/custom-skills/request-and-response-json-reference.html#response-object>`__.
 
+
+Alternatively, you can create a handler for In-built intents using one of the
+`Typed Request Handlers. <https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.0.x/ask-sdk-core/src/com/amazon/ask/dispatcher/request/handler/impl>`__
+
+.. code:: java
+
+   package com.amazon.ask.helloworld.handlers;
+
+    import com.amazon.ask.dispatcher.request.handler.HandlerInput;
+    import com.amazon.ask.dispatcher.request.handler.RequestHandler;
+    import com.amazon.ask.model.LaunchRequest;
+    import com.amazon.ask.model.Response;
+    import com.amazon.ask.request.Predicates;
+
+    import java.util.Optional;
+
+    public class LaunchRequestHandler implements com.amazon.ask.dispatcher.request.handler.impl.LaunchRequestHandler {
+
+         @Override
+         public boolean canHandle(HandlerInput input, LaunchRequest launchRequest) {
+             return true;
+         }
+
+         @Override
+         public Optional<Response> handle(HandlerInput input, LaunchRequest launchRequest) {
+             // return response.
+         }
+
+    }
+
 HelloWorldIntent handler
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -107,6 +137,10 @@ The handler’s canHandle method detects if the incoming request is an
 ``IntentRequest``, and returns true if the intent name is
 ``HelloWorldIntent``. A basic “Hello world” response is then generated
 and returned.
+
+An example of the HelloWorldIntentHandler created using Typed Request Handler can be found
+`here. <https://alexa-skills-kit-sdk-for-java.readthedocs.io/en/latest/Request-Processing.html#typed-request-handlers>`__
+
 
 HelpIntent handler
 ~~~~~~~~~~~~~~~~~~
