@@ -25,7 +25,7 @@ import com.amazon.ask.helloworld.handlers.FallbackIntentHandler;
 
 public class HelloWorldStreamHandler extends SkillStreamHandler {
 
-    private static Skill getSkill() {
+    public static Skill getSkill() {
         return Skills.standard()
                 .addRequestHandlers(
                         new CancelandStopIntentHandler(),
