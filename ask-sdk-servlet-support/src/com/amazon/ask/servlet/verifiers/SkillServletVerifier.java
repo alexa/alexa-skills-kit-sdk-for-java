@@ -20,7 +20,7 @@ package com.amazon.ask.servlet.verifiers;
 public interface SkillServletVerifier {
 
     /**
-     * Verifies an incoming serverRequest.
+     * Verifies an incoming request.
      *
      * @param serverRequest serverRequest
      * @throws SecurityException if verification fails.
