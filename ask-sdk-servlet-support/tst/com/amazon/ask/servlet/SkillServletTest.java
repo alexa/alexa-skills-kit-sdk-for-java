@@ -71,20 +71,20 @@ public class SkillServletTest extends SkillServletTestBase {
         ServletInvocationParameters invocation = build(FORMAT_VERSION, request, buildSession());
         servlet.doPost(invocation.request, invocation.response);
         verify(invocation.response).setStatus(HttpServletResponse.SC_OK);
-        verify(mockVerifier).verify(any(), any(), any());
+        verify(mockVerifier).verify(any());
     }
 
     @Test
     public void doPost_failedVerification_responseBadRequest() throws Exception {
         SkillServletVerifier mockVerifier = mock(SkillServletVerifier.class);
-        doThrow(new SecurityException("foo")).when(mockVerifier).verify(any(), any(), any());
+        doThrow(new SecurityException("foo")).when(mockVerifier).verify(any());
         SkillServlet servlet = new SkillServlet(skill, Collections.singletonList(mockVerifier));
         OffsetDateTime timestamp = OffsetDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault());
         LaunchRequest request = LaunchRequest.builder().withRequestId("rId").withLocale(LOCALE).withTimestamp(timestamp).build();
         ServletInvocationParameters invocation = build(FORMAT_VERSION, request, buildSession());
         servlet.doPost(invocation.request, invocation.response);
         verify(invocation.response).sendError(eq(HttpServletResponse.SC_BAD_REQUEST), anyString());
-        verify(mockVerifier).verify(any(), any(), any());
+        verify(mockVerifier).verify(any());
     }
 
     @Test

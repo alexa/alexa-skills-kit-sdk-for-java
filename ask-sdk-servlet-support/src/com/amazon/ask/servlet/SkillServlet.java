@@ -33,6 +33,8 @@ import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.ResponseEnvelope;
 import com.amazon.ask.model.services.Serializer;
 import com.amazon.ask.servlet.util.ServletUtils;
+import com.amazon.ask.servlet.verifiers.ServerRequest;
+import com.amazon.ask.servlet.verifiers.ServletRequest;
 import com.amazon.ask.servlet.verifiers.SkillRequestSignatureVerifier;
 import com.amazon.ask.servlet.verifiers.SkillRequestTimestampVerifier;
 import com.amazon.ask.servlet.verifiers.SkillServletVerifier;
@@ -97,9 +99,11 @@ public class SkillServlet extends HttpServlet {
             final RequestEnvelope deserializedRequestEnvelope = serializer.deserialize(IOUtils.toString(
                     serializedRequestEnvelope, ServletConstants.CHARACTER_ENCODING), RequestEnvelope.class);
 
+            final ServerRequest serverRequest = new ServletRequest(request, serializedRequestEnvelope, deserializedRequestEnvelope);
+
             // Verify the authenticity of the request by executing configured verifiers.
             for (SkillServletVerifier verifier : verifiers) {
-                verifier.verify(request, serializedRequestEnvelope, deserializedRequestEnvelope);
+                verifier.verify(serverRequest);
             }
 
             ResponseEnvelope skillResponse = skill.invoke(deserializedRequestEnvelope);
