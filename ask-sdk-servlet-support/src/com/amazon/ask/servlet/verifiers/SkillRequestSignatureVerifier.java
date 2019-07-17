@@ -13,14 +13,12 @@
 
 package com.amazon.ask.servlet.verifiers;
 
-import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.servlet.ServletConstants;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -72,9 +70,9 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
      *
      * {@inheritDoc}
      */
-    public void verify(HttpServletRequest servletRequest, byte[] serializedRequestEnvelope, RequestEnvelope deserializedRequestEnvelope) {
-        String baseEncoded64Signature = servletRequest.getHeader(ServletConstants.SIGNATURE_REQUEST_HEADER);
-        String signingCertificateChainUrl = servletRequest.getHeader(ServletConstants.SIGNATURE_CERTIFICATE_CHAIN_URL_REQUEST_HEADER);
+    public void verify(AlexaHttpRequest alexaHttpRequest) {
+        String baseEncoded64Signature = alexaHttpRequest.getBaseEncoded64Signature();
+        String signingCertificateChainUrl = alexaHttpRequest.getSigningCertificateChainUrl();
         if ((baseEncoded64Signature == null) || (signingCertificateChainUrl == null)) {
             throw new SecurityException(
                     "Missing signature/certificate for the provided skill request");
@@ -99,7 +97,7 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
             // verify that the request was signed by the provided certificate
             Signature signature = Signature.getInstance(ServletConstants.SIGNATURE_ALGORITHM);
             signature.initVerify(signingCertificate.getPublicKey());
-            signature.update(serializedRequestEnvelope);
+            signature.update(alexaHttpRequest.getSerializedRequestEnvelope());
             if (!signature.verify(Base64.decodeBase64(baseEncoded64Signature
                     .getBytes(ServletConstants.CHARACTER_ENCODING)))) {
                 throw new SecurityException(
