@@ -18,7 +18,7 @@ import com.amazon.ask.model.RequestEnvelope;
 /**
  * Provides container for server request that should be validated
  */
-public interface ServerRequest {
+public interface AlexaHttpRequest {
     /**
      * @return the signature, base64 encoded.
      */

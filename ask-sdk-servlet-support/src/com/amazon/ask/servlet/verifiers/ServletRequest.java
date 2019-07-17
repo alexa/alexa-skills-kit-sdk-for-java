@@ -19,9 +19,9 @@ import com.amazon.ask.servlet.ServletConstants;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Servlet specific implementation of {@link ServerRequest}.
+ * Servlet specific implementation of {@link AlexaHttpRequest}.
  */
-public class ServletRequest implements ServerRequest {
+public class ServletRequest implements AlexaHttpRequest {
 
     private final byte[] serializedRequestEnvelope;
     private final RequestEnvelope deserializedRequestEnvelope;
@@ -33,7 +33,6 @@ public class ServletRequest implements ServerRequest {
         this.deserializedRequestEnvelope = deserializedRequestEnvelope;
         this.baseEncoded64Signature = httpServletRequest.getHeader(ServletConstants.SIGNATURE_REQUEST_HEADER);
         this.signingCertificateChainUrl = httpServletRequest.getHeader(ServletConstants.SIGNATURE_CERTIFICATE_CHAIN_URL_REQUEST_HEADER);
-
     }
 
     /**

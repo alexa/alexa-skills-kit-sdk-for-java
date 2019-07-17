@@ -70,9 +70,9 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
      *
      * {@inheritDoc}
      */
-    public void verify(ServerRequest serverRequest) {
-        String baseEncoded64Signature = serverRequest.getBaseEncoded64Signature();
-        String signingCertificateChainUrl = serverRequest.getSigningCertificateChainUrl();
+    public void verify(AlexaHttpRequest alexaHttpRequest) {
+        String baseEncoded64Signature = alexaHttpRequest.getBaseEncoded64Signature();
+        String signingCertificateChainUrl = alexaHttpRequest.getSigningCertificateChainUrl();
         if ((baseEncoded64Signature == null) || (signingCertificateChainUrl == null)) {
             throw new SecurityException(
                     "Missing signature/certificate for the provided skill request");
@@ -97,7 +97,7 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
             // verify that the request was signed by the provided certificate
             Signature signature = Signature.getInstance(ServletConstants.SIGNATURE_ALGORITHM);
             signature.initVerify(signingCertificate.getPublicKey());
-            signature.update(serverRequest.getSerializedRequestEnvelope());
+            signature.update(alexaHttpRequest.getSerializedRequestEnvelope());
             if (!signature.verify(Base64.decodeBase64(baseEncoded64Signature
                     .getBytes(ServletConstants.CHARACTER_ENCODING)))) {
                 throw new SecurityException(

@@ -33,7 +33,7 @@ import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.ResponseEnvelope;
 import com.amazon.ask.model.services.Serializer;
 import com.amazon.ask.servlet.util.ServletUtils;
-import com.amazon.ask.servlet.verifiers.ServerRequest;
+import com.amazon.ask.servlet.verifiers.AlexaHttpRequest;
 import com.amazon.ask.servlet.verifiers.ServletRequest;
 import com.amazon.ask.servlet.verifiers.SkillRequestSignatureVerifier;
 import com.amazon.ask.servlet.verifiers.SkillRequestTimestampVerifier;
@@ -44,7 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.amazon.ask.servlet.ServletConstants.DEFAULT_TOLERANCE_MILLIS;
-import static com.amazon.ask.servlet.ServletConstants.TIMESTAMP_TOLERANCE_SYSTEM_PROPERTY;
 
 /**
  * <p>
@@ -99,11 +98,11 @@ public class SkillServlet extends HttpServlet {
             final RequestEnvelope deserializedRequestEnvelope = serializer.deserialize(IOUtils.toString(
                     serializedRequestEnvelope, ServletConstants.CHARACTER_ENCODING), RequestEnvelope.class);
 
-            final ServerRequest serverRequest = new ServletRequest(request, serializedRequestEnvelope, deserializedRequestEnvelope);
+            final AlexaHttpRequest alexaHttpRequest = new ServletRequest(request, serializedRequestEnvelope, deserializedRequestEnvelope);
 
             // Verify the authenticity of the request by executing configured verifiers.
             for (SkillServletVerifier verifier : verifiers) {
-                verifier.verify(serverRequest);
+                verifier.verify(alexaHttpRequest);
             }
 
             ResponseEnvelope skillResponse = skill.invoke(deserializedRequestEnvelope);

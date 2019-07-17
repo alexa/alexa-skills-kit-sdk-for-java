@@ -75,11 +75,11 @@ public class SkillRequestTimestampVerifier implements SkillServletVerifier {
      *
      * {@inheritDoc}
      */
-    public void verify(ServerRequest serverRequest) {
-        if (serverRequest.getDeserializedRequestEnvelope() == null) {
+    public void verify(AlexaHttpRequest alexaHttpRequest) {
+        if (alexaHttpRequest.getDeserializedRequestEnvelope() == null) {
             throw new SecurityException("Incoming request did not contain a request envelope");
         }
-        Request request = serverRequest.getDeserializedRequestEnvelope().getRequest();
+        Request request = alexaHttpRequest.getDeserializedRequestEnvelope().getRequest();
         if (request == null || request.getTimestamp() == null) {
             throw new SecurityException("Incoming request was null or did not contain a timestamp to evaluate");
         }

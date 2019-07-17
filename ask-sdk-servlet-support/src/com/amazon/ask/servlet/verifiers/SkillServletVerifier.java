@@ -22,9 +22,9 @@ public interface SkillServletVerifier {
     /**
      * Verifies an incoming request.
      *
-     * @param serverRequest serverRequest
+     * @param alexaHttpRequest request performed by Alexa
      * @throws SecurityException if verification fails.
      */
-    void verify(ServerRequest serverRequest) throws SecurityException;
+    void verify(AlexaHttpRequest alexaHttpRequest) throws SecurityException;
 
 }
