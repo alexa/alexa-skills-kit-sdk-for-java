@@ -26,23 +26,21 @@ import org.json.JSONObject;
 public class LocalDebugger {
     private static final String PORT_NUMBER = "portNumber";
     private static final String TIME_OUT = "timeOut";
-    private static int timeOut = 10000;
+    private static int timeOutinMilliseconds = 10000;
     private static int port;
 
     public static void main(String[] args) throws InterruptedException, IOException, SecurityException, ParseException {
         HelloWorldStreamHandler skillInvoker = new HelloWorldStreamHandler();
         CommandLine cmd = ParseCommandLineArgs(args);
-        if (cmd.getOptionValue(PORT_NUMBER) == null || cmd.getOptionValue(PORT_NUMBER).isEmpty()) {
-        } else {
-            port = Integer.parseInt(cmd.getOptionValue(PORT_NUMBER));
+        port = Integer.parseInt(cmd.getOptionValue(PORT_NUMBER));
+        if(port<1 || port>65535){
+            throw new IllegalArgumentException("port out of range:" + port);
+        }
+        if (cmd.getOptionValue(TIME_OUT) != null && !cmd.getOptionValue(TIME_OUT).isEmpty()) {
+            timeOutinMilliseconds = Integer.parseInt(cmd.getOptionValue(TIME_OUT));
         }
 
-        if (cmd.getOptionValue(TIME_OUT) == null || cmd.getOptionValue(TIME_OUT).isEmpty()) {
-        } else {
-            timeOut = Integer.parseInt(cmd.getOptionValue(TIME_OUT));
-        }
-
-        ServerSocket serverSocket = CreateDebuggerSocket(port, timeOut);
+        ServerSocket serverSocket = CreateDebuggerSocket(port, timeOutinMilliseconds);
         try {
             while (!serverSocket.isClosed()) {
                 Socket clientSocket = serverSocket.accept();
@@ -95,6 +93,7 @@ public class LocalDebugger {
     }
 
     private static String extractPayload(BufferedReader br) throws IOException {
+        // code to parse through header data
         while ((br.readLine()).length() != 0) {
         }
 
