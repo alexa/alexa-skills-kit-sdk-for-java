@@ -10,7 +10,9 @@
             "request": "launch",
             "mainClass": "com.debugger.LocalDebugger",
             "projectName": "helloworld",
-            "args": "-p 9000"
+            "args": "-p 9000",
+            "preLaunchTask": "debuggerSetup",
+            "postDebugTask": "localDebuggerCleanup"
         }
     ]
 }

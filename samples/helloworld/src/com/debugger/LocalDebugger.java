@@ -26,7 +26,7 @@ import org.json.JSONObject;
 public class LocalDebugger {
     private static final String PORT_NUMBER = "portNumber";
     private static final String TIME_OUT = "timeOut";
-    private static int timeOutinMilliseconds = 10000;
+    private static int timeOutinMilliseconds = 60000;
     private static int port;
 
     public static void main(String[] args) throws InterruptedException, IOException, SecurityException, ParseException {
