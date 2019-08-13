@@ -15,4 +15,4 @@ To build the sample, open a terminal and go to the directory containing pom.xml,
 Once you've created your AWS Lambda function and configured “Alexa Skills Kit” as a trigger, upload the JAR file produced in the previous step and set the handler to the fully qualified class name of your handler function. Finally, copy the ARN for your AWS Lambda function because you’ll need it when configuring your skill in the Amazon Developer console.
 
 ### Alexa Skill Setup
-Please refer to [Developing Your First Skill](https://alexa-skills-kit-sdk-for-java.readthedocs.io/en/latest/Developing-Your-First-Skill.html) for detailed instructions.
+Please refer to [Developing Your First Skill](https://developer.amazon.com/docs/alexa-skills-kit-sdk-for-java/develop-your-first-skill.html) for detailed instructions.
