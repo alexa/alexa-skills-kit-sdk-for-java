@@ -84,7 +84,7 @@ public class BaseRequestDispatcher<Input, Output> implements GenericRequestDispa
     private Output doDispatch(Input input) throws Exception {
         // execute any global request interceptors
         for (GenericRequestInterceptor<Input> requestInterceptor : requestInterceptors) {
-            requestInterceptor.process(input);
+            input = requestInterceptor.processRequest(input);
         }
 
         Optional<GenericRequestHandlerChain<Input, Output>> handlerChain = Optional.empty();
@@ -125,7 +125,7 @@ public class BaseRequestDispatcher<Input, Output> implements GenericRequestDispa
         try {
             // execute any request interceptors attached to the handler chain
             for (GenericRequestInterceptor<Input> requestInterceptor : handlerChain.get().getRequestInterceptors()) {
-                requestInterceptor.process(input);
+                input = requestInterceptor.processRequest(input);
             }
 
             // invoke request handler using the adapter
@@ -136,8 +136,9 @@ public class BaseRequestDispatcher<Input, Output> implements GenericRequestDispa
                 response = responseInterceptor.processResponse(input, response);
             }
         } catch (Exception e) {
+            final Input originalInput = input;
             return handlerChain.get().getExceptionHandlers().stream()
-                    .filter(exceptionHandler -> exceptionHandler.canHandle(input, e))
+                    .filter(exceptionHandler -> exceptionHandler.canHandle(originalInput, e))
                     .findFirst()
                     .orElseThrow(() -> e).handle(input, e);
         }
