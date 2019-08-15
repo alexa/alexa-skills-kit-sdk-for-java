@@ -270,10 +270,12 @@ public class BaseRequestDispatcherTest {
         GenericRequestInterceptor<TestHandlerInput> chainInterceptor = mock(GenericRequestInterceptor.class);
         requestInterceptors.add(globalInterceptor);
         when(mockHandlerChain.getRequestInterceptors()).thenReturn(Collections.singletonList(chainInterceptor));
+        when(globalInterceptor.processRequest(mockInput)).thenReturn(mockInput);
+        when(chainInterceptor.processRequest(mockInput)).thenReturn(mockInput);
         dispatcher.dispatch(mockInput);
         InOrder inOrder = inOrder(globalInterceptor, chainInterceptor, mockAdapter);
-        inOrder.verify(globalInterceptor).process(mockInput);
-        inOrder.verify(chainInterceptor).process(mockInput);
+        inOrder.verify(globalInterceptor).processRequest(mockInput);
+        inOrder.verify(chainInterceptor).processRequest(mockInput);
         inOrder.verify(mockAdapter).execute(any(), any());
     }
 
@@ -310,8 +312,8 @@ public class BaseRequestDispatcherTest {
             dispatcher.dispatch(mockInput);
             fail("Unhandled skill exception should have been thrown");
         } catch (AskSdkException ex) {
-            verify(globalRequestInterceptor).process(mockInput);
-            verify(chainRequestInterceptor, never()).process(mockInput);
+            verify(globalRequestInterceptor).processRequest(mockInput);
+            verify(chainRequestInterceptor, never()).processRequest(mockInput);
             verify(chainResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(globalResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(mockMapper).getRequestHandlerChain(any());
@@ -338,8 +340,8 @@ public class BaseRequestDispatcherTest {
             dispatcher.dispatch(mockInput);
             fail("Unhandled skill exception should have been thrown");
         } catch (AskSdkException ex) {
-            verify(globalRequestInterceptor).process(mockInput);
-            verify(chainRequestInterceptor, never()).process(mockInput);
+            verify(globalRequestInterceptor).processRequest(mockInput);
+            verify(chainRequestInterceptor, never()).processRequest(mockInput);
             verify(chainResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(globalResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(mockMapper).getRequestHandlerChain(any());
@@ -361,14 +363,14 @@ public class BaseRequestDispatcherTest {
         when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
 
         Exception e = new IllegalStateException();
-        doThrow(e).when(globalRequestInterceptor).process(any());
+        doThrow(e).when(globalRequestInterceptor).processRequest(any());
         when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
         try {
             dispatcher.dispatch(mockInput);
             fail("Unhandled skill exception should have been thrown");
         } catch (AskSdkException ex) {
-            verify(globalRequestInterceptor).process(mockInput);
-            verify(chainRequestInterceptor, never()).process(mockInput);
+            verify(globalRequestInterceptor).processRequest(mockInput);
+            verify(chainRequestInterceptor, never()).processRequest(mockInput);
             verify(chainResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(globalResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(mockMapper, never()).getRequestHandlerChain(any());
@@ -391,15 +393,18 @@ public class BaseRequestDispatcherTest {
         responseInterceptors.add(globalResponseInterceptor);
         when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
 
+        when(globalRequestInterceptor.processRequest(mockInput)).thenReturn(mockInput);
+        when(chainRequestInterceptor.processRequest(mockInput)).thenReturn(mockInput);
+
         Exception e = new IllegalStateException();
-        doThrow(e).when(chainRequestInterceptor).process(any());
+        doThrow(e).when(chainRequestInterceptor).processRequest(mockInput);
         when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
         try {
             dispatcher.dispatch(mockInput);
             fail("Unhandled skill exception should have been thrown");
         } catch (AskSdkException ex) {
-            verify(globalRequestInterceptor).process(mockInput);
-            verify(chainRequestInterceptor).process(mockInput);
+            verify(globalRequestInterceptor).processRequest(mockInput);
+            verify(chainRequestInterceptor).processRequest(mockInput);
             verify(chainResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(globalResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(mockMapper).getRequestHandlerChain(any());
@@ -422,6 +427,9 @@ public class BaseRequestDispatcherTest {
         responseInterceptors.add(globalResponseInterceptor);
         when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
 
+        when(globalRequestInterceptor.processRequest(mockInput)).thenReturn(mockInput);
+        when(chainRequestInterceptor.processRequest(mockInput)).thenReturn(mockInput);
+
         Exception e = new IllegalStateException();
         when(mockAdapter.execute(any(TestHandlerInput.class), any())).thenThrow(e);
         when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
@@ -429,8 +437,8 @@ public class BaseRequestDispatcherTest {
             dispatcher.dispatch(mockInput);
             fail("Unhandled skill exception should have been thrown");
         } catch (AskSdkException ex) {
-            verify(globalRequestInterceptor).process(mockInput);
-            verify(chainRequestInterceptor).process(mockInput);
+            verify(globalRequestInterceptor).processRequest(mockInput);
+            verify(chainRequestInterceptor).processRequest(mockInput);
             verify(chainResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(globalResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(mockMapper).getRequestHandlerChain(any());
@@ -453,6 +461,9 @@ public class BaseRequestDispatcherTest {
         responseInterceptors.add(globalResponseInterceptor);
         when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
 
+        when(globalRequestInterceptor.processRequest(mockInput)).thenReturn(mockInput);
+        when(chainRequestInterceptor.processRequest(mockInput)).thenReturn(mockInput);
+
         Exception e = new IllegalStateException();
         doThrow(e).when(chainResponseInterceptor).processResponse(any(), any());
         when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
@@ -460,8 +471,8 @@ public class BaseRequestDispatcherTest {
             dispatcher.dispatch(mockInput);
             fail("Unhandled skill exception should have been thrown");
         } catch (AskSdkException ex) {
-            verify(globalRequestInterceptor).process(mockInput);
-            verify(chainRequestInterceptor).process(mockInput);
+            verify(globalRequestInterceptor).processRequest(mockInput);
+            verify(chainRequestInterceptor).processRequest(mockInput);
             verify(chainResponseInterceptor).processResponse(mockInput, mockOutput);
             verify(globalResponseInterceptor, never()).processResponse(mockInput, mockOutput);
             verify(mockMapper).getRequestHandlerChain(any());
@@ -484,6 +495,9 @@ public class BaseRequestDispatcherTest {
         responseInterceptors.add(globalResponseInterceptor);
         when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
 
+        when(globalRequestInterceptor.processRequest(mockInput)).thenReturn(mockInput);
+        when(chainRequestInterceptor.processRequest(mockInput)).thenReturn(mockInput);
+
         Exception e = new IllegalStateException();
         when(chainResponseInterceptor.processResponse(mockInput, mockOutput)).thenReturn(mockOutput);
         doThrow(e).when(globalResponseInterceptor).processResponse(any(), any());
@@ -492,8 +506,8 @@ public class BaseRequestDispatcherTest {
             dispatcher.dispatch(mockInput);
             fail("Unhandled skill exception should have been thrown");
         } catch (AskSdkException ex) {
-            verify(globalRequestInterceptor).process(mockInput);
-            verify(chainRequestInterceptor).process(mockInput);
+            verify(globalRequestInterceptor).processRequest(mockInput);
+            verify(chainRequestInterceptor).processRequest(mockInput);
             verify(chainResponseInterceptor).processResponse(mockInput, mockOutput);
             verify(globalResponseInterceptor).processResponse(mockInput, mockOutput);
             verify(mockMapper).getRequestHandlerChain(any());

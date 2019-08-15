@@ -37,7 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.servlet.ServletConstants;
-import com.amazon.ask.servlet.verifiers.SkillRequestSignatureVerifier;
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
@@ -205,7 +204,8 @@ public class SkillRequestSignatureVerifierTest {
         byte[] signature = signContent(testContent, validPrivateKey);
         when(mockServletRequest.getHeader(ServletConstants.SIGNATURE_REQUEST_HEADER)).thenReturn(new Base64().encodeAsString(signature));
         when(mockServletRequest.getHeader(ServletConstants.SIGNATURE_CERTIFICATE_CHAIN_URL_REQUEST_HEADER)).thenReturn(PREPOPULATED_CERT_URL);
-        verifier.verify(mockServletRequest, testContent.getBytes(), deserializedRequestEnvelope);
+
+        verifier.verify(new ServletRequest(mockServletRequest, testContent.getBytes(), deserializedRequestEnvelope));
     }
 
     @Test
@@ -220,7 +220,7 @@ public class SkillRequestSignatureVerifierTest {
         when(mockServletRequest.getHeader(ServletConstants.SIGNATURE_REQUEST_HEADER)).thenReturn(new Base64().encodeAsString(signature));
         when(mockServletRequest.getHeader(ServletConstants.SIGNATURE_CERTIFICATE_CHAIN_URL_REQUEST_HEADER)).thenReturn(PREPOPULATED_CERT_URL);
 
-        verifier.verify(mockServletRequest, testContent.getBytes(), deserializedRequestEnvelope);
+        verifier.verify(new ServletRequest(mockServletRequest, testContent.getBytes(), deserializedRequestEnvelope));
     }
 
     private static KeyPair generateKeyPair() throws NoSuchAlgorithmException {

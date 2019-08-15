@@ -69,47 +69,47 @@ public class SkillRequestTimestampVerifierTest {
 
     @Test
     public void verify_currentDate_no_exception() {
-        verifier.verify(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(new Date()));
+        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(new Date())));
     }
 
     @Test
     public void verify_recentOldDate_no_exception() {
-        verifier.verify(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(new Date(System.currentTimeMillis() - TOLERANCE_IN_MILLIS / 2)));
+        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(new Date(System.currentTimeMillis() - TOLERANCE_IN_MILLIS / 2))));
     }
 
     @Test
     public void verify_upcomingNewDate_no_exception() {
-        verifier.verify(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(new Date(System.currentTimeMillis() + TOLERANCE_IN_MILLIS / 2)));
+        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(new Date(System.currentTimeMillis() + TOLERANCE_IN_MILLIS / 2))));
     }
 
     @Test(expected = SecurityException.class)
     public void verify_tooOldDate_throws_exception() {
-        verifier.verify(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(new Date(System.currentTimeMillis() - TOLERANCE_IN_MILLIS * 2)));
+        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(new Date(System.currentTimeMillis() - TOLERANCE_IN_MILLIS * 2))));
     }
 
     @Test(expected = SecurityException.class)
     public void verify_tooNewDate_throws_exception() {
-        verifier.verify(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(new Date(System.currentTimeMillis() + TOLERANCE_IN_MILLIS * 2)));
+        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(new Date(System.currentTimeMillis() + TOLERANCE_IN_MILLIS * 2))));
     }
 
     @Test(expected = SecurityException.class)
     public void verify_nullDate_throws_exception() {
-        verifier.verify(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(null));
+        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(null)));
     }
 
     @Test(expected = SecurityException.class)
     public void verify_nullRequestEnvelope_throws_exception() {
-        verifier.verify(mockServletRequest, serializedRequestEnvelope, null);
+        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, null));
     }
 
     @Test(expected = SecurityException.class)
     public void verify_nullRequest_throws_exception() {
-        verifier.verify(mockServletRequest, serializedRequestEnvelope, RequestEnvelope.builder().build());
+        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, RequestEnvelope.builder().build()));
     }
 
     @Test(expected = SecurityException.class)
     public void verify_nullTimestamp_throws_exception() {
-        verifier.verify(mockServletRequest, serializedRequestEnvelope, RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build());
+        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build()));
     }
 
     @Test (expected = IllegalArgumentException.class)
@@ -119,7 +119,7 @@ public class SkillRequestTimestampVerifierTest {
 
     @Test(expected = SecurityException.class)
     public void verify_withGreaterRequestTimeDelta_throws_exception() {
-        verifier.verify(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(new Date(System.currentTimeMillis() + TOLERANCE_IN_MILLIS + 200)));
+        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(new Date(System.currentTimeMillis() + TOLERANCE_IN_MILLIS + 200))));
     }
 
     private RequestEnvelope getRequestEnvelope(Date timestamp) {

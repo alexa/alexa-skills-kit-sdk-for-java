@@ -13,10 +13,6 @@
 
 package com.amazon.ask.servlet.verifiers;
 
-import com.amazon.ask.model.RequestEnvelope;
-
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * Verifiers are run against incoming requests to verify authenticity and integrity of the request before processing
  * it.
@@ -26,11 +22,9 @@ public interface SkillServletVerifier {
     /**
      * Verifies an incoming request.
      *
-     * @param servletRequest servlet request
-     * @param serializedRequestEnvelope the request envelope, in serialized form
-     * @param deserializedRequestEnvelope the request envelope, in deserialized form
+     * @param alexaHttpRequest request performed by Alexa
      * @throws SecurityException if verification fails.
      */
-    void verify(HttpServletRequest servletRequest, byte[] serializedRequestEnvelope, RequestEnvelope deserializedRequestEnvelope) throws SecurityException;
+    void verify(AlexaHttpRequest alexaHttpRequest) throws SecurityException;
 
 }
