@@ -30,8 +30,6 @@ import com.amazon.ask.model.services.ApiClient;
 import com.amazon.ask.module.SdkModule;
 import com.amazon.ask.module.SdkModuleContext;
 import com.amazon.ask.response.template.TemplateFactory;
-import com.amazon.ask.response.template.loader.TemplateLoader;
-import com.amazon.ask.response.template.renderer.TemplateRenderer;
 import org.junit.Before;
 import org.junit.Test;
 
