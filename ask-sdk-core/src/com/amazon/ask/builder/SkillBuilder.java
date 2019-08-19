@@ -82,8 +82,12 @@ public class SkillBuilder<T extends SkillBuilder<T>> extends AbstractSkillBuilde
 
         skillConfigBuilder.withPersistenceAdapter(persistenceAdapter)
                 .withApiClient(apiClient)
-                .withSkillId(skillId)
-                .withTemplateFactory(templateFactory);
+                .withSkillId(skillId);
+
+        if (templateFactory != null) {
+            skillConfigBuilder.withTemplateFactory(templateFactory);
+        }
+
 
         SdkModuleContext sdkModuleContext = new SdkModuleContext(skillConfigBuilder);
         for (SdkModule sdkModule : sdkModules) {
