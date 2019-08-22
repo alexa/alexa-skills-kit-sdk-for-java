@@ -26,6 +26,17 @@ public interface GenericRequestInterceptor<Input> {
      *
      * @param input handler input
      */
-    void process(Input input);
+    default void process(Input input) {}
+
+    /**
+     * Intercept the incoming request before the request handler is executed and return an updated request.
+     *
+     * @param input handler input
+     * @return updated request
+     */
+    default Input processRequest(Input input) {
+        process(input);
+        return input;
+    }
 
 }
