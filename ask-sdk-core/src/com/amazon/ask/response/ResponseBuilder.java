@@ -104,7 +104,9 @@ public class ResponseBuilder {
      * @return response builder
      */
     public ResponseBuilder withCard(Card card) {
-        this.card = card;
+        if(card != null) {
+            this.card = card;
+        }
         return this;
     }
 
@@ -383,7 +385,10 @@ public class ResponseBuilder {
         if (directiveList == null) {
             directiveList = new ArrayList<>();
         }
-        directiveList.add(directive);
+
+        if(directive != null) {
+            directiveList.add(directive);
+        }
 
         return this;
     }
