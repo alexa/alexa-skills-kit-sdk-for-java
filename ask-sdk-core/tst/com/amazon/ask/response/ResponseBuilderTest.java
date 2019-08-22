@@ -406,6 +406,18 @@ public class ResponseBuilderTest {
     }
 
     @Test
+    public void build_response_with_null_directive() {
+        Optional<Response> responseWithBuilder = builder
+                .addDirective(null)
+                .build();
+
+        Response response = Response.builder()
+                .build();
+
+        assertEquals(responseWithBuilder.get(), response);
+    }
+
+    @Test
     public void build_response_with_render_template_directive() {
         ImageInstance imageInstance = ImageInstance.builder()
                 .withUrl("fooUrl")
@@ -539,6 +551,18 @@ public class ResponseBuilderTest {
 
         Optional<Response> responseWithBuilder = builder
                 .withCard(simpleCard)
+                .build();
+        assertEquals(responseWithBuilder.get(), response);
+    }
+
+    @Test
+    public void build_response_with_null_card() {
+        Response response = Response.builder()
+                .withCard(null)
+                .build();
+
+        Optional<Response> responseWithBuilder = builder
+                .withCard(null)
                 .build();
         assertEquals(responseWithBuilder.get(), response);
     }

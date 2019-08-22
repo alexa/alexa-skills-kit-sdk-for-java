@@ -382,11 +382,10 @@ public class ResponseBuilder {
      * @return response builder
      */
     public ResponseBuilder addDirective(Directive directive) {
-        if (directiveList == null) {
-            directiveList = new ArrayList<>();
-        }
-
-        if(directive != null) {
+        if (directive != null) {
+            if (directiveList == null) {
+                directiveList = new ArrayList<>();
+            }
             directiveList.add(directive);
         }
 
