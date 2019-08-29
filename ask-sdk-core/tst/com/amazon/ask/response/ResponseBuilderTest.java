@@ -409,9 +409,12 @@ public class ResponseBuilderTest {
     public void build_response_with_null_directive() {
         Optional<Response> responseWithBuilder = builder
                 .addDirective(null)
+                .withShouldEndSession(true)
                 .build();
 
-        Response response = Response.builder().addDirectivesItem(null)
+        Response response = Response.builder()
+                .addDirectivesItem(null)
+                .withShouldEndSession(true)
                 .build();
 
         assertEquals(responseWithBuilder.get(), response);
@@ -554,19 +557,7 @@ public class ResponseBuilderTest {
                 .build();
         assertEquals(responseWithBuilder.get(), response);
     }
-
-    @Test
-    public void build_response_with_null_card() {
-        Response response = Response.builder()
-                .withCard(null)
-                .build();
-
-        Optional<Response> responseWithBuilder = builder
-                .withCard(null)
-                .build();
-        assertEquals(responseWithBuilder.get(), response);
-    }
-
+    
     @Test
     public void build_response_with_link_account_card() {
         Response response = Response.builder()
