@@ -104,9 +104,7 @@ public class ResponseBuilder {
      * @return response builder
      */
     public ResponseBuilder withCard(Card card) {
-        if(card != null) {
             this.card = card;
-        }
         return this;
     }
 
@@ -382,12 +380,10 @@ public class ResponseBuilder {
      * @return response builder
      */
     public ResponseBuilder addDirective(Directive directive) {
-        if (directive != null) {
             if (directiveList == null) {
                 directiveList = new ArrayList<>();
             }
             directiveList.add(directive);
-        }
 
         return this;
     }
@@ -408,7 +404,7 @@ public class ResponseBuilder {
         }
 
         for (Directive directive : directiveList) {
-            if (directive.getType().equals("VideoApp.Launch")) {
+            if ("VideoApp.Launch".equals(directive.getType())) {
                 return true;
             }
         }

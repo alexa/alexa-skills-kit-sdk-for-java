@@ -411,7 +411,7 @@ public class ResponseBuilderTest {
                 .addDirective(null)
                 .build();
 
-        Response response = Response.builder()
+        Response response = Response.builder().addDirectivesItem(null)
                 .build();
 
         assertEquals(responseWithBuilder.get(), response);
