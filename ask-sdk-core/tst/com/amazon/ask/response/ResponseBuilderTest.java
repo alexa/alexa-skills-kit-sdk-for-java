@@ -406,6 +406,21 @@ public class ResponseBuilderTest {
     }
 
     @Test
+    public void build_response_with_null_directive() {
+        Optional<Response> responseWithBuilder = builder
+                .addDirective(null)
+                .withShouldEndSession(true)
+                .build();
+
+        Response response = Response.builder()
+                .addDirectivesItem(null)
+                .withShouldEndSession(true)
+                .build();
+
+        assertEquals(responseWithBuilder.get(), response);
+    }
+
+    @Test
     public void build_response_with_render_template_directive() {
         ImageInstance imageInstance = ImageInstance.builder()
                 .withUrl("fooUrl")

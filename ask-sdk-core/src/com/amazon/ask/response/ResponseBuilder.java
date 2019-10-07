@@ -404,7 +404,7 @@ public class ResponseBuilder {
         }
 
         for (Directive directive : directiveList) {
-            if (directive.getType().equals("VideoApp.Launch")) {
+            if (directive != null && directive.getType().equals("VideoApp.Launch")) {
                 return true;
             }
         }
