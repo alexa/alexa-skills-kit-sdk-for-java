@@ -85,6 +85,10 @@ Template for a local recommendations skill. Alexa uses the data that you provide
 ### [Movie Quotes](https://github.com/alexa/skill-sample-java-movie-quotes-quiz)
 This Alexa sample skill is a basic Movie Quotes Quiz skill that makes use of Template Resolver feature of the Java SDK. A user can open up the skill, select a movie from a list, and then hear partial quotes from the selected movie. Then, they have to complete the quote.
 
+### [Pet Match](https://github.com/alexa/skill-sample-java-pet-match)
+Pet Match matches the user with a pet. When launched, this Alexa Skill will prompt the user for the information it needs to determine a match. Once all of the required information is collected, it will send the data to an external web service which processes the data and returns the match. Through this workshop, you will learn how to use advanced Alexa Skills Kit features to create and configure an Alexa Skill and AWS Lambda.
+The skill showcases the usage of Request and Response interceptors.
+
 ## Tutorials
 ### [States Quiz](https://github.com/alexa/skill-sample-java-quiz-game)
 This tutorial will guide you in building a fully-featured skill. The skill features Built-In and Custom slots, as well as state management. The skill you build with this tutorial can be customized to build your own game.
