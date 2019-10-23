@@ -22,6 +22,8 @@ import com.amazon.ask.util.JsonMarshaller;
 import com.amazon.ask.util.JsonUnmarshaller;
 import com.amazon.ask.util.ValidationUtils;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -31,21 +33,34 @@ import java.util.Optional;
  */
 public abstract class AbstractSkill<Request, Response> implements AlexaSkill<Request, Response> {
 
-    protected final JsonUnmarshaller<Request> unmarshaller;
+    protected final List<JsonUnmarshaller<Request>> unmarshallerChain;
     protected final JsonMarshaller<Response> marshaller;
 
     protected AbstractSkill(JsonUnmarshaller<Request> unmarshaller,
                             JsonMarshaller<Response> marshaller) {
-        this.unmarshaller = ValidationUtils.assertNotNull(unmarshaller, "unmarshaller");
+        this(Collections.singletonList(unmarshaller), marshaller);
+    }
+
+    protected AbstractSkill(List<JsonUnmarshaller<Request>> unmarshallerChain,
+                            JsonMarshaller<Response> marshaller) {
+        this.unmarshallerChain = ValidationUtils.assertNotNull(unmarshallerChain, "unmarshallerChain");
         this.marshaller = ValidationUtils.assertNotNull(marshaller, "marshaller");
     }
 
     @Override
     public SkillResponse<Response> execute(SkillRequest request, Object context) {
-        Optional<UnmarshalledRequest<Request>> deserializedRequest = unmarshaller.unmarshall(request.getRawRequest());
+        Optional<UnmarshalledRequest<Request>> deserializedRequest = Optional.empty();
+
+        for (JsonUnmarshaller<Request> unmarshaller : unmarshallerChain) {
+            deserializedRequest = unmarshaller.unmarshall(request.getRawRequest());
+            if (deserializedRequest.isPresent()) {
+                break;
+            }
+        }
         if (!deserializedRequest.isPresent()) {
             return null;
         }
+
         Response response = invoke(deserializedRequest.get(), context);
         return new BaseSkillResponse<>(marshaller, response);
     }

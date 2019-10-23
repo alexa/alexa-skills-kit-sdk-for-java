@@ -15,7 +15,7 @@ package com.amazon.ask.dispatcher.request.handler.impl;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
-import com.amazon.ask.model.interfaces.alexa.presentation.aplt.UserEvent;
+import com.amazon.ask.model.interfaces.alexa.presentation.apl.UserEvent;
 import com.amazon.ask.model.Response;
 
 import java.util.Optional;

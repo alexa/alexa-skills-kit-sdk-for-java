@@ -21,35 +21,61 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class JacksonJsonUnmarshaller<Type> implements JsonUnmarshaller<Type> {
 
     private static final ObjectMapper MAPPER = ObjectMapperFactory.getMapper();
 
-    private final Class<Type> outputType;
-    private final String requiredField;
+    private final Class<? extends Type> outputType;
+    private final List<String> discriminatorPath;
+    private final Map<String, Class> validTypes;
 
-    protected JacksonJsonUnmarshaller(Class<Type> outputType, String requiredField) {
+    protected JacksonJsonUnmarshaller(Class<? extends Type> outputType, List<String> discriminatorPath, Map<String, Class> validTypes) {
         this.outputType = outputType;
-        this.requiredField = requiredField;
+        this.discriminatorPath = discriminatorPath;
+        this.validTypes = validTypes;
+    }
+
+    public static <Output> JacksonJsonUnmarshaller<Output> withTypeBinding(Class<Output> outputType) {
+        return new JacksonJsonUnmarshaller<>(outputType, null, null);
     }
 
     public static <Output> JacksonJsonUnmarshaller<Output> withTypeBinding(Class<Output> outputType,
                                                                            String requiredField) {
-        return new JacksonJsonUnmarshaller<>(outputType, requiredField);
+        return new JacksonJsonUnmarshaller<>(outputType, Arrays.asList(requiredField), null);
     }
 
-    public static <Output> JacksonJsonUnmarshaller<Output> withTypeBinding(Class<Output> outputType) {
-        return new JacksonJsonUnmarshaller<>(outputType, null);
+    public static <Type> JacksonJsonUnmarshaller<Type> withTypeBinding(Class<? extends Type> outputType,
+                                                                       List<String> discriminatorPath,
+                                                                       Map<String, Class> validTypes) {
+        return new JacksonJsonUnmarshaller<>(outputType, discriminatorPath, validTypes);
     }
 
     @Override
     public Optional<UnmarshalledRequest<Type>> unmarshall(byte[] in) {
         try {
             JsonNode json = MAPPER.readTree(in);
-            if (requiredField != null && !json.has(requiredField)) {
-                return Optional.empty();
+            if (discriminatorPath != null) {
+                JsonNode discriminatorNode = json;
+                for (String path : discriminatorPath) {
+                    discriminatorNode = discriminatorNode.path(path);
+                    if (discriminatorNode.isMissingNode()) {
+                        return Optional.empty();
+                    }
+                }
+
+                if (!discriminatorNode.isTextual()) {
+                    throw new AskSdkException("Discriminator property is not text type");
+                }
+
+                String discriminatorValue = discriminatorNode.asText();
+                if (validTypes != null && !validTypes.containsKey(discriminatorValue)) {
+                    return Optional.empty();
+                }
             }
             UnmarshalledRequest<Type> unmarshalledRequest = new BaseUnmarshalledRequest<>(MAPPER.treeToValue(json, outputType), json);
             return Optional.of(unmarshalledRequest);

@@ -333,9 +333,10 @@ public class BaseRequestDispatcherTest {
         GenericResponseInterceptor<TestHandlerInput, TestHandlerOutput> chainResponseInterceptor = mock(GenericResponseInterceptor.class);
         responseInterceptors.add(globalResponseInterceptor);
         when(mockHandlerChain.getResponseInterceptors()).thenReturn(Collections.singletonList(chainResponseInterceptor));
-
         when(mockAdapter.supports(any())).thenReturn(false);
         when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
+        when(globalRequestInterceptor.processRequest(mockInput)).thenReturn(mockInput);
+        when(chainRequestInterceptor.processRequest(mockInput)).thenReturn(mockInput);
         try {
             dispatcher.dispatch(mockInput);
             fail("Unhandled skill exception should have been thrown");

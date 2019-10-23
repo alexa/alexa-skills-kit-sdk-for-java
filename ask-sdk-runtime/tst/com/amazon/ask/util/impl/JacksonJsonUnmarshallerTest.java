@@ -15,70 +15,66 @@ package com.amazon.ask.util.impl;
 
 import com.amazon.ask.exception.AskSdkException;
 import com.amazon.ask.request.UnmarshalledRequest;
-import com.amazon.ask.util.JsonUnmarshaller;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class JacksonJsonUnmarshallerTest {
-
-    private JsonUnmarshaller<FooType> jsonUnmarshaller;
+public class JacksonJsonUnmarshallerTest extends BaseUnmarshallerTest {
 
     @Before
     public void setUp() {
-        jsonUnmarshaller = new JacksonJsonUnmarshaller<>(FooType.class, "validField");
+        super.setUp();
+        jsonUnmarshaller = new JacksonJsonUnmarshaller<>(BaseFoo.class, Arrays.asList("header", "type"), subtypes);
     }
 
     @Test
-    public void required_field_missing_returns_optional_empty() {
-        assertEquals(jsonUnmarshaller.unmarshall(getPayload("invalidField")), Optional.empty());
+    public void discriminator_path_not_exists_returns_empty() {
+        assertEquals(jsonUnmarshaller.unmarshall(getPayload("invalid", "foo.bar")), Optional.empty());
+    }
+
+    @Test(expected = AskSdkException.class)
+    public void non_textual_discriminator_returns_exception() {
+        String payload = "{\"validField\":\"foo\", \"header\":{\"type\":123}}";
+        jsonUnmarshaller.unmarshall(payload.getBytes());
     }
 
     @Test
-    public void required_field_present_returns_unmarshalled_type() {
-        Optional<UnmarshalledRequest<FooType>> unmarshalledRequest = jsonUnmarshaller.unmarshall(getPayload("validField"));
+    public void discriminator_not_in_subtypes_returns_empty() {
+        assertEquals(jsonUnmarshaller.unmarshall(getPayload("type", "foo.invalid")), Optional.empty());
+    }
+
+    @Test
+    public void discriminator_exists_correct_type_unmarshalled() {
+        Optional<UnmarshalledRequest<BaseFoo>> unmarshalledRequest = jsonUnmarshaller.unmarshall(getPayload("type", "foo.member"));
         assertTrue(unmarshalledRequest.isPresent());
+        assertEquals(unmarshalledRequest.get().getUnmarshalledRequest().getClass(), BaseFoo.class);
     }
 
     @Test
     public void unmarshalled_instance_correct() {
-        Optional<UnmarshalledRequest<FooType>> unmarshalledRequest = jsonUnmarshaller.unmarshall(getPayload("validField"));
-        FooType fooType = unmarshalledRequest.get().getUnmarshalledRequest();
-        assertEquals(fooType.getValidField(), "foo");
+        Optional<UnmarshalledRequest<BaseFoo>> unmarshalledRequest = jsonUnmarshaller.unmarshall(getPayload("type", "foo.member"));
+        BaseFoo fooType = unmarshalledRequest.get().getUnmarshalledRequest();
+        assertEquals(fooType.getFoo().getValidField(), "foo");
+        assertEquals(fooType.getHeader().get("type"), "foo.member");
     }
 
     @Test
     public void unmarshalled_json_correct() {
-        Optional<UnmarshalledRequest<FooType>> unmarshalledRequest = jsonUnmarshaller.unmarshall(getPayload("validField"));
+        Optional<UnmarshalledRequest<BaseFoo>> unmarshalledRequest = jsonUnmarshaller.unmarshall(getPayload("type", "foo.member"));
         JsonNode json = unmarshalledRequest.get().getRequestJson();
-        assertEquals(json.get("validField").asText(), "foo");
+        assertEquals(json.get("foo").get("validField").asText(), "foo");
+        assertEquals(json.get("header").get("type").asText(), "foo.member");
     }
 
-    @Test(expected = AskSdkException.class)
-    public void unmarshaller_exception_wrapped_in_sdk_exception() {
-        jsonUnmarshaller.unmarshall("{foo}".getBytes());
-    }
-
-    private byte[] getPayload(String fieldName) {
-        String payload = String.format("{\"%s\":\"foo\"}", fieldName);
+    private byte[] getPayload(String discriminatorProperty, String discriminatorValue) {
+        String payload = String.format("{\"foo\":{\"validField\":\"foo\"}, \"header\":{\"%s\":\"%s\"}}", discriminatorProperty, discriminatorValue);
         return payload.getBytes();
-    }
-
-    private static class FooType {
-        private String validField;
-
-        public String getValidField() {
-            return validField;
-        }
-
-        public void setValidField(String validField) {
-            this.validField = validField;
-        }
     }
 
 }

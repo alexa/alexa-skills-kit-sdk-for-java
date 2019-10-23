@@ -1,7 +1,9 @@
 package com.amazon.ask;
 
 import com.amazon.ask.impl.AbstractSkill;
+import com.amazon.ask.model.Request;
 import com.amazon.ask.model.services.Serializer;
+import com.amazon.ask.model.utils.SubTypesManifest;
 import com.amazon.ask.request.UnmarshalledRequest;
 import com.amazon.ask.request.dispatcher.GenericRequestDispatcher;
 import com.amazon.ask.request.dispatcher.impl.BaseRequestDispatcher;
@@ -32,6 +34,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.amazon.ask.util.impl.JacksonJsonMarshaller;
 import com.amazon.ask.util.impl.JacksonJsonUnmarshaller;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public class CustomSkill extends AbstractSkill<RequestEnvelope, ResponseEnvelope> implements AlexaSkill<RequestEnvelope, ResponseEnvelope> {
@@ -45,7 +48,7 @@ public class CustomSkill extends AbstractSkill<RequestEnvelope, ResponseEnvelope
     protected final TemplateFactory<HandlerInput, Response> templateFactory;
 
     public CustomSkill(CustomSkillConfiguration configuration) {
-        super(JacksonJsonUnmarshaller.withTypeBinding(RequestEnvelope.class, "request"),
+        super(JacksonJsonUnmarshaller.withTypeBinding(RequestEnvelope.class, Arrays.asList("request", "type"), SubTypesManifest.getSubType(Request.class)),
                 JacksonJsonMarshaller.forType(ResponseEnvelope.class));
         this.persistenceAdapter = configuration.getPersistenceAdapter();
         this.requestDispatcher = BaseRequestDispatcher.<HandlerInput, Optional<Response>>builder()
