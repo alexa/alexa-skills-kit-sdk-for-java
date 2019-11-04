@@ -40,13 +40,15 @@ public class JacksonJsonUnmarshaller<Type> implements JsonUnmarshaller<Type> {
         this.validTypes = validTypes;
     }
 
+    @Deprecated
     public static <Output> JacksonJsonUnmarshaller<Output> withTypeBinding(Class<Output> outputType) {
         return new JacksonJsonUnmarshaller<>(outputType, null, null);
     }
 
+    @Deprecated
     public static <Output> JacksonJsonUnmarshaller<Output> withTypeBinding(Class<Output> outputType,
                                                                            String requiredField) {
-        return new JacksonJsonUnmarshaller<>(outputType, Arrays.asList(requiredField), null);
+        return new JacksonJsonUnmarshaller<>(outputType, Arrays.asList(requiredField, "type"), null);
     }
 
     public static <Type> JacksonJsonUnmarshaller<Type> withTypeBinding(Class<? extends Type> outputType,
