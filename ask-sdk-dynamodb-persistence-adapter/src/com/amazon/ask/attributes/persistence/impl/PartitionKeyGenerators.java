@@ -16,6 +16,7 @@ package com.amazon.ask.attributes.persistence.impl;
 import com.amazon.ask.exception.PersistenceException;
 import com.amazon.ask.model.Context;
 import com.amazon.ask.model.Device;
+import com.amazon.ask.model.Person;
 import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.User;
 import com.amazon.ask.model.interfaces.system.SystemState;
@@ -52,6 +53,21 @@ public class PartitionKeyGenerators {
                 .map(SystemState::getDevice)
                 .map(Device::getDeviceId)
                 .orElseThrow(() -> new PersistenceException("Could not retrieve device ID from request envelope to generate persistence ID"));
+    }
+
+    /**
+     * Produces a partition key from the {@link Person} ID contained in an incoming request.
+     * If the person ID is not available, the user ID will be used as fallback.
+     *
+     * @return partition key derived from person ID, if available, or user ID if person in unavailable.
+     * @throws PersistenceException if person ID cannot be retrieved and fallback to user ID fails.
+     */
+    public static Function<RequestEnvelope, String> personId() {
+        return r -> Optional.ofNullable(r).map(RequestEnvelope::getContext)
+                .map(Context::getSystem)
+                .map(SystemState::getPerson)
+                .map(Person::getPersonId)
+                .orElseGet(() -> userId().apply(r));
     }
 
 }
