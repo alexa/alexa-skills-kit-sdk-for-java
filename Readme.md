@@ -21,6 +21,8 @@ The ASK SDK for Java makes it easier for you to build highly engaging skills, by
 |[ask-sdk-servlet-support](./ask-sdk-servlet-support)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-servlet-support/2.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-servlet-support)| 
 |[ask-sdk-dynamodb-persistence-adapter](./ask-sdk-dynamodb-persistence-adapter)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-dynamodb-persistence-adapter/2.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-dynamodb-persistence-adapter)| 
 |[ask-sdk-apache-client](./ask-sdk-apache-client)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-apache-client/2.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-apache-client)| 
+|[ask-sdk-freemarker](./ask-sdk-freemarker)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-freemarker/2.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-freemarker)| 
+|[ask-sdk-runtime](./ask-sdk-runtime)| [![Maven Central](https://img.shields.io/maven-central/v/com.amazon.alexa/ask-sdk-runtime/2.svg)](http://mvnrepository.com/artifact/com.amazon.alexa/ask-sdk-runtime)| 
 
 ## Alexa Features Supported by SDK
 
