@@ -118,7 +118,7 @@
 > }
 > ```
 
-##Documentatiion
+## Documentatiion
 
 * [SMAPI SDK Reference Documentation]()
 * [SMAPI Documentation](https://developer.amazon.com/docs/smapi/smapi-overview.html)
