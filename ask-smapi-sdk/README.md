@@ -97,7 +97,7 @@
 > ``` sh
 > try {
 >    SkillManifestEnvelope skillManifestEnvelope = customSmapiClient.getSkillManifestV1(skillId, "development");
-> } catch (ServcieException e) {
+> } catch (ServiceException e) {
 >    System.out.println(e.getMessage());
 > }
 > ```
