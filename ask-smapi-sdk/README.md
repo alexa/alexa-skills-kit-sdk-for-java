@@ -96,7 +96,7 @@
 > 
 > ``` sh
 > try {
->    SkillManifestEnvelope skillManifestEnvelope = customSmapiClient.getSkillManifestV1(skillId, "developement");
+>    SkillManifestEnvelope skillManifestEnvelope = customSmapiClient.getSkillManifestV1(skillId, "development");
 > } catch (ServcieException e) {
 >    System.out.println(e.getMessage());
 > }
@@ -118,7 +118,7 @@
 > }
 > ```
 
-## Documentatiion
+## Documentation
 
 * [SMAPI SDK Reference Documentation]()
 * [SMAPI Documentation](https://developer.amazon.com/docs/smapi/smapi-overview.html)
