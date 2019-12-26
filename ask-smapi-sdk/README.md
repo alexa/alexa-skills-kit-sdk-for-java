@@ -120,7 +120,7 @@
 
 ## Documentatiion
 
-* [SMAPI SDK Reference Documentation]()
+* [SMAPI SDK Reference Documentation](http://smapi-sdk-javadocs.s3-website-us-west-2.amazonaws.com/)
 * [SMAPI Documentation](https://developer.amazon.com/docs/smapi/smapi-overview.html)
 
 ## Got Feedback?
