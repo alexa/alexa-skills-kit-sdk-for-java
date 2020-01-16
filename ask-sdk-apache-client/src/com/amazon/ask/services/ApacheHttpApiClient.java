@@ -40,11 +40,18 @@ import java.util.stream.Collectors;
 /**
  * Apache HTTP client backed implementation of the ASK Java SDK API Client.
  */
-public class ApacheHttpApiClient implements ApiClient {
+public final class ApacheHttpApiClient implements ApiClient {
 
+    /**
+     * Provision a HTTP client to send requests to external services.
+     */
     private final CloseableHttpClient httpClient;
 
-    private ApacheHttpApiClient(Builder builder) {
+    /**
+     * Private constructor to prevent instantiation from outside this class.
+     * @param builder {@link Builder}
+     */
+    private ApacheHttpApiClient(final Builder builder) {
         this.httpClient = builder.httpClient;
     }
 
@@ -64,18 +71,26 @@ public class ApacheHttpApiClient implements ApiClient {
         return new Builder();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public ApiClientResponse invoke(ApiClientRequest request) {
+    public ApiClientResponse invoke(final ApiClientRequest request) {
         HttpUriRequest lowLevelRequest = generateRequest(request);
         try (CloseableHttpResponse lowLevelResponse = httpClient.execute(lowLevelRequest)) {
             return generateResponse(lowLevelResponse);
         } catch (IOException e) {
-            //TODO: replace with API client internal exception type
+            //TODO: replace with API client internal exception type.
             throw new RuntimeException("There was an error executing the request", e);
         }
     }
 
-    private HttpUriRequest generateRequest(ApiClientRequest request) {
+    /**
+     * Generates a {@link HttpUriRequest} instance based on request method.
+     * @param request of type {@link ApiClientRequest}.
+     * @return HttpUriRequest.
+     */
+    private HttpUriRequest generateRequest(final ApiClientRequest request) {
         HttpUriRequest lowLevelRequest;
         switch (request.getMethod()) {
             case "GET":
@@ -117,7 +132,13 @@ public class ApacheHttpApiClient implements ApiClient {
         return lowLevelRequest;
     }
 
-    private ApiClientResponse generateResponse(CloseableHttpResponse lowLevelResponse) throws IOException {
+    /**
+     * Generates {@link ApiClientResponse} from an input low level response.
+     * @param lowLevelResponse of type {@link CloseableHttpResponse}.
+     * @throws IOException in case of an exception while processing the response.
+     * @return apiClientResponse.
+     */
+    private ApiClientResponse generateResponse(final CloseableHttpResponse lowLevelResponse) throws IOException {
         ApiClientResponse response = new ApiClientResponse();
         response.setStatusCode(lowLevelResponse.getStatusLine().getStatusCode());
         response.setHeaders(Arrays.stream(lowLevelResponse.getAllHeaders())
@@ -130,17 +151,35 @@ public class ApacheHttpApiClient implements ApiClient {
         return response;
     }
 
+    /**
+     * Apache HTTP Api Client Builder.
+     */
     public static final class Builder {
+
+        /**
+         * Provision a HTTP client to send requests to external services.
+         */
         private CloseableHttpClient httpClient;
 
-        private Builder() {
-        }
+        /**
+         * Prevent instantiation.
+         */
+        private Builder() { }
 
-        public Builder withHttpClient(CloseableHttpClient httpClient) {
+        /**
+         * Allows user to configure a custom HTTP client.
+         * @param httpClient {@link CloseableHttpClient}.
+         * @return {@link Builder}
+         */
+        public Builder withHttpClient(final CloseableHttpClient httpClient) {
             this.httpClient = httpClient;
             return this;
         }
 
+        /**
+         * Returns an instance of {@link ApacheHttpApiClient} with the given configuration.
+         * @return ApacheHttpApiClient.
+         */
         public ApacheHttpApiClient build() {
             return new ApacheHttpApiClient(this);
         }
