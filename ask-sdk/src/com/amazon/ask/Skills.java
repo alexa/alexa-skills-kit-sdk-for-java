@@ -13,23 +13,20 @@
 
 package com.amazon.ask;
 
-import com.amazon.ask.attributes.persistence.PersistenceAdapter;
-import com.amazon.ask.attributes.persistence.impl.DynamoDbPersistenceAdapter;
 import com.amazon.ask.builder.CustomSkillBuilder;
 import com.amazon.ask.builder.StandardSkillBuilder;
-import com.amazon.ask.model.services.ApiClient;
-import com.amazon.ask.services.ApacheHttpApiClient;
 
 /**
  * Factory methods for different {@link Skill} builders.
  */
 public final class Skills {
 
-    /** Prevent instantiation */
-    private Skills() {}
+    /** Prevent instantiation. */
+    private Skills() { }
 
     /**
-     * Creates a builder used to construct a new {@link Skill} using the default {@link DynamoDbPersistenceAdapter} and {@link ApacheHttpApiClient}.
+     * Creates a builder used to construct a new {@link Skill} using the default
+     * {@link com.amazon.ask.attributes.persistence.impl.DynamoDbPersistenceAdapter} and {@link com.amazon.ask.services.ApacheHttpApiClient}.
      *
      * @return standard skill builder
      */
@@ -38,7 +35,8 @@ public final class Skills {
     }
 
     /**
-     * Creates a builder used to construct a new {@link Skill} with a custom {@link ApiClient} and {@link PersistenceAdapter}.
+     * Creates a builder used to construct a new {@link Skill} with a custom {@link com.amazon.ask.model.services.ApiClient} and
+     * {@link com.amazon.ask.attributes.persistence.PersistenceAdapter}.
      *
      * @return custom skill builder
      */
