@@ -24,50 +24,122 @@ import com.amazon.ask.model.services.skillManagement.SkillManagementServiceClien
 import com.amazon.ask.model.services.util.JacksonSerializer;
 import com.amazon.ask.services.ApacheHttpApiClient;
 
-public class SmapiClientBuilder {
+/**
+ * Builder class used to build an instance of {@link SkillManagementService}.
+ */
+public final class SmapiClientBuilder {
+    /**
+     * Default api endpoint.
+     */
     private static final String DEFAULT_API_ENDPOINT = "https://api.amazonalexa.com";
 
+    /**
+     * Public identifier for the client.
+     */
     private String clientId;
+
+    /**
+     * Secret known only to the application and the authorization server.
+     */
     private String clientSecret;
+
+    /**
+     * Allows an application to obtain a new access token.
+     */
     private String refreshToken;
+
+    /**
+     * Custom api client.
+     */
     private ApiClient apiClient;
+
+    /**
+     * Custom api endpoint.
+     */
     private String apiEndpoint;
+
+    /**
+     * Custom serializer.
+     */
     private Serializer serializer;
 
-    private SmapiClientBuilder() {}
+    /**
+     * Prevent instantiation.
+     */
+    private SmapiClientBuilder() { }
 
-    public static SmapiClientBuilder create() { return new SmapiClientBuilder(); }
+    /**
+     * Constructs an instance of SmapiClientBuilder.
+     * @return {@link SmapiClientBuilder}.
+     */
+    public static SmapiClientBuilder create() {
+        return new SmapiClientBuilder();
+    }
 
-    public SmapiClientBuilder withClientId(String clientId) {
+    /**
+     * Adds client id information to the builder.
+     * @param clientId client id.
+     * @return {@link SmapiClientBuilder}.
+     */
+    public SmapiClientBuilder withClientId(final String clientId) {
         this.clientId = clientId;
         return this;
     }
 
-    public SmapiClientBuilder withClientSecret(String clientSecret) {
+    /**
+     * Adds client secret information to the builder.
+     * @param clientSecret client secret
+     * @return {@link SmapiClientBuilder}.
+     */
+    public SmapiClientBuilder withClientSecret(final String clientSecret) {
         this.clientSecret = clientSecret;
         return this;
     }
 
-    public SmapiClientBuilder withRefreshToken(String refreshToken) {
+    /**
+     * Adds refresh token information to the builder.
+     * @param refreshToken refresh token.
+     * @return {@link SmapiClientBuilder}.
+     */
+    public SmapiClientBuilder withRefreshToken(final String refreshToken) {
         this.refreshToken = refreshToken;
         return this;
     }
 
-    public SmapiClientBuilder withApiClient(ApiClient apiClient) {
+    /**
+     * Adds api client information to the builder.
+     * @param apiClient custom api client.
+     * @return {@link SmapiClientBuilder}.
+     */
+    public SmapiClientBuilder withApiClient(final ApiClient apiClient) {
         this.apiClient = apiClient;
         return this;
     }
 
-    public SmapiClientBuilder withApiEndpoint(String apiEndpoint) {
+    /**
+     * Adds api endpoint information to the builder.
+     * @param apiEndpoint custom api endpoint.
+     * @return {@link SmapiClientBuilder}.
+     */
+    public SmapiClientBuilder withApiEndpoint(final String apiEndpoint) {
         this.apiEndpoint = apiEndpoint;
         return this;
     }
 
-    public SmapiClientBuilder withSerializer(Serializer serializer) {
+    /**
+     * Adds serializer information to the builder.
+     * @param serializer custom serializer.
+     * @return {@link SmapiClientBuilder}.
+     */
+    public SmapiClientBuilder withSerializer(final Serializer serializer) {
         this.serializer = serializer;
         return this;
     }
 
+    /**
+     * Builder method to build an instance of SkillManagementService with the provided configuration.
+     * @return instance of SkillManagementService.
+     */
     public SkillManagementService build() {
         final ApiConfiguration apiConfiguration = DefaultApiConfiguration.builder()
                 .withSerializer(serializer == null ? new JacksonSerializer() : serializer)

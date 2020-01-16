@@ -19,14 +19,25 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Utils {
+/**
+ * Utility class to provide header values retrieval.
+ */
+public final class Utils {
+
+    /**
+     * Prevent instantiation.
+     */
+    private Utils() { }
 
     /**
      * Returns the value of the requested key from the response header. If multiple values exist, returns all values
      * as list of strings. Returns empty list if no matching key is found.
+     * @param headers list of headers represented as key values pairs.
+     * @param key header with key.
+     * @return list of values which match the input key.
      */
-    public static List<String> getValuesByKey(List<Pair<String, String>> headers, String key) {
-        if(headers == null || key == null) {
+    public static List<String> getValuesByKey(final List<Pair<String, String>> headers, final String key) {
+        if (headers == null || key == null) {
             return Collections.emptyList();
         }
         return headers.stream()
