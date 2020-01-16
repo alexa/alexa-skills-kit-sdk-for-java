@@ -44,13 +44,25 @@ import java.util.List;
  * <strong>Handler</strong>.
  */
 public abstract class SkillStreamHandler implements RequestStreamHandler {
+
+    /**
+     * List of skills of type {@link AlexaSkill}.
+     */
     private final List<AlexaSkill> skills;
 
-    public SkillStreamHandler(AlexaSkill skill) {
+    /**
+     * Constructor to build an instance of {@link SkillStreamHandler} with a single Alexa skill.
+     * @param skill instance of type {@link AlexaSkill}.
+     */
+    public SkillStreamHandler(final AlexaSkill skill) {
         this.skills = Collections.singletonList(ValidationUtils.assertNotNull(skill, "skill"));
     }
 
-    public SkillStreamHandler(AlexaSkill... skills) {
+    /**
+     * Constructor to build an instance of {@link SkillStreamHandler} with multiple Alexa skills.
+     * @param skills instances of type {@link AlexaSkill}.
+     */
+    public SkillStreamHandler(final AlexaSkill... skills) {
         this.skills = Arrays.asList(ValidationUtils.assertNotEmpty(skills, "skills"));
     }
 
@@ -65,7 +77,8 @@ public abstract class SkillStreamHandler implements RequestStreamHandler {
      * the failure are then available in the Lambda console logs within CloudWatch. {@inheritDoc}
      */
     @Override
-    public final void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
+    public final void handleRequest(final InputStream input, final OutputStream output, final Context context)
+            throws IOException {
         byte[] inputBytes = IOUtils.toByteArray(input);
         for (AlexaSkill skill : skills) {
             SkillResponse response = skill.execute(new BaseSkillRequest(inputBytes), context);
