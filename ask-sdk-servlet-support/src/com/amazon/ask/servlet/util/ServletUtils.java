@@ -15,15 +15,19 @@ package com.amazon.ask.servlet.util;
 
 import com.amazon.ask.servlet.ServletConstants;
 
-public class ServletUtils {
+/**
+ * Utility class with methods to get Timestamp tolerance and to verify if Request Signature has been disabled.
+ */
+public final class ServletUtils {
 
-    /** Prevent instantiation */
-    private ServletUtils() {}
+    /** Prevent instantiation. */
+    private ServletUtils() { }
 
     /**
      * Returns the value of the {@link ServletConstants#TIMESTAMP_TOLERANCE_SYSTEM_PROPERTY} JVM system property as a {@link Long},
      * or returns null if the property is empty.
-     * @return value of the {@link ServletConstants#TIMESTAMP_TOLERANCE_SYSTEM_PROPERTY} system property as a {@link Long}, or null if the property is empty.
+     * @return value of the {@link ServletConstants#TIMESTAMP_TOLERANCE_SYSTEM_PROPERTY} system property as a {@link Long}, or null
+     * if the property is empty.
      * @throws IllegalArgumentException if the system property is present but not parseable as a Long.
      */
     public static Long getTimeStampToleranceSystemProperty() {
@@ -43,7 +47,7 @@ public class ServletUtils {
      * Returns the value of the {@link ServletConstants#DISABLE_REQUEST_SIGNATURE_CHECK_SYSTEM_PROPERTY} JVM system property as a {@link Boolean}.
      * @return value of the {@link ServletConstants#DISABLE_REQUEST_SIGNATURE_CHECK_SYSTEM_PROPERTY} system property as a {@link Boolean}.
      */
-    public static Boolean isRequestSignatureCheckSystemPropertyDisabled(){
+    public static Boolean isRequestSignatureCheckSystemPropertyDisabled() {
         String isRequestSignatureCheckDisabled = System.getProperty(ServletConstants.DISABLE_REQUEST_SIGNATURE_CHECK_SYSTEM_PROPERTY);
         return Boolean.valueOf(isRequestSignatureCheckDisabled);
     }
