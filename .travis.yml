@@ -1,7 +1,7 @@
 dist: trusty
 sudo: required
 language: java
-script: mvn install javadoc:javadoc -V
+script: mvn site && mvn install javadoc:javadoc -V
 jdk:
   - openjdk8
   - oraclejdk8
