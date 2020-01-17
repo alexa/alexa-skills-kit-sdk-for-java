@@ -17,11 +17,30 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.Optional;
 
+/**
+ * Utility class, exposes a method to retrieve namespace discriminator.
+ */
 final class UnmarshallUtils {
 
+    /**
+     * Header field name.
+     */
     static final String HEADER_FIELD_NAME = "header";
+
+    /**
+     * Namespace field name.
+     */
     static final String NAMESPACE_FIELD_NAME = "namespace";
+
+    /**
+     * Field name for name key in a JSON node.
+     */
     static final String NAME_FIELD_NAME = "name";
+
+    /**
+     * Prevent instantiation.
+     */
+    private UnmarshallUtils() { }
 
     /**
      * Computes the target discriminator value for a namespaced request by traversing
@@ -32,7 +51,7 @@ final class UnmarshallUtils {
      * @return an {@link Optional} containing the computed discriminator value, or empty if
      *         none could be found.
      */
-    static Optional<String> getNamespaceDiscriminator(JsonNode root) {
+    static Optional<String> getNamespaceDiscriminator(final JsonNode root) {
         if (!root.has(HEADER_FIELD_NAME)) {
             return Optional.empty();
         }

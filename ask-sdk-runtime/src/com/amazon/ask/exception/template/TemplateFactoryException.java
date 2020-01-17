@@ -20,11 +20,20 @@ import com.amazon.ask.exception.AskSdkException;
  */
 public class TemplateFactoryException extends AskSdkException {
 
-    public TemplateFactoryException(String message) {
+    /**
+     * Constructs an instance of TemplateFactoryException with the given message.
+     * @param message exception message.
+     */
+    public TemplateFactoryException(final String message) {
         super(message);
     }
 
-    public TemplateFactoryException(String message, Throwable cause) {
+    /**
+     * Constructs an instance of TemplateFactoryException with the given message and cause.
+     * @param message exception message.
+     * @param cause instance of {@link Throwable}.
+     */
+    public TemplateFactoryException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

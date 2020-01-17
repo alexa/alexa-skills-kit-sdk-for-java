@@ -20,6 +20,7 @@ import java.util.Map;
 
 /**
  * Renderer interface for template rendering and response conversion.
+ * @param <Output> output type.
  */
 public interface TemplateRenderer<Output> {
 

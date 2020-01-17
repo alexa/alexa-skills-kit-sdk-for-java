@@ -18,11 +18,20 @@ package com.amazon.ask.exception;
  */
 public class AskSdkException extends RuntimeException {
 
-    public AskSdkException(String message) {
+    /**
+     * Constructs an instance of AskSdkException with the given message.
+     * @param message exception message.
+     */
+    public AskSdkException(final String message) {
         super(message);
     }
 
-    public AskSdkException(String message, Throwable cause) {
+    /**
+     * Constructs an instance of AskSdkException with the given message and cause.
+     * @param message exception message.
+     * @param cause instance of {@link Throwable}.
+     */
+    public AskSdkException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

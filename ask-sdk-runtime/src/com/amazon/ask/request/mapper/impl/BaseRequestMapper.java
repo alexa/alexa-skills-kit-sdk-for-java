@@ -28,17 +28,29 @@ import java.util.Optional;
  *
  * This implementation accesses registered {@link GenericRequestHandlerChain} instances in the order they were provided.
  * Suitable chains are identified by calling canHandle on the attached {@link GenericRequestHandler}.
+ * @param <Input> handler input type.
+ * @param <Output> handler output type.
  */
 public class BaseRequestMapper<Input, Output> implements GenericRequestMapper<Input, Output> {
 
+    /**
+     * List of handler chains.
+     */
     protected final List<BaseRequestHandlerChain<Input, Output>> handlerChains;
 
-    protected BaseRequestMapper(List<BaseRequestHandlerChain<Input, Output>> handlerChains) {
+    /**
+     * Constructor for BaseRequestMapper.
+     * @param handlerChains list of handler chains.
+     */
+    protected BaseRequestMapper(final List<BaseRequestHandlerChain<Input, Output>> handlerChains) {
         this.handlerChains = ValidationUtils.assertNotEmpty(handlerChains, "handlerChains");
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public Optional<GenericRequestHandlerChain<Input, Output>> getRequestHandlerChain(Input input) {
+    public Optional<GenericRequestHandlerChain<Input, Output>> getRequestHandlerChain(final Input input) {
         for (BaseRequestHandlerChain<Input, Output> handlerChain : handlerChains) {
             if (handlerChain.getRequestHandler().canHandle(input)) {
                 return Optional.of(handlerChain);
@@ -47,28 +59,64 @@ public class BaseRequestMapper<Input, Output> implements GenericRequestMapper<In
         return Optional.empty();
     }
 
+    /**
+     * Returns an instance of Builder.
+     * @param input class of type Input
+     * @param output class of type Output
+     * @param <Input> handler input type.
+     * @param <Output> handler output type.
+     * @param <Self> of type Builder.
+     * @return {@link Builder}.
+     */
     public static <Input, Output, Self extends Builder<Input, Output, Self>> Builder<Input, Output, Self> forTypes(
-            Class<Input> input, Class<Output> output) {
+            final Class<Input> input, final Class<Output> output) {
         return new Builder<>();
     }
 
+    /**
+     * Returns an instance of Builder.
+     * @param <Input> handler input type.
+     * @param <Output> handler output type.
+     * @return {@link Builder}.
+     */
     public static <Input, Output> Builder<Input, Output, ?> builder() {
         return new Builder<>();
     }
 
+    /**
+     * Base Request Mapper Builder.
+     * @param <Input> handler input type.
+     * @param <Output> handler output type.
+     * @param <Self> of type Builder.
+     */
     @SuppressWarnings("unchecked")
     public static class Builder<Input, Output, Self extends Builder<Input, Output, Self>> {
+        /**
+         * List of handler chains.
+         */
         protected List<BaseRequestHandlerChain<Input, Output>> handlerChains;
 
-        protected Builder() {
-        }
+        /**
+         * Constructor for Builder.
+         */
+        protected Builder() { }
 
-        public Self withRequestHandlerChains(List<BaseRequestHandlerChain<Input, Output>> handlerChains) {
+        /**
+         * Add multiple request handler chains to BaseRequestMapper.
+         * @param handlerChains list of handler chains.
+         * @return {@link Builder}.
+         */
+        public Self withRequestHandlerChains(final List<BaseRequestHandlerChain<Input, Output>> handlerChains) {
             this.handlerChains = handlerChains;
             return (Self) this;
         }
 
-        public Self addRequestHandlerChain(BaseRequestHandlerChain<Input, Output> handlerChain) {
+        /**
+         * Add a request handler chain to BaseRequestMapper.
+         * @param handlerChain handler chain.
+         * @return {@link Builder}.
+         */
+        public Self addRequestHandlerChain(final BaseRequestHandlerChain<Input, Output> handlerChain) {
             if (handlerChains == null) {
                 handlerChains = new ArrayList<>();
             }
@@ -76,6 +124,10 @@ public class BaseRequestMapper<Input, Output> implements GenericRequestMapper<In
             return (Self) this;
         }
 
+        /**
+         * Builder method to build an instance of BaseRequestMapper.
+         * @return {@link GenericRequestMapper}.
+         */
         public GenericRequestMapper<Input, Output> build() {
             return new BaseRequestMapper<>(handlerChains);
         }

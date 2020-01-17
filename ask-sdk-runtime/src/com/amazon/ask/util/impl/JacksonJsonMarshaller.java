@@ -20,16 +20,32 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * Jackson Marshaller to serialize a given object. Implements {@link JsonMarshaller}.
+ * @param <Type> input type.
+ */
 public class JacksonJsonMarshaller<Type> implements JsonMarshaller<Type> {
 
+    /**
+     * Static instance of {@link ObjectMapper}.
+     */
     private static final ObjectMapper MAPPER = ObjectMapperFactory.getMapper();
 
-    public static <Type> JacksonJsonMarshaller<Type> forType(Class<Type> type) {
+    /**
+     * Returns an instance of JacksonJsonMarshaller.
+     * @param type class from which the JSON is marshalled from.
+     * @param <Type> input type.
+     * @return {@link JacksonJsonMarshaller}.
+     */
+    public static <Type> JacksonJsonMarshaller<Type> forType(final Class<Type> type) {
         return new JacksonJsonMarshaller<>();
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public void marshall(Type t, OutputStream stream) {
+    public void marshall(final Type t, final OutputStream stream) {
         try {
             MAPPER.writeValue(stream, t);
         } catch (IOException e) {
@@ -37,8 +53,11 @@ public class JacksonJsonMarshaller<Type> implements JsonMarshaller<Type> {
         }
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public byte[] marshall(Type t) {
+    public byte[] marshall(final Type t) {
         try {
             return MAPPER.writeValueAsBytes(t);
         } catch (IOException e) {

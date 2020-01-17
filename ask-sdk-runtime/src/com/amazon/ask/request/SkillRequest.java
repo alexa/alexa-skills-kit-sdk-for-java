@@ -18,6 +18,10 @@ package com.amazon.ask.request;
  */
 public interface SkillRequest {
 
+    /**
+     * Retrieves request in it's raw format.
+     * @return byte array.
+     */
     byte[] getRawRequest();
 
 }

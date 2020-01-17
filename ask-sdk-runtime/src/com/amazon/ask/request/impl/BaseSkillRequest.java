@@ -16,14 +16,27 @@ package com.amazon.ask.request.impl;
 import com.amazon.ask.request.SkillRequest;
 import com.amazon.ask.util.ValidationUtils;
 
+/**
+ * Skill Request implements {@link SkillRequest} and provides utility method to get raw request.
+ */
 public class BaseSkillRequest implements SkillRequest {
 
+    /**
+     * Incoming request in raw format.
+     */
     private final byte[] payload;
 
-    public BaseSkillRequest(byte[] payload) {
+    /**
+     * Construct instance of BaseSkillRequest with the given payload.
+     * @param payload request in raw format.
+     */
+    public BaseSkillRequest(final byte[] payload) {
         this.payload = ValidationUtils.assertNotNull(payload, "payload");
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public byte[] getRawRequest() {
         return payload;

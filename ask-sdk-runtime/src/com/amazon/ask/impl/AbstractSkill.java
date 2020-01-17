@@ -33,22 +33,42 @@ import java.util.Optional;
  */
 public abstract class AbstractSkill<Request, Response> implements AlexaSkill<Request, Response> {
 
+    /**
+     * List of JSON unmarshallers.
+     */
     protected final List<JsonUnmarshaller<Request>> unmarshallerChain;
+
+    /**
+     * JSON marshaller.
+     */
     protected final JsonMarshaller<Response> marshaller;
 
-    protected AbstractSkill(JsonUnmarshaller<Request> unmarshaller,
-                            JsonMarshaller<Response> marshaller) {
+    /**
+     * Constructor to build an instance of AbstractSkill.
+     * @param unmarshaller JSON unmarshaller.
+     * @param marshaller JSON marshaller.
+     */
+    protected AbstractSkill(final JsonUnmarshaller<Request> unmarshaller,
+                            final JsonMarshaller<Response> marshaller) {
         this(Collections.singletonList(unmarshaller), marshaller);
     }
 
-    protected AbstractSkill(List<JsonUnmarshaller<Request>> unmarshallerChain,
-                            JsonMarshaller<Response> marshaller) {
+    /**
+     * Constructor to build an instance of AbstractSkill.
+     * @param unmarshallerChain list of JSON unmarshallers.
+     * @param marshaller JSON marshaller.
+     */
+    protected AbstractSkill(final List<JsonUnmarshaller<Request>> unmarshallerChain,
+                            final JsonMarshaller<Response> marshaller) {
         this.unmarshallerChain = ValidationUtils.assertNotNull(unmarshallerChain, "unmarshallerChain");
         this.marshaller = ValidationUtils.assertNotNull(marshaller, "marshaller");
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public SkillResponse<Response> execute(SkillRequest request, Object context) {
+    public SkillResponse<Response> execute(final SkillRequest request, final Object context) {
         Optional<UnmarshalledRequest<Request>> deserializedRequest = Optional.empty();
 
         for (JsonUnmarshaller<Request> unmarshaller : unmarshallerChain) {
@@ -65,6 +85,12 @@ public abstract class AbstractSkill<Request, Response> implements AlexaSkill<Req
         return new BaseSkillResponse<>(marshaller, response);
     }
 
+    /**
+     * Abstract method to kick off the request handling process.
+     * @param unmarshalledRequest unmarshalled request.
+     * @param context object passed to handler by AWS Lambda running your function.
+     * @return {@link Response}.
+     */
     protected abstract Response invoke(UnmarshalledRequest<Request> unmarshalledRequest, Object context);
 
 }

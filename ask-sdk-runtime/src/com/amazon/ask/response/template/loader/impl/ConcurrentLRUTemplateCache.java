@@ -13,6 +13,8 @@
 
 package com.amazon.ask.response.template.loader.impl;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import com.amazon.ask.response.template.TemplateContentData;
 import com.amazon.ask.response.template.loader.TemplateCache;
 import org.slf4j.Logger;
@@ -23,30 +25,71 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 /**
+ * {@inheritDoc}.
+ *
  * {@link TemplateCache} implementation to cache {@link TemplateContentData} using LRU replacement policy based on access order.
  * If no capacity specified, use default value of 5 MB.
  * If no time to live threshold specified, use default value of 1 day.
  */
 public class ConcurrentLRUTemplateCache implements TemplateCache {
 
+    /**
+     * Default cache capacity.
+     */
     private static final long DEFAULT_CAPACITY = 1000 * 1000 * 5;
+
+    /**
+     * Default TTL for a cache entry.
+     */
     private static final long DEFAULT_TIME_TO_LIVE_THRESHOLD = 1000 * 60 * 60 * 24;
+
+    /**
+     * Initial cache queue capacity.
+     */
     private static final int INITIAL_QUEUE_CAPACITY = 11;
 
+    /**
+     * Logger to log information used for debugging purposes.
+     */
     private static final Logger LOGGER = getLogger(ConcurrentLRUTemplateCache.class);
 
+    /**
+     * Custom capacity.
+     */
     protected final long capacity;
+
+    /**
+     * Custom TTL.
+     */
     protected final long timeToLiveThreshold;
+
+    /**
+     * Template data map.
+     */
     protected final Map<String, AccessOrderedTemplateContentData> templateDataMap;
+
+    /**
+     * Template order queue.
+     */
     protected final Queue<AccessOrderedTemplateContentData> templateOrderQueue;
 
+    /**
+     * Counter to estimate current cache occupancy.
+     */
     private AtomicInteger capacityCounter;
+
+    /**
+     * Map to store locks on cache units.
+     */
     private Map<String, Object> locksMap;
 
-    protected ConcurrentLRUTemplateCache(long capacity, long timeToLiveThreshold) {
+    /**
+     * Constructor for ConcurrentLRUTemplateCache.
+     * @param capacity custom capacity.
+     * @param timeToLiveThreshold custom TTL.
+     */
+    protected ConcurrentLRUTemplateCache(final long capacity, final long timeToLiveThreshold) {
         this.capacity = capacity;
         this.timeToLiveThreshold = timeToLiveThreshold;
         this.templateDataMap = new ConcurrentHashMap<>();
@@ -57,6 +100,10 @@ public class ConcurrentLRUTemplateCache implements TemplateCache {
         this.locksMap = new ConcurrentHashMap<>();
     }
 
+    /**
+     * Static method which builds an instance of Builder.
+     * @return {@link Builder}.
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -95,7 +142,7 @@ public class ConcurrentLRUTemplateCache implements TemplateCache {
      * If there's not enough capacity for new entry, remove eldest ones until have capacity to insert.
      */
     @Override
-    synchronized public void put(String identifier, TemplateContentData templateContentData) {
+    synchronized public void put(final String identifier, final TemplateContentData templateContentData) {
         if (!locksMap.containsKey(identifier)) {
             locksMap.put(identifier, new Object());
         }
@@ -107,7 +154,8 @@ public class ConcurrentLRUTemplateCache implements TemplateCache {
                 return;
             }
             if (templateDataMap.containsKey(identifier)) {
-                LOGGER.info(String.format("Try to put the same template with identifier: %s into cache, removing duplicate entry in queue.", identifier));
+                LOGGER.info(String.format("Try to put the same template with identifier: %s into cache, removing duplicate entry in queue.",
+                        identifier));
                 templateOrderQueue.remove(templateDataMap.get(identifier));
             }
             while (size + capacityCounter.get() > capacity) {
@@ -131,7 +179,7 @@ public class ConcurrentLRUTemplateCache implements TemplateCache {
      * @return {@link TemplateContentData} if exists and it is fresh, otherwise return null
      */
     @Override
-    public TemplateContentData get(String identifier) {
+    public TemplateContentData get(final String identifier) {
         Object lock = locksMap.get(identifier);
         if (lock != null) {
             synchronized (lock) {
@@ -152,30 +200,64 @@ public class ConcurrentLRUTemplateCache implements TemplateCache {
         return null;
     }
 
-    private boolean isFresh(AccessOrderedTemplateContentData data) {
+    /**
+     * Validates a cache entry.
+     * @param data Template content data.
+     * @return true is a cache entry is valid.
+     */
+    private boolean isFresh(final AccessOrderedTemplateContentData data) {
         long current = System.currentTimeMillis();
         long dataTimestamp = data.getAccessTimestamp();
         return (current - dataTimestamp) < timeToLiveThreshold;
     }
 
-    private int deductAndGet(int delta) {
+    /**
+     * Get current cache remaining capacity.
+     * @param delta difference between initial size and current size.
+     * @return remaining capacity.
+     */
+    private int deductAndGet(final int delta) {
         return capacityCounter.addAndGet(Math.negateExact(delta));
     }
 
+    /**
+     * Concurrent LRU Template Cache Builder.
+     */
     public static class Builder {
+        /**
+         * Custom cache capacity.
+         */
         private long capacity = DEFAULT_CAPACITY;
+
+        /**
+         * Custom TTL.
+         */
         private long timeToLiveThreshold = DEFAULT_TIME_TO_LIVE_THRESHOLD;
 
-        public Builder withCapacity(long capacity) {
+        /**
+         * Add custom cache capacity to ConcurrentLRUTemplateCache.
+         * @param capacity custom capacity.
+         * @return {@link Builder}.
+         */
+        public Builder withCapacity(final long capacity) {
             this.capacity = capacity;
             return this;
         }
 
-        public Builder withLiveTimeThreshold(long liveTimeThreshold) {
+        /**
+         * Add custom TTL to ConcurrentLRUTemplateCache.
+         * @param liveTimeThreshold custom TTL.
+         * @return {@link Builder}.
+         */
+        public Builder withLiveTimeThreshold(final long liveTimeThreshold) {
             this.timeToLiveThreshold = liveTimeThreshold;
             return this;
         }
 
+        /**
+         * Builder method to build an instance of ConcurrentLRUTemplateCache.
+         * @return {@link ConcurrentLRUTemplateCache}.
+         */
         public ConcurrentLRUTemplateCache build() {
             return new ConcurrentLRUTemplateCache(this.capacity, this.timeToLiveThreshold);
         }

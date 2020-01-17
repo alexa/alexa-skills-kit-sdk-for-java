@@ -16,12 +16,12 @@ package com.amazon.ask.util;
 import java.util.Collection;
 
 /**
- * Useful utilities to validate dependencies
+ * Useful utilities to validate dependencies.
  */
 public final class ValidationUtils {
 
-    /** Prevent instantiation */
-    private ValidationUtils() {}
+    /** Prevent instantiation. */
+    private ValidationUtils() { }
 
     /**
      * Asserts that the given object is non-null and returns it.
@@ -35,7 +35,7 @@ public final class ValidationUtils {
      * @throws IllegalArgumentException
      *         If object was null
      */
-    public static <T> T assertNotNull(T object, String fieldName) throws IllegalArgumentException {
+    public static <T> T assertNotNull(final T object, final String fieldName) throws IllegalArgumentException {
         if (object == null) {
             throw new IllegalArgumentException(String.format("%s cannot be null", fieldName));
         }
@@ -50,7 +50,7 @@ public final class ValidationUtils {
      * @throws IllegalArgumentException
      *         if any object provided was NOT null.
      */
-    public static void assertAllAreNull(String messageIfNull, Object... objects) throws IllegalArgumentException {
+    public static void assertAllAreNull(final String messageIfNull, final Object... objects) throws IllegalArgumentException {
         for (Object object : objects) {
             if (object != null) {
                 throw new IllegalArgumentException(messageIfNull);
@@ -65,14 +65,22 @@ public final class ValidationUtils {
      * @param fieldName Field name to display in exception message if not positive.
      * @return Number if positive.
      */
-    public static int assertIsPositive(int num, String fieldName) {
+    public static int assertIsPositive(final int num, final String fieldName) {
         if (num <= 0) {
             throw new IllegalArgumentException(String.format("%s must be positive", fieldName));
         }
         return num;
     }
 
-    public static <T extends Collection<?>> T assertNotEmpty(T collection, String fieldName) throws IllegalArgumentException{
+    /**
+     * Asserts that the given collection is not empty (non-null and non-empty).
+     * @param collection collection to validate.
+     * @param fieldName field name to display in exception message if empty.
+     * @param <T> type of elements in given collection.
+     * @return collection if non-empty.
+     * @throws IllegalArgumentException if the collection provided was empty.
+     */
+    public static <T extends Collection<?>> T assertNotEmpty(final T collection, final String fieldName) throws IllegalArgumentException {
         assertNotNull(collection, fieldName);
         if (collection.isEmpty()) {
             throw new IllegalArgumentException(String.format("%s cannot be empty", fieldName));
@@ -80,7 +88,15 @@ public final class ValidationUtils {
         return collection;
     }
 
-    public static <T> T[] assertNotEmpty(T[] array, String fieldName) throws IllegalArgumentException {
+    /**
+     * Asserts that the given array is not empty (non-null and non-empty).
+     * @param array array to validate.
+     * @param fieldName field name to display in exception message if empty.
+     * @param <T> type of elements in given array.
+     * @return array if non-empty.
+     * @throws IllegalArgumentException if the array provided was empty.
+     */
+    public static <T> T[] assertNotEmpty(final T[] array, final String fieldName) throws IllegalArgumentException {
         assertNotNull(array, fieldName);
         if (array.length == 0) {
             throw new IllegalArgumentException(String.format("%s cannot be empty", fieldName));
@@ -88,7 +104,14 @@ public final class ValidationUtils {
         return array;
     }
 
-    public static String assertStringNotEmpty(String string, String fieldName) throws IllegalArgumentException {
+    /**
+     * Asserts that the given string is not empty (non-null and non-empty).
+     * @param string string to validate.
+     * @param fieldName field name to display in exception message if empty.
+     * @return string if non-empty.
+     * @throws IllegalArgumentException if the string provided was empty.
+     */
+    public static String assertStringNotEmpty(final String string, final String fieldName) throws IllegalArgumentException {
         assertNotNull(string, fieldName);
         if (string.isEmpty()) {
             throw new IllegalArgumentException(String.format("%s cannot be empty", fieldName));

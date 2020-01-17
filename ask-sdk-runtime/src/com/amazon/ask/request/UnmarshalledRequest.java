@@ -22,13 +22,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 public interface UnmarshalledRequest<Type> {
 
     /**
-     * Returns the unmarshalled request
+     * Returns the unmarshalled request.
      * @return unmarshalled request
      */
     Type getUnmarshalledRequest();
 
     /**
-     * Returns the raw request as a {@link JsonNode}
+     * Returns the raw request as a {@link JsonNode}.
      * @return JSON representation of request
      */
     JsonNode getRequestJson();

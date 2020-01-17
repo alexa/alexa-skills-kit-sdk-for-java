@@ -19,6 +19,8 @@ import java.util.Map;
 
 /**
  * Template Factory interface to process template and data to generate skill response.
+ * @param <Input> Skill input type.
+ * @param <Output> Skill output type.
  */
 public interface TemplateFactory<Input, Output> {
 
