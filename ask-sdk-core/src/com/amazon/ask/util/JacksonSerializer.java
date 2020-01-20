@@ -26,10 +26,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Jackson backed implementation of {@link Serializer}
+ * Jackson backed implementation of {@link Serializer}.
  */
 public final class JacksonSerializer implements Serializer {
 
+    /**
+     * Mapper used to serialize and de-serialize objects and byte streams respectively.
+     */
     private static ObjectMapper mapper = new ObjectMapper();
     static {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
@@ -40,13 +43,14 @@ public final class JacksonSerializer implements Serializer {
 
     /**
      * For testing purposes.
+     * @param objectMapper instance of type {@link ObjectMapper}.
      */
-    static void setMapper(ObjectMapper objectMapper) {
+    static void setMapper(final ObjectMapper objectMapper) {
         mapper = objectMapper;
     }
 
     @Override
-    public <T> String serialize(T t) {
+    public <T> String serialize(final T t) {
         try {
             return mapper.writeValueAsString(t);
         } catch (IOException e) {
@@ -55,7 +59,7 @@ public final class JacksonSerializer implements Serializer {
     }
 
     @Override
-    public <T> void serialize(T object, OutputStream outputStream) {
+    public <T> void serialize(final T object, final OutputStream outputStream) {
         try {
             mapper.writeValue(outputStream, object);
         } catch (IOException e) {
@@ -64,7 +68,7 @@ public final class JacksonSerializer implements Serializer {
     }
 
     @Override
-    public <T> T deserialize(String s, Class<T> aClass) {
+    public <T> T deserialize(final String s, final Class<T> aClass) {
         try {
             return mapper.readValue(s, aClass);
         } catch (IOException e) {
@@ -73,7 +77,7 @@ public final class JacksonSerializer implements Serializer {
     }
 
     @Override
-    public <T> T deserialize(InputStream inputStream, Class<T> type) {
+    public <T> T deserialize(final InputStream inputStream, final Class<T> type) {
         try {
             return mapper.readValue(inputStream, type);
         } catch (IOException e) {

@@ -22,4 +22,4 @@ import java.util.Optional;
  * An adapter that allows a {@link com.amazon.ask.dispatcher.RequestDispatcher} to invoke a type of request handler.
  */
 @Deprecated
-public interface HandlerAdapter extends GenericHandlerAdapter<HandlerInput, Optional<Response>> {}
+public interface HandlerAdapter extends GenericHandlerAdapter<HandlerInput, Optional<Response>> { }

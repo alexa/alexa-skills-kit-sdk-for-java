@@ -34,34 +34,78 @@ import java.util.Optional;
  */
 public class SkillConfiguration extends AbstractSkillConfiguration<HandlerInput, Optional<Response>> implements CustomSkillConfiguration {
 
+    /**
+     * Custom UserAgent.
+     */
     protected final String customUserAgent;
+
+    /**
+     * Unique ID associated with a Skill.
+     */
     protected final String skillId;
+
+    /**
+     *  Persistence adapters allow an {@link com.amazon.ask.attributes.AttributesManager} to store skill attributes to a
+     *  persistence layer.
+     */
     protected final PersistenceAdapter persistenceAdapter;
+
+    /**
+     * Api client to make external API calls.
+     */
     protected final ApiClient apiClient;
+
+    /**
+     * Template Factory interface to process template and data to generate skill response.
+     */
     protected final TemplateFactory<HandlerInput, Response> templateFactory;
 
-    protected SkillConfiguration(List<GenericRequestMapper<HandlerInput, Optional<Response>>> requestMappers,
-                                 List<GenericHandlerAdapter<HandlerInput, Optional<Response>>> handlerAdapters,
-                                 GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper,
-                                 PersistenceAdapter persistenceAdapter,
-                                 ApiClient apiClient,
-                                 String customUserAgent,
-                                 String skillId,
-                                 TemplateFactory<HandlerInput, Response> templateFactory) {
+    /**
+     * Constructor for SkillConfiguration.
+     * @param requestMappers list of request mappers.
+     * @param handlerAdapters list of handler adapters.
+     * @param exceptionMapper exception mapper.
+     * @param persistenceAdapter store skill attributes to a persistence layer.
+     * @param apiClient api client to make external API calls.
+     * @param customUserAgent custom user agent.
+     * @param skillId unique ID associated with a Skill.
+     * @param templateFactory interface to process template and data to generate skill response.
+     */
+    protected SkillConfiguration(final List<GenericRequestMapper<HandlerInput, Optional<Response>>> requestMappers,
+                                 final List<GenericHandlerAdapter<HandlerInput, Optional<Response>>> handlerAdapters,
+                                 final GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper,
+                                 final PersistenceAdapter persistenceAdapter,
+                                 final ApiClient apiClient,
+                                 final String customUserAgent,
+                                 final String skillId,
+                                 final TemplateFactory<HandlerInput, Response> templateFactory) {
         this(requestMappers, handlerAdapters, null, null, exceptionMapper,
                 persistenceAdapter, apiClient, customUserAgent, skillId, templateFactory);
     }
 
-    protected SkillConfiguration(List<GenericRequestMapper<HandlerInput, Optional<Response>>> requestMappers,
-                                 List<GenericHandlerAdapter<HandlerInput, Optional<Response>>> handlerAdapters,
-                                 List<GenericRequestInterceptor<HandlerInput>> requestInterceptors,
-                                 List<GenericResponseInterceptor<HandlerInput, Optional<Response>>> responseInterceptors,
-                                 GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper,
-                                 PersistenceAdapter persistenceAdapter,
-                                 ApiClient apiClient,
-                                 String customUserAgent,
-                                 String skillId,
-                                 TemplateFactory<HandlerInput, Response> templateFactory) {
+    /**
+     * Constructor for SkillConfiguration.
+     * @param requestMappers list of request mappers.
+     * @param handlerAdapters list of handler adapters.
+     * @param requestInterceptors list of request interceptors.
+     * @param responseInterceptors list of response interceptors.
+     * @param exceptionMapper exception mapper.
+     * @param persistenceAdapter store skill attributes to a persistence layer.
+     * @param apiClient api client to make external API calls.
+     * @param customUserAgent custom user agent.
+     * @param skillId unique ID associated with a Skill.
+     * @param templateFactory interface to process template and data to generate skill response.
+     */
+    protected SkillConfiguration(final List<GenericRequestMapper<HandlerInput, Optional<Response>>> requestMappers,
+                                 final List<GenericHandlerAdapter<HandlerInput, Optional<Response>>> handlerAdapters,
+                                 final List<GenericRequestInterceptor<HandlerInput>> requestInterceptors,
+                                 final List<GenericResponseInterceptor<HandlerInput, Optional<Response>>> responseInterceptors,
+                                 final GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper,
+                                 final PersistenceAdapter persistenceAdapter,
+                                 final ApiClient apiClient,
+                                 final String customUserAgent,
+                                 final String skillId,
+                                 final TemplateFactory<HandlerInput, Response> templateFactory) {
         super(requestMappers, handlerAdapters, requestInterceptors, responseInterceptors, exceptionMapper);
         this.customUserAgent = customUserAgent;
         this.skillId = skillId;
@@ -70,91 +114,188 @@ public class SkillConfiguration extends AbstractSkillConfiguration<HandlerInput,
         this.templateFactory = templateFactory;
     }
 
+    /**
+     * Static method to build an instance of Builder class.
+     * @return {@link Builder}.
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     public String getCustomUserAgent() {
         return customUserAgent;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     public String getSkillId() {
         return skillId;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     public PersistenceAdapter getPersistenceAdapter() {
         return persistenceAdapter;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     public ApiClient getApiClient() {
         return apiClient;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     public TemplateFactory<HandlerInput, Response> getTemplateFactory() {
         return templateFactory;
     }
 
+    /**
+     * Skill configuration Builder.
+     */
     public static final class Builder extends AbstractSkillConfiguration.Builder<HandlerInput, Optional<Response>, Builder> {
+        /**
+         * Store skill attributes to a persistence layer.
+         */
         private PersistenceAdapter persistenceAdapter;
+
+        /**
+         * Api client to make external API calls.
+         */
         private ApiClient apiClient;
+
+        /**
+         * Custom UserAgent.
+         */
         private String customUserAgent;
+
+        /**
+         * Unique ID associated with a Skill.
+         */
         private String skillId;
+
+        /**
+         * Template Factory interface to process template and data to generate skill response.
+         */
         private TemplateFactory<HandlerInput, Response> templateFactory;
 
-        public Builder() {
-        }
+        /**
+         * Prevent instantiation.
+         */
+        public Builder() { }
 
-        public Builder withPersistenceAdapter(PersistenceAdapter persistenceAdapter) {
+        /**
+         * Adds PersistenceAdapter to Skill configuration.
+         * @param persistenceAdapter Store skill attributes to a persistence layer.
+         * @return {@link Builder}.
+         */
+        public Builder withPersistenceAdapter(final PersistenceAdapter persistenceAdapter) {
             this.persistenceAdapter = persistenceAdapter;
             return this;
         }
 
+        /**
+         * Getter for Persistence Adapter.
+         * @return {@link PersistenceAdapter}.
+         */
         public PersistenceAdapter getPersistenceAdapter() {
             return persistenceAdapter;
         }
 
-        public Builder withApiClient(ApiClient apiClient) {
+        /**
+         * Adds ApiClient to a Skill.
+         * @param apiClient Api client to make external API calls.
+         * @return {@link Builder}.
+         */
+        public Builder withApiClient(final ApiClient apiClient) {
             this.apiClient = apiClient;
             return this;
         }
 
+        /**
+         * Getter for Api client.
+         * @return {@link ApiClient}.
+         */
         public ApiClient getApiClient() {
             return apiClient;
         }
 
-        public Builder withCustomUserAgent(String customUserAgent) {
+        /**
+         * Adds custom useragent to Skill configuration.
+         * @param customUserAgent custom user agent.
+         * @return {@link Builder}.
+         */
+        public Builder withCustomUserAgent(final String customUserAgent) {
             this.customUserAgent = customUserAgent;
             return this;
         }
 
-        public Builder appendCustomUserAgent(String userAgent) {
+        /**
+         * Appends a custom user agent to the existing user agent.
+         * @param userAgent user agent.
+         * @return {@link Builder}.
+         */
+        public Builder appendCustomUserAgent(final String userAgent) {
             customUserAgent = customUserAgent == null ? userAgent : customUserAgent + " " + userAgent;
             return this;
         }
 
+        /**
+         * Getter for custom user agent.
+         * @return custom user agent.
+         */
         public String getCustomUserAgent() {
             return customUserAgent;
         }
 
-        public Builder withSkillId(String skillId) {
+        /**
+         * Adds SkillId to Skill configuration.
+         * @param skillId Unique ID associated with a Skill.
+         * @return {@link Builder}.
+         */
+        public Builder withSkillId(final String skillId) {
             this.skillId = skillId;
             return this;
         }
 
+        /**
+         * Getter for Skill Id.
+         * @return skill id.
+         */
         public String getSkillId() {
             return skillId;
         }
 
-        public Builder withTemplateFactory(TemplateFactory<HandlerInput, Response> templateFactory) {
+        /**
+         * Adds Template factory to Skill configuration.
+         * @param templateFactory interface to process template and data to generate skill response.
+         * @return {@link Builder}.
+         */
+        public Builder withTemplateFactory(final TemplateFactory<HandlerInput, Response> templateFactory) {
             withCustomUserAgent(CustomUserAgent.TEMPLATE_RESOLVER.getUserAgent());
             this.templateFactory = templateFactory;
             return this;
         }
 
+        /**
+         * Getter for Template factory.
+         * @return {@link TemplateFactory}.
+         */
         public TemplateFactory<HandlerInput, Response> getTemplateFactory() {
             return templateFactory;
         }
 
+        /**
+         * Builder method to construct skill configuration with the provided data.
+         * @return {@link SkillConfiguration}.
+         */
         public SkillConfiguration build() {
             return new SkillConfiguration(requestMappers, handlerAdapters, requestInterceptors, responseInterceptors,
                     exceptionMapper, persistenceAdapter, apiClient, customUserAgent, skillId, templateFactory);

@@ -21,4 +21,4 @@ import java.util.Optional;
 /**
  * Request handlers are responsible for handling one or more types of incoming requests.
  */
-public interface RequestHandler extends GenericRequestHandler<HandlerInput, Optional<Response>> {}
+public interface RequestHandler extends GenericRequestHandler<HandlerInput, Optional<Response>> { }

@@ -13,11 +13,17 @@
 
 package com.amazon.ask.util;
 
+/**
+ * Helper class to store SDK wide constants.
+ */
 public final class SdkConstants {
 
-    /** Prevent instantiation */
-    private SdkConstants() {}
+    /** Prevent instantiation. */
+    private SdkConstants() { }
 
+    /**
+     * Format version.
+     */
     public static final String FORMAT_VERSION = "1.0";
 
     /**

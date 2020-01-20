@@ -19,12 +19,18 @@ import java.util.Properties;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class UserAgentUtils {
+/**
+ * Utility class to help build user agents.
+ */
+public final class UserAgentUtils {
 
+    /**
+     * Instance of {@link Logger} to logger info for debugging purposes.
+     */
     private static Logger logger = getLogger(UserAgentUtils.class);
 
-    /** Prevent instantiation */
-    private UserAgentUtils() {}
+    /** Prevent instantiation. */
+    private UserAgentUtils() { }
 
     /**
      * Returns the user agent string.  Format is "(SDK name)/(SDK version) (Language)/(Language version)"
@@ -42,7 +48,7 @@ public class UserAgentUtils {
      * @param customUserAgent custom user agent to append to end of standard user agent
      * @return user agent string
      */
-    public static String getUserAgent(String customUserAgent) {
+    public static String getUserAgent(final String customUserAgent) {
         Properties systemProperties;
         try {
             systemProperties = System.getProperties();
@@ -53,12 +59,23 @@ public class UserAgentUtils {
         return internalGetUserAgent(systemProperties, customUserAgent);
     }
 
-    static String internalGetUserAgent(Properties systemProperties, String customUserAgent) {
+    /**
+     * Builds a custom user agent by appending the given customUserAgent to the core user agent.
+     * @param systemProperties instance of type {@link Properties}.
+     * @param customUserAgent string appended to track usage of a particular feature.
+     * @return customUserAgent.
+     */
+    static String internalGetUserAgent(final Properties systemProperties, final String customUserAgent) {
         String coreUserAgent = String.format("ask-java/%s Java/%s", SdkConstants.SDK_VERSION, getJavaVersion(systemProperties));
         return coreUserAgent + (customUserAgent != null ? " " + customUserAgent : "");
     }
 
-    private static String getJavaVersion(Properties systemProperties) {
+    /**
+     * Returns the JAVA version currently in use.
+     * @param systemProperties instance of type {@link Properties}.
+     * @return javaVersion.
+     */
+    private static String getJavaVersion(final Properties systemProperties) {
         if (systemProperties != null && systemProperties.getProperty("java.version") != null) {
             return systemProperties.getProperty("java.version");
         }

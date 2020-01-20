@@ -21,11 +21,19 @@ import com.amazon.ask.builder.SkillConfiguration;
  */
 public class Skill extends CustomSkill {
 
-    public Skill(CustomSkillConfiguration config) {
+    /**
+     * Constructor to create an instance of {@link Skill}.
+     * @param config instance of type {@link CustomSkillConfiguration}.
+     */
+    public Skill(final CustomSkillConfiguration config) {
         super(config);
     }
-    
-    public Skill(SkillConfiguration config) {
+
+    /**
+     * Constructor to create an instance of {@link Skill}.
+     * @param config instance of type {@link SkillConfiguration}.
+     */
+    public Skill(final SkillConfiguration config) {
         super(config);
     }
 

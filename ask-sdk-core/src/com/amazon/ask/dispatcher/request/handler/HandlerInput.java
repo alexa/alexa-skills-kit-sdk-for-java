@@ -32,7 +32,8 @@ import java.util.function.Predicate;
 
 /**
  * Input that is passed to all {@link RequestHandler}, {@link com.amazon.ask.dispatcher.exception.ExceptionHandler},
- * {@link com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor}, and {@link com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor}.
+ * {@link com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor},
+ * and {@link com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor}.
  *
  * Contains the {@link com.amazon.ask.model.RequestEnvelope}, {@link com.amazon.ask.attributes.AttributesManager},
  * {@link com.amazon.ask.model.services.ServiceClientFactory}, {@link com.amazon.ask.response.ResponseBuilder},
@@ -40,16 +41,48 @@ import java.util.function.Predicate;
  */
 public class HandlerInput extends AbstractHandlerInput<Request> {
 
+    /**
+     * Request Envelope.
+     */
     protected final RequestEnvelope requestEnvelope;
+
+    /**
+     * Manager for all skill attributes.
+     */
     protected final AttributesManager attributesManager;
+
+    /**
+     * Factory class to vend out various service clients.
+     */
     protected final ServiceClientFactory serviceClientFactory;
+
+    /**
+     * Response Builder.
+     */
     protected final ResponseBuilder responseBuilder;
+
+    /**
+     * Request envelope in JSON format.
+     */
     protected final JsonNode requestEnvelopeJson;
+
+    /**
+     * Interface to process template and data to generate skill response.
+     */
     protected final TemplateFactory<HandlerInput, Response> templateFactory;
 
-    protected HandlerInput(RequestEnvelope requestEnvelope, PersistenceAdapter persistenceAdapter,
-                           Object context, ServiceClientFactory serviceClientFactory,
-                           JsonNode requestEnvelopeJson, TemplateFactory<HandlerInput, Response> templateFactory) {
+    /**
+     * Constructor for HandlerInput.
+     * @param requestEnvelope Request Envelope.
+     * @param persistenceAdapter Store skill attributes to a persistence layer.
+     * @param context object passed in when using AWS Lambda to host Skill backend code.
+     * @param serviceClientFactory Factory class to vend out various service clients.
+     * @param requestEnvelopeJson Request envelope in JSON format.
+     * @param templateFactory Interface to process template and data to generate skill response.
+     */
+    protected HandlerInput(final RequestEnvelope requestEnvelope, final PersistenceAdapter persistenceAdapter,
+                           final Object context, final ServiceClientFactory serviceClientFactory,
+                           final JsonNode requestEnvelopeJson, final TemplateFactory<HandlerInput, Response> templateFactory) {
         super(ValidationUtils.assertNotNull(requestEnvelope, "request envelope").getRequest(), context);
         this.requestEnvelope = requestEnvelope;
         this.serviceClientFactory = serviceClientFactory;
@@ -62,6 +95,10 @@ public class HandlerInput extends AbstractHandlerInput<Request> {
         this.templateFactory = templateFactory;
     }
 
+    /**
+     * Static method to build an instance of Builder.
+     * @return {@link Builder}.
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -69,16 +106,19 @@ public class HandlerInput extends AbstractHandlerInput<Request> {
     /**
      * Generate {@link Response} using skill response template and injecting data.
      * Response template contains response components including but not limited to
-     * {@link com.amazon.ask.model.ui.OutputSpeech}, {@link com.amazon.ask.model.ui.Card}, {@link com.amazon.ask.model.Directive} and {@link com.amazon.ask.model.canfulfill.CanFulfillIntent}
-     * and placeholders for injecting data.
+     * {@link com.amazon.ask.model.ui.OutputSpeech}, {@link com.amazon.ask.model.ui.Card}, {@link com.amazon.ask.model.Directive}
+     * and {@link com.amazon.ask.model.canfulfill.CanFulfillIntent} and placeholders for injecting data.
      * Injecting data provides component values to be injected into template.
      *
      * @param responseTemplateName name of response template
      * @param dataMap a map that contains injecting data
      * @return skill response
-     * @throws TemplateFactoryException if fail to load or render template using provided {@link com.amazon.ask.response.template.loader.TemplateLoader} or {@link com.amazon.ask.response.template.renderer.TemplateRenderer}
+     * @throws TemplateFactoryException if fail to load or render template using provided
+     * {@link com.amazon.ask.response.template.loader.TemplateLoader}
+     * or {@link com.amazon.ask.response.template.renderer.TemplateRenderer}
      */
-    public Optional<Response> generateTemplateResponse(String responseTemplateName, Map<String, Object> dataMap) throws TemplateFactoryException {
+    public Optional<Response> generateTemplateResponse(final String responseTemplateName, final Map<String, Object> dataMap)
+            throws TemplateFactoryException {
         return Optional.of(templateFactory.processTemplate(responseTemplateName, dataMap, this));
     }
 
@@ -105,7 +145,9 @@ public class HandlerInput extends AbstractHandlerInput<Request> {
      *
      * @return JSON request envelope representation
      */
-    public JsonNode getRequestEnvelopeJson() { return requestEnvelopeJson; }
+    public JsonNode getRequestEnvelopeJson() {
+        return requestEnvelopeJson;
+    }
 
     /**
      * Returns a {@link ServiceClientFactory} used to retrieve service client instances that can call Alexa APIs.
@@ -127,7 +169,9 @@ public class HandlerInput extends AbstractHandlerInput<Request> {
      * @param predicate predicate to evaluate
      * @return true if the predicates matches this input, false if not
      */
-    public boolean matches(Predicate<HandlerInput> predicate) { return predicate.test(this); }
+    public boolean matches(final Predicate<HandlerInput> predicate) {
+        return predicate.test(this);
+    }
 
     /**
      * Returns a {@link ResponseBuilder} that can be used to construct a complete skill response containing speech,
@@ -139,41 +183,95 @@ public class HandlerInput extends AbstractHandlerInput<Request> {
         return responseBuilder;
     }
 
+    /**
+     * HandlerInput Builder.
+     */
     public static final class Builder extends AbstractHandlerInput.Builder<Request, Builder> {
+
+        /**
+         * Request Envelope.
+         */
         private RequestEnvelope requestEnvelope;
+
+        /**
+         * Store skill attributes to a persistence layer.
+         */
         private PersistenceAdapter persistenceAdapter;
+
+        /**
+         * Factory class to vend out various service clients.
+         */
         private ServiceClientFactory serviceClientFactory;
+
+        /**
+         * Request envelope in JSON format.
+         */
         private JsonNode requestEnvelopeJson;
+
+        /**
+         * Interface to process template and data to generate skill response.
+         */
         private TemplateFactory templateFactory;
 
-        private Builder() {
-        }
+        /**
+         * Prevent instantiation.
+         */
+        private Builder() { }
 
-        public Builder withRequestEnvelope(RequestEnvelope requestEnvelope) {
+        /**
+         * Adds Request Envelope to HandlerInput.
+         * @param requestEnvelope Request Envelope.
+         * @return {@link Builder}.
+         */
+        public Builder withRequestEnvelope(final RequestEnvelope requestEnvelope) {
             this.requestEnvelope = requestEnvelope;
             return this;
         }
 
-        public Builder withPersistenceAdapter(PersistenceAdapter persistenceAdapter) {
+        /**
+         * Adds Persistence Adapter to HandlerInput.
+         * @param persistenceAdapter Persistence Adapter.
+         * @return {@link Builder}.
+         */
+        public Builder withPersistenceAdapter(final PersistenceAdapter persistenceAdapter) {
             this.persistenceAdapter = persistenceAdapter;
             return this;
         }
 
-        public Builder withServiceClientFactory(ServiceClientFactory serviceClientFactory) {
+        /**
+         * Adds Service Client Factory to HandlerInput.
+         * @param serviceClientFactory Service Client Factory.
+         * @return {@link Builder}.
+         */
+        public Builder withServiceClientFactory(final ServiceClientFactory serviceClientFactory) {
             this.serviceClientFactory = serviceClientFactory;
             return this;
         }
 
-        public Builder withRequestEnvelopeJson(JsonNode requestEnvelopeJson) {
+        /**
+         * Adds Request Envelope Json to HandlerInput.
+         * @param requestEnvelopeJson Request Envelope Json.
+         * @return {@link Builder}.
+         */
+        public Builder withRequestEnvelopeJson(final JsonNode requestEnvelopeJson) {
             this.requestEnvelopeJson = requestEnvelopeJson;
             return this;
         }
 
-        public Builder withTemplateFactory(TemplateFactory templateFactory) {
+        /**
+         * Adds Template factory to HandlerInput.
+         * @param templateFactory Template factory.
+         * @return {@link Builder}.
+         */
+        public Builder withTemplateFactory(final TemplateFactory templateFactory) {
             this.templateFactory = templateFactory;
             return this;
         }
 
+        /**
+         * Builder method to build an instance of HandlerInput with the provided data.
+         * @return {@link HandlerInput}.
+         */
         public HandlerInput build() {
             return new HandlerInput(requestEnvelope, persistenceAdapter, context, serviceClientFactory, requestEnvelopeJson, templateFactory);
         }

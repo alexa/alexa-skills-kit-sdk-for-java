@@ -54,13 +54,50 @@ import java.util.Optional;
  */
 public class ResponseBuilder {
 
+    /**
+     * SSML Speak open tag.
+     */
+    private static final String SPEAK_OPEN_TAG = "<speak>";
+
+    /**
+     * SSML Speak close tag.
+     */
+    private static final String SPEAK_CLOSE_TAG = "</speak>";
+
+    /**
+     * Output speech.
+     */
     protected OutputSpeech speech;
+
+    /**
+     * Output in card format.
+     */
     protected Card card;
+
+    /**
+     * List of device directives.
+     */
     protected List<Directive> directiveList;
+
+    /**
+     * Determines if the current session should end or not.
+     */
     protected Boolean shouldEndSession;
+
+    /**
+     * Reprompt message to keep the session open.
+     */
     protected Reprompt reprompt;
+
+    /**
+     * Instance of {@link CanFulfillIntent}.
+     */
     protected CanFulfillIntent canFulfillIntent;
 
+    /**
+     * Builds an instance of Response to be returned to the client.
+     * @return {@link Response}.
+     */
     public Optional<Response> build() {
         return Optional.of(Response.builder()
                 .withOutputSpeech(speech)
@@ -78,7 +115,7 @@ public class ResponseBuilder {
      * @param speechText speech text
      * @return response builder
      */
-    public ResponseBuilder withSpeech(String speechText) {
+    public ResponseBuilder withSpeech(final String speechText) {
         return withSpeech(speechText, null);
     }
 
@@ -89,7 +126,7 @@ public class ResponseBuilder {
      * @param playBehavior determines the queuing and playback of this output speech
      * @return response builder
      */
-    public ResponseBuilder withSpeech(String speechText, com.amazon.ask.model.ui.PlayBehavior playBehavior) {
+    public ResponseBuilder withSpeech(final String speechText, final com.amazon.ask.model.ui.PlayBehavior playBehavior) {
         this.speech = SsmlOutputSpeech.builder()
                 .withSsml("<speak>" + trimOutputSpeech(speechText) + "</speak>")
                 .withPlayBehavior(playBehavior)
@@ -103,7 +140,7 @@ public class ResponseBuilder {
      * @param card card object
      * @return response builder
      */
-    public ResponseBuilder withCard(Card card) {
+    public ResponseBuilder withCard(final Card card) {
         this.card = card;
         return this;
     }
@@ -115,7 +152,7 @@ public class ResponseBuilder {
      * @param cardText text in the card
      * @return response builder
      */
-    public ResponseBuilder withSimpleCard(String cardTitle, String cardText) {
+    public ResponseBuilder withSimpleCard(final String cardTitle, final String cardText) {
         this.card = SimpleCard.builder()
                 .withContent(cardText)
                 .withTitle(cardTitle)
@@ -124,14 +161,14 @@ public class ResponseBuilder {
     }
 
     /**
-     * Sets a standard {@link Card} on the response with the specified title, content and image
+     * Sets a standard {@link Card} on the response with the specified title, content and image.
      *
      * @param cardTitle title for card
      * @param cardText text in the card
      * @param image image
      * @return response builder
      */
-    public ResponseBuilder withStandardCard(String cardTitle, String cardText, Image image) {
+    public ResponseBuilder withStandardCard(final String cardTitle, final String cardText, final Image image) {
         this.card = StandardCard.builder()
                 .withText(cardText)
                 .withImage(image)
@@ -156,7 +193,7 @@ public class ResponseBuilder {
      * @param permissions permission array
      * @return response builder
      */
-    public ResponseBuilder withAskForPermissionsConsentCard(List<String> permissions) {
+    public ResponseBuilder withAskForPermissionsConsentCard(final List<String> permissions) {
         this.card = AskForPermissionsConsentCard.builder()
                 .withPermissions(permissions)
                 .build();
@@ -169,7 +206,7 @@ public class ResponseBuilder {
      * @param text reprompt text
      * @return response builder
      */
-    public ResponseBuilder withReprompt(String text) {
+    public ResponseBuilder withReprompt(final String text) {
         return withReprompt(text, null);
     }
 
@@ -180,7 +217,7 @@ public class ResponseBuilder {
      * @param playBehavior determines the queuing and playback of this output speech
      * @return response builder
      */
-    public ResponseBuilder withReprompt(String text, com.amazon.ask.model.ui.PlayBehavior playBehavior) {
+    public ResponseBuilder withReprompt(final String text, final com.amazon.ask.model.ui.PlayBehavior playBehavior) {
         this.reprompt = Reprompt.builder()
                 .withOutputSpeech(SsmlOutputSpeech.builder()
                         .withSsml("<speak>" + trimOutputSpeech(text) + "</speak>")
@@ -201,7 +238,7 @@ public class ResponseBuilder {
      * @param shouldEndSession whether session should end or not, or null
      * @return response builder
      */
-    public ResponseBuilder withShouldEndSession(Boolean shouldEndSession) {
+    public ResponseBuilder withShouldEndSession(final Boolean shouldEndSession) {
         if (!this.isVideoAppLaunchDirectivePresent()) {
             this.shouldEndSession = shouldEndSession;
         }
@@ -215,7 +252,7 @@ public class ResponseBuilder {
      * @param hintText hint text
      * @return response builder
      */
-    public ResponseBuilder addHintDirective(String hintText) {
+    public ResponseBuilder addHintDirective(final String hintText) {
         PlainTextHint hint = PlainTextHint.builder()
                 .withText(hintText)
                 .build();
@@ -233,7 +270,7 @@ public class ResponseBuilder {
      * @param subtitle subtitle that can be displayed on VideoApp
      * @return response builder
      */
-    public ResponseBuilder addVideoAppLaunchDirective(String source, String title, String subtitle) {
+    public ResponseBuilder addVideoAppLaunchDirective(final String source, final String title, final String subtitle) {
         Metadata metadata = Metadata.builder()
                 .withSubtitle(subtitle)
                 .withTitle(title)
@@ -257,7 +294,7 @@ public class ResponseBuilder {
      * @param template display template
      * @return response builder
      */
-    public ResponseBuilder addRenderTemplateDirective(Template template) {
+    public ResponseBuilder addRenderTemplateDirective(final Template template) {
         RenderTemplateDirective templateDirective = RenderTemplateDirective.builder()
                 .withTemplate(template)
                 .build();
@@ -270,7 +307,7 @@ public class ResponseBuilder {
      * @param updatedIntent updated intent
      * @return response builder
      */
-    public ResponseBuilder addDelegateDirective(Intent updatedIntent) {
+    public ResponseBuilder addDelegateDirective(final Intent updatedIntent) {
         DelegateDirective delegateDirective = DelegateDirective.builder()
                 .withUpdatedIntent(updatedIntent)
                 .build();
@@ -284,7 +321,7 @@ public class ResponseBuilder {
      * @param updatedIntent updated intent
      * @return response builder
      */
-    public ResponseBuilder addElicitSlotDirective(String slotName, Intent updatedIntent) {
+    public ResponseBuilder addElicitSlotDirective(final String slotName, final Intent updatedIntent) {
         ElicitSlotDirective elicitSlotDirective = ElicitSlotDirective.builder()
                 .withUpdatedIntent(updatedIntent)
                 .withSlotToElicit(slotName)
@@ -299,7 +336,7 @@ public class ResponseBuilder {
      * @param updatedIntent updated intent
      * @return response builder
      */
-    public ResponseBuilder addConfirmSlotDirective(String slotName, Intent updatedIntent) {
+    public ResponseBuilder addConfirmSlotDirective(final String slotName, final Intent updatedIntent) {
         ConfirmSlotDirective confirmSlotDirective = ConfirmSlotDirective.builder()
                 .withSlotToConfirm(slotName)
                 .withUpdatedIntent(updatedIntent)
@@ -313,7 +350,7 @@ public class ResponseBuilder {
      * @param updatedIntent updated intent
      * @return response builder
      */
-    public ResponseBuilder addConfirmIntentDirective(Intent updatedIntent) {
+    public ResponseBuilder addConfirmIntentDirective(final Intent updatedIntent) {
         ConfirmIntentDirective confirmIntentDirective = ConfirmIntentDirective.builder()
                 .withUpdatedIntent(updatedIntent)
                 .build();
@@ -330,8 +367,8 @@ public class ResponseBuilder {
      * @param url Identifies the location of audio content at a remote HTTPS location
      * @return response builder
      */
-    public ResponseBuilder addAudioPlayerPlayDirective(PlayBehavior playBehavior, Long offsetInMilliseconds,
-                                                       String expectedPreviousToken, String token, String url) {
+    public ResponseBuilder addAudioPlayerPlayDirective(final PlayBehavior playBehavior, final Long offsetInMilliseconds,
+                                                       final String expectedPreviousToken, final String token, final String url) {
         Stream stream = Stream.builder()
                 .withOffsetInMilliseconds(offsetInMilliseconds)
                 .withExpectedPreviousToken(expectedPreviousToken)
@@ -366,7 +403,7 @@ public class ResponseBuilder {
      * @param clearBehavior  Describes the clear queue behavior
      * @return response builder
      */
-    public ResponseBuilder addAudioPlayerClearQueueDirective(ClearBehavior clearBehavior) {
+    public ResponseBuilder addAudioPlayerClearQueueDirective(final ClearBehavior clearBehavior) {
         ClearQueueDirective clearQueueDirective = ClearQueueDirective.builder()
                 .withClearBehavior(clearBehavior)
                 .build();
@@ -379,7 +416,7 @@ public class ResponseBuilder {
      * @param directive directive to send with the response back to the Alexa device
      * @return response builder
      */
-    public ResponseBuilder addDirective(Directive directive) {
+    public ResponseBuilder addDirective(final Directive directive) {
         if (directiveList == null) {
             directiveList = new ArrayList<>();
         }
@@ -389,15 +426,19 @@ public class ResponseBuilder {
     }
 
     /**
-     * Helper method for adding canFulfillIntent to response
-     * @param canFulfillIntent
+     * Helper method for adding canFulfillIntent to response.
+     * @param canFulfillIntent canFulfillIntent.
      * @return response builder
      */
-    public ResponseBuilder withCanFulfillIntent(CanFulfillIntent canFulfillIntent) {
+    public ResponseBuilder withCanFulfillIntent(final CanFulfillIntent canFulfillIntent) {
         this.canFulfillIntent = canFulfillIntent;
         return this;
     }
 
+    /**
+     * Checks the presence of VideoApp Launch Directive.
+     * @return true if the directive is present.
+     */
     private boolean isVideoAppLaunchDirectivePresent() {
         if (directiveList == null || directiveList.isEmpty()) {
             return false;
@@ -413,17 +454,18 @@ public class ResponseBuilder {
     }
 
     /**
-     * Removes <speak></speak> XML tag in speechOutput
+     * Removes <speak> opening and closing XML tags in speechOutput.
      * @param outputSpeech output speech
      * @return trimmed output speech
      */
-    private String trimOutputSpeech(String outputSpeech) {
+    private String trimOutputSpeech(final String outputSpeech) {
         if (outputSpeech == null) {
             return "";
         }
         String trimmedOutputSpeech = outputSpeech.trim();
-        if (trimmedOutputSpeech.startsWith("<speak>") && trimmedOutputSpeech.endsWith("</speak>")) {
-            return trimmedOutputSpeech.substring(7, trimmedOutputSpeech.length() - 8).trim();
+        if (trimmedOutputSpeech.startsWith(SPEAK_OPEN_TAG) && trimmedOutputSpeech.endsWith(SPEAK_CLOSE_TAG)) {
+            return trimmedOutputSpeech.substring(SPEAK_OPEN_TAG.length(), trimmedOutputSpeech.length() - SPEAK_CLOSE_TAG.length())
+                    .trim();
         }
         return trimmedOutputSpeech;
     }

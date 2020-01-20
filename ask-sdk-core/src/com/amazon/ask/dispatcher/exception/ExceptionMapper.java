@@ -26,4 +26,4 @@ import java.util.Optional;
  * find a handler that is compatible with the current exception.
  */
 @Deprecated
-public interface ExceptionMapper extends GenericExceptionMapper<HandlerInput, Optional<Response>> {}
+public interface ExceptionMapper extends GenericExceptionMapper<HandlerInput, Optional<Response>> { }

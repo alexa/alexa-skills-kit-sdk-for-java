@@ -22,10 +22,14 @@ import com.amazon.ask.model.interfaces.display.TextContent;
 public class PlainTextContentContentHelper extends TextContentHelper {
 
     /**
-     *  In place to prevent instantiation
+     *  In place to prevent instantiation.
      */
     PlainTextContentContentHelper() { }
 
+    /**
+     * Builds an instance of TextContent.
+     * @return {@link TextContent}.
+     */
     public TextContent build() {
         return TextContent.builder()
                 .withPrimaryText(primaryText != null ? PlainText.builder().withText(primaryText).build() : null)

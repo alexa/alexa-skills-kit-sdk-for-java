@@ -29,48 +29,108 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Exposes a builder interface to add configuration to a Skill.
+ * @param <T> of type SkillBuilder.
+ */
 public class SkillBuilder<T extends SkillBuilder<T>> extends AbstractSkillBuilder<HandlerInput, Optional<Response>, T> {
 
+    /**
+     * An interface for SDK extensions that can be registered on the {@link SkillBuilder} when setting up a Skill instance.
+     */
     protected final List<SdkModule> sdkModules;
+
+    /**
+     *  Persistence adapters allow an {@link com.amazon.ask.attributes.AttributesManager} to store skill attributes to a
+     *  persistence layer.
+     */
     protected PersistenceAdapter persistenceAdapter;
+
+    /**
+     * Api client to make external API calls.
+     */
     protected ApiClient apiClient;
+
+    /**
+     * Unique ID associated with a Skill.
+     */
     protected String skillId;
+
+    /**
+     * Template Factory interface to process template and data to generate skill response.
+     */
     protected TemplateFactory<HandlerInput, Response> templateFactory;
 
+    /**
+     * Constructor for SkillBuilder.
+     */
     public SkillBuilder() {
         this.sdkModules = new ArrayList<>();
     }
 
-    public T withPersistenceAdapter(PersistenceAdapter persistenceAdapter) {
+    /**
+     * Adds PersistenceAdapter to a Skill.
+     * @param persistenceAdapter store attributes to a persistence layer.
+     * @return {@link T}.
+     */
+    public T withPersistenceAdapter(final PersistenceAdapter persistenceAdapter) {
         this.persistenceAdapter = persistenceAdapter;
         return getThis();
     }
 
-    public T withApiClient(ApiClient apiClient) {
+    /**
+     * Adds ApiClient to a Skill.
+     * @param apiClient Api client to make external API calls.
+     * @return {@link T}.
+     */
+    public T withApiClient(final ApiClient apiClient) {
         this.apiClient = apiClient;
         return getThis();
     }
 
-    public T registerSdkModule(SdkModule sdkModule) {
+    /**
+     * Adds SDK modules to a Skill.
+     * @param sdkModule interface for SDK extensions.
+     * @return {@link T}.
+     */
+    public T registerSdkModule(final SdkModule sdkModule) {
         sdkModules.add(sdkModule);
         return getThis();
     }
 
-    public T withSkillId(String skillId) {
+    /**
+     * Adds SkillId.
+     * @param skillId Unique ID associated with a Skill.
+     * @return {@link T}.
+     */
+    public T withSkillId(final String skillId) {
         this.skillId = skillId;
         return getThis();
     }
 
-    public T withTemplateFactory(TemplateFactory templateFactory) {
+    /**
+     * Adds Template Factory to a Skill.
+     * @param templateFactory Interface to process template and data to generate skill response.
+     * @return {@link T}.
+     */
+    public T withTemplateFactory(final TemplateFactory templateFactory) {
         this.templateFactory = templateFactory;
         return getThis();
     }
 
+    /**
+     * Typecast class to type T.
+     * @return {@link T}.
+     */
     @SuppressWarnings("unchecked")
     private T getThis() {
         return (T) this;
     }
 
+    /**
+     * Get configuration builder.
+     * @return {@link com.amazon.ask.builder.SkillConfiguration.Builder}.
+     */
     protected SkillConfiguration.Builder getConfigBuilder() {
         SkillConfiguration.Builder skillConfigBuilder = SkillConfiguration.builder();
 
@@ -97,6 +157,10 @@ public class SkillBuilder<T extends SkillBuilder<T>> extends AbstractSkillBuilde
         return skillConfigBuilder;
     }
 
+    /**
+     * Build an instance of Skill with the given configuration.
+     * @return {@link Skill}.
+     */
     public Skill build() {
         return new Skill(getConfigBuilder().build());
     }

@@ -13,9 +13,24 @@
 
 package com.amazon.ask.request.viewport;
 
+/**
+ * Enum holds various orientations of the device.
+ */
 public enum Orientation {
+
+    /**
+     * Landscape orientation of the device.
+     */
     LANDSCAPE,
+
+    /**
+     * Equal orientation of the device (If the device is circular in shape).
+     */
     EQUAL,
+
+    /**
+     * Portrait orientation of the device.
+     */
     PORTRAIT;
 
 }

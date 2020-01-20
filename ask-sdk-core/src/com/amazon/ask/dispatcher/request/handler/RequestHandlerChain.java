@@ -21,4 +21,4 @@ import java.util.Optional;
 /**
  * A handler chain contains a request handler and any associated request/response interceptors and exception handlers.
  */
-public interface RequestHandlerChain extends GenericRequestHandlerChain<HandlerInput, Optional<Response>> {}
+public interface RequestHandlerChain extends GenericRequestHandlerChain<HandlerInput, Optional<Response>> { }

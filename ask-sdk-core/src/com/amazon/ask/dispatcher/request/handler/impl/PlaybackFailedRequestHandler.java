@@ -26,7 +26,7 @@ import java.util.Optional;
 public interface PlaybackFailedRequestHandler extends RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request
+     * Returns true if the handler can dispatch the current request.
      *
      * @param input input to the request handler
      * @param playbackFailedRequest PlaybackFailedRequest request
@@ -46,14 +46,14 @@ public interface PlaybackFailedRequestHandler extends RequestHandler {
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
         if (handlerInput.getRequest() instanceof PlaybackFailedRequest) {
-            return canHandle(handlerInput, (PlaybackFailedRequest)handlerInput.getRequest());
+            return canHandle(handlerInput, (PlaybackFailedRequest) handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (PlaybackFailedRequest)handlerInput.getRequest());
+        return handle(handlerInput, (PlaybackFailedRequest) handlerInput.getRequest());
     }
 
 }

@@ -13,15 +13,33 @@
 
 package com.amazon.ask.util;
 
+/**
+ * Enum holds the values of all the custom user agents that need to be appended to the base user agent.
+ */
 public enum CustomUserAgent {
+
+    /**
+     * Template resolver's user agent.
+     */
     TEMPLATE_RESOLVER("templateResolver");
 
+    /**
+     * User agent string.
+     */
     private final String userAgent;
 
-    CustomUserAgent(String userAgent) {
+    /**
+     * Constructs a custom user agent instance with the given string.
+     * @param userAgent custom user agent string.
+     */
+    CustomUserAgent(final String userAgent) {
         this.userAgent = userAgent;
     }
 
+    /**
+     * Returns the user agent.
+     * @return userAgent.
+     */
     public String getUserAgent() {
         return this.userAgent;
     }

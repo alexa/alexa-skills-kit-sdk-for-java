@@ -13,12 +13,6 @@
 
 package com.amazon.ask.dispatcher.impl;
 
-import com.amazon.ask.dispatcher.exception.ExceptionMapper;
-import com.amazon.ask.dispatcher.request.handler.HandlerAdapter;
-import com.amazon.ask.dispatcher.request.handler.RequestHandlerChain;
-import com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor;
-import com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor;
-import com.amazon.ask.dispatcher.request.mapper.RequestMapper;
 import com.amazon.ask.request.exception.mapper.GenericExceptionMapper;
 import com.amazon.ask.request.dispatcher.impl.BaseRequestDispatcher;
 import com.amazon.ask.request.handler.adapter.GenericHandlerAdapter;
@@ -33,42 +27,73 @@ import java.util.Collection;
 import java.util.Optional;
 
 /**
- * {@inheritDoc}
+ * {@inheritDoc}.
  *
- * This implementation routes incoming requests to a {@link RequestMapper} to find a {@link RequestHandlerChain}.
- * A {@link HandlerAdapter} is used to execute the discovered request handler type.
+ * This implementation routes incoming requests to a {@link com.amazon.ask.dispatcher.request.mapper.RequestMapper} to find a
+ * {@link com.amazon.ask.dispatcher.request.handler.RequestHandlerChain}. A {@link com.amazon.ask.dispatcher.request.handler.HandlerAdapter}
+ * is used to execute the discovered request handler type.
  *
- * {@link RequestInterceptor} and {@link ResponseInterceptor} instances may be configured globally on this dispatcher
- * to be executed for all requests. Interceptors set on the {@link RequestHandlerChain} level are also supported.
+ * {@link com.amazon.ask.dispatcher.request.interceptor.RequestInterceptor} and
+ * {@link com.amazon.ask.dispatcher.request.interceptor.ResponseInterceptor} instances may be configured globally on this dispatcher to be
+ * executed for all requests. Interceptors set on the {@link com.amazon.ask.dispatcher.request.handler.RequestHandlerChain} level are also
+ * supported.
  *
- * An {@link ExceptionMapper} is used to find exception handlers in the event of an unhandled exception during
+ * An {@link com.amazon.ask.dispatcher.exception.ExceptionMapper} is used to find exception handlers in the event of an unhandled exception during
  * request processing.
  */
 @Deprecated
 public class DefaultRequestDispatcher extends BaseRequestDispatcher<HandlerInput, Optional<Response>> implements RequestDispatcher {
 
-    protected DefaultRequestDispatcher(Collection<GenericHandlerAdapter<HandlerInput, Optional<Response>>> handlerAdapters,
-                                       Collection<GenericRequestMapper<HandlerInput, Optional<Response>>> requestMappers,
-                                       GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper) {
+    /**
+     * Constructor for DefaultRequestDispatcher.
+     * @param handlerAdapters collection of handler adapters.
+     * @param requestMappers collection of request mappers.
+     * @param exceptionMapper exception mapper.
+     */
+    protected DefaultRequestDispatcher(final Collection<GenericHandlerAdapter<HandlerInput, Optional<Response>>> handlerAdapters,
+                                       final Collection<GenericRequestMapper<HandlerInput, Optional<Response>>> requestMappers,
+                                       final GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper) {
         this(handlerAdapters, requestMappers, exceptionMapper, null, null);
     }
 
-    protected DefaultRequestDispatcher(Collection<GenericHandlerAdapter<HandlerInput, Optional<Response>>> handlerAdapters,
-                                       Collection<GenericRequestMapper<HandlerInput, Optional<Response>>> requestMappers,
-                                       GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper,
-                                       Collection<GenericRequestInterceptor<HandlerInput>> requestInterceptors,
-                                       Collection<GenericResponseInterceptor<HandlerInput, Optional<Response>>> responseInterceptors) {
+    /**
+     * Constructor for DefaultRequestDispatcher.
+     * @param handlerAdapters collection of handler adapters.
+     * @param requestMappers collection of request mappers.
+     * @param exceptionMapper exception mapper.
+     * @param requestInterceptors collection of request interceptors.
+     * @param responseInterceptors collection of response interceptors.
+     */
+    protected DefaultRequestDispatcher(final Collection<GenericHandlerAdapter<HandlerInput, Optional<Response>>> handlerAdapters,
+                                       final Collection<GenericRequestMapper<HandlerInput, Optional<Response>>> requestMappers,
+                                       final GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper,
+                                       final Collection<GenericRequestInterceptor<HandlerInput>> requestInterceptors,
+                                       final Collection<GenericResponseInterceptor<HandlerInput, Optional<Response>>> responseInterceptors) {
         super(requestMappers, exceptionMapper, handlerAdapters, requestInterceptors, responseInterceptors);
     }
 
+    /**
+     * Static method to build an instance of Builder.
+     * @return {@link com.amazon.ask.request.dispatcher.impl.BaseRequestDispatcher.Builder}.
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * DefaultRequestDispatcher Builder.
+     */
     public static final class Builder extends BaseRequestDispatcher.Builder<HandlerInput, Optional<Response>, Builder> {
-        private Builder() {
-        }
 
+        /**
+         * Prevent instantiation.
+         */
+        private Builder() { }
+
+        /**
+         * Builder method to construct an instance of DefaultRequestDispatcher.
+         * @return {@link DefaultRequestDispatcher}.
+         */
         public DefaultRequestDispatcher build() {
             return new DefaultRequestDispatcher(handlerAdapters, requestMappers, exceptionMapper, requestInterceptors, responseInterceptors);
         }
