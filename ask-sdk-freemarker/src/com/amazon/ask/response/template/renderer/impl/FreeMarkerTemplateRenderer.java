@@ -40,20 +40,44 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * {@link TemplateRenderer} implementation to render a FreeMarker template, and deserialize to skill response output.
+ * @param <Output> type.
  */
 public class FreeMarkerTemplateRenderer<Output> implements TemplateRenderer<Output> {
 
+    /**
+     * Log information for debugging purposes.
+     */
     private static final Logger LOGGER = getLogger(FreeMarkerTemplateRenderer.class);
+
+    /**
+     * Charset used in encoding.
+     */
     private static final Charset STANDARD_CHARSET = StandardCharsets.UTF_8;
 
+    /**
+     * Freemarker configuration.
+     */
     protected final Configuration configuration;
+
+    /**
+     * Unmarshaller used to convert byte-stream back to their original data or object.
+     */
     protected final JsonUnmarshaller<Output> unmarshaller;
 
-    protected FreeMarkerTemplateRenderer(Configuration configuration, JsonUnmarshaller<Output> unmarshaller) {
+    /**
+     * Construct an instance of FreeMarkerTemplateRenderer.
+     * @param configuration freemarker configuration.
+     * @param unmarshaller unmarshaller.
+     */
+    protected FreeMarkerTemplateRenderer(final Configuration configuration, final JsonUnmarshaller<Output> unmarshaller) {
         this.configuration = configuration == null ? buildConfig() : configuration;
         this.unmarshaller = ValidationUtils.assertNotNull(unmarshaller, "unmarshaller");
     }
 
+    /**
+     * Build freemarker configuration object.
+     * @return {@link Configuration}.
+     */
     private Configuration buildConfig() {
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_24);
         configuration.setDefaultEncoding(STANDARD_CHARSET.toString());
@@ -62,6 +86,10 @@ public class FreeMarkerTemplateRenderer<Output> implements TemplateRenderer<Outp
         return configuration;
     }
 
+    /**
+     * Static method to construct an instance of Builder.
+     * @return {@link Builder}.
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -75,8 +103,7 @@ public class FreeMarkerTemplateRenderer<Output> implements TemplateRenderer<Outp
      * @throws TemplateRendererException if fail to render template or deserialize to skill response output.
      */
     @Override
-    public Output render(TemplateContentData templateContentData,
-                                   Map<String, Object> dataMap) throws TemplateRendererException {
+    public Output render(final TemplateContentData templateContentData, final Map<String, Object> dataMap) throws TemplateRendererException {
         byte[] contentBytes = templateContentData.getTemplateContent();
         try (Reader reader = new InputStreamReader(new ByteArrayInputStream(contentBytes), STANDARD_CHARSET);
              ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -97,9 +124,17 @@ public class FreeMarkerTemplateRenderer<Output> implements TemplateRenderer<Outp
         }
     }
 
-    private TemplateRendererException throwException(String exceptionMessage, Exception e,
-                                                     TemplateContentData templateContentData,
-                                                     Map<String, Object> dataMap) {
+    /**
+     * Method used to throw a custom exception in case of failure to process a template.
+     * @param exceptionMessage exception message.
+     * @param e exception
+     * @param templateContentData content inside a freemarker template.
+     * @param dataMap data to be filled inside the template.
+     * @return {@link TemplateRendererException}.
+     */
+    private TemplateRendererException throwException(final String exceptionMessage, final Exception e,
+                                                     final TemplateContentData templateContentData,
+                                                     final Map<String, Object> dataMap) {
         String exceptionMsg = exceptionMessage + " with identifier: %s using data model map: %s with error: %s ";
         if (LOGGER.isTraceEnabled()) {
             String traceMsg = String.format(exceptionMsg + "with template content data: %s.",
@@ -110,26 +145,54 @@ public class FreeMarkerTemplateRenderer<Output> implements TemplateRenderer<Outp
                 templateContentData.getIdentifier(), dataMap, e.getMessage()));
     }
 
-    private void updateLoadingConfig(TemplateContentData templateContentData) {
+    /**
+     * Update class loader in the configuration.
+     * @param templateContentData content inside a freemarker template.
+     */
+    private void updateLoadingConfig(final TemplateContentData templateContentData) {
         String baseDir = templateContentData.getTemplateBaseDir();
         ClassLoader classLoader = this.getClass().getClassLoader();
         configuration.setClassLoaderForTemplateLoading(classLoader, baseDir);
     }
 
+    /**
+     * Static builder class to construct an instance of {@link FreeMarkerTemplateRenderer}.
+     */
     public static final class Builder {
+        /**
+         * Freemarker configuration.
+         */
         private Configuration configuration;
+
+        /**
+         * JSON unmarshaller.
+         */
         private JsonUnmarshaller unmarshaller;
 
-        public Builder withConfiguration(Configuration configuration) {
+        /**
+         * Builder method to supply {@link Configuration} instance.
+         * @param configuration freemarker configuration.
+         * @return {@link Builder}.
+         */
+        public Builder withConfiguration(final Configuration configuration) {
             this.configuration = configuration;
             return this;
         }
 
-        public Builder withUnmarshaller(JsonUnmarshaller unmarshaller) {
+        /**
+         * Builder method to supply {@link JsonUnmarshaller} instance.
+         * @param unmarshaller JSON unmarshaller.
+         * @return {@link Builder}.
+         */
+        public Builder withUnmarshaller(final JsonUnmarshaller unmarshaller) {
             this.unmarshaller = unmarshaller;
             return this;
         }
 
+        /**
+         * Builder method to construct an instance of FreeMarkerTemplateRenderer.
+         * @return {@link FreeMarkerTemplateRenderer}.
+         */
         public FreeMarkerTemplateRenderer build() {
             return new FreeMarkerTemplateRenderer(configuration, unmarshaller);
         }
