@@ -21,14 +21,18 @@ import com.amazon.ask.smapi.builder.refreshtoken.SmapiClientBuilder;
  */
 public final class SmapiClients {
 
-    /** Prevent instantiation */
-    private SmapiClients() {}
+    /** Prevent instantiation. */
+    private SmapiClients() { }
 
     /**
      * Returns an instance of {@link SkillManagementService} with default values of {@link com.amazon.ask.model.services.Serializer},
      * {@link com.amazon.ask.model.services.ApiClient} and apiEndpoint.
+     * @param clientId client id
+     * @param clientSecret client secret
+     * @param refreshToken refresh token used during api call.
+     * @return SkillManagementService instance which exposes api methods.
      */
-    public static SkillManagementService createDefault(String clientId, String clientSecret, String refreshToken) {
+    public static SkillManagementService createDefault(final String clientId, final String clientSecret, final String refreshToken) {
         return SmapiClientBuilder.create()
                 .withClientId(clientId)
                 .withClientSecret(clientSecret)
@@ -37,7 +41,8 @@ public final class SmapiClients {
     }
 
     /**
-     * Returns an instance of {@link SmapiClientBuilder} used to build an instance of {@link SkillManagementService}.
+     * Create a custom SmapiClientBuilder instance.
+     * @return  an instance of {@link SmapiClientBuilder} used to build an instance of {@link SkillManagementService}.
      */
     public static SmapiClientBuilder custom() {
         return SmapiClientBuilder.create();
