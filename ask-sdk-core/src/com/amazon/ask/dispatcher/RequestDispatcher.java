@@ -23,4 +23,4 @@ import java.util.Optional;
  * Receives a request, dispatches to customer handling code, and optionally returns a {@link Response}.
  */
 @Deprecated
-public interface RequestDispatcher extends GenericRequestDispatcher<HandlerInput, Optional<Response>> {}
+public interface RequestDispatcher extends GenericRequestDispatcher<HandlerInput, Optional<Response>> { }

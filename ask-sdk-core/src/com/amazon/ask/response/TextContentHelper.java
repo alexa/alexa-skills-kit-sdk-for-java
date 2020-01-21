@@ -21,33 +21,71 @@ import com.amazon.ask.model.interfaces.display.TextContent;
  **/
 public abstract class TextContentHelper {
 
+    /**
+     * Primary text.
+     */
     protected String primaryText;
+
+    /**
+     * Secondary text.
+     */
     protected String secondaryText;
+
+    /**
+     * Tertiary text.
+     */
     protected String tertiaryText;
 
+    /**
+     * Returns an instance of PlainTextContentContentHelper.
+     * @return {@link PlainTextContentContentHelper}.
+     */
     public static PlainTextContentContentHelper forPlainText() {
         return new PlainTextContentContentHelper();
     }
 
+    /**
+     * Returns an instance of RichContentTextContentHelper.
+     * @return {@link RichContentTextContentHelper}.
+     */
     public static RichContentTextContentHelper forRichText() {
         return new RichContentTextContentHelper();
     }
 
-    public TextContentHelper withPrimaryText(String primaryText) {
+    /**
+     * Adds primary text to TextContentHelper.
+     * @param primaryText primary text.
+     * @return {@link TextContentHelper}.
+     */
+    public TextContentHelper withPrimaryText(final String primaryText) {
         this.primaryText = primaryText;
         return this;
     }
 
-    public TextContentHelper withSecondaryText(String secondaryText) {
+    /**
+     * Adds secondary text to TextContentHelper.
+     * @param secondaryText secondary text.
+     * @return {@link TextContentHelper}.
+     */
+    public TextContentHelper withSecondaryText(final String secondaryText) {
         this.secondaryText = secondaryText;
         return this;
     }
 
-    public TextContentHelper withTertiaryText(String tertiaryText) {
+    /**
+     * Adds tertiary text to TextContentHelper.
+     * @param tertiaryText tertiary text.
+     * @return {@link TextContentHelper}.
+     */
+    public TextContentHelper withTertiaryText(final String tertiaryText) {
         this.tertiaryText = tertiaryText;
         return this;
     }
 
+    /**
+     * Abstract method to build an instance of TextContent.
+     * @return {@link TextContent}.
+     */
     public abstract TextContent build();
 
 }

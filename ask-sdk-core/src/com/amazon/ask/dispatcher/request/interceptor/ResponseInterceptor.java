@@ -24,4 +24,4 @@ import java.util.Optional;
  * have access to the output generated from execution of the request handler, they are ideal for tasks such as response
  * sanitation and validation.
  */
-public interface ResponseInterceptor extends GenericResponseInterceptor<HandlerInput, Optional<Response>> {}
+public interface ResponseInterceptor extends GenericResponseInterceptor<HandlerInput, Optional<Response>> { }

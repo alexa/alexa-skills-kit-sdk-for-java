@@ -26,7 +26,7 @@ import java.util.Optional;
 public interface IntentRequestHandler extends RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request
+     * Returns true if the handler can dispatch the current request.
      *
      * @param input input to the request handler
      * @param intentRequest IntentRequest request
@@ -46,14 +46,14 @@ public interface IntentRequestHandler extends RequestHandler {
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
         if (handlerInput.getRequest() instanceof IntentRequest) {
-            return canHandle(handlerInput, (IntentRequest)handlerInput.getRequest());
+            return canHandle(handlerInput, (IntentRequest) handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (IntentRequest)handlerInput.getRequest());
+        return handle(handlerInput, (IntentRequest) handlerInput.getRequest());
     }
 
 }

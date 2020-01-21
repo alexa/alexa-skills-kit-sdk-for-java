@@ -13,11 +13,40 @@
 
 package com.amazon.ask.request.viewport;
 
+/**
+ * Enum holds the DPI values for specific devices.
+ * Dots per inch (DPI) is a measure of spatial printing, video or image scanner dot density, in particular the number of
+ * individual dots that can be placed in a line within the span of 1 inch (2.54 cm).
+ */
 public enum Density {
+
+    /**
+     * Extra low.
+     */
     XLOW,
+
+    /**
+     * Low.
+     */
     LOW,
+
+    /**
+     * Medium.
+     */
     MEDIUM,
+
+    /**
+     * High.
+     */
     HIGH,
+
+    /**
+     * Extra High.
+     */
     XHIGH,
+
+    /**
+     * Extra Extra High.
+     */
     XXHIGH;
 }

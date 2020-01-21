@@ -13,11 +13,34 @@
 
 package com.amazon.ask.request.viewport;
 
+/**
+ * Enum holds the various sizes of the devices.
+ */
 public enum Size {
+
+    /**
+     * Extra small sized device.
+     */
     XSMALL,
+
+    /**
+     * Small sized device.
+     */
     SMALL,
+
+    /**
+     * Medium sized device.
+     */
     MEDIUM,
+
+    /**
+     * Large sized device.
+     */
     LARGE,
+
+    /**
+     * Extra large sized device.
+     */
     XLARGE;
 
 }

@@ -31,25 +31,50 @@ import java.util.Optional;
 @Deprecated
 public class DefaultRequestHandlerChain extends BaseRequestHandlerChain<HandlerInput, Optional<Response>> implements RequestHandlerChain {
 
-    protected DefaultRequestHandlerChain(GenericRequestHandler<HandlerInput, Optional<Response>> handler, List<GenericRequestInterceptor<HandlerInput>> requestInterceptors,
-                                         List<GenericResponseInterceptor<HandlerInput, Optional<Response>>> responseInterceptors,
-                                         List<GenericExceptionHandler<HandlerInput, Optional<Response>>> exceptionHandlers) {
+    /**
+     * Constructor to build an instance of DefaultRequestHandlerChain.
+     * @param handler request handler responsible for processing an incoming request.
+     * @param requestInterceptors list of request interceptors.
+     * @param responseInterceptors list of response interceptors.
+     * @param exceptionHandlers list of exception handlers.
+     */
+    protected DefaultRequestHandlerChain(final GenericRequestHandler<HandlerInput, Optional<Response>> handler,
+                                         final List<GenericRequestInterceptor<HandlerInput>> requestInterceptors,
+                                         final List<GenericResponseInterceptor<HandlerInput, Optional<Response>>> responseInterceptors,
+                                         final List<GenericExceptionHandler<HandlerInput, Optional<Response>>> exceptionHandlers) {
         super(handler, requestInterceptors, responseInterceptors, exceptionHandlers);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public com.amazon.ask.dispatcher.request.handler.RequestHandler getRequestHandler() {
-        return (com.amazon.ask.dispatcher.request.handler.RequestHandler)handler;
+        return (com.amazon.ask.dispatcher.request.handler.RequestHandler) handler;
     }
 
+    /**
+     * Static method to return an instance of Builder.
+     * @return {@link Builder}.
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * DefaultRequestHandlerChain Builder.
+     */
     public static final class Builder extends BaseRequestHandlerChain.Builder<HandlerInput, Optional<Response>, Builder> {
 
-        private Builder() {
-        }
+        /**
+         * Prevent instantiation.
+         */
+        private Builder() { }
+
+        /**
+         * Builder method to construct an instance of DefaultRequestHandlerChain.
+         * @return {@link DefaultRequestHandlerChain}.
+         */
         public DefaultRequestHandlerChain build() {
             return new DefaultRequestHandlerChain(handler, requestInterceptors, responseInterceptors, exceptionHandlers);
         }

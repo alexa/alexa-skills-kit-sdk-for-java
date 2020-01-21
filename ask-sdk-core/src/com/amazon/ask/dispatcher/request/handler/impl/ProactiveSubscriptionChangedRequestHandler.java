@@ -26,7 +26,7 @@ import java.util.Optional;
 public interface ProactiveSubscriptionChangedRequestHandler extends RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request
+     * Returns true if the handler can dispatch the current request.
      *
      * @param input input to the request handler
      * @param proactiveSubscriptionChangedRequest ProactiveSubscriptionChangedRequest request
@@ -46,14 +46,14 @@ public interface ProactiveSubscriptionChangedRequestHandler extends RequestHandl
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
         if (handlerInput.getRequest() instanceof ProactiveSubscriptionChangedRequest) {
-            return canHandle(handlerInput, (ProactiveSubscriptionChangedRequest)handlerInput.getRequest());
+            return canHandle(handlerInput, (ProactiveSubscriptionChangedRequest) handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (ProactiveSubscriptionChangedRequest)handlerInput.getRequest());
+        return handle(handlerInput, (ProactiveSubscriptionChangedRequest) handlerInput.getRequest());
     }
 
 }

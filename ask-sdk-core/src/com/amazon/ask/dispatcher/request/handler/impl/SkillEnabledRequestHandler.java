@@ -26,7 +26,7 @@ import java.util.Optional;
 public interface SkillEnabledRequestHandler extends RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request
+     * Returns true if the handler can dispatch the current request.
      *
      * @param input input to the request handler
      * @param skillEnabledRequest SkillEnabledRequest request
@@ -46,14 +46,14 @@ public interface SkillEnabledRequestHandler extends RequestHandler {
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
         if (handlerInput.getRequest() instanceof SkillEnabledRequest) {
-            return canHandle(handlerInput, (SkillEnabledRequest)handlerInput.getRequest());
+            return canHandle(handlerInput, (SkillEnabledRequest) handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (SkillEnabledRequest)handlerInput.getRequest());
+        return handle(handlerInput, (SkillEnabledRequest) handlerInput.getRequest());
     }
 
 }

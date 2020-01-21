@@ -26,7 +26,7 @@ import java.util.Optional;
 public interface LaunchRequestHandler extends RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request
+     * Returns true if the handler can dispatch the current request.
      *
      * @param input input to the request handler
      * @param launchRequest LaunchRequest request
@@ -46,14 +46,14 @@ public interface LaunchRequestHandler extends RequestHandler {
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
         if (handlerInput.getRequest() instanceof LaunchRequest) {
-            return canHandle(handlerInput, (LaunchRequest)handlerInput.getRequest());
+            return canHandle(handlerInput, (LaunchRequest) handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (LaunchRequest)handlerInput.getRequest());
+        return handle(handlerInput, (LaunchRequest) handlerInput.getRequest());
     }
 
 }

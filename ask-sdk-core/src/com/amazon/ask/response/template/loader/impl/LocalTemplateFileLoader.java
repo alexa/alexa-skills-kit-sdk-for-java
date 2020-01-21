@@ -26,24 +26,46 @@ import java.util.function.BiFunction;
  */
 public class LocalTemplateFileLoader extends AbstractLocalTemplateFileLoader<HandlerInput> {
 
-    protected LocalTemplateFileLoader(String directoryPath, String fileExtension,
-                                      ClassLoader classLoader, TemplateCache templateCache,
-                                      BiFunction<String, HandlerInput, TemplateEnumerator<HandlerInput>> templateEnumeratorSupplier) {
+    /**
+     * Constructor for LocalTemplateFileLoader.
+     * @param directoryPath Templates' directory path.
+     * @param fileExtension Type of templates is determined by this file extension.
+     * @param classLoader Loads classes.
+     * @param templateCache Caches the template content.
+     * @param templateEnumeratorSupplier Template enumerator supplier.
+     */
+    protected LocalTemplateFileLoader(final String directoryPath, final String fileExtension, final ClassLoader classLoader,
+                                      final TemplateCache templateCache,
+                                      final BiFunction<String, HandlerInput, TemplateEnumerator<HandlerInput>> templateEnumeratorSupplier) {
         super(directoryPath, fileExtension, classLoader, templateCache, templateEnumeratorSupplier);
     }
 
+    /**
+     * Static method to return an instance of Builder.
+     * @return {@link Builder}.
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * LocalTemplateFileLoader Builder.
+     */
     public static final class Builder extends AbstractLocalTemplateFileLoader.Builder<HandlerInput, Builder> {
 
+        /**
+         * Builder method to build an instance of LocalTemplateFileLoader.
+         * @return {@link LocalTemplateFileLoader}.
+         */
         public LocalTemplateFileLoader build() {
             return new LocalTemplateFileLoader(directoryPath, fileExtension,
                     classLoader, templateCache,
                     templateEnumeratorSupplier == null
-                            ? (BiFunction<String, HandlerInput, TemplateEnumerator<HandlerInput>>) (s, handlerInput) -> LocaleTemplateEnumerator.builder().withTemplateName(s).withHandlerInput(handlerInput).build()
-                            : templateEnumeratorSupplier);
+                            ? (BiFunction<String, HandlerInput, TemplateEnumerator<HandlerInput>>) (s, handlerInput) ->
+                            LocaleTemplateEnumerator.builder()
+                            .withTemplateName(s)
+                            .withHandlerInput(handlerInput)
+                            .build() : templateEnumeratorSupplier);
         }
     }
 

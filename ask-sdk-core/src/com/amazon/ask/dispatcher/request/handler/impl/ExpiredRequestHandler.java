@@ -26,7 +26,7 @@ import java.util.Optional;
 public interface ExpiredRequestHandler extends RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request
+     * Returns true if the handler can dispatch the current request.
      *
      * @param input input to the request handler
      * @param expiredRequest ExpiredRequest request
@@ -46,14 +46,14 @@ public interface ExpiredRequestHandler extends RequestHandler {
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
         if (handlerInput.getRequest() instanceof ExpiredRequest) {
-            return canHandle(handlerInput, (ExpiredRequest)handlerInput.getRequest());
+            return canHandle(handlerInput, (ExpiredRequest) handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (ExpiredRequest)handlerInput.getRequest());
+        return handle(handlerInput, (ExpiredRequest) handlerInput.getRequest());
     }
 
 }

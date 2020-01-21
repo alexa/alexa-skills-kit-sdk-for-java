@@ -13,10 +13,8 @@
 
 package com.amazon.ask.builder;
 
-import com.amazon.ask.AlexaSkill;
-
 /**
- * Builder used to construct a new {@link AlexaSkill} without any additional modules.
+ * Builder used to construct a new {@link com.amazon.ask.AlexaSkill} without any additional modules.
  * Direct passthrough to {@link SkillBuilder}.
  */
-public class CustomSkillBuilder extends SkillBuilder<CustomSkillBuilder> {}
+public class CustomSkillBuilder extends SkillBuilder<CustomSkillBuilder> { }
