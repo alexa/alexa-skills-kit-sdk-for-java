@@ -18,11 +18,20 @@ package com.amazon.ask.exception.template;
  */
 public class TemplateRendererException extends TemplateFactoryException {
 
-    public TemplateRendererException(String message) {
+    /**
+     * Constructs an instance of TemplateRendererException with the given message.
+     * @param message exception message.
+     */
+    public TemplateRendererException(final String message) {
         super(message);
     }
 
-    public TemplateRendererException(String message, Throwable cause) {
+    /**
+     * Constructs an instance of TemplateRendererException with the given message and cause.
+     * @param message exception message.
+     * @param cause instance of {@link Throwable}.
+     */
+    public TemplateRendererException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

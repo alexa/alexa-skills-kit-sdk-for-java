@@ -13,6 +13,8 @@
 
 package com.amazon.ask.request.dispatcher.impl;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import com.amazon.ask.exception.AskSdkException;
 import com.amazon.ask.request.dispatcher.GenericRequestDispatcher;
 import com.amazon.ask.request.exception.handler.GenericExceptionHandler;
@@ -31,8 +33,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 /**
  * {@inheritDoc}
  *
@@ -44,22 +44,54 @@ import static org.slf4j.LoggerFactory.getLogger;
  *
  * A {@link GenericRequestMapper} is used to find exception handlers in the event of an unhandled exception during
  * request processing.
+ * @param <Input> handler input type.
+ * @param <Output> handler output type.
  */
 public class BaseRequestDispatcher<Input, Output> implements GenericRequestDispatcher<Input, Output> {
 
-    private static final Logger logger = getLogger(BaseRequestDispatcher.class);
+    /**
+     * Logger instance to log information for debugging purposes.
+     */
+    private static final Logger LOGGER = getLogger(BaseRequestDispatcher.class);
 
+    /**
+     * Collection of request mappers.
+     */
     protected final Collection<GenericRequestMapper<Input, Output>> requestMappers;
+
+    /**
+     * Exception mapper.
+     */
     protected final GenericExceptionMapper<Input, Output> exceptionMapper;
+
+    /**
+     * Collection of handler adapters.
+     */
     protected final Collection<GenericHandlerAdapter<Input, Output>> handlerAdapters;
+
+    /**
+     * Collection of request interceptors.
+     */
     protected final Collection<GenericRequestInterceptor<Input>> requestInterceptors;
+
+    /**
+     * Collection of response interceptors.
+     */
     protected final Collection<GenericResponseInterceptor<Input, Output>> responseInterceptors;
 
-    protected BaseRequestDispatcher(Collection<GenericRequestMapper<Input, Output>> requestMappers,
-                                    GenericExceptionMapper<Input, Output> exceptionMapper,
-                                    Collection<GenericHandlerAdapter<Input, Output>> handlerAdapters,
-                                    Collection<GenericRequestInterceptor<Input>> requestInterceptors,
-                                    Collection<GenericResponseInterceptor<Input, Output>> responseInterceptors) {
+    /**
+     *
+     * @param requestMappers Collection of request mappers.
+     * @param exceptionMapper Exception mapper.
+     * @param handlerAdapters Collection of handler adapters.
+     * @param requestInterceptors Collection of request interceptors.
+     * @param responseInterceptors Collection of response interceptors.
+     */
+    protected BaseRequestDispatcher(final Collection<GenericRequestMapper<Input, Output>> requestMappers,
+                                    final GenericExceptionMapper<Input, Output> exceptionMapper,
+                                    final Collection<GenericHandlerAdapter<Input, Output>> handlerAdapters,
+                                    final Collection<GenericRequestInterceptor<Input>> requestInterceptors,
+                                    final Collection<GenericResponseInterceptor<Input, Output>> responseInterceptors) {
         this.requestMappers = ValidationUtils.assertNotEmpty(requestMappers, "requestMappers");
         this.exceptionMapper = exceptionMapper;
         this.handlerAdapters = ValidationUtils.assertNotNull(handlerAdapters, "handlerAdapters");
@@ -67,7 +99,13 @@ public class BaseRequestDispatcher<Input, Output> implements GenericRequestDispa
         this.responseInterceptors = responseInterceptors != null ? responseInterceptors : new ArrayList<>();
     }
 
-    public Output dispatch(Input input) throws AskSdkException {
+    /**
+     * Dispatches an incoming request to the appropriate handling code and returns any output.
+     * @param input input to the dispatcher
+     * @return {@link Output}.
+     * @throws AskSdkException is thrown when dispatch fails.
+     */
+    public Output dispatch(final Input input) throws AskSdkException {
         try {
             return doDispatch(input);
         } catch (Exception e) {
@@ -81,26 +119,33 @@ public class BaseRequestDispatcher<Input, Output> implements GenericRequestDispa
         }
     }
 
-    private Output doDispatch(Input input) throws Exception {
+    /**
+     * Dispatches an incoming request to the appropriate handling code and returns any output.
+     * @param input input to the dispatcher
+     * @return {@link Output}.
+     * @throws Exception is thrown when dispatch fails.
+     */
+    private Output doDispatch(final Input input) throws Exception {
         // execute any global request interceptors
+        Input modifiedInput = input;
         for (GenericRequestInterceptor<Input> requestInterceptor : requestInterceptors) {
-            input = requestInterceptor.processRequest(input);
+            modifiedInput = requestInterceptor.processRequest(modifiedInput);
         }
 
         Optional<GenericRequestHandlerChain<Input, Output>> handlerChain = Optional.empty();
         // first we query the mappers to find a handler chain for the current request
         for (GenericRequestMapper<Input, Output> mapper : requestMappers) {
-            handlerChain = mapper.getRequestHandlerChain(input);
+            handlerChain = mapper.getRequestHandlerChain(modifiedInput);
             if (handlerChain.isPresent()) {
                 break;
             }
         }
 
         if (handlerChain.isPresent()) {
-            logger.debug("Found matching handler");
+            LOGGER.debug("Found matching handler");
         } else {
             String message = "Unable to find a suitable request handler";
-            logger.error(message);
+            LOGGER.error(message);
             throw new AskSdkException(message);
         }
 
@@ -110,14 +155,14 @@ public class BaseRequestDispatcher<Input, Output> implements GenericRequestDispa
         for (GenericHandlerAdapter<Input, Output> adapter : handlerAdapters) {
             if (adapter.supports(requestHandler)) {
                 handlerAdapter = adapter;
-                logger.debug("Found compatible adapter {}", adapter.getClass().getName());
+                LOGGER.debug("Found compatible adapter {}", adapter.getClass().getName());
                 break;
             }
         }
 
         if (handlerAdapter == null) {
             String message = "Unable to find a suitable handler adapter";
-            logger.error(message);
+            LOGGER.error(message);
             throw new AskSdkException(message);
         }
 
@@ -125,128 +170,240 @@ public class BaseRequestDispatcher<Input, Output> implements GenericRequestDispa
         try {
             // execute any request interceptors attached to the handler chain
             for (GenericRequestInterceptor<Input> requestInterceptor : handlerChain.get().getRequestInterceptors()) {
-                input = requestInterceptor.processRequest(input);
+                modifiedInput = requestInterceptor.processRequest(modifiedInput);
             }
 
             // invoke request handler using the adapter
-            response = handlerAdapter.execute(input, requestHandler);
+            response = handlerAdapter.execute(modifiedInput, requestHandler);
 
             // execute any response interceptors attached to the handler chain
             for (GenericResponseInterceptor<Input, Output> responseInterceptor : handlerChain.get().getResponseInterceptors()) {
-                response = responseInterceptor.processResponse(input, response);
+                response = responseInterceptor.processResponse(modifiedInput, response);
             }
         } catch (Exception e) {
-            final Input originalInput = input;
+            final Input originalInput = modifiedInput;
             return handlerChain.get().getExceptionHandlers().stream()
                     .filter(exceptionHandler -> exceptionHandler.canHandle(originalInput, e))
                     .findFirst()
-                    .orElseThrow(() -> e).handle(input, e);
+                    .orElseThrow(() -> e).handle(modifiedInput, e);
         }
 
         // execute any global response interceptors
         for (GenericResponseInterceptor<Input, Output> responseInterceptor : responseInterceptors) {
-            response = responseInterceptor.processResponse(input, response);
+            response = responseInterceptor.processResponse(modifiedInput, response);
         }
 
         return response;
     }
 
+    /**
+     * Returns an instance of Builder.
+     * @param input class of type Input.
+     * @param output class of type Output.
+     * @param <Input> handler input type.
+     * @param <Output> handler output type.
+     * @param <Self> of type Builder.
+     * @return {@link Builder}.
+     */
     public static <Input, Output, Self extends Builder<Input, Output, Self>> Builder<Input, Output, Self> forTypes(
-            Class<Input> input, Class<Output> output) {
+            final Class<Input> input, final Class<Output> output) {
         return new Builder<>();
     }
 
+    /**
+     * Returns an instance of Builder.
+     * @param <Input> handler input type.
+     * @param <Output> handler output type.
+     * @return {@link Builder}.
+     */
     public static <Input, Output> Builder<Input, Output, ?> builder() {
         return new Builder<>();
     }
 
+    /**
+     * Base Request Dispatcher Builder.
+     * @param <Input> handler input type.
+     * @param <Output> handler output type.
+     * @param <Self> of type Builder.
+     */
     @SuppressWarnings("unchecked")
     public static class Builder<Input, Output, Self extends Builder<Input, Output, Self>> {
+        /**
+         * Collection of request mappers.
+         */
         protected Collection<GenericRequestMapper<Input, Output>> requestMappers;
+
+        /**
+         * Exception mapper.
+         */
         protected GenericExceptionMapper<Input, Output> exceptionMapper;
+
+        /**
+         * Collection of handler adapters.
+         */
         protected Collection<GenericHandlerAdapter<Input, Output>> handlerAdapters;
+
+        /**
+         * Collection of request interceptors.
+         */
         protected Collection<GenericRequestInterceptor<Input>> requestInterceptors;
+
+        /**
+         * Collection of response interceptors.
+         */
         protected Collection<GenericResponseInterceptor<Input, Output>> responseInterceptors;
 
-        protected Builder() {}
+        /**
+         * Constructor for Builder.
+         */
+        protected Builder() { }
 
-        public Self withRequestMappers(Collection<GenericRequestMapper<Input, Output>> requestMappers) {
+        /**
+         * Add multiple request mappers to BaseRequestDispatcher.
+         * @param requestMappers Collection of request mappers.
+         * @return {@link Builder}.
+         */
+        public Self withRequestMappers(final Collection<GenericRequestMapper<Input, Output>> requestMappers) {
             this.requestMappers = requestMappers;
-            return (Self)this;
+            return (Self) this;
         }
 
-        public Self withRequestMappers(GenericRequestMapper<Input, Output>... requestMappers) {
+        /**
+         * Add multiple request mappers to BaseRequestDispatcher.
+         * @param requestMappers request mappers.
+         * @return {@link Builder}.
+         */
+        public Self withRequestMappers(final GenericRequestMapper<Input, Output>... requestMappers) {
             this.requestMappers = Arrays.asList(requestMappers);
-            return (Self)this;
+            return (Self) this;
         }
 
-        public Self addRequestMapper(GenericRequestMapper<Input, Output> requestMapper) {
+        /**
+         * Add a request mapper to BaseRequestDispatcher.
+         * @param requestMapper request mapper.
+         * @return {@link Builder}.
+         */
+        public Self addRequestMapper(final GenericRequestMapper<Input, Output> requestMapper) {
             if (requestMappers == null) {
                 requestMappers = new ArrayList<>();
             }
             requestMappers.add(requestMapper);
-            return (Self)this;
+            return (Self) this;
         }
 
-        public Self withExceptionMapper(GenericExceptionMapper<Input, Output> exceptionMapper) {
+        /**
+         * Add an exception mapper to BaseRequestDispatcher.
+         * @param exceptionMapper exception mapper.
+         * @return {@link Builder}.
+         */
+        public Self withExceptionMapper(final GenericExceptionMapper<Input, Output> exceptionMapper) {
             this.exceptionMapper = exceptionMapper;
-            return (Self)this;
+            return (Self) this;
         }
 
-        public Self withHandlerAdapters(Collection<GenericHandlerAdapter<Input, Output>> adapters) {
+        /**
+         * Add multiple handler adapters to BaseRequestDispatcher.
+         * @param adapters collection of handler adapters.
+         * @return {@link Builder}.
+         */
+        public Self withHandlerAdapters(final Collection<GenericHandlerAdapter<Input, Output>> adapters) {
             this.handlerAdapters = adapters;
-            return (Self)this;
+            return (Self) this;
         }
 
-        public Self withHandlerAdapters(GenericHandlerAdapter<Input, Output>... adapters) {
+        /**
+         * Add multiple handler adapters to BaseRequestDispatcher.
+         * @param adapters handler adapters.
+         * @return {@link Builder}.
+         */
+        public Self withHandlerAdapters(final GenericHandlerAdapter<Input, Output>... adapters) {
             this.handlerAdapters = Arrays.asList(adapters);
-            return (Self)this;
+            return (Self) this;
         }
 
-        public Self addHandlerAdapter(GenericHandlerAdapter<Input, Output> adapter) {
+        /**
+         * Add a handler adapter to BaseRequestDispatcher.
+         * @param adapter handler adapter.
+         * @return {@link Builder}.
+         */
+        public Self addHandlerAdapter(final GenericHandlerAdapter<Input, Output> adapter) {
             if (handlerAdapters == null) {
                 handlerAdapters = new ArrayList<>();
             }
             handlerAdapters.add(adapter);
-            return (Self)this;
+            return (Self) this;
         }
 
-        public Self withRequestInterceptors(Collection<GenericRequestInterceptor<Input>> requestInterceptors) {
+        /**
+         * Add multiple request interceptors to BaseRequestDispatcher.
+         * @param requestInterceptors collection of request interceptors.
+         * @return {@link Builder}.
+         */
+        public Self withRequestInterceptors(final Collection<GenericRequestInterceptor<Input>> requestInterceptors) {
             this.requestInterceptors = requestInterceptors;
-            return (Self)this;
+            return (Self) this;
         }
 
-        public Self withRequestInterceptors(GenericRequestInterceptor<Input>... requestInterceptors) {
+        /**
+         * Add multiple request interceptors to BaseRequestDispatcher.
+         * @param requestInterceptors request interceptors.
+         * @return {@link Builder}.
+         */
+        public Self withRequestInterceptors(final GenericRequestInterceptor<Input>... requestInterceptors) {
             this.requestInterceptors = Arrays.asList(requestInterceptors);
-            return (Self)this;
+            return (Self) this;
         }
 
-        public Self addRequestInterceptor(GenericRequestInterceptor<Input> requestInterceptor) {
+        /**
+         * Add a request interceptor to BaseRequestDispatcher.
+         * @param requestInterceptor request interceptor.
+         * @return {@link Builder}.
+         */
+        public Self addRequestInterceptor(final GenericRequestInterceptor<Input> requestInterceptor) {
             if (requestInterceptors == null) {
                 requestInterceptors = new ArrayList<>();
             }
             requestInterceptors.add(requestInterceptor);
-            return (Self)this;
+            return (Self) this;
         }
 
-        public Self withResponseInterceptors(Collection<GenericResponseInterceptor<Input, Output>> responseInterceptors) {
+        /**
+         * Add multiple response interceptors to BaseRequestDispatcher.
+         * @param responseInterceptors collection of response interceptors.
+         * @return {@link Builder}.
+         */
+        public Self withResponseInterceptors(final Collection<GenericResponseInterceptor<Input, Output>> responseInterceptors) {
             this.responseInterceptors = responseInterceptors;
-            return (Self)this;
+            return (Self) this;
         }
 
-        public Self withResponseInterceptors(GenericResponseInterceptor<Input, Output>... responseInterceptors) {
+        /**
+         * Add multiple response interceptors to BaseRequestDispatcher.
+         * @param responseInterceptors response interceptors.
+         * @return {@link Builder}.
+         */
+        public Self withResponseInterceptors(final GenericResponseInterceptor<Input, Output>... responseInterceptors) {
             this.responseInterceptors = Arrays.asList(responseInterceptors);
-            return (Self)this;
+            return (Self) this;
         }
 
-        public Self addResponseInterceptor(GenericResponseInterceptor<Input, Output> responseInterceptor) {
+        /**
+         * Add a response interceptor to BaseRequestDispatcher.
+         * @param responseInterceptor response interceptor.
+         * @return {@link Builder}.
+         */
+        public Self addResponseInterceptor(final GenericResponseInterceptor<Input, Output> responseInterceptor) {
             if (responseInterceptors == null) {
                 responseInterceptors = new ArrayList<>();
             }
             responseInterceptors.add(responseInterceptor);
-            return (Self)this;
+            return (Self) this;
         }
 
+        /**
+         * Builder method to build an instance of BaseRequestDispatcher.
+         * @return {@link GenericRequestDispatcher}.
+         */
         public GenericRequestDispatcher<Input, Output> build() {
             return new BaseRequestDispatcher<>(requestMappers, exceptionMapper, handlerAdapters, requestInterceptors,
                     responseInterceptors);

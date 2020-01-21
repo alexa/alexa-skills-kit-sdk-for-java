@@ -16,7 +16,7 @@ package com.amazon.ask.request.dispatcher;
 import com.amazon.ask.exception.AskSdkException;
 
 /**
- * Receives a request, dispatches to customer handling code, and returns a response
+ * Receives a request, dispatches to customer handling code, and returns a response.
  *
  * @param <Input> handler input type
  * @param <Output> handler output type
@@ -24,7 +24,7 @@ import com.amazon.ask.exception.AskSdkException;
 public interface GenericRequestDispatcher<Input, Output> {
 
     /**
-     * Dispatches an incoming request to the appropriate handling code and returns any output
+     * Dispatches an incoming request to the appropriate handling code and returns any output.
      *
      * @param input input to the dispatcher
      * @return output optionally containing a response

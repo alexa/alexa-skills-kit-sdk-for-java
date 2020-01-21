@@ -15,39 +15,89 @@ package com.amazon.ask.request.exception.handler.impl;
 
 import com.amazon.ask.util.ValidationUtils;
 
+/**
+ * Abstraction over HandlerInput. HandlerInput exposes incoming request object and context (for lambda backend).
+ * @param <Request> Incoming request type.
+ */
 public abstract class AbstractHandlerInput<Request> {
 
+    /**
+     * Incoming request object.
+     */
     protected final Request request;
+
+    /**
+     * Exposed by AWS Lambda.
+     */
     protected final Object context;
 
-    protected AbstractHandlerInput(Request request, Object context) {
+    /**
+     * Constructor for AbstractHandlerInput.
+     * @param request incoming request object.
+     * @param context context.
+     */
+    protected AbstractHandlerInput(final Request request, final Object context) {
         this.request = ValidationUtils.assertNotNull(request, "request");
         this.context = context;
     }
 
+    /**
+     * Getter for Request.
+     * @return {@link Request}.
+     */
     public Request getRequest() {
         return request;
     }
 
+    /**
+     * Getter for context.
+     * @return context.
+     */
     public Object getContext() {
         return context;
     }
 
+    /**
+     * Static builder class for AbstractHandlerInput.
+     * @param <Request> incoming request object type.
+     * @param <Self> of type Builder.
+     */
     @SuppressWarnings("unchecked")
     protected abstract static class Builder<Request, Self extends Builder<Request, Self>> {
+        /**
+         * Incoming request object.
+         */
         protected Request request;
+
+        /**
+         * Exposed by AWS Lambda.
+         */
         protected Object context;
 
-        public Self withRequest(Request request) {
+        /**
+         * Add request object to HandlerInput.
+         * @param request incoming request object.
+         * @return {@link Builder}.
+         */
+        public Self withRequest(final Request request) {
             this.request = request;
-            return (Self)this;
+            return (Self) this;
         }
 
-        public Self withContext(Object context) {
+        /**
+         * Add context object to HandlerInput.
+         * @param context context.
+         * @return {@link Builder}.
+         */
+        public Self withContext(final Object context) {
             this.context = context;
-            return (Self)this;
+            return (Self) this;
         }
 
+        /**
+         * Abstract method to build an instance of AbstractHandlerInput.
+         * @return {@link AbstractHandlerInput}.
+         */
         public abstract AbstractHandlerInput<Request> build();
     }
 

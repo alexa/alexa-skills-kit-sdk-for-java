@@ -31,7 +31,7 @@ public interface GenericExceptionHandler<Input, Output> {
     boolean canHandle(Input input, Throwable throwable);
 
     /**
-     * Handles the exception
+     * Handles the exception.
      *
      * @param input handler input
      * @param throwable the exception that was originally thrown

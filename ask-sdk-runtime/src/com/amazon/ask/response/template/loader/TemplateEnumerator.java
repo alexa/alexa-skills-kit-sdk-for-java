@@ -17,7 +17,6 @@ import java.util.Iterator;
 
 /**
  * Enumerator interface to enumerate template name based on specific property.
+ * @param <Input> input type.
  */
-public interface TemplateEnumerator<Input> extends Iterator<String> {
-
-}
+public interface TemplateEnumerator<Input> extends Iterator<String> { }

@@ -15,11 +15,13 @@ package com.amazon.ask.request.handler;
 
 /**
  * Request handlers are responsible for handling one or more types of incoming requests.
+ * @param <Input> input type.
+ * @param <Output> output type.
  */
 public interface GenericRequestHandler<Input, Output> {
 
     /**
-     * Returns true if the handler can dispatch the current request
+     * Returns true if the handler can dispatch the current request.
      *
      * @param input input to the request handler
      * @return true if the handler is capable of handling the current request and/or state

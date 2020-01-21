@@ -20,26 +20,52 @@ import com.amazon.ask.util.ValidationUtils;
 
 import java.io.OutputStream;
 
+/**
+ * Skill Response implements {@link SkillResponse} and provides utility methods to check existence of response, fetch
+ * response and raw response.
+ * @param <T> output type.
+ */
 public class BaseSkillResponse<T> implements SkillResponse<T> {
 
+    /**
+     * JSON marshaller.
+     */
     private final JsonMarshaller<T> marshaller;
+
+    /**
+     * Response of type T.
+     */
     private final T response;
 
-    public BaseSkillResponse(JsonMarshaller<T> marshaller, T response) {
+    /**
+     * Constructor to build an instance of BaseSkillResponse.
+     * @param marshaller JSON marshaller.
+     * @param response response of type T.
+     */
+    public BaseSkillResponse(final JsonMarshaller<T> marshaller, final T response) {
         this.marshaller = ValidationUtils.assertNotNull(marshaller, "marshaller");
         this.response = response;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public boolean isPresent() {
         return response != null;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public T getResponse() {
         return response;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public byte[] getRawResponse() {
         if (response != null) {
@@ -49,8 +75,11 @@ public class BaseSkillResponse<T> implements SkillResponse<T> {
         }
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public void writeTo(OutputStream outputStream) {
+    public void writeTo(final OutputStream outputStream) {
         if (response != null) {
             marshaller.marshall((response), outputStream);
         } else {

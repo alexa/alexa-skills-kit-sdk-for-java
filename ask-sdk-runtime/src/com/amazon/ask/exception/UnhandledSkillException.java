@@ -18,7 +18,11 @@ package com.amazon.ask.exception;
  */
 public class UnhandledSkillException extends AskSdkException {
 
-    public UnhandledSkillException(Throwable cause) {
+    /**
+     * Constructs an instance of UnhandledSkillException.
+     * @param cause instance of {@link Throwable}
+     */
+    public UnhandledSkillException(final Throwable cause) {
         super("Unhandled exception", cause);
     }
 

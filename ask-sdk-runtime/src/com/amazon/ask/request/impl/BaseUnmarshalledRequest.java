@@ -18,24 +18,42 @@ import com.amazon.ask.util.ValidationUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
- * Default implementation of an {@link UnmarshalledRequest}
+ * Default implementation of an {@link UnmarshalledRequest}.
  * @param <Type> unmarshalled type
  */
 public class BaseUnmarshalledRequest<Type> implements UnmarshalledRequest<Type> {
 
+    /**
+     * Unmarshalled request.
+     */
     private final Type unmarshalledRequest;
+
+    /**
+     * Root of the object tree.
+     */
     private final JsonNode json;
 
-    public BaseUnmarshalledRequest(Type unmarshalledRequest, JsonNode json) {
+    /**
+     * Constructor to build an instance of BaseUnmarshalledRequest.
+     * @param unmarshalledRequest unmarshalled request.
+     * @param json instance of {@link JsonNode}.
+     */
+    public BaseUnmarshalledRequest(final Type unmarshalledRequest, final JsonNode json) {
         this.unmarshalledRequest = ValidationUtils.assertNotNull(unmarshalledRequest, "unmarshalled request");
         this.json = json;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public Type getUnmarshalledRequest() {
         return unmarshalledRequest;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public JsonNode getRequestJson() {
         return json;
