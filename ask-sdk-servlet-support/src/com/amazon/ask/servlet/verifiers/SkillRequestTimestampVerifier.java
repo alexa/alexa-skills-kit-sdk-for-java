@@ -36,6 +36,9 @@ import static com.amazon.ask.servlet.ServletConstants.MAXIMUM_TOLERANCE_MILLIS;
  */
 public class SkillRequestTimestampVerifier implements SkillServletVerifier {
 
+    /**
+     * Tolerance of this verifier, in milliseconds used to construct a new timestamp verifier.
+     */
     private final long toleranceInMilliseconds;
 
     /**
@@ -45,10 +48,10 @@ public class SkillRequestTimestampVerifier implements SkillServletVerifier {
      *            the tolerance of this verifier, in milliseconds. must be non-negative and less than
      *            {@value ServletConstants#MAXIMUM_TOLERANCE_MILLIS}.
      */
-    public SkillRequestTimestampVerifier(long toleranceInMilliseconds) {
+    public SkillRequestTimestampVerifier(final long toleranceInMilliseconds) {
         if (toleranceInMilliseconds > MAXIMUM_TOLERANCE_MILLIS) {
-            throw new IllegalArgumentException(String.format("Provided tolerance value %s exceeds the maximum" +
-                    " allowed %s", toleranceInMilliseconds, MAXIMUM_TOLERANCE_MILLIS));
+            throw new IllegalArgumentException(String.format("Provided tolerance value %s exceeds the maximum"
+                    + " allowed %s", toleranceInMilliseconds, MAXIMUM_TOLERANCE_MILLIS));
         } else if (toleranceInMilliseconds < 0) {
             throw new IllegalArgumentException("A negative tolerance is not supported");
         }
@@ -64,7 +67,7 @@ public class SkillRequestTimestampVerifier implements SkillServletVerifier {
      * @param timeUnit
      *            {@link TimeUnit} must be non-null.
      */
-    public SkillRequestTimestampVerifier(long tolerance, TimeUnit timeUnit) {
+    public SkillRequestTimestampVerifier(final long tolerance, final TimeUnit timeUnit) {
         this(ValidationUtils.assertNotNull(timeUnit, "timeUnit").toMillis(tolerance));
     }
 
@@ -75,7 +78,7 @@ public class SkillRequestTimestampVerifier implements SkillServletVerifier {
      *
      * {@inheritDoc}
      */
-    public void verify(AlexaHttpRequest alexaHttpRequest) {
+    public void verify(final AlexaHttpRequest alexaHttpRequest) {
         if (alexaHttpRequest.getDeserializedRequestEnvelope() == null) {
             throw new SecurityException("Incoming request did not contain a request envelope");
         }
@@ -89,8 +92,8 @@ public class SkillRequestTimestampVerifier implements SkillServletVerifier {
         boolean withinTolerance = delta <= toleranceInMilliseconds;
 
         if (!withinTolerance) {
-            throw new SecurityException(String.format("Request with id %s and timestamp %s failed timestamp validation" +
-                    " with a delta of %s", request.getRequestId(), requestTimestamp, delta));
+            throw new SecurityException(String.format("Request with id %s and timestamp %s failed timestamp validation"
+                    + " with a delta of %s", request.getRequestId(), requestTimestamp, delta));
         }
     }
 

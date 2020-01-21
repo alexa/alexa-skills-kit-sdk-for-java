@@ -13,7 +13,15 @@
 
 package com.amazon.ask.servlet;
 
+/**
+ * Helper class to hold package's constant values.
+ */
 public final class ServletConstants {
+
+    /**
+     * Prevent instantiation.
+     */
+    private ServletConstants() { }
 
     /**
      * The algorithm used to generate the signature.

@@ -23,12 +23,34 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class ServletRequest implements AlexaHttpRequest {
 
+    /**
+     * Serialized request envelope.
+     */
     private final byte[] serializedRequestEnvelope;
+
+    /**
+     * De-serialized request envelope.
+     */
     private final RequestEnvelope deserializedRequestEnvelope;
+
+    /**
+     * Base64 encoded signature.
+     */
     private final String baseEncoded64Signature;
+
+    /**
+     * Certificate chain URL.
+     */
     private final String signingCertificateChainUrl;
 
-    public ServletRequest(final HttpServletRequest httpServletRequest, final byte[] serializedRequestEnvelope, final RequestEnvelope deserializedRequestEnvelope) {
+    /**
+     * Constructor to build an instance of ServletRequest.
+     * @param httpServletRequest instance of type {@link HttpServletRequest}.
+     * @param serializedRequestEnvelope serialized request envelope.
+     * @param deserializedRequestEnvelope de-serialized request envelope.
+     */
+    public ServletRequest(final HttpServletRequest httpServletRequest, final byte[] serializedRequestEnvelope,
+                          final RequestEnvelope deserializedRequestEnvelope) {
         this.serializedRequestEnvelope = serializedRequestEnvelope;
         this.deserializedRequestEnvelope = deserializedRequestEnvelope;
         this.baseEncoded64Signature = httpServletRequest.getHeader(ServletConstants.SIGNATURE_REQUEST_HEADER);
