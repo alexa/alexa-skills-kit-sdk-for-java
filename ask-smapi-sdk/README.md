@@ -7,9 +7,9 @@
 
 ### Add the dependency to your maven project’s pom.xml file
 
-> 
-> 
-> ``` sh
+>
+>
+> ``` xml
 > <dependency>
 >      <groupId>com.amazon.alexa</groupId>
 >      <artifactId>ask-smapi-sdk</artifactId>
@@ -19,8 +19,8 @@
 
 ### Installation from Github
 
-> 
-> 
+>
+>
 > ``` sh
 > $ git clone https://github.com/alexa/alexa-skills-kit-sdk-for-java.git
 > $ cd alexa-skills-kit-sdk-for-java/ask-smapi-sdk
@@ -36,12 +36,12 @@
 
 > 1. Create a new security profile for your Amazon Developer account by following the instructions provided [here](https://developer.amazon.com/docs/smapi/ask-cli-command-reference.html#generate-lwa-tokens).
 >  This will generate `Client ID` and `Client Secret` keys.
-> 2. Using the ASK CLI, run: `ask util generate-lwa-tokens`. You will be asked to provide the `Client ID` and `Client Secret` keys from the previous step. 
+> 2. Using the ASK CLI, run: `ask util generate-lwa-tokens`. You will be asked to provide the `Client ID` and `Client Secret` keys from the previous step.
 >  This will return the following JSON with a `Refresh Token`:
 
-> 
-> 
-> ``` sh
+>
+>
+> ``` javascript
 > {
 >   "access_token": "ACCESS_TOKEN",
 >   "refresh_token": "REFRESH_TOKEN",
@@ -56,15 +56,15 @@
 
 > Using the `Client ID`, `Client Secret` and `Refresh Token` retrieved in the previous step to configure a new SMAPI client:
 
-> 
-> 
+>
+>
 > ``` java
 > final SkillManagementService defaultSmapiClient = SmapiClients.createDefault(
 >    "<clientId here>",
 >    "<client secret here>",
 >    "<refresh token here>"
 > );
-> 
+>
 > final SkillManagementService customSmapiClient = SmapiClients.custom()
 >    .withClientId("<clientId here>")
 >    .withClientSecret("<client secret here>")
@@ -73,14 +73,14 @@
 >    .withApiEndpoint("<api end point>")
 >    .withSerializer() // Any class object which implements com.amazon.ask.model.services.Serializer
 >    .build();
-> 
+>
 > try {
 >       // response with just the body.
 >       Vendors response = customSmapiClient.getVendorListV1();
-> 
+>
 >       // For full response with header, body and status code.
 >       ApiResponse<Vendors> resp = customSmapiClient.callGetVendorListV1();
-> 
+>
 >     } catch (ServiceException e) {
 >       System.out.println(e.getMessage());
 > }
@@ -92,9 +92,9 @@
 
 ### Get Skill Manifest
 
-> 
-> 
-> ``` sh
+>
+>
+> ``` java
 > try {
 >    SkillManifestEnvelope skillManifestEnvelope = customSmapiClient.getSkillManifestV1(skillId, "development");
 > } catch (ServiceException e) {
@@ -104,15 +104,15 @@
 
 ### List all Skills
 
-> 
-> 
-> ``` sh
+>
+>
+> ``` java
 > try {
 >     // response with just the body.
->     Vendors response = customSmapiClient.listSkills();
-> 
+>     Vendors response = customSmapiClient.listSkillsForVendorV1(vendorId, nextToken, maxResults, skillIdList);
+>
 >     // For full response with header, body and status code.
->     ApiResponse<Vendors> resp = customSmapiClient.callListSKills();
+>     ApiResponse<Vendors> resp = customSmapiClient.callListSkillsForVendorV1(vendorId, nextToken, maxResults, skillIdList);
 > } catch (ServiceException e) {
 >     System.out.println(e.getMessage());
 > }
