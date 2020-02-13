@@ -26,7 +26,7 @@ import java.util.Optional;
 public interface UserEventHandler extends RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request.
+     * Returns true if the handler can dispatch the current request
      *
      * @param input input to the request handler
      * @param userEvent UserEvent request
@@ -46,14 +46,14 @@ public interface UserEventHandler extends RequestHandler {
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
         if (handlerInput.getRequest() instanceof UserEvent) {
-            return canHandle(handlerInput, (UserEvent) handlerInput.getRequest());
+            return canHandle(handlerInput, (UserEvent)handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (UserEvent) handlerInput.getRequest());
+        return handle(handlerInput, (UserEvent)handlerInput.getRequest());
     }
 
 }

@@ -26,7 +26,7 @@ import java.util.Optional;
 public interface CanFulfillIntentRequestHandler extends RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request.
+     * Returns true if the handler can dispatch the current request
      *
      * @param input input to the request handler
      * @param canFulfillIntentRequest CanFulfillIntentRequest request
@@ -46,14 +46,14 @@ public interface CanFulfillIntentRequestHandler extends RequestHandler {
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
         if (handlerInput.getRequest() instanceof CanFulfillIntentRequest) {
-            return canHandle(handlerInput, (CanFulfillIntentRequest) handlerInput.getRequest());
+            return canHandle(handlerInput, (CanFulfillIntentRequest)handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (CanFulfillIntentRequest) handlerInput.getRequest());
+        return handle(handlerInput, (CanFulfillIntentRequest)handlerInput.getRequest());
     }
 
 }

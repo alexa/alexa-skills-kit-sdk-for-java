@@ -26,7 +26,7 @@ import java.util.Optional;
 public interface ListDeletedEventRequestHandler extends RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request.
+     * Returns true if the handler can dispatch the current request
      *
      * @param input input to the request handler
      * @param listDeletedEventRequest ListDeletedEventRequest request
@@ -46,14 +46,14 @@ public interface ListDeletedEventRequestHandler extends RequestHandler {
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
         if (handlerInput.getRequest() instanceof ListDeletedEventRequest) {
-            return canHandle(handlerInput, (ListDeletedEventRequest) handlerInput.getRequest());
+            return canHandle(handlerInput, (ListDeletedEventRequest)handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (ListDeletedEventRequest) handlerInput.getRequest());
+        return handle(handlerInput, (ListDeletedEventRequest)handlerInput.getRequest());
     }
 
 }

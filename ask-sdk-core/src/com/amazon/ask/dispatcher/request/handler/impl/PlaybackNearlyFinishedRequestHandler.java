@@ -26,7 +26,7 @@ import java.util.Optional;
 public interface PlaybackNearlyFinishedRequestHandler extends RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request.
+     * Returns true if the handler can dispatch the current request
      *
      * @param input input to the request handler
      * @param playbackNearlyFinishedRequest PlaybackNearlyFinishedRequest request
@@ -46,14 +46,14 @@ public interface PlaybackNearlyFinishedRequestHandler extends RequestHandler {
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
         if (handlerInput.getRequest() instanceof PlaybackNearlyFinishedRequest) {
-            return canHandle(handlerInput, (PlaybackNearlyFinishedRequest) handlerInput.getRequest());
+            return canHandle(handlerInput, (PlaybackNearlyFinishedRequest)handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (PlaybackNearlyFinishedRequest) handlerInput.getRequest());
+        return handle(handlerInput, (PlaybackNearlyFinishedRequest)handlerInput.getRequest());
     }
 
 }

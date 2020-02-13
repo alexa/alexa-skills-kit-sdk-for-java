@@ -26,7 +26,7 @@ import java.util.Optional;
 public interface PermissionAcceptedRequestHandler extends RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request.
+     * Returns true if the handler can dispatch the current request
      *
      * @param input input to the request handler
      * @param permissionAcceptedRequest PermissionAcceptedRequest request
@@ -46,14 +46,14 @@ public interface PermissionAcceptedRequestHandler extends RequestHandler {
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
         if (handlerInput.getRequest() instanceof PermissionAcceptedRequest) {
-            return canHandle(handlerInput, (PermissionAcceptedRequest) handlerInput.getRequest());
+            return canHandle(handlerInput, (PermissionAcceptedRequest)handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (PermissionAcceptedRequest) handlerInput.getRequest());
+        return handle(handlerInput, (PermissionAcceptedRequest)handlerInput.getRequest());
     }
 
 }

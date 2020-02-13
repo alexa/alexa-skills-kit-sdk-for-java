@@ -26,7 +26,7 @@ import java.util.Optional;
 public interface ExceptionEncounteredRequestHandler extends RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request.
+     * Returns true if the handler can dispatch the current request
      *
      * @param input input to the request handler
      * @param exceptionEncounteredRequest ExceptionEncounteredRequest request
@@ -46,14 +46,14 @@ public interface ExceptionEncounteredRequestHandler extends RequestHandler {
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
         if (handlerInput.getRequest() instanceof ExceptionEncounteredRequest) {
-            return canHandle(handlerInput, (ExceptionEncounteredRequest) handlerInput.getRequest());
+            return canHandle(handlerInput, (ExceptionEncounteredRequest)handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (ExceptionEncounteredRequest) handlerInput.getRequest());
+        return handle(handlerInput, (ExceptionEncounteredRequest)handlerInput.getRequest());
     }
 
 }

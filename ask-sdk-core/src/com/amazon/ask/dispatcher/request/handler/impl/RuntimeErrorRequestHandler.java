@@ -15,45 +15,45 @@ package com.amazon.ask.dispatcher.request.handler.impl;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
 import com.amazon.ask.dispatcher.request.handler.RequestHandler;
-import com.amazon.ask.model.interfaces.audioplayer.PlaybackFailedRequest;
+import com.amazon.ask.model.interfaces.alexa.presentation.html.RuntimeErrorRequest;
 import com.amazon.ask.model.Response;
 
 import java.util.Optional;
 
 /**
- * Request handler for PlaybackFailedRequest requests.
+ * Request handler for RuntimeErrorRequest requests.
  */
-public interface PlaybackFailedRequestHandler extends RequestHandler {
+public interface RuntimeErrorRequestHandler extends RequestHandler {
 
     /**
      * Returns true if the handler can dispatch the current request
      *
      * @param input input to the request handler
-     * @param playbackFailedRequest PlaybackFailedRequest request
+     * @param runtimeErrorRequest RuntimeErrorRequest request
      * @return true if the handler is capable of handling the current request and/or state
      */
-    boolean canHandle(HandlerInput input, PlaybackFailedRequest playbackFailedRequest);
+    boolean canHandle(HandlerInput input, RuntimeErrorRequest runtimeErrorRequest);
 
     /**
      * Handles the request.
      *
      * @param input input to the request handler
-     * @param playbackFailedRequest PlaybackFailedRequest request
+     * @param runtimeErrorRequest RuntimeErrorRequest request
      * @return output from the handler.
      */
-    Optional<Response> handle(HandlerInput input, PlaybackFailedRequest playbackFailedRequest);
+    Optional<Response> handle(HandlerInput input, RuntimeErrorRequest runtimeErrorRequest);
 
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
-        if (handlerInput.getRequest() instanceof PlaybackFailedRequest) {
-            return canHandle(handlerInput, (PlaybackFailedRequest)handlerInput.getRequest());
+        if (handlerInput.getRequest() instanceof RuntimeErrorRequest) {
+            return canHandle(handlerInput, (RuntimeErrorRequest)handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (PlaybackFailedRequest)handlerInput.getRequest());
+        return handle(handlerInput, (RuntimeErrorRequest)handlerInput.getRequest());
     }
 
 }

@@ -26,7 +26,7 @@ import java.util.Optional;
 public interface ConnectionsResponseHandler extends RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request.
+     * Returns true if the handler can dispatch the current request
      *
      * @param input input to the request handler
      * @param connectionsResponse ConnectionsResponse request
@@ -46,14 +46,14 @@ public interface ConnectionsResponseHandler extends RequestHandler {
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
         if (handlerInput.getRequest() instanceof ConnectionsResponse) {
-            return canHandle(handlerInput, (ConnectionsResponse) handlerInput.getRequest());
+            return canHandle(handlerInput, (ConnectionsResponse)handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (ConnectionsResponse) handlerInput.getRequest());
+        return handle(handlerInput, (ConnectionsResponse)handlerInput.getRequest());
     }
 
 }

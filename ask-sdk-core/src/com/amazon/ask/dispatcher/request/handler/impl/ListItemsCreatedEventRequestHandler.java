@@ -26,7 +26,7 @@ import java.util.Optional;
 public interface ListItemsCreatedEventRequestHandler extends RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request.
+     * Returns true if the handler can dispatch the current request
      *
      * @param input input to the request handler
      * @param listItemsCreatedEventRequest ListItemsCreatedEventRequest request
@@ -46,14 +46,14 @@ public interface ListItemsCreatedEventRequestHandler extends RequestHandler {
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
         if (handlerInput.getRequest() instanceof ListItemsCreatedEventRequest) {
-            return canHandle(handlerInput, (ListItemsCreatedEventRequest) handlerInput.getRequest());
+            return canHandle(handlerInput, (ListItemsCreatedEventRequest)handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (ListItemsCreatedEventRequest) handlerInput.getRequest());
+        return handle(handlerInput, (ListItemsCreatedEventRequest)handlerInput.getRequest());
     }
 
 }

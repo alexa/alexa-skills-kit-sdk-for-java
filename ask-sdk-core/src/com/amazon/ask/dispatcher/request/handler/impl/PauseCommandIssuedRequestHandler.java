@@ -26,7 +26,7 @@ import java.util.Optional;
 public interface PauseCommandIssuedRequestHandler extends RequestHandler {
 
     /**
-     * Returns true if the handler can dispatch the current request.
+     * Returns true if the handler can dispatch the current request
      *
      * @param input input to the request handler
      * @param pauseCommandIssuedRequest PauseCommandIssuedRequest request
@@ -46,14 +46,14 @@ public interface PauseCommandIssuedRequestHandler extends RequestHandler {
     @Override
     default boolean canHandle(HandlerInput handlerInput) {
         if (handlerInput.getRequest() instanceof PauseCommandIssuedRequest) {
-            return canHandle(handlerInput, (PauseCommandIssuedRequest) handlerInput.getRequest());
+            return canHandle(handlerInput, (PauseCommandIssuedRequest)handlerInput.getRequest());
         }
         return false;
     }
 
     @Override
     default Optional<Response> handle(HandlerInput handlerInput) {
-        return handle(handlerInput, (PauseCommandIssuedRequest) handlerInput.getRequest());
+        return handle(handlerInput, (PauseCommandIssuedRequest)handlerInput.getRequest());
     }
 
 }
