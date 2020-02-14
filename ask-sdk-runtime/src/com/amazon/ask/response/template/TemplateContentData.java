@@ -14,6 +14,7 @@
 package com.amazon.ask.response.template;
 
 import com.amazon.ask.util.ValidationUtils;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Abstraction of template content using byte array with unique identifier, base directory information will be used in resolving template import.
@@ -86,7 +87,7 @@ public class TemplateContentData {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("class TemplateContentData {\n");
-        sb.append("    templateContent: ").append(this.toIndentedString(new String(this.templateContent))).append("\n");
+        sb.append("    templateContent: ").append(this.toIndentedString(new String(this.templateContent, StandardCharsets.UTF_8))).append("\n");
         sb.append("    templateBaseDir: ").append(this.toIndentedString(this.templateBaseDir)).append("\n");
         sb.append("}");
         return sb.toString();
