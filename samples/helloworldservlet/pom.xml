@@ -81,7 +81,7 @@
                 <value>insert_your_password</value>
               </systemProperty>
               <systemProperty>
-                <key>com.amazon.speech.speechlet.servlet.disableRequestSignatureCheck</key>
+                <key>com.amazon.ask.servlet.disableRequestSignatureCheck</key>
                 <value>${disableRequestSignatureCheck}</value>
               </systemProperty>
               <systemProperty>
