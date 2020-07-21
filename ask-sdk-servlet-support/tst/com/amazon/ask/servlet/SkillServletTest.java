@@ -32,6 +32,9 @@ import com.amazon.ask.model.Response;
 import com.amazon.ask.model.ResponseEnvelope;
 import com.amazon.ask.servlet.verifiers.SkillRequestSignatureVerifier;
 import com.amazon.ask.servlet.verifiers.SkillServletVerifier;
+import com.amazon.ask.response.impl.BaseSkillResponse;
+import com.amazon.ask.util.JsonMarshaller;
+import com.amazon.ask.util.impl.JacksonJsonMarshaller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,7 +93,7 @@ public class SkillServletTest extends SkillServletTestBase {
     @Test
     public void doPost_sdkException_responseInternalServiceException() throws Exception {
         SkillServlet servlet = new SkillServlet(skill, Collections.emptyList());
-        when(skill.invoke(any())).thenThrow(new AskSdkException("foo"));
+        when(skill.execute(any())).thenThrow(new AskSdkException("foo"));
         OffsetDateTime timestamp = OffsetDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault());
         LaunchRequest request = LaunchRequest.builder().withRequestId("rId").withLocale(LOCALE).withTimestamp(timestamp).build();
         ServletInvocationParameters invocation = build(FORMAT_VERSION, request, buildSession());
@@ -103,7 +106,7 @@ public class SkillServletTest extends SkillServletTestBase {
         SkillServlet servlet = new SkillServlet(skill, Collections.emptyList());
         Response response = Response.builder().build();
         ResponseEnvelope responseEnvelope = ResponseEnvelope.builder().withResponse(response).build();
-        when(skill.invoke(any())).thenReturn(responseEnvelope);
+        when(skill.execute(any())).thenReturn(new BaseSkillResponse<>(new JacksonJsonMarshaller<>(), responseEnvelope));
         OffsetDateTime timestamp = OffsetDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault());
         LaunchRequest request = LaunchRequest.builder().withRequestId("rId").withLocale(LOCALE).withTimestamp(timestamp).build();
         ServletInvocationParameters invocation = build(FORMAT_VERSION, request, buildSession());

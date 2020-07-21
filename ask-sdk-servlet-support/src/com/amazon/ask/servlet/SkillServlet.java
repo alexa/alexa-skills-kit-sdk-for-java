@@ -17,21 +17,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Proxy;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.amazon.ask.Skill;
 import com.amazon.ask.exception.AskSdkException;
 import com.amazon.ask.model.RequestEnvelope;
-import com.amazon.ask.model.ResponseEnvelope;
 import com.amazon.ask.model.services.Serializer;
+import com.amazon.ask.request.impl.BaseSkillRequest;
+import com.amazon.ask.response.SkillResponse;
 import com.amazon.ask.servlet.util.ServletUtils;
 import com.amazon.ask.servlet.verifiers.AlexaHttpRequest;
 import com.amazon.ask.servlet.verifiers.ServletRequest;
@@ -134,15 +137,17 @@ public class SkillServlet extends HttpServlet {
                 verifier.verify(alexaHttpRequest);
             }
 
-            ResponseEnvelope skillResponse = skill.invoke(deserializedRequestEnvelope);
-            // Generate JSON and send back the response
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_OK);
-            if (skillResponse != null) {
-                byte[] serializedResponse = serializer.serialize(skillResponse).getBytes(StandardCharsets.UTF_8);
-                try (OutputStream out = response.getOutputStream()) {
-                    response.setContentLength(serializedResponse.length);
-                    out.write(serializedResponse);
+            try(final ByteArrayOutputStream skillResponse = new ByteArrayOutputStream()) {
+                handleRequest(new ByteArrayInputStream(serializedRequestEnvelope), skillResponse);
+                // Generate JSON and send back the response
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_OK);
+                byte[] serializedResponse = skillResponse.toByteArray();
+                if (skillResponse != null) {
+                    try (final OutputStream out = response.getOutputStream()) {
+                        response.setContentLength(serializedResponse.length);
+                        out.write(serializedResponse);
+                    }
                 }
             }
         } catch (SecurityException ex) {
@@ -153,6 +158,17 @@ public class SkillServlet extends HttpServlet {
             int statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
             LOGGER.error("Exception occurred in doPost, returning status code {}", statusCode, ex);
             response.sendError(statusCode, ex.getMessage());
+        }
+    }
+
+    public final void handleRequest(InputStream input, OutputStream output) throws IOException {
+        byte[] inputBytes = IOUtils.toByteArray(input);
+        final BaseSkillRequest skillRequest = new BaseSkillRequest(inputBytes);
+        SkillResponse<?> skillResponse = skill.execute(skillRequest);
+        if (skillResponse != null) {
+            if(skillResponse.isPresent()) {
+                skillResponse.writeTo(output);
+            }
         }
     }
 
