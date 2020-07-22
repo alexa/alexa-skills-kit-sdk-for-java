@@ -20,30 +20,49 @@ import com.amazon.ask.model.DialogState;
 import com.amazon.ask.model.Intent;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.LaunchRequest;
+import com.amazon.ask.model.ListSlotValue;
 import com.amazon.ask.model.Request;
 import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.Session;
+import com.amazon.ask.model.SimpleSlotValue;
 import com.amazon.ask.model.Slot;
 import com.amazon.ask.model.SupportedInterfaces;
 import com.amazon.ask.model.User;
 import com.amazon.ask.model.interfaces.system.SystemState;
+import com.amazon.ask.request.intent.SlotValueWrapper;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class RequestHelperTest {
 
+    private SimpleSlotValue testSimpleSlotValue = SimpleSlotValue.builder()
+            .build();
+    private ListSlotValue testListSlotValue = ListSlotValue.builder()
+            .build();
     private Slot testSlot = Slot.builder()
             .withValue("FooValue")
                 .build();
+    private Slot simpleSlot = Slot.builder()
+            .withSlotValue(testSimpleSlotValue)
+            .build();
+    private Slot listSlot = Slot.builder()
+            .withSlotValue(testListSlotValue)
+            .build();
+    private Map<String, Slot> testSlots = new HashMap<>();
     private Intent testIntent = Intent.builder()
             .withName("FooIntent")
-            .withSlots(Collections.singletonMap("FooSlot", testSlot))
+            .withSlots(testSlots)
             .build();
     private IntentRequest testIntentRequest = IntentRequest.builder()
             .withLocale("FooLocale")
@@ -68,6 +87,13 @@ public class RequestHelperTest {
             .build();
     private Context testContext = Context.builder()
             .withSystem(testSystemState).build();
+
+    @Before
+    public void setup() {
+        testSlots.put("FooSlot", testSlot);
+        testSlots.put("SimpleSlot", simpleSlot);
+        testSlots.put("ListSlot", listSlot);
+    }
 
     @Test(expected = IllegalArgumentException.class)
     public void null_handler_input_throws_exception() {
@@ -185,6 +211,22 @@ public class RequestHelperTest {
                 .withRequestEnvelope(requestEnvelope)
                 .build();
         assertEquals(RequestHelper.forHandlerInput(input).getUserId(), Optional.of("userId"));
+    }
+
+    @Test
+    public void get_slot_value_wrapper_returns_empty_wrapper_if_slot_does_not_exist() {
+        assertNull(RequestHelper.forHandlerInput(getHandlerInputForRequest(testIntentRequest)).getSlotValueWrapper("Invalid").unwrap());
+    }
+
+    @Test
+    public void get_slot_value_wrapper_returns_empty_wrapper_if_no_slot_value() {
+        assertNull(RequestHelper.forHandlerInput(getHandlerInputForRequest(testIntentRequest)).getSlotValueWrapper("FooSlot").unwrap());
+    }
+
+    @Test
+    public void get_slot_value_wrapper_returns_wrapped_value_if_exists() {
+        SlotValueWrapper wrapper = RequestHelper.forHandlerInput(getHandlerInputForRequest(testIntentRequest)).getSlotValueWrapper("SimpleSlot");
+        assertEquals(wrapper.unwrap(), testSimpleSlotValue);
     }
 
     private HandlerInput getHandlerInputForRequest(Request request) {

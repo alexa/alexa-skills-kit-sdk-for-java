@@ -95,6 +95,11 @@ public class ResponseBuilder {
     protected CanFulfillIntent canFulfillIntent;
 
     /**
+     * {@link Object} to include in response.
+     */
+    protected Object apiResponse;
+
+    /**
      * Builds an instance of Response to be returned to the client.
      * @return {@link Response}.
      */
@@ -106,6 +111,7 @@ public class ResponseBuilder {
                 .withDirectives(directiveList)
                 .withCanFulfillIntent(canFulfillIntent)
                 .withShouldEndSession(shouldEndSession)
+                .withApiResponse(apiResponse)
                 .build());
     }
 
@@ -243,6 +249,22 @@ public class ResponseBuilder {
             this.shouldEndSession = shouldEndSession;
         }
 
+        return this;
+    }
+
+    /**
+     * Sets the {@link Object} object in the response.
+     *
+     * @param apiResponse {@link Object} to include in the response.
+     *
+     * The API response is a free form type. Values provided should be
+     * either primitive Java types or complex types serializable by Jackson's
+     * ObjectMapper.
+     *
+     * @return response builder
+     */
+    public ResponseBuilder withApiResponse(final Object apiResponse) {
+        this.apiResponse = apiResponse;
         return this;
     }
 

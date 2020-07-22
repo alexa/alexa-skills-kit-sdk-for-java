@@ -18,8 +18,10 @@ import com.amazon.ask.model.DialogState;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Session;
 import com.amazon.ask.model.Slot;
+import com.amazon.ask.model.SlotValue;
 import com.amazon.ask.model.SupportedInterfaces;
 import com.amazon.ask.model.User;
+import com.amazon.ask.request.intent.SlotValueWrapper;
 import com.amazon.ask.util.ValidationUtils;
 
 import java.util.Map;
@@ -182,6 +184,18 @@ public final class RequestHelper {
      */
     public Optional<String> getSlotValue(final String slotName) {
         return getSlot(slotName).map(Slot::getValue);
+    }
+
+    /**
+     * Returns a {@link SlotValueWrapper} wrapping the underlying {@link SlotValue} from the given slot.
+     *
+     * @param slotName name of the slot to retrieve {@link SlotValue} and create a {@link SlotValueWrapper}.
+     * @return new {@link SlotValueWrapper}.
+     */
+    public SlotValueWrapper getSlotValueWrapper(final String slotName) {
+        return SlotValueWrapper.createFrom(getSlot(slotName)
+                .map(Slot::getSlotValue)
+                .orElse(null));
     }
 
     /**
