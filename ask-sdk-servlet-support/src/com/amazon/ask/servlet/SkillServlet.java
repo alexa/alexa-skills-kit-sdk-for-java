@@ -137,14 +137,14 @@ public class SkillServlet extends HttpServlet {
                 verifier.verify(alexaHttpRequest);
             }
 
-            try(final ByteArrayOutputStream skillResponse = new ByteArrayOutputStream()) {
+            try (ByteArrayOutputStream skillResponse = new ByteArrayOutputStream()) {
                 handleRequest(new ByteArrayInputStream(serializedRequestEnvelope), skillResponse);
                 // Generate JSON and send back the response
                 response.setContentType("application/json");
                 response.setStatus(HttpServletResponse.SC_OK);
                 byte[] serializedResponse = skillResponse.toByteArray();
                 if (skillResponse != null) {
-                    try (final OutputStream out = response.getOutputStream()) {
+                    try (OutputStream out = response.getOutputStream()) {
                         response.setContentLength(serializedResponse.length);
                         out.write(serializedResponse);
                     }
@@ -161,12 +161,21 @@ public class SkillServlet extends HttpServlet {
         }
     }
 
-    public final void handleRequest(InputStream input, OutputStream output) throws IOException {
+    /**
+     * This method is the entry point when executing your servlet. The configured
+     * {@code SkillServlet} determines the type of request and passes the request to
+     * the configured {@code Skill}.
+     *
+     * @param input - input stream of the request.
+     * @param output - output stream of the response.
+     * @throws IOException if an input or output error is detected when the servlet handles the request
+     */
+    public final void handleRequest(final InputStream input, final OutputStream output) throws IOException {
         byte[] inputBytes = IOUtils.toByteArray(input);
         final BaseSkillRequest skillRequest = new BaseSkillRequest(inputBytes);
         SkillResponse<?> skillResponse = skill.execute(skillRequest);
         if (skillResponse != null) {
-            if(skillResponse.isPresent()) {
+            if (skillResponse.isPresent()) {
                 skillResponse.writeTo(output);
             }
         }

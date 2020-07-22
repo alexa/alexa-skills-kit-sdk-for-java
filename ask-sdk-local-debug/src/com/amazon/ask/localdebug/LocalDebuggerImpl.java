@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 /**
  * {@link LocalDebugger} implementation.
  */
-public class LocalDebuggerImpl implements LocalDebugger {
+public final class LocalDebuggerImpl implements LocalDebugger {
     /**
      * Logger instance of the class.
      */

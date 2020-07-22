@@ -183,10 +183,14 @@ public class WebSocketClientImpl extends org.java_websocket.client.WebSocketClie
     @Override
     public void sendSkillResponse(final String localDebugASKResponse) {
         LOG.info("Skill response: \n" + localDebugASKResponse);
-        send(new String(localDebugASKResponse.getBytes(StandardCharsets.UTF_8)
-                , StandardCharsets.UTF_8));
+        send(new String(localDebugASKResponse.getBytes(StandardCharsets.UTF_8),
+                StandardCharsets.UTF_8));
     }
 
+    /**
+     * Event triggered when WebSocket client receives an incoming payload.
+     * @param bytes The buffer which contains the payload.
+     */
     @Override
     public void onMessage(final ByteBuffer bytes) {
         onMessage(new String(bytes.array(), StandardCharsets.UTF_8));

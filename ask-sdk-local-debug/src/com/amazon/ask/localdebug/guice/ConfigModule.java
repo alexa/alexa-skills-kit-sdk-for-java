@@ -33,7 +33,7 @@ import java.util.Map;
 /**
  * Configures configuration dependencies for injection.
  */
-public class ConfigModule extends AbstractModule {
+public final class ConfigModule extends AbstractModule {
     /**
      * Logger instance of the class.
      */
@@ -126,6 +126,11 @@ public class ConfigModule extends AbstractModule {
         }
     }
 
+    /**
+     * Creates an debug endpoint connection header object.
+     * @param accessToken LWA access token.
+     * @return request headers.
+     */
     @Provides
     @Singleton
     @Named("ConnectCustomDebugEndpointHeaders")
