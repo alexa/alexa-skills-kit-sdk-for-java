@@ -28,7 +28,7 @@ import com.amazon.ask.request.mapper.GenericRequestMapper;
 import com.amazon.ask.request.mapper.impl.BaseRequestMapper;
 import com.amazon.ask.response.template.TemplateFactory;
 import com.amazon.ask.services.ApacheHttpApiClient;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -96,7 +96,7 @@ public class StandardSkillBuilderTest {
     @Test
     public void dynamo_persistence_adapter_used_if_table_name_provided() {
         builder.addRequestHandler(mockRequestHandler);
-        SkillConfiguration configuration = builder.withTableName("fooTable").withDynamoDbClient(mock(AmazonDynamoDB.class)).getConfigBuilder().build();
+        SkillConfiguration configuration = builder.withTableName("fooTable").withDynamoDbClient(mock(DynamoDbClient.class)).getConfigBuilder().build();
         assertTrue(configuration.getPersistenceAdapter() instanceof DynamoDbPersistenceAdapter);
     }
 

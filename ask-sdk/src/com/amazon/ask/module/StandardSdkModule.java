@@ -24,7 +24,7 @@ import com.amazon.ask.response.template.renderer.TemplateRenderer;
 import com.amazon.ask.response.template.renderer.impl.FreeMarkerTemplateRenderer;
 import com.amazon.ask.services.ApacheHttpApiClient;
 import com.amazon.ask.util.impl.JacksonJsonUnmarshaller;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 
@@ -101,7 +101,7 @@ public class StandardSdkModule implements SdkModule {
         /**
          * Custom DynamoDB client.
          */
-        protected AmazonDynamoDB customDynamoDBClient;
+        protected DynamoDbClient customDynamoDBClient;
 
         /**
          * DynamoDB table name.
@@ -165,10 +165,10 @@ public class StandardSdkModule implements SdkModule {
 
         /**
          * Allows the user to specify a custom DynamoDB client.
-         * @param customDynamoDBClient should implement {@link AmazonDynamoDB}.
+         * @param customDynamoDBClient should implement {@link DynamoDbClient}.
          * @return {@link Builder}
          */
-        public Builder withDynamoDbClient(final AmazonDynamoDB customDynamoDBClient) {
+        public Builder withDynamoDbClient(final DynamoDbClient customDynamoDBClient) {
             this.customDynamoDBClient = customDynamoDBClient;
             return this;
         }

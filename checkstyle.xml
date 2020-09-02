@@ -130,7 +130,7 @@
         <module name="ArrayTypeStyle"/>
         <module name="FinalParameters"/>
         <module name="UpperEll"/>
-
+        <module name="SuppressionCommentFilter"/>
     </module>
 
 </module>

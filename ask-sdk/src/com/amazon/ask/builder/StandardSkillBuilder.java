@@ -16,7 +16,7 @@ package com.amazon.ask.builder;
 import com.amazon.ask.Skill;
 import com.amazon.ask.module.StandardSdkModule;
 import com.amazon.ask.model.RequestEnvelope;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import org.apache.http.impl.client.CloseableHttpClient;
 
 import java.util.function.Function;
@@ -74,10 +74,10 @@ public class StandardSkillBuilder extends SkillBuilder<StandardSkillBuilder> {
 
     /**
      * Allows the user to specify a custom DynamoDB client.
-     * @param customDynamoDBClient should implement {@link AmazonDynamoDB}.
+     * @param customDynamoDBClient should implement {@link DynamoDbClient}.
      * @return {@link StandardSkillBuilder}
      */
-    public StandardSkillBuilder withDynamoDbClient(final AmazonDynamoDB customDynamoDBClient) {
+    public StandardSkillBuilder withDynamoDbClient(final DynamoDbClient customDynamoDBClient) {
         standardSdkModuleBuilder.withDynamoDbClient(customDynamoDBClient);
         return this;
     }
