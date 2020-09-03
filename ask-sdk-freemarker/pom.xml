@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.amazon.alexa</groupId>
         <artifactId>ask-sdk-pom</artifactId>
-        <version>2.32.0</version>
+        <version>2.33.0</version>
     </parent>
     <groupId>com.amazon.alexa</groupId>
     <artifactId>ask-sdk-freemarker</artifactId>
     <packaging>jar</packaging>
-    <version>2.32.0</version>
+    <version>2.33.0</version>
     <name>ASK SDK for Java FreeMarker Template Renderer</name>
     <description>Template Renderer for ASK SDK Java using the Apache Freemarker template engine.</description>
     <url>http://developer.amazon.com/ask</url>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>com.amazon.alexa</groupId>
             <artifactId>ask-sdk-runtime</artifactId>
-            <version>2.32.0</version>
+            <version>2.33.0</version>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>
