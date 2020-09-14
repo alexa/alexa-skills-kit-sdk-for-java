@@ -21,28 +21,30 @@ import java.util.List;
 
 /**
  * A handler chain contains a request handler and any associated request/response interceptors and exception handlers.
+ * @param <Input> handler input type
+ * @param <Output> handler output type
  */
 public interface GenericRequestHandlerChain<Input, Output> {
 
     /**
-     * Returns the request handler
+     * Returns the request handler.
      *
      * @return request handler
      */
     Object getRequestHandler();
 
     /**
-     * @return list of chain-level request interceptors
+     * @return list of chain-level request interceptors.
      */
     List<GenericRequestInterceptor<Input>> getRequestInterceptors();
 
     /**
-     * @return list of chain-level response interceptors
+     * @return list of chain-level response interceptors.
      */
     List<GenericResponseInterceptor<Input, Output>> getResponseInterceptors();
 
     /**
-     * @return list of chain-level exception handlers
+     * @return list of chain-level exception handlers.
      */
     List<GenericExceptionHandler<Input, Output>> getExceptionHandlers();
 

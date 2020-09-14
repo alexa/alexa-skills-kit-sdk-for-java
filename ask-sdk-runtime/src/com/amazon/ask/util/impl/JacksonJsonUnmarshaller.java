@@ -26,39 +26,88 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Jackson Unmarshaller to deserialize a given byte array. Implements {@link JsonUnmarshaller}.
+ * @param <Type> type to unmarshall.
+ */
 public class JacksonJsonUnmarshaller<Type> implements JsonUnmarshaller<Type> {
 
+    /**
+     * Mapper used to serialize and de-serialize objects.
+     */
     private static final ObjectMapper MAPPER = ObjectMapperFactory.getMapper();
 
+    /**
+     * Output type after unmarshalling.
+     */
     private final Class<? extends Type> outputType;
+
+    /**
+     * Discriminator path.
+     */
     private final List<String> discriminatorPath;
+
+    /**
+     * Map of valid class types.
+     */
     private final Map<String, Class> validTypes;
 
-    protected JacksonJsonUnmarshaller(Class<? extends Type> outputType, List<String> discriminatorPath, Map<String, Class> validTypes) {
+    /**
+     * Constructor for JacksonJsonUnmarshaller.
+     * @param outputType output type.
+     * @param discriminatorPath discriminator path.
+     * @param validTypes map of valid class types.
+     */
+    protected JacksonJsonUnmarshaller(final Class<? extends Type> outputType, final List<String> discriminatorPath,
+                                      final Map<String, Class> validTypes) {
         this.outputType = outputType;
         this.discriminatorPath = discriminatorPath;
         this.validTypes = validTypes;
     }
 
+    /**
+     * Return an instance of JacksonJsonUnmarshaller.
+     * @param outputType class of type Output.
+     * @param <Output> Type of class to be unmarshalled to.
+     * @return {@link JacksonJsonUnmarshaller}.
+     */
     @Deprecated
-    public static <Output> JacksonJsonUnmarshaller<Output> withTypeBinding(Class<Output> outputType) {
+    public static <Output> JacksonJsonUnmarshaller<Output> withTypeBinding(final Class<Output> outputType) {
         return new JacksonJsonUnmarshaller<>(outputType, null, null);
     }
 
+    /**
+     * Return an instance of JacksonJsonUnmarshaller.
+     * @param outputType class of type Output.
+     * @param requiredField required field.
+     * @param <Output> Type of class to be unmarshalled to.
+     * @return {@link JacksonJsonUnmarshaller}.
+     */
     @Deprecated
-    public static <Output> JacksonJsonUnmarshaller<Output> withTypeBinding(Class<Output> outputType,
-                                                                           String requiredField) {
+    public static <Output> JacksonJsonUnmarshaller<Output> withTypeBinding(final Class<Output> outputType,
+                                                                           final String requiredField) {
         return new JacksonJsonUnmarshaller<>(outputType, Arrays.asList(requiredField, "type"), null);
     }
 
-    public static <Type> JacksonJsonUnmarshaller<Type> withTypeBinding(Class<? extends Type> outputType,
-                                                                       List<String> discriminatorPath,
-                                                                       Map<String, Class> validTypes) {
+    /**
+     * Return an instance of JacksonJsonUnmarshaller.
+     * @param outputType class of type Output.
+     * @param discriminatorPath discriminator path.
+     * @param validTypes valid class types.
+     * @param <Type> unmarshaller of type.
+     * @return {@link JacksonJsonUnmarshaller}.
+     */
+    public static <Type> JacksonJsonUnmarshaller<Type> withTypeBinding(final Class<? extends Type> outputType,
+                                                                       final List<String> discriminatorPath,
+                                                                       final Map<String, Class> validTypes) {
         return new JacksonJsonUnmarshaller<>(outputType, discriminatorPath, validTypes);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public Optional<UnmarshalledRequest<Type>> unmarshall(byte[] in) {
+    public Optional<UnmarshalledRequest<Type>> unmarshall(final byte[] in) {
         try {
             JsonNode json = MAPPER.readTree(in);
             if (discriminatorPath != null) {

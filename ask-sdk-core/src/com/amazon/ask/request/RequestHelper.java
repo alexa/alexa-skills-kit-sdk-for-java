@@ -18,8 +18,10 @@ import com.amazon.ask.model.DialogState;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.Session;
 import com.amazon.ask.model.Slot;
+import com.amazon.ask.model.SlotValue;
 import com.amazon.ask.model.SupportedInterfaces;
 import com.amazon.ask.model.User;
+import com.amazon.ask.request.intent.SlotValueWrapper;
 import com.amazon.ask.util.ValidationUtils;
 
 import java.util.Map;
@@ -28,11 +30,18 @@ import java.util.Optional;
 /**
  * Helper class that makes it easy to retrieve request properties from a {@link HandlerInput}.
  */
-public class RequestHelper {
+public final class RequestHelper {
 
+    /**
+     * Property of type {@link HandlerInput}.
+     */
     private final HandlerInput handlerInput;
 
-    private RequestHelper(HandlerInput handlerInput) {
+    /**
+     * Private constructor to create am instance of {@link RequestHelper}.
+     * @param handlerInput handler input.
+     */
+    private RequestHelper(final HandlerInput handlerInput) {
         this.handlerInput = ValidationUtils.assertNotNull(handlerInput, "handlerInput");
     }
 
@@ -42,7 +51,7 @@ public class RequestHelper {
      * @param input handler input
      * @return an RequestHelper, providing convience methods for retrieving request properties out of the provided handler input.
      */
-    public static RequestHelper forHandlerInput(HandlerInput input) {
+    public static RequestHelper forHandlerInput(final HandlerInput input) {
         return new RequestHelper(input);
     }
 
@@ -154,12 +163,12 @@ public class RequestHelper {
      * @param slotName name of the slot to retrieve
      * @return an {@link Optional} containing the target slot if it exists in the request, else an empty {@link Optional}
      */
-    public Optional<Slot> getSlot(String slotName) {
-         Map<String, Slot> slots = castRequestType(handlerInput, IntentRequest.class).getIntent().getSlots();
-         if (slots != null) {
-             return Optional.ofNullable(slots.get(slotName));
-         }
-         return Optional.empty();
+    public Optional<Slot> getSlot(final String slotName) {
+        Map<String, Slot> slots = castRequestType(handlerInput, IntentRequest.class).getIntent().getSlots();
+        if (slots != null) {
+            return Optional.ofNullable(slots.get(slotName));
+        }
+        return Optional.empty();
     }
 
     /**
@@ -173,8 +182,20 @@ public class RequestHelper {
      * @param slotName name of the slot to retrieve
      * @return an {@link Optional} containing the target slot's value if it exists in the request, else an empty {@link Optional}
      */
-    public Optional<String> getSlotValue(String slotName) {
+    public Optional<String> getSlotValue(final String slotName) {
         return getSlot(slotName).map(Slot::getValue);
+    }
+
+    /**
+     * Returns a {@link SlotValueWrapper} wrapping the underlying {@link SlotValue} from the given slot.
+     *
+     * @param slotName name of the slot to retrieve {@link SlotValue} and create a {@link SlotValueWrapper}.
+     * @return new {@link SlotValueWrapper}.
+     */
+    public SlotValueWrapper getSlotValueWrapper(final String slotName) {
+        return SlotValueWrapper.createFrom(getSlot(slotName)
+                .map(Slot::getSlotValue)
+                .orElse(null));
     }
 
     /**
@@ -222,7 +243,14 @@ public class RequestHelper {
         return Optional.ofNullable(handlerInput.getRequestEnvelope().getContext().getSystem().getUser()).map(User::getUserId);
     }
 
-    private static <T> T castRequestType(HandlerInput input, Class<T> targetType) {
+    /**
+     * Casts the request object of {@link HandlerInput} to a given target type.
+     * @param input instance of {@link HandlerInput}.
+     * @param targetType to which the request has to be casted to.
+     * @param <T> target type.
+     * @return casted object of type T.
+     */
+    private static <T> T castRequestType(final HandlerInput input, final Class<T> targetType) {
         if (!targetType.isInstance(input.getRequest())) {
             throw new IllegalArgumentException("Provided request is not a " + targetType.getName());
         }

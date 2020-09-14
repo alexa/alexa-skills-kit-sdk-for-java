@@ -640,4 +640,16 @@ public class ResponseBuilderTest {
                 .build();
         assertEquals(responseWithBuilder.get(), response);
     }
+
+    @Test
+    public void build_response_with_api_response() {
+            String apiResponse = "foo";
+            Response response = Response.builder()
+                .withApiResponse(apiResponse)
+                .build();
+            Optional<Response> responseWithBuilder = builder
+                .withApiResponse(apiResponse)
+                .build();
+            assertEquals(responseWithBuilder.get(), response);
+    }
 }

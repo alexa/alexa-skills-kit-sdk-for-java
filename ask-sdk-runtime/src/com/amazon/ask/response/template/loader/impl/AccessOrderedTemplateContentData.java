@@ -21,40 +21,80 @@ import com.amazon.ask.util.ValidationUtils;
  */
 public class AccessOrderedTemplateContentData {
 
+    /**
+     * Template content data.
+     */
     protected final TemplateContentData templateContentData;
 
+    /**
+     * Timestamp of last access of template content data.
+     */
     private long accessTimestamp;
 
-    public AccessOrderedTemplateContentData(TemplateContentData templateContentData) {
+    /**
+     * Constructor for AccessOrderedTemplateContentData.
+     * @param templateContentData template content data.
+     */
+    public AccessOrderedTemplateContentData(final TemplateContentData templateContentData) {
         this.templateContentData = ValidationUtils.assertNotNull(templateContentData, "templateContentData");
         this.accessTimestamp = System.currentTimeMillis();
     }
 
+    /**
+     * Static method returns an instance of Builder class.
+     * @return {@link Builder}.
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Get access time stamp.
+     * @return access time stamp.
+     */
     public long getAccessTimestamp() {
         return this.accessTimestamp;
     }
 
+    /**
+     * Get template content data.
+     * @return {@link TemplateContentData}.
+     */
     public TemplateContentData getTemplateContentData() {
         updateTimestamp();
         return this.templateContentData;
     }
 
+    /**
+     * Updates the timestamp.
+     */
     private void updateTimestamp() {
         this.accessTimestamp = System.currentTimeMillis();
     }
 
+    /**
+     * Access Ordered Template Content Data Builder.
+     */
     public static final class Builder {
+        /**
+         * Template content data.
+         */
         private TemplateContentData templateContentData;
 
-        public Builder withTemplateContentData(TemplateContentData templateContentData) {
+        /**
+         * Adds template content data to AccessOrderedTemplateContentData.
+         * @param templateContentData template content data.
+         * @return {@link Builder}.
+         */
+        public Builder withTemplateContentData(final TemplateContentData templateContentData) {
             this.templateContentData = templateContentData;
             return this;
         }
 
+        /**
+         * Builder method to build an instance of AccessOrderedTemplateContentData.
+         * @return {@link AccessOrderedTemplateContentData}.
+         */
         public AccessOrderedTemplateContentData build() {
             return new AccessOrderedTemplateContentData(templateContentData);
         }

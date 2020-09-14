@@ -21,16 +21,41 @@ import com.amazon.ask.request.mapper.GenericRequestMapper;
 
 import java.util.List;
 
+/**
+ * Interface provides abstract methods to fetch properties common to various types of Skill Configuration.
+ * @param <Input> input type.
+ * @param <Output> output type.
+ */
 public interface GenericSkillConfiguration<Input, Output> {
 
+    /**
+     * Getter method for list of GenericRequestMapper.
+     * @return list of {@link GenericRequestMapper}.
+     */
     List<GenericRequestMapper<Input, Output>> getRequestMappers();
 
+    /**
+     * Getter method for list of GenericHandlerAdapter.
+     * @return list of {@link GenericHandlerAdapter}.
+     */
     List<GenericHandlerAdapter<Input, Output>> getHandlerAdapters();
 
+    /**
+     * Getter method for list of GenericRequestInterceptor.
+     * @return list of {@link GenericRequestInterceptor}.
+     */
     List<GenericRequestInterceptor<Input>> getRequestInterceptors();
 
+    /**
+     * Getter method for list of GenericResponseInterceptor.
+     * @return list of {@link GenericResponseInterceptor}.
+     */
     List<GenericResponseInterceptor<Input, Output>> getResponseInterceptors();
 
+    /**
+     * Getter method for GenericExceptionMapper.
+     * @return {@link GenericExceptionMapper}.
+     */
     GenericExceptionMapper<Input, Output> getExceptionMapper();
 
 }

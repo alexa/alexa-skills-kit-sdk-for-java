@@ -18,9 +18,71 @@ import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.interfaces.viewport.Shape;
 import com.amazon.ask.model.interfaces.viewport.ViewportState;
 
-public class ViewportUtils {
+/**
+ * Helps to determine which device is making the request.
+ */
+public final class ViewportUtils {
 
-    public static ViewportProfile getViewportProfile(RequestEnvelope requestEnvelope) {
+    // Density ranges.
+
+    /**
+     * XLow density upper bound.
+     */
+    private static final int XLOW_DENSITY_UPPER_BOUND = 121;
+
+    /**
+     * Low density upper bound.
+     */
+    private static final int LOW_DENSITY_UPPER_BOUND = 161;
+
+    /**
+     * Medium density upper bound.
+     */
+    private static final int MEDIUM_DENSITY_UPPER_BOUND = 241;
+
+    /**
+     * High density upper bound.
+     */
+    private static final int HIGH_DENSITY_UPPER_BOUND = 321;
+
+    /**
+     * XHigh density upper bound.
+     */
+    private static final int XHIGH_DENSITY_UPPER_BOUND = 481;
+
+    // Size ranges.
+
+    /**
+     * XSmall size upper bound.
+     */
+    private static final int XSMALL_SIZE_UPPER_BOUND = 600;
+
+    /**
+     * Small size upper bound.
+     */
+    private static final int SMALL_SIZE_UPPER_BOUND = 960;
+
+    /**
+     * Medium size upper bound.
+     */
+    private static final int MEDIUM_SIZE_UPPER_BOUND = 1280;
+
+    /**
+     * Large size upper bound.
+     */
+    private static final int LARGE_SIZE_UPPER_BOUND = 1920;
+
+    /**
+     * Prevent instantiation.
+     */
+    private ViewportUtils() { }
+
+    /**
+     * Get viewport profile which helps to determine type of device.
+     * @param requestEnvelope request envelope.
+     * @return {@link ViewportProfile}.
+     */
+    public static ViewportProfile getViewportProfile(final RequestEnvelope requestEnvelope) {
         ViewportState viewportState = requestEnvelope.getContext().getViewport();
         Shape shape = viewportState.getShape();
         int currentPixelWidth = viewportState.getCurrentPixelWidth().intValueExact();
@@ -28,104 +90,115 @@ public class ViewportUtils {
         int dpi = viewportState.getDpi().intValueExact();
         Orientation orientation = getOrientation(currentPixelHeight, currentPixelWidth);
 
-        if (shape == Shape.ROUND &&
-                orientation == Orientation.EQUAL &&
-                getSize(currentPixelHeight) == Size.XSMALL &&
-                getSize(currentPixelWidth) == Size.XSMALL &&
-                getDensity(dpi) == Density.LOW) {
+        if (shape == Shape.ROUND
+                && orientation == Orientation.EQUAL
+                && getSize(currentPixelHeight) == Size.XSMALL
+                && getSize(currentPixelWidth) == Size.XSMALL
+                && getDensity(dpi) == Density.LOW) {
             return ViewportProfile.HUB_ROUND_SMALL;
 
-        } else if (shape == Shape.RECTANGLE &&
-                orientation == Orientation.LANDSCAPE &&
-                getSize(currentPixelWidth).ordinal() <= Size.MEDIUM.ordinal() &&
-                getSize(currentPixelHeight).ordinal() <= Size.XSMALL.ordinal() &&
-                getDensity(dpi) == Density.LOW) {
+        } else if (shape == Shape.RECTANGLE
+                && orientation == Orientation.LANDSCAPE
+                && getSize(currentPixelWidth).ordinal() <= Size.MEDIUM.ordinal()
+                && getSize(currentPixelHeight).ordinal() <= Size.XSMALL.ordinal()
+                && getDensity(dpi) == Density.LOW) {
             return ViewportProfile.HUB_LANDSCAPE_SMALL;
- 
-        } else if (shape == Shape.RECTANGLE &&
-                orientation == Orientation.LANDSCAPE &&
-                getSize(currentPixelWidth).ordinal() <= Size.MEDIUM.ordinal() &&
-                getSize(currentPixelHeight).ordinal() <= Size.SMALL.ordinal() &&
-                getDensity(dpi) == Density.LOW) {
+
+        } else if (shape == Shape.RECTANGLE
+                && orientation == Orientation.LANDSCAPE
+                && getSize(currentPixelWidth).ordinal() <= Size.MEDIUM.ordinal()
+                && getSize(currentPixelHeight).ordinal() <= Size.SMALL.ordinal()
+                && getDensity(dpi) == Density.LOW) {
             return ViewportProfile.HUB_LANDSCAPE_MEDIUM;
 
-        } else if (shape == Shape.RECTANGLE &&
-                orientation == Orientation.LANDSCAPE &&
-                getSize(currentPixelWidth).ordinal() >= Size.LARGE.ordinal() &&
-                getSize(currentPixelHeight).ordinal() >= Size.SMALL.ordinal() &&
-                getDensity(dpi) == Density.LOW) {
+        } else if (shape == Shape.RECTANGLE
+                && orientation == Orientation.LANDSCAPE
+                && getSize(currentPixelWidth).ordinal() >= Size.LARGE.ordinal()
+                && getSize(currentPixelHeight).ordinal() >= Size.SMALL.ordinal()
+                && getDensity(dpi) == Density.LOW) {
             return ViewportProfile.HUB_LANDSCAPE_LARGE;
 
-        } else if (shape == Shape.RECTANGLE &&
-                orientation == Orientation.LANDSCAPE &&
-                getSize(currentPixelWidth).ordinal() >= Size.MEDIUM.ordinal() &&
-                getSize(currentPixelHeight).ordinal() >= Size.SMALL.ordinal() &&
-                getDensity(dpi) == Density.MEDIUM) {
+        } else if (shape == Shape.RECTANGLE
+                && orientation == Orientation.LANDSCAPE
+                && getSize(currentPixelWidth).ordinal() >= Size.MEDIUM.ordinal()
+                && getSize(currentPixelHeight).ordinal() >= Size.SMALL.ordinal()
+                && getDensity(dpi) == Density.MEDIUM) {
             return ViewportProfile.MOBILE_LANDSCAPE_MEDIUM;
 
-        } else if (shape == Shape.RECTANGLE &&
-                orientation == Orientation.PORTRAIT &&
-                getSize(currentPixelWidth).ordinal() >= Size.SMALL.ordinal() &&
-                getSize(currentPixelHeight).ordinal() >= Size.MEDIUM.ordinal() &&
-                getDensity(dpi) == Density.MEDIUM) {
+        } else if (shape == Shape.RECTANGLE
+                && orientation == Orientation.PORTRAIT
+                && getSize(currentPixelWidth).ordinal() >= Size.SMALL.ordinal()
+                && getSize(currentPixelHeight).ordinal() >= Size.MEDIUM.ordinal()
+                && getDensity(dpi) == Density.MEDIUM) {
             return ViewportProfile.MOBILE_PORTRAIT_MEDIUM;
 
-        } else if (shape == Shape.RECTANGLE &&
-                orientation == Orientation.LANDSCAPE &&
-                getSize(currentPixelWidth).ordinal() >= Size.SMALL.ordinal() &&
-                getSize(currentPixelHeight).ordinal() >= Size.XSMALL.ordinal() &&
-                getDensity(dpi) == Density.MEDIUM) {
+        } else if (shape == Shape.RECTANGLE
+                && orientation == Orientation.LANDSCAPE
+                && getSize(currentPixelWidth).ordinal() >= Size.SMALL.ordinal()
+                && getSize(currentPixelHeight).ordinal() >= Size.XSMALL.ordinal()
+                && getDensity(dpi) == Density.MEDIUM) {
             return ViewportProfile.MOBILE_LANDSCAPE_SMALL;
 
-        } else if (shape == Shape.RECTANGLE &&
-                orientation == Orientation.PORTRAIT &&
-                getSize(currentPixelWidth).ordinal() >= Size.XSMALL.ordinal() &&
-                getSize(currentPixelHeight).ordinal() >= Size.SMALL.ordinal() &&
-                getDensity(dpi) == Density.MEDIUM) {
+        } else if (shape == Shape.RECTANGLE
+                && orientation == Orientation.PORTRAIT
+                && getSize(currentPixelWidth).ordinal() >= Size.XSMALL.ordinal()
+                && getSize(currentPixelHeight).ordinal() >= Size.SMALL.ordinal()
+                && getDensity(dpi) == Density.MEDIUM) {
             return ViewportProfile.MOBILE_PORTRAIT_SMALL;
 
-        } else if (shape == Shape.RECTANGLE &&
-                orientation == Orientation.LANDSCAPE &&
-                getSize(currentPixelWidth).ordinal() >= Size.XLARGE.ordinal() &&
-                getSize(currentPixelHeight).ordinal() >= Size.MEDIUM.ordinal() &&
-                getDensity(dpi).ordinal() >= Density.HIGH.ordinal()) {
+        } else if (shape == Shape.RECTANGLE
+                && orientation == Orientation.LANDSCAPE
+                && getSize(currentPixelWidth).ordinal() >= Size.XLARGE.ordinal()
+                && getSize(currentPixelHeight).ordinal() >= Size.MEDIUM.ordinal()
+                && getDensity(dpi).ordinal() >= Density.HIGH.ordinal()) {
             return ViewportProfile.TV_LANDSCAPE_XLARGE;
 
-        } else if (shape == Shape.RECTANGLE &&
-                orientation == Orientation.PORTRAIT &&
-                getSize(currentPixelWidth) == Size.XSMALL &&
-                getSize(currentPixelHeight) == Size.XLARGE &&
-                getDensity(dpi).ordinal() >= Density.HIGH.ordinal()) {
+        } else if (shape == Shape.RECTANGLE
+                && orientation == Orientation.PORTRAIT
+                && getSize(currentPixelWidth) == Size.XSMALL
+                && getSize(currentPixelHeight) == Size.XLARGE
+                && getDensity(dpi).ordinal() >= Density.HIGH.ordinal()) {
             return ViewportProfile.TV_PORTRAIT_MEDIUM;
 
-        } else if (shape == Shape.RECTANGLE &&
-                orientation == Orientation.LANDSCAPE &&
-                getSize(currentPixelWidth) == Size.MEDIUM &&
-                getSize(currentPixelHeight) == Size.SMALL &&
-                getDensity(dpi).ordinal() >= Density.HIGH.ordinal()) {
+        } else if (shape == Shape.RECTANGLE
+                && orientation == Orientation.LANDSCAPE
+                && getSize(currentPixelWidth) == Size.MEDIUM
+                && getSize(currentPixelHeight) == Size.SMALL
+                && getDensity(dpi).ordinal() >= Density.HIGH.ordinal()) {
             return ViewportProfile.TV_LANDSCAPE_MEDIUM;
         }
         return ViewportProfile.UNKNOWN_VIEWPORT_PROFILE;
     }
 
-    private static Density getDensity(int dpi) {
-        if (isBetween(dpi, 0, 121)) {
+    /**
+     * Get dpi density.
+     * @param dpi dots per inch.
+     * @return {@link Density}.
+     */
+    private static Density getDensity(final int dpi) {
+        if (isBetween(dpi, 0, XLOW_DENSITY_UPPER_BOUND)) {
             return Density.XLOW;
-        } else if (isBetween(dpi, 121, 161)) {
+        } else if (isBetween(dpi, XLOW_DENSITY_UPPER_BOUND, LOW_DENSITY_UPPER_BOUND)) {
             return Density.LOW;
-        } else if (isBetween(dpi, 161, 241)) {
+        } else if (isBetween(dpi, LOW_DENSITY_UPPER_BOUND, MEDIUM_DENSITY_UPPER_BOUND)) {
             return Density.MEDIUM;
-        } else if (isBetween(dpi, 241, 321)) {
+        } else if (isBetween(dpi, MEDIUM_DENSITY_UPPER_BOUND, HIGH_DENSITY_UPPER_BOUND)) {
             return Density.HIGH;
-        } else if (isBetween(dpi, 321, 481)) {
+        } else if (isBetween(dpi, HIGH_DENSITY_UPPER_BOUND, XHIGH_DENSITY_UPPER_BOUND)) {
             return Density.XHIGH;
-        } else if (dpi >= 481) {
+        } else if (dpi >= XHIGH_DENSITY_UPPER_BOUND) {
             return Density.XXHIGH;
         }
         throw new AskSdkException("Unknown density dpi value " + dpi);
     }
 
-    private static Orientation getOrientation(int height, int width) {
+    /**
+     * Gte device orientation.
+     * @param height height.
+     * @param width width.
+     * @return {@link Orientation}.
+     */
+    private static Orientation getOrientation(final int height, final int width) {
         if (height > width) {
             return Orientation.PORTRAIT;
         } else if (height < width) {
@@ -134,22 +207,34 @@ public class ViewportUtils {
         return Orientation.EQUAL;
     }
 
-    private static Size getSize(int dpi) {
-        if (isBetween(dpi, 0, 600)) {
+    /**
+     * Gets the size of the device in use.
+     * @param dpi dots per inch.
+     * @return {@link Size}.
+     */
+    private static Size getSize(final int dpi) {
+        if (isBetween(dpi, 0, XSMALL_SIZE_UPPER_BOUND)) {
             return Size.XSMALL;
-        } else if (isBetween(dpi, 600, 960)) {
+        } else if (isBetween(dpi, XSMALL_SIZE_UPPER_BOUND, SMALL_SIZE_UPPER_BOUND)) {
             return Size.SMALL;
-        } else if (isBetween(dpi, 960, 1280)) {
+        } else if (isBetween(dpi, SMALL_SIZE_UPPER_BOUND, MEDIUM_SIZE_UPPER_BOUND)) {
             return Size.MEDIUM;
-        } else if (isBetween(dpi, 1280, 1920)) {
+        } else if (isBetween(dpi, MEDIUM_SIZE_UPPER_BOUND, LARGE_SIZE_UPPER_BOUND)) {
             return Size.LARGE;
-        } else if (dpi >= 1920) {
+        } else if (dpi >= LARGE_SIZE_UPPER_BOUND) {
             return Size.XLARGE;
         }
         throw new AskSdkException("Unknown size group value " + dpi);
     }
 
-    private static boolean isBetween(int x, int lower, int upper) {
+    /**
+     * Checks range of input x.
+     * @param x current input.
+     * @param lower lower end.
+     * @param upper upper end.
+     * @return true if x is within lower and upper bounds.
+     */
+    private static boolean isBetween(final int x, final int lower, final int upper) {
         return lower <= x && x < upper;
     }
 }

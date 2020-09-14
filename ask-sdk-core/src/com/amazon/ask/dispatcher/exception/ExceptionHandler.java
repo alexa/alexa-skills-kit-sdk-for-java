@@ -22,4 +22,4 @@ import java.util.Optional;
 /**
  * A handler for handling one or more types of exceptions thrown during the request processing lifecycle.
  */
-public interface ExceptionHandler extends GenericExceptionHandler<HandlerInput, Optional<Response>> {}
+public interface ExceptionHandler extends GenericExceptionHandler<HandlerInput, Optional<Response>> { }

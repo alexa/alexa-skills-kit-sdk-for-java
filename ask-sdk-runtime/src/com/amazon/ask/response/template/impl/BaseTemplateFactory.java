@@ -13,6 +13,8 @@
 
 package com.amazon.ask.response.template.impl;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import com.amazon.ask.exception.template.TemplateFactoryException;
 import com.amazon.ask.response.template.TemplateContentData;
 import com.amazon.ask.response.template.TemplateFactory;
@@ -25,44 +27,69 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 /**
  * {@link TemplateFactory} implementation to chain {@link TemplateLoader} and {@link TemplateRenderer}.
  * It is responsible to pass in template name, data map and Input to get response output for skill request.
+ * @param <Input> Skill input type.
+ * @param <Output> Skill output type.
  */
 public class BaseTemplateFactory<Input, Output> implements TemplateFactory<Input, Output> {
 
+    /**
+     * Logger instance to log information for debugging purposes.
+     */
     private static final Logger LOGGER = getLogger(BaseTemplateFactory.class);
 
+    /**
+     * List of loader interfaces for template loading from data store.
+     */
     protected final List<TemplateLoader<Input>> templateLoaders;
+
+    /**
+     * Renderer interface for template rendering and response conversion.
+     */
     protected final TemplateRenderer<Output> templateRenderer;
 
-    protected BaseTemplateFactory(List<TemplateLoader<Input>> templateLoaders, TemplateRenderer<Output> templateRenderer) {
+    /**
+     * Constructor to build an instance of BaseTemplateFactory.
+     * @param templateLoaders template loaders.
+     * @param templateRenderer template renderer.
+     */
+    protected BaseTemplateFactory(final List<TemplateLoader<Input>> templateLoaders, final TemplateRenderer<Output> templateRenderer) {
         this.templateLoaders = templateLoaders;
         this.templateRenderer = templateRenderer;
     }
 
+    /**
+     * Return Builder instance.
+     * @param input class of type input.
+     * @param output class of type output.
+     * @param <Input> Skill input type.
+     * @param <Output> Skill output type.
+     * @param <Self> of type Builder class or any parent class of Builder.
+     * @return {@link Builder}.
+     */
     public static <Input, Output, Self extends Builder<Input, Output, Self>> Builder<Input, Output, Self> forTypes(
-            Class<Input> input, Class<Output> output) {
+            final Class<Input> input, final Class<Output> output) {
         return new Builder<>();
     }
 
+    /**
+     * Return Builder instance.
+     * @param <Input> Skill input type.
+     * @param <Output> Skill output type.
+     * @return {@link Builder}.
+     */
     public static <Input, Output> Builder<Input, Output, ?> builder() {
         return new Builder<>();
     }
 
     /**
-     * Process template and data using provided {@link TemplateLoader} and {@link TemplateRenderer} to generate skill response output.
-     *
-     * @param responseTemplateName name of response template
-     * @param dataMap map contains injecting data
-     * @param input skill input
-     * @return Output skill response output if loading and rendering successfully
-     * @throws TemplateFactoryException if fail to load or render template
+     * {@inheritDoc}.
      */
     @Override
-    public Output processTemplate(String responseTemplateName, Map<String, Object> dataMap, Input input) throws TemplateFactoryException {
+    public Output processTemplate(final String responseTemplateName, final Map<String, Object> dataMap, final Input input)
+            throws TemplateFactoryException {
         if (templateLoaders == null || templateLoaders.isEmpty() || templateRenderer == null) {
             String message = "Template Loader list is null or empty, or Template Renderer is null.";
             LOGGER.error(message);
@@ -73,7 +100,14 @@ public class BaseTemplateFactory<Input, Output> implements TemplateFactory<Input
         return response;
     }
 
-    private TemplateContentData loadTemplate(String responseTemplateName, Input input) throws TemplateFactoryException {
+    /**
+     * Loads the template with the given name.
+     * @param responseTemplateName template name.
+     * @param input Skill input type.
+     * @return {@link TemplateContentData}.
+     * @throws TemplateFactoryException is thrown when template loading fails.
+     */
+    private TemplateContentData loadTemplate(final String responseTemplateName, final Input input) throws TemplateFactoryException {
         Optional<TemplateContentData> templateContentData;
         for (TemplateLoader templateLoader : templateLoaders) {
             try {
@@ -82,7 +116,8 @@ public class BaseTemplateFactory<Input, Output> implements TemplateFactory<Input
                     return templateContentData.get();
                 }
             } catch (TemplateFactoryException e) {
-                LOGGER.error(String.format("Fail to load template: %s using %s with error: %s.", responseTemplateName, templateLoader, e.getMessage()));
+                LOGGER.error(String.format("Fail to load template: %s using %s with error: %s.", responseTemplateName,
+                        templateLoader, e.getMessage()));
                 throw e;
             }
         }
@@ -91,38 +126,82 @@ public class BaseTemplateFactory<Input, Output> implements TemplateFactory<Input
         throw new TemplateFactoryException(message);
     }
 
-    private Output renderResponse(TemplateContentData templateContentData, Map<String, Object> dataMap) throws TemplateFactoryException {
+    /**
+     * Render the response obtained by merging data map with template.
+     * @param templateContentData data retrieved from the specified template.
+     * @param dataMap data to be added to the template.
+     * @return Output Skill output type.
+     * @throws TemplateFactoryException is thrown when template rendering fails.
+     */
+    private Output renderResponse(final TemplateContentData templateContentData, final Map<String, Object> dataMap)
+            throws TemplateFactoryException {
         try {
             return templateRenderer.render(templateContentData, dataMap);
         } catch (TemplateFactoryException e) {
-            LOGGER.error(String.format("Fail to render template: %s using %s with error: %s.", templateContentData, templateRenderer, e.getMessage()));
+            LOGGER.error(String.format("Fail to render template: %s using %s with error: %s.", templateContentData,
+                    templateRenderer, e.getMessage()));
             throw e;
         }
     }
 
+    /**
+     * Base Template Factory Builder.
+     * @param <Input> Skill input type.
+     * @param <Output> Skill output type.
+     * @param <Self> of type Builder class.
+     */
     public static class Builder<Input, Output, Self extends Builder<Input, Output, Self>> {
+        /**
+         * List of loader interfaces for template loading from data store.
+         */
         protected List<TemplateLoader<Input>> templateLoaders;
+
+        /**
+         * Renderer interface for template rendering and response conversion.
+         */
         protected TemplateRenderer<Output> templateRenderer;
 
+        /**
+         * Constructor for Builder class.
+         */
         protected Builder() {
             this.templateLoaders = new ArrayList<>();
         }
 
-        public Self addTemplateLoader(TemplateLoader<Input> templateLoader) {
+        /**
+         * Add a Template Loader to BaseTemplateFactory instance.
+         * @param templateLoader template loader.
+         * @return {@link Builder}.
+         */
+        public Self addTemplateLoader(final TemplateLoader<Input> templateLoader) {
             this.templateLoaders.add(templateLoader);
-            return (Self)this;
+            return (Self) this;
         }
 
-        public Self addTemplateLoaders(List<TemplateLoader<Input>> templateLoaders) {
+        /**
+         * Add multiple Template Loaders to BaseTemplateFactory instance.
+         * @param templateLoaders list of TemplateLoader instances.
+         * @return {@link Builder}.
+         */
+        public Self addTemplateLoaders(final List<TemplateLoader<Input>> templateLoaders) {
             this.templateLoaders.addAll(templateLoaders);
-            return (Self)this;
+            return (Self) this;
         }
 
-        public Self withTemplateRenderer(TemplateRenderer<Output> templateRenderer) {
+        /**
+         * Add Template Renderer to BaseTemplateFactory instance.
+         * @param templateRenderer Template renderer.
+         * @return {@link Builder}.
+         */
+        public Self withTemplateRenderer(final TemplateRenderer<Output> templateRenderer) {
             this.templateRenderer = templateRenderer;
-            return (Self)this;
+            return (Self) this;
         }
 
+        /**
+         * Builder method to build an instance of BaseTemplateFactory.
+         * @return {@link BaseTemplateFactory}.
+         */
         public BaseTemplateFactory<Input, Output> build() {
             return new BaseTemplateFactory<>(templateLoaders, templateRenderer);
         }

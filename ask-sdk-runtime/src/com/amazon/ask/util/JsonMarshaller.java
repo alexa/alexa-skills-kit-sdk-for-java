@@ -22,8 +22,18 @@ import java.io.OutputStream;
  */
 public interface JsonMarshaller<Type> {
 
+    /**
+     * Marshall a given of type T.
+     * @param t Type to marshall from.
+     * @param stream outputstream.
+     */
     void marshall(Type t, OutputStream stream);
 
+    /**
+     * Marshall a given of type T.
+     * @param t Type to marshall from.
+     * @return byte array of the marshalled output.
+     */
     byte[] marshall(Type t);
 
 }

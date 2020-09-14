@@ -35,68 +35,158 @@ import java.util.function.Function;
  */
 public class StandardSdkModule implements SdkModule {
 
+    /**
+     * Apache HTTP client backed implementation of the ASK Java SDK API Client.
+     */
     protected ApacheHttpApiClient apiClient;
+
+    /**
+     * Persistence adapter for storing skill persistence attributes in Amazon DynamoDB.
+     */
     protected DynamoDbPersistenceAdapter persistenceAdapter;
+
+    /**
+     * Template Factory interface to process template and data to generate skill response.
+     */
     protected TemplateFactory templateFactory;
 
-    public StandardSdkModule(ApacheHttpApiClient apiClient, DynamoDbPersistenceAdapter persistenceAdapter, TemplateFactory templateFactory) {
+
+    /**
+     * Constructs an instance of {@link StandardSdkModule} with given {@link ApacheHttpApiClient}, {@link DynamoDbPersistenceAdapter}
+     * and {@link TemplateFactory}.
+     * @param apiClient ApacheHttpApiClient
+     * @param persistenceAdapter DynamoDbPersistenceAdapter
+     * @param templateFactory TemplateFactory
+     */
+    public StandardSdkModule(final ApacheHttpApiClient apiClient, final DynamoDbPersistenceAdapter persistenceAdapter,
+                             final TemplateFactory templateFactory) {
         this.apiClient = apiClient;
         this.persistenceAdapter = persistenceAdapter;
         this.templateFactory = templateFactory;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void setupModule(SdkModuleContext context) {
+    public void setupModule(final SdkModuleContext context) {
         context.setApiClient(apiClient);
         context.setPersistenceAdapter(persistenceAdapter);
         context.setTemplateFactory(templateFactory);
     }
 
+    /**
+     * Returns an instance of {@link Builder}.
+     * @return Builder.
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Standard SDK Module Builder.
+     */
     public static final class Builder {
 
-        private Builder() {}
+        /**
+         * Prevent instantiation.
+         */
+        private Builder() { }
 
+        /**
+         * Custom HTTP client.
+         */
         protected CloseableHttpClient customHttpClient;
+
+        /**
+         * Custom DynamoDB client.
+         */
         protected AmazonDynamoDB customDynamoDBClient;
+
+        /**
+         * DynamoDB table name.
+         */
         protected String tableName;
+
+        /**
+         * Boolean value to specify auto creation of a DynamoDB table.
+         */
         protected Boolean autoCreateTable;
+
+        /**
+         * Partition Key Generator, the key of which is used as input for a hash function to determine storage.
+         */
         protected Function<RequestEnvelope, String> partitionKeyGenerator;
+
+        /**
+         *  Directory path where the templates are stored.
+         */
         protected String templateDirectoryPath;
 
-        public Builder withHttpClient(CloseableHttpClient customHttpClient) {
+        /**
+         * Allows the user to configure custom HTTP client.
+         * @param customHttpClient which extends CloseableHttpClient.
+         * @return {@link Builder}
+         */
+        public Builder withHttpClient(final CloseableHttpClient customHttpClient) {
             this.customHttpClient = customHttpClient;
             return this;
         }
 
-        public Builder withTableName(String tableName) {
+        /**
+         * Allows the user to configure a name for the DynamoDB table.
+         * @param tableName name for the DynamoDB table.
+         * @return {@link Builder}
+         */
+        public Builder withTableName(final String tableName) {
             this.tableName = tableName;
             return this;
         }
 
-        public Builder withAutoCreateTable(boolean autoCreateTable) {
+        /**
+         * Allows SDK to create a table if the table doesn't exist.
+         * @param autoCreateTable boolean. If set to true, allows SDK to auto create table.
+         * @return {@link Builder}
+         */
+        public Builder withAutoCreateTable(final boolean autoCreateTable) {
             this.autoCreateTable = autoCreateTable;
             return this;
         }
 
-        public Builder withPartitionKeyGenerator(Function<RequestEnvelope, String> partitionKeyGenerator) {
+        /**
+         * Allows the user to specify a partition key generator.
+         * @param partitionKeyGenerator DynamoDB uses the partition key as input for a hash function to determine storage.
+         * @return {@link Builder}
+         */
+        public Builder withPartitionKeyGenerator(final Function<RequestEnvelope, String> partitionKeyGenerator) {
             this.partitionKeyGenerator = partitionKeyGenerator;
             return this;
         }
 
-        public Builder withDynamoDbClient(AmazonDynamoDB customDynamoDBClient) {
+        /**
+         * Allows the user to specify a custom DynamoDB client.
+         * @param customDynamoDBClient should implement {@link AmazonDynamoDB}.
+         * @return {@link Builder}
+         */
+        public Builder withDynamoDbClient(final AmazonDynamoDB customDynamoDBClient) {
             this.customDynamoDBClient = customDynamoDBClient;
             return this;
         }
 
-        public Builder withTemplateDirectoryPath(String templateDirectoryPath) {
+        /**
+         * Allows the user to specify directory path where the templates are stored.
+         * @param templateDirectoryPath string.
+         * @return {@link Builder}
+         */
+        public Builder withTemplateDirectoryPath(final String templateDirectoryPath) {
             this.templateDirectoryPath = templateDirectoryPath;
             return this;
         }
 
+        /**
+         * Returns a new {@link StandardSdkModule} instance.
+         * @return StandardSdkModule.
+         */
         public StandardSdkModule build() {
             DynamoDbPersistenceAdapter persistenceAdapter = null;
             TemplateFactory templateFactory = null;
@@ -120,7 +210,7 @@ public class StandardSdkModule implements SdkModule {
                     .withHttpClient(customHttpClient != null ? customHttpClient : HttpClients.createDefault())
                     .build();
 
-            if(templateDirectoryPath != null) {
+            if (templateDirectoryPath != null) {
                 final TemplateLoader loader = LocalTemplateFileLoader.builder()
                         .withDirectoryPath(templateDirectoryPath)
                         .withFileExtension("ftl")

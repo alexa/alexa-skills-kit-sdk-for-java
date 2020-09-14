@@ -17,6 +17,9 @@ import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.ResponseEnvelope;
 import com.amazon.ask.exception.AskSdkException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -120,15 +123,19 @@ public class JacksonSerializerTest {
     }
 
     @Test(expected = AskSdkException.class)
-    public void deserialize_from_string_ioexception_throws_sdk_exception() throws Exception {
-        when(mockMapper.readValue("foo", RequestEnvelope.class)).thenThrow(new IOException());
+    public void deserialize_from_string_exception_throws_sdk_exception() throws Exception {
+        JsonFactory factory = new JsonFactory();
+        JsonParser jp = factory.createParser("foo");
+        when(mockMapper.readValue("foo", RequestEnvelope.class)).thenThrow(new JsonParseException(jp, ""));
         serializer.deserialize("foo", RequestEnvelope.class);
     }
 
     @Test(expected = AskSdkException.class)
-    public void deserialize_from_stream_ioexception_throws_sdk_exception() throws Exception {
+    public void deserialize_from_stream_exception_throws_sdk_exception() throws Exception {
         InputStream is = mock(InputStream.class);
-        when(mockMapper.readValue(is, RequestEnvelope.class)).thenThrow(new IOException());
+        JsonFactory factory = new JsonFactory();
+        JsonParser jp = factory.createParser(is);
+        when(mockMapper.readValue(is, RequestEnvelope.class)).thenThrow(new JsonParseException(jp, ""));
         serializer.deserialize(is, RequestEnvelope.class);
     }
 }

@@ -3,7 +3,7 @@
   <groupId>com.amazon.alexa</groupId>
   <artifactId>ask-sdk-pom</artifactId>
   <packaging>pom</packaging>
-  <version>2.27.1</version>
+  <version>2.34.0</version>
   <name>ASK SDK for Java</name>
   <description>The Alexa Skills Kit SDK for Java.</description>
   <url>http://developer.amazon.com/ask</url>
@@ -27,6 +27,23 @@
     <url>https://github.com/amzn/alexa-skills-kit-java.git</url>
   </scm>
 
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>3.1.0</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>checkstyle</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
+
   <modules>
     <module>ask-sdk-runtime</module>
     <module>ask-sdk-core</module>
@@ -35,6 +52,7 @@
     <module>ask-sdk-dynamodb-persistence-adapter</module>
     <module>ask-sdk-apache-client</module>
     <module>ask-sdk-freemarker</module>
+    <module>ask-sdk-local-debug</module>
     <module>ask-sdk</module>
   </modules>
 
@@ -52,6 +70,36 @@
             <target>1.8</target>
             <forceJavacCompilerUse>true</forceJavacCompilerUse>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>3.1.0</version>
+          <configuration>
+            <configLocation>checkstyle.xml</configLocation>
+            <encoding>UTF-8</encoding>
+            <consoleOutput>true</consoleOutput>
+            <failsOnError>true</failsOnError>
+          </configuration>
+          <executions>
+            <execution>
+              <id>validate</id>
+              <phase>validate</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.7.1</version>
         </plugin>
       </plugins>
     </pluginManagement>

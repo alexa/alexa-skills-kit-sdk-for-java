@@ -26,7 +26,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Enumerate possible template name, given a locale "en-US" from the request, and a response template name "template",
- * the following combinations will be tried:
+ * the following combinations will be tried.
  * <ul>
  * <li>template/en/US</li>
  * <li>template/en_US</li>
@@ -38,30 +38,89 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public final class LocaleTemplateEnumerator implements TemplateEnumerator<HandlerInput> {
 
+    /**
+     * Third cursor state.
+     */
+    private static final int THIRD_CURSOR_STATE = 3;
+
+    /**
+     * Fourth cursor state.
+     */
+    private static final int FOURTH_CURSOR_STATE = 4;
+
+    /**
+     * Logger instance to log information for debugging purposes.
+     */
     private static final Logger LOGGER = getLogger(LocaleTemplateEnumerator.class);
+
+    /**
+     * File separator.
+     */
     private static final String FILE_SEPARATOR = File.separator;
+
+    /**
+     * Underscore.
+     */
     private static final String UNDERSCORE = "_";
+
+    /**
+     * Default value for null locale enumeration size.
+     */
     private static final int NULL_LOCALE_ENUMERATION_SIZE = 1;
+
+    /**
+     * Default value for non-null locale enumeration size.
+     */
     private static final int NON_NULL_LOCALE_ENUMERATION_SIZE = 6;
 
+    /**
+     * Template name.
+     */
     protected String templateName;
+
+    /**
+     * HandlerInput.
+     */
     protected HandlerInput handlerInput;
+
+    /**
+     * Current enumeration size.
+     */
     private int enumerationSize;
+
+    /**
+     * Used to match the template name against a regex pattern.
+     */
     private Matcher matcher;
+
+    /**
+     * Current position in the enumeration sequence.
+     */
     private int cursor;
 
-    protected LocaleTemplateEnumerator(String templateName, HandlerInput handlerInput) {
+    /**
+     * Constructor for LocaleTemplateEnumerator.
+     * @param templateName template name.
+     * @param handlerInput HandlerInput.
+     */
+    protected LocaleTemplateEnumerator(final String templateName, final HandlerInput handlerInput) {
         this.templateName = ValidationUtils.assertNotNull(templateName, "templateName");
         this.handlerInput = ValidationUtils.assertNotNull(handlerInput, "handlerInput");
         this.enumerationSize = getEnumerationSize(handlerInput);
         this.cursor = 0;
     }
 
+    /**
+     * Static method returns an instance of Builder.
+     * @return {@link Builder}.
+     */
     public static Builder builder() {
         return new Builder();
     }
 
     /**
+     * {@inheritDoc}.
+     *
      * Check whether next combination of template name is available.
      *
      * @return true if next combination of template name is available
@@ -72,6 +131,8 @@ public final class LocaleTemplateEnumerator implements TemplateEnumerator<Handle
     }
 
     /**
+     * {@inheritDoc}.
+     *
      * Generate the next combination of template name and return.
      *
      * @return the next combination of template name
@@ -89,9 +150,9 @@ public final class LocaleTemplateEnumerator implements TemplateEnumerator<Handle
                 case 0: cursor++; return templateName + FILE_SEPARATOR + language + FILE_SEPARATOR + country;
                 case 1: cursor++; return templateName + FILE_SEPARATOR + language + UNDERSCORE + country;
                 case 2: cursor++; return templateName + FILE_SEPARATOR + language;
-                case 3: cursor++; return templateName + UNDERSCORE + language + UNDERSCORE + country;
-                case 4: cursor++; return templateName + UNDERSCORE + language;
-                case 5: cursor++; return templateName;
+                case THIRD_CURSOR_STATE: cursor++; return templateName + UNDERSCORE + language + UNDERSCORE + country;
+                case FOURTH_CURSOR_STATE: cursor++; return templateName + UNDERSCORE + language;
+                default: cursor++; return templateName;
             }
         }
         String message = "No next available template name combination.";
@@ -99,7 +160,12 @@ public final class LocaleTemplateEnumerator implements TemplateEnumerator<Handle
         throw new IllegalStateException(message);
     }
 
-    private int getEnumerationSize(HandlerInput handlerInput) {
+    /**
+     * Returns the enumeration size.
+     * @param handlerInput HandlerInput.
+     * @return size of enumeration.
+     */
+    private int getEnumerationSize(final HandlerInput handlerInput) {
         String locale = handlerInput.getRequestEnvelope().getRequest().getLocale();
         if (locale == null || locale.isEmpty()) {
             return NULL_LOCALE_ENUMERATION_SIZE;
@@ -114,20 +180,45 @@ public final class LocaleTemplateEnumerator implements TemplateEnumerator<Handle
         throw new IllegalArgumentException(message);
     }
 
+    /**
+     * LocaleTemplateEnumerator Builder.
+     */
     public static final class Builder {
+
+        /**
+         * Template name currently in use.
+         */
         private String templateName;
+
+        /**
+         * HandlerInput.
+         */
         private HandlerInput handlerInput;
 
-        public Builder withTemplateName(String templateName) {
+        /**
+         * Adds Template name to LocaleTemplateEnumerator.
+         * @param templateName template name.
+         * @return {@link Builder}.
+         */
+        public Builder withTemplateName(final String templateName) {
             this.templateName = templateName;
             return this;
         }
 
-        public Builder withHandlerInput(HandlerInput handlerInput) {
+        /**
+         * Adds HandlerInput to LocaleTemplateEnumerator.
+         * @param handlerInput HandlerInput.
+         * @return {@link Builder}.
+         */
+        public Builder withHandlerInput(final HandlerInput handlerInput) {
             this.handlerInput = handlerInput;
             return this;
         }
 
+        /**
+         * Builder method to construct an instance of LocaleTemplateEnumerator.
+         * @return {@link LocaleTemplateEnumerator}.
+         */
         public LocaleTemplateEnumerator build() {
             return new LocaleTemplateEnumerator(templateName, handlerInput);
         }

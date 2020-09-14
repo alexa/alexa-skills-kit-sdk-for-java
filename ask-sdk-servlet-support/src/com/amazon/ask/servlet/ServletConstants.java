@@ -13,7 +13,15 @@
 
 package com.amazon.ask.servlet;
 
+/**
+ * Helper class to hold package's constant values.
+ */
 public final class ServletConstants {
+
+    /**
+     * Prevent instantiation.
+     */
+    private ServletConstants() { }
 
     /**
      * The algorithm used to generate the signature.
@@ -66,7 +74,7 @@ public final class ServletConstants {
      * The name of the system property that can be used to configure the timestamp tolerance (in
      * millis) of the {@link SkillServlet}. Requests with timestamps outside of this inclusive tolerance range,
      * either in the past or future, are rejected. If this property is not provided the default value,
-     * {@value TIMESTAMP_TOLERANCE_SYSTEM_PROPERTY}, will be used.
+     * {@value DEFAULT_TOLERANCE_MILLIS}, will be used.
      */
     public static final String TIMESTAMP_TOLERANCE_SYSTEM_PROPERTY =
             "com.amazon.speech.speechlet.servlet.timestampTolerance";

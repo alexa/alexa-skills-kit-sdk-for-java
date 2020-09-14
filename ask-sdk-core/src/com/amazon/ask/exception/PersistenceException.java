@@ -19,11 +19,20 @@ package com.amazon.ask.exception;
  */
 public class PersistenceException extends AskSdkException {
 
-    public PersistenceException(String message) {
+    /**
+     * Constructor to build an instance of {@link PersistenceException} with a message.
+     * @param message description of the response.
+     */
+    public PersistenceException(final String message) {
         super(message);
     }
 
-    public PersistenceException(String message, Throwable cause) {
+    /**
+     * Constructor to build an instance of {@link PersistenceException} with a message and cause.
+     * @param message description of the response.
+     * @param cause instance of type {@link Throwable}.
+     */
+    public PersistenceException(final String message, final Throwable cause) {
         super(message, cause);
     }
 

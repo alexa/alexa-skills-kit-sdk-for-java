@@ -20,4 +20,4 @@ import com.amazon.ask.request.interceptor.GenericRequestInterceptor;
  * Request interceptors are invoked immediately prior to execution of the request handler for an incoming request.
  * Request interceptors can pass data and entities on to request handlers via the use of request attributes.
  */
-public interface RequestInterceptor extends GenericRequestInterceptor<HandlerInput> {}
+public interface RequestInterceptor extends GenericRequestInterceptor<HandlerInput> { }

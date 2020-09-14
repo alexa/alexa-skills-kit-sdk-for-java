@@ -14,15 +14,14 @@
 package com.amazon.ask.dispatcher.request.mapper;
 
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
-import com.amazon.ask.dispatcher.request.handler.RequestHandlerChain;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.request.mapper.GenericRequestMapper;
 
 import java.util.Optional;
 
 /**
- * The request mapper is responsible for mapping an incoming request to a {@link RequestHandlerChain} containing
- * a handler suitable for processing the request.
+ * The request mapper is responsible for mapping an incoming request to a {@link com.amazon.ask.dispatcher.request.handler.RequestHandlerChain}
+ * containing a handler suitable for processing the request.
  */
 @Deprecated
-public interface RequestMapper extends GenericRequestMapper<HandlerInput, Optional<Response>> {}
+public interface RequestMapper extends GenericRequestMapper<HandlerInput, Optional<Response>> { }

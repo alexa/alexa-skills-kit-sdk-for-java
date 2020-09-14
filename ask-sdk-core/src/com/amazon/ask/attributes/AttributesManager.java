@@ -18,12 +18,9 @@ import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.attributes.persistence.PersistenceAdapter;
 import org.slf4j.Logger;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -51,30 +48,62 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class AttributesManager {
 
+    /**
+     * Logger to log information for debugging purposes.
+     */
     private static Logger logger = getLogger(AttributesManager.class);
 
+    /**
+     * Request envelope object which encapsulates Request, Session, context and the current version.
+     */
     protected final RequestEnvelope requestEnvelope;
+
+    /**
+     * Adapter layer used to persist Skill data.
+     */
     protected final PersistenceAdapter persistenceAdapter;
 
+    /**
+     * Data stored in session as key-value pairs.
+     */
     protected Map<String, Object> sessionAttributes;
+
+    /**
+     * Data stored in persistence layer (Eg: AWS DynamoDB).
+     */
     protected Map<String, Object> persistentAttributes;
+
+    /**
+     * Request attributes.
+     */
     protected Map<String, Object> requestAttributes;
 
+    /**
+     * Check to see if persistence attributes have been set.
+     */
     protected boolean persistenceAttributesSet;
 
-    protected AttributesManager(PersistenceAdapter persistenceAdapter, RequestEnvelope requestEnvelope) {
+    /**
+     * Constructor for AttributesManager.
+     * @param persistenceAdapter Adapter layer used to persist Skill data.
+     * @param requestEnvelope Request envelope object which encapsulates Request, Session, context and the current version.
+     */
+    protected AttributesManager(final PersistenceAdapter persistenceAdapter, final RequestEnvelope requestEnvelope) {
         this.persistenceAdapter = persistenceAdapter;
         this.requestEnvelope = requestEnvelope;
         this.requestAttributes = new HashMap<>();
 
         if (requestEnvelope.getSession() != null) {
-            Map<String, Object> attributes = requestEnvelope.getSession().getAttributes() != null ?
-                    requestEnvelope.getSession().getAttributes() :
-                    new HashMap<>();
+            Map<String, Object> attributes = requestEnvelope.getSession().getAttributes() != null
+                    ? requestEnvelope.getSession().getAttributes() : new HashMap<>();
             this.sessionAttributes = attributes;
         }
     }
 
+    /**
+     * Static builder method which returns an instance of Builder.
+     * @return {@link Builder}.
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -102,7 +131,7 @@ public class AttributesManager {
      * @param sessionAttributes session attributes to set
      * @throws IllegalStateException if attempting to retrieve session attributes from an out of session request
      */
-    public void setSessionAttributes(Map<String, Object> sessionAttributes) {
+    public void setSessionAttributes(final Map<String, Object> sessionAttributes) {
         if (requestEnvelope.getSession() == null) {
             throw new IllegalStateException("Attempting to set session attributes for out of session request");
         }
@@ -146,7 +175,7 @@ public class AttributesManager {
      * @param persistentAttributes persistent attributes to set
      * @throws IllegalStateException if no {@link PersistenceAdapter} is configured
      */
-    public void setPersistentAttributes(Map<String, Object> persistentAttributes) {
+    public void setPersistentAttributes(final Map<String, Object> persistentAttributes) {
         if (persistenceAdapter == null) {
             throw new IllegalStateException("Attempting to set persistence attributes without configured persistence adapter");
         }
@@ -170,7 +199,7 @@ public class AttributesManager {
      *
      * @param requestAttributes request attributes to set
      */
-    public void setRequestAttributes(Map<String, Object> requestAttributes) {
+    public void setRequestAttributes(final Map<String, Object> requestAttributes) {
         this.requestAttributes = requestAttributes;
     }
 
@@ -206,23 +235,50 @@ public class AttributesManager {
         persistenceAttributesSet = false;
     }
 
+    /**
+     * Attributes Manager Builder class.
+     */
     public static final class Builder {
+
+        /**
+         * Adapter layer used to persist Skill data.
+         */
         private PersistenceAdapter persistenceAdapter;
+
+        /**
+         * Request envelope object which encapsulates Request, Session, context and the current version.
+         */
         private RequestEnvelope requestEnvelope;
 
-        private Builder() {
-        }
+        /**
+         * Prevent instantiation.
+         */
+        private Builder() { }
 
-        public Builder withPersistenceAdapter(PersistenceAdapter persistenceAdapter) {
+        /**
+         * Adds PersistenceAdapter to AttributesManager.
+         * @param persistenceAdapter persistence adapter.
+         * @return {@link Builder}.
+         */
+        public Builder withPersistenceAdapter(final PersistenceAdapter persistenceAdapter) {
             this.persistenceAdapter = persistenceAdapter;
             return this;
         }
 
-        public Builder withRequestEnvelope(RequestEnvelope requestEnvelope) {
+        /**
+         * Adds RequestEnvelope to AttributesManager.
+         * @param requestEnvelope request envelope.
+         * @return {@link Builder}.
+         */
+        public Builder withRequestEnvelope(final RequestEnvelope requestEnvelope) {
             this.requestEnvelope = requestEnvelope;
             return this;
         }
 
+        /**
+         * Builds an instance of AttributesManager with the provided configuration.
+         * @return {@link AttributesManager}.
+         */
         public AttributesManager build() {
             return new AttributesManager(persistenceAdapter, requestEnvelope);
         }

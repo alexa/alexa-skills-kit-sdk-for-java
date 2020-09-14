@@ -44,17 +44,59 @@ import java.util.concurrent.ConcurrentHashMap;
  * Provides a utility method to verify the signature of a skill request.
  */
 public final class SkillRequestSignatureVerifier implements SkillServletVerifier {
+    /**
+     * Map which serves as a cache to store public key certificates.
+     */
     private static final Map<String, X509Certificate> CERTIFICATE_CACHE = new ConcurrentHashMap<>();
+
+    /**
+     * Used to check if the entry is for a domain name.
+     */
     private static final Integer DOMAIN_NAME_SUBJECT_ALTERNATIVE_NAME_ENTRY = 2;
+
+    /**
+     * Certificate chain protocol.
+     */
     private static final String VALID_SIGNING_CERT_CHAIN_PROTOCOL = "https";
+
+    /**
+     * Certificate chain host name.
+     */
     private static final String VALID_SIGNING_CERT_CHAIN_URL_HOST_NAME = "s3.amazonaws.com";
+
+    /**
+     * Certificate chain url path prefix.
+     */
     private static final String VALID_SIGNING_CERT_CHAIN_URL_PATH_PREFIX = "/echo.api/";
+
+    /**
+     * Used to validate the port to make the connection on.
+     */
     private static final int UNSPECIFIED_SIGNING_CERT_CHAIN_URL_PORT_VALUE = -1;
+
+    /**
+     * Maximum number of trials to retrieve a certificate.
+     */
     private static final int CERT_RETRIEVAL_RETRY_COUNT = 5;
+
+    /**
+     * Delay between each retry in milliseconds.
+     */
     private static final int DELAY_BETWEEN_RETRIES_MS = 500;
 
+    /**
+     * Http OK response code.
+     */
+    private static final int HTTP_OK_RESPONSE_CODE = 200;
+
+    /**
+     * Represents a proxy setting, typically a type (http, socks) and a socket address.
+     */
     private final Proxy proxy;
 
+    /**
+     * Constructor to build an instance of SkillRequestSignatureVerifier.
+     */
     public SkillRequestSignatureVerifier() {
         this.proxy = null;
     }
@@ -62,7 +104,7 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
     /**
      * @param proxy proxy configuration for certificate retrieval
      */
-    public SkillRequestSignatureVerifier(Proxy proxy) {
+    public SkillRequestSignatureVerifier(final Proxy proxy) {
         this.proxy = proxy;
     }
 
@@ -73,7 +115,7 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
      *
      * {@inheritDoc}
      */
-    public void verify(AlexaHttpRequest alexaHttpRequest) {
+    public void verify(final AlexaHttpRequest alexaHttpRequest) {
         String baseEncoded64Signature = alexaHttpRequest.getBaseEncoded64Signature();
         String signingCertificateChainUrl = alexaHttpRequest.getSigningCertificateChainUrl();
         if ((baseEncoded64Signature == null) || (signingCertificateChainUrl == null)) {
@@ -121,16 +163,15 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
      * @throws CertificateException
      *             if the certificate cannot be retrieve or is invalid
      */
-    private X509Certificate retrieveAndVerifyCertificateChain(
-            final String signingCertificateChainUrl) throws CertificateException {
+    private X509Certificate retrieveAndVerifyCertificateChain(final String signingCertificateChainUrl) throws CertificateException {
         for (int attempt = 0; attempt <= CERT_RETRIEVAL_RETRY_COUNT; attempt++) {
             InputStream in = null;
             try {
                 HttpURLConnection connection =
-                        proxy != null ? (HttpURLConnection)getAndVerifySigningCertificateChainUrl(signingCertificateChainUrl).openConnection(proxy)
-                                : (HttpURLConnection)getAndVerifySigningCertificateChainUrl(signingCertificateChainUrl).openConnection();
+                        proxy != null ? (HttpURLConnection) getAndVerifySigningCertificateChainUrl(signingCertificateChainUrl).openConnection(proxy)
+                                : (HttpURLConnection) getAndVerifySigningCertificateChainUrl(signingCertificateChainUrl).openConnection();
 
-                if (connection.getResponseCode() != 200) {
+                if (connection.getResponseCode() != HTTP_OK_RESPONSE_CODE) {
                     if (waitForRetry(attempt)) {
                         continue;
                     } else {
@@ -198,7 +239,12 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
         throw new RuntimeException("Unable to retrieve signing certificate due to an unhandled exception");
     }
 
-    private boolean waitForRetry(int attempt) {
+    /**
+     * Checks if the system should retry to fetch a certificate.
+     * @param attempt Nth attempt.
+     * @return true if the number of attempts to retrieve certificates does not exceed pre-mentioned value.
+     */
+    private boolean waitForRetry(final int attempt) {
         if (attempt < CERT_RETRIEVAL_RETRY_COUNT) {
             try {
                 Thread.sleep(DELAY_BETWEEN_RETRIES_MS);
@@ -211,6 +257,12 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
         }
     }
 
+    /**
+     * Verify Echo API's hostname is specified as one of subject alternative names on the signing certificate.
+     * @param subjectAlternativeNameEntries name entries.
+     * @return true if subject alternative entry is in the expected form and if the entry is for a domain name and that domain name
+     * matches the domain name for the echo sdk.
+     */
     private boolean subjectAlernativeNameListContainsEchoSdkDomainName(
             final Collection<List<?>> subjectAlternativeNameEntries) {
         for (List<?> entry : subjectAlternativeNameEntries) {

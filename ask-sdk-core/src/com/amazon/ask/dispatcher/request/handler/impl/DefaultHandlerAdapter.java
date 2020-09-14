@@ -27,6 +27,9 @@ import java.util.Optional;
 @Deprecated
 public class DefaultHandlerAdapter extends BaseHandlerAdapter<HandlerInput, Optional<Response>, RequestHandler> implements HandlerAdapter {
 
+    /**
+     * Constructor to build an instance of {@link DefaultHandlerAdapter}.
+     */
     public DefaultHandlerAdapter() {
         super(RequestHandler.class);
     }

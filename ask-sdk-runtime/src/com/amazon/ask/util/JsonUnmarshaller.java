@@ -24,6 +24,11 @@ import java.util.Optional;
  */
 public interface JsonUnmarshaller<Type> {
 
+    /**
+     * Abstract method to unmarshall a given byte array.
+     * @param in input byte array.
+     * @return {@link Optional} of {@link UnmarshalledRequest}.
+     */
     Optional<UnmarshalledRequest<Type>> unmarshall(byte[] in);
 
 }

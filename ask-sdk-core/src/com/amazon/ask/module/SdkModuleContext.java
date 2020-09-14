@@ -36,91 +36,164 @@ import java.util.Optional;
  */
 public class SdkModuleContext {
 
+    /**
+     * Skill configuration builder.
+     */
     protected final SkillConfiguration.Builder skillConfigBuilder;
 
-    public SdkModuleContext(SkillConfiguration.Builder skillConfigBuilder) {
+    /**
+     * Constructor for SdkModuleContext.
+     * @param skillConfigBuilder Skill configuration builder.
+     */
+    public SdkModuleContext(final SkillConfiguration.Builder skillConfigBuilder) {
         this.skillConfigBuilder = skillConfigBuilder;
     }
 
-    public SdkModuleContext addRequestMappers(List<GenericRequestMapper<HandlerInput, Optional<Response>>> requestMapper) {
+    /**
+     * Adds multiple request mappers to SkillConfiguration Builder.
+     * @param requestMapper request mappers.
+     * @return {@link SdkModuleContext}.
+     */
+    public SdkModuleContext addRequestMappers(final List<GenericRequestMapper<HandlerInput, Optional<Response>>> requestMapper) {
         requestMapper.forEach(skillConfigBuilder::addRequestMapper);
         return this;
     }
 
-    public SdkModuleContext addRequestMapper(GenericRequestMapper<HandlerInput, Optional<Response>> requestMapper) {
+    /**
+     * Adds request mapper to SkillConfiguration Builder.
+     * @param requestMapper request mapper.
+     * @return {@link SdkModuleContext}.
+     */
+    public SdkModuleContext addRequestMapper(final GenericRequestMapper<HandlerInput, Optional<Response>> requestMapper) {
         skillConfigBuilder.addRequestMapper(requestMapper);
         return this;
     }
 
+    /**
+     * Getter for Request Mappers.
+     * @return list of {@link GenericRequestMapper}.
+     */
     public List<GenericRequestMapper<HandlerInput, Optional<Response>>> getRequestMappers() {
         return Collections.unmodifiableList(skillConfigBuilder.getRequestMappers());
     }
 
-    public SdkModuleContext addHandlerAdapters(List<GenericHandlerAdapter<HandlerInput, Optional<Response>>> handlerAdapter) {
+    /**
+     * Adds multiple handler adapters to SkillConfiguration Builder.
+     * @param handlerAdapter handler adapters.
+     * @return {@link SdkModuleContext}.
+     */
+    public SdkModuleContext addHandlerAdapters(final List<GenericHandlerAdapter<HandlerInput, Optional<Response>>> handlerAdapter) {
         handlerAdapter.forEach(skillConfigBuilder::addHandlerAdapter);
         return this;
     }
 
-    public SdkModuleContext addHandlerAdapter(GenericHandlerAdapter<HandlerInput, Optional<Response>> handlerAdapter) {
+    /**
+     * Adds handler adapter to SkillConfiguration Builder.
+     * @param handlerAdapter handler adapter.
+     * @return {@link SdkModuleContext}.
+     */
+    public SdkModuleContext addHandlerAdapter(final GenericHandlerAdapter<HandlerInput, Optional<Response>> handlerAdapter) {
         skillConfigBuilder.addHandlerAdapter(handlerAdapter);
         return this;
     }
 
+    /**
+     * Getter for Handler Adapters.
+     * @return list of {@link GenericHandlerAdapter}.
+     */
     public List<GenericHandlerAdapter<HandlerInput, Optional<Response>>> getHandlerAdapter() {
         return skillConfigBuilder.getHandlerAdapters() == null
                 ? null
                 : Collections.unmodifiableList(skillConfigBuilder.getHandlerAdapters());
     }
 
-    public SdkModuleContext addRequestInterceptor(GenericRequestInterceptor<HandlerInput> requestInterceptor) {
+    /**
+     * Adds Request interceptor to SkillConfiguration Builder.
+     * @param requestInterceptor request interceptor.
+     * @return {@link SdkModuleContext}.
+     */
+    public SdkModuleContext addRequestInterceptor(final GenericRequestInterceptor<HandlerInput> requestInterceptor) {
         skillConfigBuilder.addRequestInterceptor(requestInterceptor);
         return this;
     }
 
+    /**
+     * Getter for Request interceptors.
+     * @return list of {@link GenericRequestInterceptor}.
+     */
     public List<GenericRequestInterceptor<HandlerInput>> getRequestInterceptors() {
         return skillConfigBuilder.getRequestInterceptors() == null
                 ? null
                 : Collections.unmodifiableList(skillConfigBuilder.getRequestInterceptors());
     }
 
-    public SdkModuleContext addResponseInterceptor(GenericResponseInterceptor<HandlerInput, Optional<Response>> responseInterceptor) {
+    /**
+     * Adds Response interceptor to SkillConfiguration Builder.
+     * @param responseInterceptor response interceptor.
+     * @return {@link SdkModuleContext}.
+     */
+    public SdkModuleContext addResponseInterceptor(final GenericResponseInterceptor<HandlerInput, Optional<Response>> responseInterceptor) {
         skillConfigBuilder.addResponseInterceptor(responseInterceptor);
         return this;
     }
 
+    /**
+     * Getter for Response interceptors.
+     * @return list of {@link GenericResponseInterceptor}.
+     */
     public List<GenericResponseInterceptor<HandlerInput, Optional<Response>>> getResponseInterceptors() {
         return skillConfigBuilder.getResponseInterceptors() == null
                 ? null
                 : Collections.unmodifiableList(skillConfigBuilder.getResponseInterceptors());
     }
 
-    public SdkModuleContext setExceptionMapper(GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper) {
+    /**
+     * Adds exception mapper to SkillConfiguration Builder.
+     * @param exceptionMapper exception mapper.
+     * @return {@link SdkModuleContext}.
+     */
+    public SdkModuleContext setExceptionMapper(final GenericExceptionMapper<HandlerInput, Optional<Response>> exceptionMapper) {
         skillConfigBuilder.withExceptionMapper(exceptionMapper);
         return this;
     }
 
-    public SdkModuleContext setPersistenceAdapter(PersistenceAdapter persistenceAdapter) {
+    /**
+     * Adds Persistence Adapter to SkillConfiguration Builder.
+     * @param persistenceAdapter Store skill attributes to a persistence layer.
+     * @return {@link SdkModuleContext}.
+     */
+    public SdkModuleContext setPersistenceAdapter(final PersistenceAdapter persistenceAdapter) {
         if (skillConfigBuilder.getPersistenceAdapter() != null) {
-            throw new AskSdkException("Conflicting persistence adapter configuration: " +
-                    "module attempting to override previously set value.");
+            throw new AskSdkException("Conflicting persistence adapter configuration: "
+                    + "module attempting to override previously set value.");
         }
         skillConfigBuilder.withPersistenceAdapter(persistenceAdapter);
         return this;
     }
 
-    public SdkModuleContext setApiClient(ApiClient apiClient) {
+    /**
+     * Adds Api client to SkillConfiguration Builder.
+     * @param apiClient client to make API calls.
+     * @return {@link SdkModuleContext}.
+     */
+    public SdkModuleContext setApiClient(final ApiClient apiClient) {
         if (skillConfigBuilder.getApiClient() != null) {
-            throw new AskSdkException("Conflicting API client configuration: " +
-                    "module attempting to override previously set value.");
+            throw new AskSdkException("Conflicting API client configuration: "
+                    + "module attempting to override previously set value.");
         }
         skillConfigBuilder.withApiClient(apiClient);
         return this;
     }
 
-    public SdkModuleContext setTemplateFactory(TemplateFactory templateFactory) {
+    /**
+     * Adds TemplateFactory to SkillConfiguration Builder.
+     * @param templateFactory Interface to process template and data to generate skill response.
+     * @return {@link SdkModuleContext}.
+     */
+    public SdkModuleContext setTemplateFactory(final TemplateFactory templateFactory) {
         if (skillConfigBuilder.getTemplateFactory() != null) {
-            throw new AskSdkException("Conflicting Template factory configuration: " +
-                    "module attempting to override previously set value.");
+            throw new AskSdkException("Conflicting Template factory configuration: "
+                    + "module attempting to override previously set value.");
         }
         skillConfigBuilder.withTemplateFactory(templateFactory);
         return this;

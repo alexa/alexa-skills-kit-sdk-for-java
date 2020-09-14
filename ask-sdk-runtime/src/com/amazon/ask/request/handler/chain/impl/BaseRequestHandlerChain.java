@@ -30,64 +30,148 @@ import java.util.List;
  */
 public class BaseRequestHandlerChain<Input, Output> implements GenericRequestHandlerChain<Input, Output> {
 
+    /**
+     * Request handler responsible for processing an incoming request.
+     */
     protected final GenericRequestHandler<Input, Output> handler;
+
+    /**
+     * List of request interceptors.
+     */
     protected final List<GenericRequestInterceptor<Input>> requestInterceptors;
+
+    /**
+     * List of response interceptors.
+     */
     protected final List<GenericResponseInterceptor<Input, Output>> responseInterceptors;
+
+    /**
+     * List of exception handlers.
+     */
     protected final List<GenericExceptionHandler<Input, Output>> exceptionHandlers;
 
-    protected BaseRequestHandlerChain(GenericRequestHandler<Input, Output> handler,
-                                      List<GenericRequestInterceptor<Input>> requestInterceptors,
-                                      List<GenericResponseInterceptor<Input, Output>> responseInterceptors,
-                                      List<GenericExceptionHandler<Input, Output>> exceptionHandlers) {
+    /**
+     * Constructor to build an instance of BaseRequestHandlerChain.
+     * @param handler request handler responsible for processing an incoming request.
+     * @param requestInterceptors list of request interceptors.
+     * @param responseInterceptors list of response interceptors.
+     * @param exceptionHandlers list of exception handlers.
+     */
+    protected BaseRequestHandlerChain(final GenericRequestHandler<Input, Output> handler,
+                                      final List<GenericRequestInterceptor<Input>> requestInterceptors,
+                                      final List<GenericResponseInterceptor<Input, Output>> responseInterceptors,
+                                      final List<GenericExceptionHandler<Input, Output>> exceptionHandlers) {
         this.handler = handler;
         this.requestInterceptors = requestInterceptors != null ? requestInterceptors : new ArrayList<>();
-        this.responseInterceptors= responseInterceptors != null ? responseInterceptors : new ArrayList<>();
+        this.responseInterceptors = responseInterceptors != null ? responseInterceptors : new ArrayList<>();
         this.exceptionHandlers = exceptionHandlers != null ? exceptionHandlers : new ArrayList<>();
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public GenericRequestHandler<Input, Output> getRequestHandler() { return handler; }
+    public GenericRequestHandler<Input, Output> getRequestHandler() {
+        return handler;
+    }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<GenericRequestInterceptor<Input>> getRequestInterceptors() {
         return requestInterceptors;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<GenericResponseInterceptor<Input, Output>> getResponseInterceptors() {
         return responseInterceptors;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
     public List<GenericExceptionHandler<Input, Output>> getExceptionHandlers() {
         return exceptionHandlers;
     }
 
+    /**
+     * Returns an instance of Builder for the specified class types.
+     * @param input input class type.
+     * @param output output class type.
+     * @param <Input> handler input type.
+     * @param <Output> handler output type.
+     * @param <Self> generic of type self.
+     * @return {@link Builder}.
+     */
     public static <Input, Output, Self extends Builder<Input, Output, Self>> Builder<Input, Output, Self> forTypes(
-            Class<Input> input, Class<Output> output) {
+            final Class<Input> input, final Class<Output> output) {
         return new Builder<>();
     }
 
+    /**
+     * Returns an instance of Builder.
+     * @param <Input> handler input type.
+     * @param <Output> handler output type.
+     * @return {@link Builder}.
+     */
     public static <Input, Output> Builder<Input, Output, ?> builder() {
         return new Builder<>();
     }
 
+    /**
+     * Base Request Handler Chain Builder.
+     * @param <Input> handler input type.
+     * @param <Output> handler output type.
+     * @param <Self> of type Builder class.
+     */
     @SuppressWarnings("unchecked")
     public static class Builder<Input, Output, Self extends Builder<Input, Output, Self>> {
+        /**
+         * Request handler responsible for processing an incoming request.
+         */
         protected GenericRequestHandler<Input, Output> handler;
+
+        /**
+         * List of request interceptors.
+         */
         protected List<GenericRequestInterceptor<Input>> requestInterceptors;
+
+        /**
+         * List of response interceptors.
+         */
         protected List<GenericResponseInterceptor<Input, Output>> responseInterceptors;
+
+        /**
+         * List of exception handlers.
+         */
         protected List<GenericExceptionHandler<Input, Output>> exceptionHandlers;
 
-        public Builder() {
-        }
+        /**
+         * Public constructor.
+         */
+        public Builder() { }
 
-        public Self withRequestHandler(GenericRequestHandler<Input, Output> handler) {
+        /**
+         * Adds a request handler of type {@link GenericRequestHandler} to request handler chain.
+         * @param handler request handler.
+         * @return {@link Builder}.
+         */
+        public Self withRequestHandler(final GenericRequestHandler<Input, Output> handler) {
             this.handler = handler;
             return (Self) this;
         }
 
-        public Self addRequestInterceptor(GenericRequestInterceptor<Input> requestInterceptor) {
+        /**
+         * Adds a single request interceptor of type {@link GenericRequestInterceptor} to request handler chain.
+         * @param requestInterceptor request interceptor.
+         * @return {@link Builder}.
+         */
+        public Self addRequestInterceptor(final GenericRequestInterceptor<Input> requestInterceptor) {
             if (requestInterceptors == null) {
                 requestInterceptors = new ArrayList<>();
             }
@@ -95,12 +179,22 @@ public class BaseRequestHandlerChain<Input, Output> implements GenericRequestHan
             return (Self) this;
         }
 
-        public Self withRequestInterceptors(List<GenericRequestInterceptor<Input>> requestInterceptors) {
+        /**
+         * Adds multiple request interceptors of type {@link GenericRequestInterceptor} to request handler chain.
+         * @param requestInterceptors list of request interceptors.
+         * @return {@link Builder}.
+         */
+        public Self withRequestInterceptors(final List<GenericRequestInterceptor<Input>> requestInterceptors) {
             this.requestInterceptors = requestInterceptors;
             return (Self) this;
         }
 
-        public Self addResponseInterceptor(GenericResponseInterceptor<Input, Output> responseInterceptor) {
+        /**
+         * Adds a single response interceptor of type {@link GenericResponseInterceptor} to request handler chain.
+         * @param responseInterceptor response interceptor.
+         * @return {@link Builder}.
+         */
+        public Self addResponseInterceptor(final GenericResponseInterceptor<Input, Output> responseInterceptor) {
             if (responseInterceptors == null) {
                 responseInterceptors = new ArrayList<>();
             }
@@ -108,17 +202,32 @@ public class BaseRequestHandlerChain<Input, Output> implements GenericRequestHan
             return (Self) this;
         }
 
-        public Self withResponseInterceptor(List<GenericResponseInterceptor<Input, Output>> responseInterceptors) {
+        /**
+         * Adds multiple response interceptors of type {@link GenericResponseInterceptor} to request handler chain.
+         * @param responseInterceptors list of response interceptors.
+         * @return {@link Builder}.
+         */
+        public Self withResponseInterceptor(final List<GenericResponseInterceptor<Input, Output>> responseInterceptors) {
             this.responseInterceptors = responseInterceptors;
             return (Self) this;
         }
 
-        public Self withExceptionHandlers(List<GenericExceptionHandler<Input, Output>> exceptionHandlers) {
+        /**
+         * Adds multiple exception handlers of type {@link BaseRequestHandlerChain} to request handler chain.
+         * @param exceptionHandlers list of exception handlers.
+         * @return {@link Builder}.
+         */
+        public Self withExceptionHandlers(final List<GenericExceptionHandler<Input, Output>> exceptionHandlers) {
             this.exceptionHandlers = exceptionHandlers;
             return (Self) this;
         }
 
-        public Self addExceptionHandler(GenericExceptionHandler<Input, Output> exceptionHandler) {
+        /**
+         * Adds a single exception handler of type {@link GenericExceptionHandler} to request handler chain.
+         * @param exceptionHandler exception handler.
+         * @return {@link Builder}.
+         */
+        public Self addExceptionHandler(final GenericExceptionHandler<Input, Output> exceptionHandler) {
             if (exceptionHandlers == null) {
                 exceptionHandlers = new ArrayList<>();
             }
@@ -126,11 +235,13 @@ public class BaseRequestHandlerChain<Input, Output> implements GenericRequestHan
             return (Self) this;
         }
 
-
+        /**
+         * Builder method constructs an instance of BaseRequestHandlerChain.
+         * @return {@link BaseRequestHandlerChain}.
+         */
         public BaseRequestHandlerChain<Input, Output> build() {
             return new BaseRequestHandlerChain<>(handler, requestInterceptors, responseInterceptors, exceptionHandlers);
         }
     }
-
 
 }

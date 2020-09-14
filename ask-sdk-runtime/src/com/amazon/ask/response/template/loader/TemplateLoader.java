@@ -20,6 +20,7 @@ import java.util.Optional;
 
 /**
  * Loader interface for template loading from data store.
+ * @param <Input> Skill input type.
  */
 public interface TemplateLoader<Input> {
 

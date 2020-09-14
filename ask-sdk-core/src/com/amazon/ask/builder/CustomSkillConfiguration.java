@@ -21,16 +21,39 @@ import com.amazon.ask.response.template.TemplateFactory;
 
 import java.util.Optional;
 
+/**
+ * Custom implementation of {@link SkillConfiguration}.
+ */
 public interface CustomSkillConfiguration extends GenericSkillConfiguration<HandlerInput, Optional<Response>> {
 
+    /**
+     * Getter method for Custom UserAgent.
+     * @return user agent.
+     */
     String getCustomUserAgent();
 
+    /**
+     * Getter method for SkillId.
+     * @return skill id.
+     */
     String getSkillId();
 
+    /**
+     * Getter method for Persistence Adapter.
+     * @return {@link PersistenceAdapter}.
+     */
     PersistenceAdapter getPersistenceAdapter();
 
+    /**
+     * Getter method for Api Client.
+     * @return {@link ApiClient}.
+     */
     ApiClient getApiClient();
 
+    /**
+     * Getter method for Template Factory.
+     * @return {@link TemplateFactory}.
+     */
     TemplateFactory<HandlerInput, Response> getTemplateFactory();
 
 }

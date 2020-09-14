@@ -19,18 +19,33 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+/**
+ * Mapper factory class to setup mapper configuration and return {@link ObjectMapper}.
+ */
 public final class ObjectMapperFactory {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    /**
+     * Prevent instantiation.
+     */
+    private ObjectMapperFactory() { }
+
+    /**
+     * Static instance of {@link ObjectMapper}.
+     */
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     static {
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        mapper.registerModule(new JavaTimeModule());
+        MAPPER.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        MAPPER.registerModule(new JavaTimeModule());
     }
 
+    /**
+     * Getter for static ObjectMapper instance.
+     * @return instance of {@link ObjectMapper}.
+     */
     public static ObjectMapper getMapper() {
-        return mapper;
+        return MAPPER;
     }
 
 }

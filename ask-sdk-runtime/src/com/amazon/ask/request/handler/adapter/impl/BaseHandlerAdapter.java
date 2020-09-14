@@ -26,19 +26,32 @@ import com.amazon.ask.request.handler.adapter.GenericHandlerAdapter;
 public class BaseHandlerAdapter<Input, Output, Handler extends GenericRequestHandler<Input, Output>>
         implements GenericHandlerAdapter<Input, Output> {
 
+    /**
+     * Class of type {@link Handler}.
+     */
     private final Class<Handler> handlerType;
 
-    public BaseHandlerAdapter(Class<Handler> handlerType) {
+    /**
+     * Constructor for BaseHandlerAdapter.
+     * @param handlerType class of type {@link Handler}.
+     */
+    public BaseHandlerAdapter(final Class<Handler> handlerType) {
         this.handlerType = handlerType;
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public boolean supports(Object handler) {
+    public boolean supports(final Object handler) {
         return handlerType.isInstance(handler);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public Output execute(Input input, Object handler) {
+    public Output execute(final Input input, final Object handler) {
         return handlerType.cast(handler).handle(input);
     }
 

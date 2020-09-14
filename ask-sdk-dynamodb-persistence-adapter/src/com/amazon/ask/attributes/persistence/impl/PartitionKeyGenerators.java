@@ -24,10 +24,13 @@ import com.amazon.ask.model.interfaces.system.SystemState;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class PartitionKeyGenerators {
+/**
+ * Helps to generate partition keys from the userId or deviceId or personId contained in an incoming request.
+ */
+public final class PartitionKeyGenerators {
 
-    /** Prevent instantiation */
-    private PartitionKeyGenerators() {}
+    /** Prevent instantiation. */
+    private PartitionKeyGenerators() { }
 
     /**
      * Produces a partition key from the user ID contained in an incoming request.

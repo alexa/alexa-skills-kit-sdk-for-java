@@ -17,21 +17,24 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Proxy;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.amazon.ask.Skill;
 import com.amazon.ask.exception.AskSdkException;
 import com.amazon.ask.model.RequestEnvelope;
-import com.amazon.ask.model.ResponseEnvelope;
 import com.amazon.ask.model.services.Serializer;
+import com.amazon.ask.request.impl.BaseSkillRequest;
+import com.amazon.ask.response.SkillResponse;
 import com.amazon.ask.servlet.util.ServletUtils;
 import com.amazon.ask.servlet.verifiers.AlexaHttpRequest;
 import com.amazon.ask.servlet.verifiers.ServletRequest;
@@ -58,14 +61,38 @@ import static com.amazon.ask.servlet.ServletConstants.DEFAULT_TOLERANCE_MILLIS;
  *
  */
 public class SkillServlet extends HttpServlet {
-    private static final Logger log = LoggerFactory.getLogger(SkillServlet.class);
+    /**
+     * Logger mechanism to log data for debugging purposes.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(SkillServlet.class);
+
+    /**
+     * The serialization runtime associates with each serializable class a version number, called a serialVersionUID,
+     * which is used during deserialization to verify that the sender and receiver of a serialized object have loaded
+     * classes for that object that are compatible with respect to serialization.
+     */
     private static final long serialVersionUID = 3257254794185762002L;
 
+    /**
+     * Instance of type {@link Skill}.
+     */
     private transient final Skill skill;
+
+    /**
+     * List of {@link SkillServletVerifier}.
+     */
     private transient final List<SkillServletVerifier> verifiers;
+
+    /**
+     * Instance of type {@link Serializer} initialized with reference to {@link JacksonSerializer}.
+     */
     private transient final Serializer serializer = new JacksonSerializer();
 
-    public SkillServlet(Skill skill) {
+    /**
+     * Constructor to build an instance of SkillServlet.
+     * @param skill an Alexa skill instance.
+     */
+    public SkillServlet(final Skill skill) {
         List<SkillServletVerifier> defaultVerifiers = new ArrayList<>();
         if (!ServletUtils.isRequestSignatureCheckSystemPropertyDisabled()) {
             defaultVerifiers.add(new SkillRequestSignatureVerifier());
@@ -77,7 +104,12 @@ public class SkillServlet extends HttpServlet {
         this.verifiers = defaultVerifiers;
     }
 
-    SkillServlet(Skill skill, List<SkillServletVerifier> verifiers) {
+    /**
+     * Constructor to build an instance of SkillServlet.
+     * @param skill instance of {@link Skill}.
+     * @param verifiers list of {@link SkillServletVerifier}.
+     */
+    SkillServlet(final Skill skill, final List<SkillServletVerifier> verifiers) {
         this.skill = skill;
         this.verifiers = verifiers;
     }
@@ -105,25 +137,47 @@ public class SkillServlet extends HttpServlet {
                 verifier.verify(alexaHttpRequest);
             }
 
-            ResponseEnvelope skillResponse = skill.invoke(deserializedRequestEnvelope);
-            // Generate JSON and send back the response
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_OK);
-            if (skillResponse != null) {
-                byte[] serializedResponse = serializer.serialize(skillResponse).getBytes(StandardCharsets.UTF_8);
-                try (final OutputStream out = response.getOutputStream()) {
-                    response.setContentLength(serializedResponse.length);
-                    out.write(serializedResponse);
+            try (ByteArrayOutputStream skillResponse = new ByteArrayOutputStream()) {
+                handleRequest(new ByteArrayInputStream(serializedRequestEnvelope), skillResponse);
+                // Generate JSON and send back the response
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_OK);
+                byte[] serializedResponse = skillResponse.toByteArray();
+                if (skillResponse != null) {
+                    try (OutputStream out = response.getOutputStream()) {
+                        response.setContentLength(serializedResponse.length);
+                        out.write(serializedResponse);
+                    }
                 }
             }
         } catch (SecurityException ex) {
             int statusCode = HttpServletResponse.SC_BAD_REQUEST;
-            log.error("Incoming request failed verification {}", statusCode, ex);
+            LOGGER.error("Incoming request failed verification {}", statusCode, ex);
             response.sendError(statusCode, ex.getMessage());
         } catch (AskSdkException ex) {
             int statusCode = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-            log.error("Exception occurred in doPost, returning status code {}", statusCode, ex);
+            LOGGER.error("Exception occurred in doPost, returning status code {}", statusCode, ex);
             response.sendError(statusCode, ex.getMessage());
+        }
+    }
+
+    /**
+     * This method is the entry point when executing your servlet. The configured
+     * {@code SkillServlet} determines the type of request and passes the request to
+     * the configured {@code Skill}.
+     *
+     * @param input - input stream of the request.
+     * @param output - output stream of the response.
+     * @throws IOException if an input or output error is detected when the servlet handles the request
+     */
+    public final void handleRequest(final InputStream input, final OutputStream output) throws IOException {
+        byte[] inputBytes = IOUtils.toByteArray(input);
+        final BaseSkillRequest skillRequest = new BaseSkillRequest(inputBytes);
+        SkillResponse<?> skillResponse = skill.execute(skillRequest);
+        if (skillResponse != null) {
+            if (skillResponse.isPresent()) {
+                skillResponse.writeTo(output);
+            }
         }
     }
 
@@ -132,17 +186,28 @@ public class SkillServlet extends HttpServlet {
      *
      * @param proxy the {@code Proxy} to associate with this servlet.
      */
-    public void setProxy(Proxy proxy) {
+    public void setProxy(final Proxy proxy) {
         if (verifiers.removeIf(verifier -> verifier instanceof SkillRequestSignatureVerifier)) {
             verifiers.add(new SkillRequestSignatureVerifier(proxy));
         }
     }
 
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+    /**
+     * Method throws an {@link NotSerializableException} if the servlet is not serializable.
+     * @param in instance of {@link ObjectInputStream}.
+     * @throws IOException I/O exception.
+     * @throws ClassNotFoundException cannot a class through its fully-qualified name and can not find its definition on the classpath.
+     */
+    private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
         throw new NotSerializableException("Skill servlet is not serializable");
     }
 
-    private void writeObject(ObjectOutputStream out) throws IOException {
+    /**
+     * Method throws an {@link NotSerializableException} if the servlet is not serializable.
+     * @param out instance of {@link ObjectOutputStream}.
+     * @throws IOException I/O exception.
+     */
+    private void writeObject(final ObjectOutputStream out) throws IOException {
         throw new NotSerializableException("Skill servlet is not serializable");
     }
 }

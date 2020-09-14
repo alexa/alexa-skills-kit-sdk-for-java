@@ -13,7 +13,6 @@
 
 package com.amazon.ask.dispatcher.request.mapper.impl;
 
-import com.amazon.ask.dispatcher.request.handler.impl.DefaultRequestHandlerChain;
 import com.amazon.ask.request.handler.chain.impl.BaseRequestHandlerChain;
 import com.amazon.ask.request.mapper.impl.BaseRequestMapper;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
@@ -26,22 +25,43 @@ import java.util.Optional;
 /**
  * {@inheritDoc}
  *
- * This implementation accesses registered {@link DefaultRequestHandlerChain} instances in the order they were provided.
- * Suitable chains are identified by calling canHandle on the attached {@link com.amazon.ask.dispatcher.request.handler.RequestHandler}.
+ * This implementation accesses registered {@link com.amazon.ask.dispatcher.request.handler.impl.DefaultRequestHandlerChain} instances
+ * in the order they were provided. Suitable chains are identified by calling canHandle on the attached
+ * {@link com.amazon.ask.dispatcher.request.handler.RequestHandler}.
  */
 @Deprecated
 public class DefaultRequestMapper extends BaseRequestMapper<HandlerInput, Optional<Response>> implements RequestMapper {
 
-    protected DefaultRequestMapper(List<BaseRequestHandlerChain<HandlerInput, Optional<Response>>> handlerChains) {
+    /**
+     * Constructor for DefaultRequestMapper.
+     * @param handlerChains list of request handler chains.
+     */
+    protected DefaultRequestMapper(final List<BaseRequestHandlerChain<HandlerInput, Optional<Response>>> handlerChains) {
         super(handlerChains);
     }
 
-    public static Builder builder() { return new Builder(); }
+    /**
+     * Static method which returns an instance of Builder.
+     * @return {@link com.amazon.ask.request.mapper.impl.BaseRequestMapper.Builder}.
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
 
-    public static class Builder extends BaseRequestMapper.Builder<HandlerInput, Optional<Response>, Builder>{
-        private Builder() {
-        }
+    /**
+     * DefaultRequestMapper Builder.
+     */
+    public static final class Builder extends BaseRequestMapper.Builder<HandlerInput, Optional<Response>, Builder> {
 
+        /**
+         * Prevent instantiation.
+         */
+        private Builder() { }
+
+        /**
+         * Builder method to construct an instance of DefaultRequestMapper.
+         * @return {@link DefaultRequestMapper}.
+         */
         public DefaultRequestMapper build() {
             return new DefaultRequestMapper(handlerChains);
         }

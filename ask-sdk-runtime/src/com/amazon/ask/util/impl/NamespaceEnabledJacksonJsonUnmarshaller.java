@@ -24,25 +24,55 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Jackson Unmarshaller to deserialize a given byte array based on a namespace discriminator.
+ * Implements {@link JsonUnmarshaller}.
+ * @param <Type> type to unmarshall
+ */
 public class NamespaceEnabledJacksonJsonUnmarshaller<Type> implements JsonUnmarshaller<Type> {
 
+    /**
+     * Mapper used to serialize and de-serialize objects.
+     */
     private static final ObjectMapper MAPPER = ObjectMapperFactory.getMapper();
 
+    /**
+     * Output type after unmarshalling.
+     */
     private final Class<Type> outputType;
+
+    /**
+     * Map of valid class types.
+     */
     private final Map<String, Class> validTypes;
 
-    protected NamespaceEnabledJacksonJsonUnmarshaller(Class<Type> outputType, Map<String, Class> validTypes) {
+    /**
+     * Constructor for NamespaceEnabledJacksonJsonUnmarshaller.
+     * @param outputType Output type after unmarshalling.
+     * @param validTypes Map of valid class types.
+     */
+    protected NamespaceEnabledJacksonJsonUnmarshaller(final Class<Type> outputType, final Map<String, Class> validTypes) {
         this.outputType = outputType;
         this.validTypes = validTypes;
     }
 
-    public static <Output> NamespaceEnabledJacksonJsonUnmarshaller<Output> withTypeBinding(Class<Output> outputType,
-                                                                                           Map<String, Class> validTypes) {
+    /**
+     * Return an instance of NamespaceEnabledJacksonJsonUnmarshaller.
+     * @param outputType Output type after unmarshalling.
+     * @param validTypes Map of valid class types.
+     * @param <Output> Type of NamespaceEnabledJacksonJsonUnmarshaller.
+     * @return {@link NamespaceEnabledJacksonJsonUnmarshaller}.
+     */
+    public static <Output> NamespaceEnabledJacksonJsonUnmarshaller<Output> withTypeBinding(final Class<Output> outputType,
+                                                                                           final Map<String, Class> validTypes) {
         return new NamespaceEnabledJacksonJsonUnmarshaller<>(outputType, validTypes);
     }
 
+    /**
+     * {@inheritDoc}.
+     */
     @Override
-    public Optional<UnmarshalledRequest<Type>> unmarshall(byte[] in) {
+    public Optional<UnmarshalledRequest<Type>> unmarshall(final byte[] in) {
         try {
             JsonNode root = MAPPER.readTree(in);
             Optional<String> namespaceDiscriminator = UnmarshallUtils.getNamespaceDiscriminator(root);
@@ -50,7 +80,7 @@ public class NamespaceEnabledJacksonJsonUnmarshaller<Type> implements JsonUnmars
                 return Optional.empty();
             }
             Class targetType = validTypes.get(namespaceDiscriminator.get());
-            UnmarshalledRequest<Type> unmarshalledRequest = new BaseUnmarshalledRequest<>((Type)MAPPER.treeToValue(root, targetType), root);
+            UnmarshalledRequest<Type> unmarshalledRequest = new BaseUnmarshalledRequest<>((Type) MAPPER.treeToValue(root, targetType), root);
             return Optional.of(unmarshalledRequest);
         } catch (IOException e) {
             throw new AskSdkException("Deserialization error", e);
