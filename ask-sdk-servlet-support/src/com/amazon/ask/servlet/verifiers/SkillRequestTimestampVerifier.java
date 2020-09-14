@@ -18,8 +18,12 @@ import com.amazon.ask.servlet.ServletConstants;
 import com.amazon.ask.util.ValidationUtils;
 
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.amazon.ask.servlet.ServletConstants.MAXIMUM_TOLERANCE_MILLIS;
+import static com.amazon.ask.servlet.ServletConstants.TOLERANCE_SKILL_EVENTS_MILLIS;
+import static com.amazon.ask.servlet.ServletConstants.SKILL_EVENT_REQUESTS;
 
 /**
  * Verifies whether or not timestamps are valid within a certain tolerance.
@@ -42,6 +46,11 @@ public class SkillRequestTimestampVerifier implements SkillServletVerifier {
     private final long toleranceInMilliseconds;
 
     /**
+     * Logger mechanism to log data for debugging purposes.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(SkillRequestTimestampVerifier.class);
+
+    /**
      * Constructs a new timestamp verifier with the provided tolerance milliseconds.
      *
      * @param toleranceInMilliseconds
@@ -50,12 +59,15 @@ public class SkillRequestTimestampVerifier implements SkillServletVerifier {
      */
     public SkillRequestTimestampVerifier(final long toleranceInMilliseconds) {
         if (toleranceInMilliseconds > MAXIMUM_TOLERANCE_MILLIS) {
-            throw new IllegalArgumentException(String.format("Provided tolerance value %s exceeds the maximum"
-                    + " allowed %s", toleranceInMilliseconds, MAXIMUM_TOLERANCE_MILLIS));
+            LOGGER.warn(String.format("Provided tolerance value %s exceeds the maximum"
+                    + " allowed %s. Maximum value will be used instead.",
+                    toleranceInMilliseconds, MAXIMUM_TOLERANCE_MILLIS));
+            this.toleranceInMilliseconds = MAXIMUM_TOLERANCE_MILLIS;
         } else if (toleranceInMilliseconds < 0) {
             throw new IllegalArgumentException("A negative tolerance is not supported");
+        } else {
+            this.toleranceInMilliseconds = toleranceInMilliseconds;
         }
-        this.toleranceInMilliseconds = toleranceInMilliseconds;
     }
 
     /**
@@ -89,7 +101,13 @@ public class SkillRequestTimestampVerifier implements SkillServletVerifier {
 
         long requestTimestamp = request.getTimestamp().toInstant().toEpochMilli();
         long delta = Math.abs(System.currentTimeMillis() - requestTimestamp);
-        boolean withinTolerance = delta <= toleranceInMilliseconds;
+
+        boolean withinTolerance;
+        if (SKILL_EVENT_REQUESTS.contains(request.getType())) {
+            withinTolerance = delta <= TOLERANCE_SKILL_EVENTS_MILLIS;
+        } else {
+            withinTolerance = delta <= toleranceInMilliseconds;
+        }
 
         if (!withinTolerance) {
             throw new SecurityException(String.format("Request with id %s and timestamp %s failed timestamp validation"
