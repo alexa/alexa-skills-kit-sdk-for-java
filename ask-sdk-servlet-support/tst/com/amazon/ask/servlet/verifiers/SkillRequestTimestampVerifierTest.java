@@ -16,6 +16,8 @@ package com.amazon.ask.servlet.verifiers;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.LaunchRequest;
 import com.amazon.ask.model.RequestEnvelope;
+import com.amazon.ask.model.events.skillevents.SkillEnabledRequest;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +32,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import static com.amazon.ask.servlet.ServletConstants.MAXIMUM_TOLERANCE_MILLIS;
+import static com.amazon.ask.servlet.ServletConstants.TOLERANCE_SKILL_EVENTS_MILLIS;;
 import static org.mockito.Mockito.mock;
 
 @RunWith(Parameterized.class)
@@ -62,8 +65,8 @@ public class SkillRequestTimestampVerifierTest {
         new SkillRequestTimestampVerifier(-1);
     }
 
-    @Test (expected = IllegalArgumentException.class)
-    public void construct_withToleranceBeyondMaximum_throwsIllegalArgumentException() {
+    @Test
+    public void construct_withToleranceBeyondMaximum_latchesToMaxTolerance() {
         new SkillRequestTimestampVerifier(MAXIMUM_TOLERANCE_MILLIS + 1);
     }
 
@@ -122,8 +125,27 @@ public class SkillRequestTimestampVerifierTest {
         verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, getRequestEnvelope(new Date(System.currentTimeMillis() + TOLERANCE_IN_MILLIS + 200))));
     }
 
+    @Test
+    public void verify_skillEventRequestWithinTolerance_no_exception() {
+        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, getSkillEventRequestEnvelope(new Date(System.currentTimeMillis() - TOLERANCE_SKILL_EVENTS_MILLIS / 2))));
+    }
+
+    @Test(expected = SecurityException.class)
+    public void verify_skillEventRequestOutsideTolerance_throws_exception() {
+        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, getSkillEventRequestEnvelope(new Date(System.currentTimeMillis() - TOLERANCE_SKILL_EVENTS_MILLIS * 2))));
+    }
+
     private RequestEnvelope getRequestEnvelope(Date timestamp) {
         return RequestEnvelope.builder().withRequest(LaunchRequest
+                .builder()
+                .withRequestId("rId")
+                .withTimestamp(timestamp != null ? OffsetDateTime.ofInstant(timestamp.toInstant(), ZoneId.systemDefault()) : null)
+                .withLocale("en-US")
+                .build()).build();
+    }
+
+    private RequestEnvelope getSkillEventRequestEnvelope(Date timestamp) {
+        return RequestEnvelope.builder().withRequest(SkillEnabledRequest
                 .builder()
                 .withRequestId("rId")
                 .withTimestamp(timestamp != null ? OffsetDateTime.ofInstant(timestamp.toInstant(), ZoneId.systemDefault()) : null)

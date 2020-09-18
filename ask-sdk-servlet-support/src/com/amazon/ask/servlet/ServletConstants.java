@@ -13,6 +13,10 @@
 
 package com.amazon.ask.servlet;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * Helper class to hold package's constant values.
  */
@@ -86,8 +90,29 @@ public final class ServletConstants {
     public static final long DEFAULT_TOLERANCE_MILLIS = 30000;
 
     /**
-     * Maximum allowed timestamp offset tolerance value in millis.
+     * Maximum allowed timestamp offset tolerance value in millis for standard skill requests.
      */
-    public static final long MAXIMUM_TOLERANCE_MILLIS = 3600000;
+    public static final long MAXIMUM_TOLERANCE_MILLIS = 150000;
+
+    /**
+     * Timestamp offset tolerance value in millis for skill event requests. These requests may be
+     * delivered up to one hour past their original timestamp.
+     */
+    public static final long TOLERANCE_SKILL_EVENTS_MILLIS = 3600000;
+
+    /**
+     * Set of skill event requests. Due to the delivery characteristics of events, these
+     * requests may arrive with a timestamp value of up to 1 hour prior to the current time
+     * and are verified against a different upper bound value than standard requests.
+     *
+     * https://developer.amazon.com/en-US/docs/alexa/smapi/skill-events-in-alexa-skills.html#delivery-of-events-to-the-skill
+     */
+    public static final Set<String> SKILL_EVENT_REQUESTS = Stream.of(
+        "AlexaSkillEvent.SkillEnabled",
+        "AlexaSkillEvent.SkillDisabled",
+        "AlexaSkillEvent.SkillPermissionChanged",
+        "AlexaSkillEvent.SkillPermissionAccepted",
+        "AlexaSkillEvent.SkillAccountLinked").collect(Collectors.toSet());
+
 
 }
