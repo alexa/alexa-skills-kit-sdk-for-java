@@ -27,6 +27,15 @@ import static org.junit.Assert.assertEquals;
 
 public class ViewportUtilsTest {
     @Test
+    public void viewport_not_in_request_maps_to_unknown_viewport() {
+        RequestEnvelope requestEnvelope = RequestEnvelope.builder()
+        .withContext(Context.builder().build())
+        .build();
+        ViewportProfile profile = ViewportUtils.getViewportProfile(requestEnvelope);
+        assertEquals(profile, ViewportProfile.UNKNOWN_VIEWPORT_PROFILE);
+    }
+
+    @Test
     public void rook_maps_to_hub_round_small() {
         ViewportState viewportState = getViewportState("Rook");
         RequestEnvelope requestEnvelope = RequestEnvelope.builder()
