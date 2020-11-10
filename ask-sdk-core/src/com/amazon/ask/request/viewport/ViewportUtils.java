@@ -83,89 +83,91 @@ public final class ViewportUtils {
      * @return {@link ViewportProfile}.
      */
     public static ViewportProfile getViewportProfile(final RequestEnvelope requestEnvelope) {
-        ViewportState viewportState = requestEnvelope.getContext().getViewport();
-        Shape shape = viewportState.getShape();
-        int currentPixelWidth = viewportState.getCurrentPixelWidth().intValueExact();
-        int currentPixelHeight = viewportState.getCurrentPixelHeight().intValueExact();
-        int dpi = viewportState.getDpi().intValueExact();
-        Orientation orientation = getOrientation(currentPixelHeight, currentPixelWidth);
+        if (requestEnvelope.getContext().getViewport() != null) {
+            ViewportState viewportState = requestEnvelope.getContext().getViewport();
+            Shape shape = viewportState.getShape();
+            int currentPixelWidth = viewportState.getCurrentPixelWidth().intValueExact();
+            int currentPixelHeight = viewportState.getCurrentPixelHeight().intValueExact();
+            int dpi = viewportState.getDpi().intValueExact();
+            Orientation orientation = getOrientation(currentPixelHeight, currentPixelWidth);
 
-        if (shape == Shape.ROUND
-                && orientation == Orientation.EQUAL
-                && getSize(currentPixelHeight) == Size.XSMALL
-                && getSize(currentPixelWidth) == Size.XSMALL
-                && getDensity(dpi) == Density.LOW) {
-            return ViewportProfile.HUB_ROUND_SMALL;
+            if (shape == Shape.ROUND
+                    && orientation == Orientation.EQUAL
+                    && getSize(currentPixelHeight) == Size.XSMALL
+                    && getSize(currentPixelWidth) == Size.XSMALL
+                    && getDensity(dpi) == Density.LOW) {
+                return ViewportProfile.HUB_ROUND_SMALL;
 
-        } else if (shape == Shape.RECTANGLE
-                && orientation == Orientation.LANDSCAPE
-                && getSize(currentPixelWidth).ordinal() <= Size.MEDIUM.ordinal()
-                && getSize(currentPixelHeight).ordinal() <= Size.XSMALL.ordinal()
-                && getDensity(dpi) == Density.LOW) {
-            return ViewportProfile.HUB_LANDSCAPE_SMALL;
+            } else if (shape == Shape.RECTANGLE
+                    && orientation == Orientation.LANDSCAPE
+                    && getSize(currentPixelWidth).ordinal() <= Size.MEDIUM.ordinal()
+                    && getSize(currentPixelHeight).ordinal() <= Size.XSMALL.ordinal()
+                    && getDensity(dpi) == Density.LOW) {
+                return ViewportProfile.HUB_LANDSCAPE_SMALL;
 
-        } else if (shape == Shape.RECTANGLE
-                && orientation == Orientation.LANDSCAPE
-                && getSize(currentPixelWidth).ordinal() <= Size.MEDIUM.ordinal()
-                && getSize(currentPixelHeight).ordinal() <= Size.SMALL.ordinal()
-                && getDensity(dpi) == Density.LOW) {
-            return ViewportProfile.HUB_LANDSCAPE_MEDIUM;
+            } else if (shape == Shape.RECTANGLE
+                    && orientation == Orientation.LANDSCAPE
+                    && getSize(currentPixelWidth).ordinal() <= Size.MEDIUM.ordinal()
+                    && getSize(currentPixelHeight).ordinal() <= Size.SMALL.ordinal()
+                    && getDensity(dpi) == Density.LOW) {
+                return ViewportProfile.HUB_LANDSCAPE_MEDIUM;
 
-        } else if (shape == Shape.RECTANGLE
-                && orientation == Orientation.LANDSCAPE
-                && getSize(currentPixelWidth).ordinal() >= Size.LARGE.ordinal()
-                && getSize(currentPixelHeight).ordinal() >= Size.SMALL.ordinal()
-                && getDensity(dpi) == Density.LOW) {
-            return ViewportProfile.HUB_LANDSCAPE_LARGE;
+            } else if (shape == Shape.RECTANGLE
+                    && orientation == Orientation.LANDSCAPE
+                    && getSize(currentPixelWidth).ordinal() >= Size.LARGE.ordinal()
+                    && getSize(currentPixelHeight).ordinal() >= Size.SMALL.ordinal()
+                    && getDensity(dpi) == Density.LOW) {
+                return ViewportProfile.HUB_LANDSCAPE_LARGE;
 
-        } else if (shape == Shape.RECTANGLE
-                && orientation == Orientation.LANDSCAPE
-                && getSize(currentPixelWidth).ordinal() >= Size.MEDIUM.ordinal()
-                && getSize(currentPixelHeight).ordinal() >= Size.SMALL.ordinal()
-                && getDensity(dpi) == Density.MEDIUM) {
-            return ViewportProfile.MOBILE_LANDSCAPE_MEDIUM;
+            } else if (shape == Shape.RECTANGLE
+                    && orientation == Orientation.LANDSCAPE
+                    && getSize(currentPixelWidth).ordinal() >= Size.MEDIUM.ordinal()
+                    && getSize(currentPixelHeight).ordinal() >= Size.SMALL.ordinal()
+                    && getDensity(dpi) == Density.MEDIUM) {
+                return ViewportProfile.MOBILE_LANDSCAPE_MEDIUM;
 
-        } else if (shape == Shape.RECTANGLE
-                && orientation == Orientation.PORTRAIT
-                && getSize(currentPixelWidth).ordinal() >= Size.SMALL.ordinal()
-                && getSize(currentPixelHeight).ordinal() >= Size.MEDIUM.ordinal()
-                && getDensity(dpi) == Density.MEDIUM) {
-            return ViewportProfile.MOBILE_PORTRAIT_MEDIUM;
+            } else if (shape == Shape.RECTANGLE
+                    && orientation == Orientation.PORTRAIT
+                    && getSize(currentPixelWidth).ordinal() >= Size.SMALL.ordinal()
+                    && getSize(currentPixelHeight).ordinal() >= Size.MEDIUM.ordinal()
+                    && getDensity(dpi) == Density.MEDIUM) {
+                return ViewportProfile.MOBILE_PORTRAIT_MEDIUM;
 
-        } else if (shape == Shape.RECTANGLE
-                && orientation == Orientation.LANDSCAPE
-                && getSize(currentPixelWidth).ordinal() >= Size.SMALL.ordinal()
-                && getSize(currentPixelHeight).ordinal() >= Size.XSMALL.ordinal()
-                && getDensity(dpi) == Density.MEDIUM) {
-            return ViewportProfile.MOBILE_LANDSCAPE_SMALL;
+            } else if (shape == Shape.RECTANGLE
+                    && orientation == Orientation.LANDSCAPE
+                    && getSize(currentPixelWidth).ordinal() >= Size.SMALL.ordinal()
+                    && getSize(currentPixelHeight).ordinal() >= Size.XSMALL.ordinal()
+                    && getDensity(dpi) == Density.MEDIUM) {
+                return ViewportProfile.MOBILE_LANDSCAPE_SMALL;
 
-        } else if (shape == Shape.RECTANGLE
-                && orientation == Orientation.PORTRAIT
-                && getSize(currentPixelWidth).ordinal() >= Size.XSMALL.ordinal()
-                && getSize(currentPixelHeight).ordinal() >= Size.SMALL.ordinal()
-                && getDensity(dpi) == Density.MEDIUM) {
-            return ViewportProfile.MOBILE_PORTRAIT_SMALL;
+            } else if (shape == Shape.RECTANGLE
+                    && orientation == Orientation.PORTRAIT
+                    && getSize(currentPixelWidth).ordinal() >= Size.XSMALL.ordinal()
+                    && getSize(currentPixelHeight).ordinal() >= Size.SMALL.ordinal()
+                    && getDensity(dpi) == Density.MEDIUM) {
+                return ViewportProfile.MOBILE_PORTRAIT_SMALL;
 
-        } else if (shape == Shape.RECTANGLE
-                && orientation == Orientation.LANDSCAPE
-                && getSize(currentPixelWidth).ordinal() >= Size.XLARGE.ordinal()
-                && getSize(currentPixelHeight).ordinal() >= Size.MEDIUM.ordinal()
-                && getDensity(dpi).ordinal() >= Density.HIGH.ordinal()) {
-            return ViewportProfile.TV_LANDSCAPE_XLARGE;
+            } else if (shape == Shape.RECTANGLE
+                    && orientation == Orientation.LANDSCAPE
+                    && getSize(currentPixelWidth).ordinal() >= Size.XLARGE.ordinal()
+                    && getSize(currentPixelHeight).ordinal() >= Size.MEDIUM.ordinal()
+                    && getDensity(dpi).ordinal() >= Density.HIGH.ordinal()) {
+                return ViewportProfile.TV_LANDSCAPE_XLARGE;
 
-        } else if (shape == Shape.RECTANGLE
-                && orientation == Orientation.PORTRAIT
-                && getSize(currentPixelWidth) == Size.XSMALL
-                && getSize(currentPixelHeight) == Size.XLARGE
-                && getDensity(dpi).ordinal() >= Density.HIGH.ordinal()) {
-            return ViewportProfile.TV_PORTRAIT_MEDIUM;
+            } else if (shape == Shape.RECTANGLE
+                    && orientation == Orientation.PORTRAIT
+                    && getSize(currentPixelWidth) == Size.XSMALL
+                    && getSize(currentPixelHeight) == Size.XLARGE
+                    && getDensity(dpi).ordinal() >= Density.HIGH.ordinal()) {
+                return ViewportProfile.TV_PORTRAIT_MEDIUM;
 
-        } else if (shape == Shape.RECTANGLE
-                && orientation == Orientation.LANDSCAPE
-                && getSize(currentPixelWidth) == Size.MEDIUM
-                && getSize(currentPixelHeight) == Size.SMALL
-                && getDensity(dpi).ordinal() >= Density.HIGH.ordinal()) {
-            return ViewportProfile.TV_LANDSCAPE_MEDIUM;
+            } else if (shape == Shape.RECTANGLE
+                    && orientation == Orientation.LANDSCAPE
+                    && getSize(currentPixelWidth) == Size.MEDIUM
+                    && getSize(currentPixelHeight) == Size.SMALL
+                    && getDensity(dpi).ordinal() >= Density.HIGH.ordinal()) {
+                return ViewportProfile.TV_LANDSCAPE_MEDIUM;
+            }
         }
         return ViewportProfile.UNKNOWN_VIEWPORT_PROFILE;
     }
