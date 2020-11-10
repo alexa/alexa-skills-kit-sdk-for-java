@@ -16,6 +16,7 @@
 package com.amazon.ask.localdebug.util;
 
 import com.amazon.ask.localdebug.config.ClientConfiguration;
+import com.amazon.ask.localdebug.constants.Constants;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,18 +33,6 @@ public final class ClientConfigurationBuilder {
 
     }
     // Configuration names
-    /**
-     * Skill entry class argument name.
-     */
-    private static final String SKILL_ENTRY_CLASS_ARG_NAME = "skillStreamHandlerClass";
-    /**
-     * Skill id argument name.
-     */
-    private static final String SKILL_ID_ARG_NAME = "skillId";
-    /**
-     * LWA client id argument name.
-     */
-    private static final String ACCESS_TOKEN = "accessToken";
 
     /**
      * Builds {@link ClientConfiguration} instance.
@@ -53,10 +42,18 @@ public final class ClientConfigurationBuilder {
     public static ClientConfiguration buildClientConfiguration(final String[] arguments) {
         List<String> argumentList = Arrays.asList(arguments);
         return ClientConfiguration.builder()
-                .withSkillId(ArgumentParserUtils.getArgumentValue(SKILL_ID_ARG_NAME, argumentList).toString())
+                .withSkillId(ArgumentParserUtils.getArgumentValue(Constants.SKILL_ID_ARG_NAME, argumentList).toString())
                 .withSkillInvokerClassName(ArgumentParserUtils
-                        .getArgumentValue(SKILL_ENTRY_CLASS_ARG_NAME, argumentList).toString())
-                .withAccessToken(ArgumentParserUtils.getArgumentValue(ACCESS_TOKEN, argumentList).toString())
+                        .getArgumentValue(Constants.SKILL_ENTRY_CLASS_ARG_NAME, argumentList).toString())
+                .withAccessToken(ArgumentParserUtils.getArgumentValue(Constants.ACCESS_TOKEN, argumentList).toString())
+                .withThreadPoolSize(Integer.parseInt(ArgumentParserUtils
+                        .getArgumentValue(Constants.THREAD_POOL_SIZE, argumentList, false, 0)
+                        .toString()))
+                .withRegion(ArgumentParserUtils
+                        .getArgumentValue(Constants.REGION, argumentList, false, Constants.DEFAULT_REGION)
+                        .toString())
                 .build();
     }
 }
+
+

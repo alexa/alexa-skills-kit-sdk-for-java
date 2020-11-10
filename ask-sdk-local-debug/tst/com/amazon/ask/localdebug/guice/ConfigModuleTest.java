@@ -16,6 +16,7 @@
 package com.amazon.ask.localdebug.guice;
 
 import com.amazon.ask.localdebug.config.ClientConfiguration;
+import com.amazon.ask.localdebug.exception.LocalDebugSdkException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +38,7 @@ public class ConfigModuleTest {
                 .withSkillId("fooSkillId")
                 .withSkillInvokerClassName("Foo")
                 .withAccessToken("foo")
+                .withRegion("NA")
                 .build();
     }
 
@@ -54,5 +56,22 @@ public class ConfigModuleTest {
         Assert.assertEquals("websocket", actualHeaders.get("upgrade"));
         Assert.assertEquals("upgrade", actualHeaders.get("connection"));
         Assert.assertEquals(3, actualHeaders.size());
+    }
+
+    @Test(expected = LocalDebugSdkException.class)
+    public void invalidRegion_expectedException() {
+        clientConfiguration = ClientConfiguration.builder()
+                .withSkillId("fooSkillId")
+                .withSkillInvokerClassName("Foo")
+                .withAccessToken("foo")
+                .withRegion("foo")
+                .build();
+        ConfigModule configModule = new ConfigModule(clientConfiguration);
+        try{
+            configModule.connectCustomDebugEndpointUri();
+        } catch (LocalDebugSdkException ex) {
+            Assert.assertEquals("com.amazon.ask.localdebug.exception.LocalDebugSdkException: Invalid region - foo. Please ensure that the region value is one of NorthAmerica, Europe or FarEast" , ex.toString());
+            throw ex;
+        }
     }
 }

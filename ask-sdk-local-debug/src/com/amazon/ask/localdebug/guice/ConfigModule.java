@@ -16,7 +16,9 @@
 package com.amazon.ask.localdebug.guice;
 
 import com.amazon.ask.localdebug.config.ClientConfiguration;
+import com.amazon.ask.localdebug.config.Region;
 import com.amazon.ask.localdebug.config.SkillInvokerConfiguration;
+import com.amazon.ask.localdebug.constants.Constants;
 import com.amazon.ask.localdebug.exception.LocalDebugSdkException;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -33,38 +35,11 @@ import java.util.Map;
 /**
  * Configures configuration dependencies for injection.
  */
-public final class ConfigModule extends AbstractModule {
+public class ConfigModule extends AbstractModule {
     /**
      * Logger instance of the class.
      */
     private static final Logger LOG = LoggerFactory.getLogger(ConfigModule.class);
-    /**
-     * Web socket connection uri skeleton.
-     */
-    private static final String CONNECT_CUSTOM_DEBUG_URI_SKELETON =
-            "wss://bob-dispatch-prod-na.amazon.com/v1/skills/%1$s/stages/development/connectCustomDebugEndpoint";
-
-    // Header constants for web socket connection request
-    /**
-     * Upgrade header value.
-     */
-    private static final String UPGRADE_HEADER_VALUE = "websocket";
-    /**
-     * Upgrade header key.
-     */
-    private static final String UPGRADE_HEADER_NAME = "upgrade";
-    /**
-     * Connection header value.
-     */
-    private static final String CONNECTION_HEADER_VALUE = "upgrade";
-    /**
-     * Authorization header key.
-     */
-    private static final String AUTHORIZATION_HEADER_NAME = "authorization";
-    /**
-     * Connection header key.
-     */
-    private static final String CONNECTION_HEADER_NAME = "connection";
 
     /**
      * Client configuration.
@@ -87,7 +62,7 @@ public final class ConfigModule extends AbstractModule {
     }
 
     /**
-     * Creates authentication token from obtained client id, client secret and refresh token.
+     * Returns user configured accessToken.
      * @return authentication token.
      */
     @Provides
@@ -118,8 +93,21 @@ public final class ConfigModule extends AbstractModule {
     @Named("ConnectCustomDebugEndpointUri")
     public URI connectCustomDebugEndpointUri() {
         try {
+            final String region = clientConfiguration.getRegion();
+            LOG.info("Region chosen: " + region);
+            String endpointUrl;
+            try {
+                endpointUrl = Region.valueOf(region.toUpperCase()).getEndpoint();
+            } catch (IllegalArgumentException ie) {
+                final String errorMessage = String.format("Invalid region - %1$s."
+                        + " Please ensure that the region value is one of "
+                        + "NorthAmerica, Europe or FarEast", region);
+                LOG.error(errorMessage);
+                throw new LocalDebugSdkException(errorMessage);
+            }
             return new URI(String.format(
-                    CONNECT_CUSTOM_DEBUG_URI_SKELETON, clientConfiguration.getSkillId()));
+                    Constants.CONNECT_CUSTOM_DEBUG_URI_SKELETON, endpointUrl,
+                    clientConfiguration.getSkillId()));
         } catch (URISyntaxException e) {
             LOG.error("Encountered error when constructing Uri", e);
             throw new LocalDebugSdkException(e.getMessage(), e);
@@ -127,9 +115,9 @@ public final class ConfigModule extends AbstractModule {
     }
 
     /**
-     * Creates an debug endpoint connection header object.
-     * @param accessToken LWA access token.
-     * @return request headers.
+     * Creates headers for connectCustomDebugEndpoint call.
+     * @param accessToken - LWA Access token.
+     * @return {@link Map}.
      */
     @Provides
     @Singleton
@@ -137,9 +125,20 @@ public final class ConfigModule extends AbstractModule {
     public Map<String, String> connectCustomDebugEndpointHeaders(@Named("AccessToken")
                                                                      final String accessToken) {
         Map<String, String> headers = new HashMap<>();
-        headers.put(AUTHORIZATION_HEADER_NAME, accessToken);
-        headers.put(UPGRADE_HEADER_NAME, UPGRADE_HEADER_VALUE);
-        headers.put(CONNECTION_HEADER_NAME, CONNECTION_HEADER_VALUE);
+        headers.put(Constants.AUTHORIZATION_HEADER_NAME, accessToken);
+        headers.put(Constants.UPGRADE_HEADER_NAME, Constants.UPGRADE_HEADER_VALUE);
+        headers.put(Constants.CONNECTION_HEADER_NAME, Constants.CONNECTION_HEADER_VALUE);
         return headers;
+    }
+
+    /**
+     * Returns user provided thread pool size.
+     * @return number of worker threads.
+     */
+    @Provides
+    @Singleton
+    @Named("ThreadPoolSize")
+    public int threadPoolSize() {
+        return clientConfiguration.getThreadPoolSize();
     }
 }

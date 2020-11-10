@@ -23,7 +23,7 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 /**
  * Empty lambda context used to initiate a local debugging session.
  */
-public final class DebugLambdaContext implements Context {
+public class DebugLambdaContext implements Context {
 
     @Override
     public String getAwsRequestId() {

@@ -18,7 +18,7 @@ package com.amazon.ask.localdebug.exception;
 /**
  * Base exception class for all exceptions encountered during local debug session.
  */
-public final class LocalDebugSdkException extends RuntimeException {
+public class LocalDebugSdkException extends RuntimeException {
     /**
      * Constructs an instance of LocalDebugSdkException with the given message.
      * @param message String error message.

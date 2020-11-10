@@ -21,7 +21,6 @@ import com.amazon.ask.localdebug.config.SkillInvokerConfiguration;
 import com.amazon.ask.localdebug.config.WebSocketClientConfig;
 import com.amazon.ask.localdebug.exception.LocalDebugSdkException;
 import com.amazon.ask.localdebug.util.RequestResponseUtils;
-import com.amazon.ask.model.dynamicEndpoints.Request;
 import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,19 +32,28 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Web socket client wrapper re-purposed for local debugging.
  */
 public class WebSocketClientImpl extends org.java_websocket.client.WebSocketClient implements WebSocketClient {
+
     /**
      * TLS version to be set in the SSLContext.
      */
     private static final String TLS = "TLSv1.2";
+
     /**
      * Logger instance of the class.
      */
     private static final Logger LOG = LoggerFactory.getLogger(WebSocketClientImpl.class);
+
+    /**
+     * Executor service instance for managing async tasks.
+     */
+    private ExecutorService executorService;
 
     /**
      * Certificate provider to be used for setting the SSL context
@@ -62,15 +70,21 @@ public class WebSocketClientImpl extends org.java_websocket.client.WebSocketClie
     /**
      * Initialize base WebSocket client instance.
      *
-     * @param webSocketClientConfig web-socket client configuration class {@link WebSocketClientConfig}.
-     * @param skillInvokerConfiguration reflection configuration to be
-     *                                  used to invoke skill code {@link SkillInvokerConfiguration}.
+     * @param builder builder instance {@link WebSocketClientImpl.Builder}.
      */
-    public WebSocketClientImpl(final WebSocketClientConfig webSocketClientConfig,
-                               final SkillInvokerConfiguration skillInvokerConfiguration) {
-        super(webSocketClientConfig.getWebSocketServerUri(), webSocketClientConfig.getHeaders());
+    public WebSocketClientImpl(final Builder builder) {
+        super(builder.webSocketClientConfig.getWebSocketServerUri(), builder.webSocketClientConfig.getHeaders());
         certificateProvider = new AllTrustCertificateProvider();
-        this.skillInvokerConfiguration = skillInvokerConfiguration;
+        this.skillInvokerConfiguration = builder.skillInvokerConfiguration;
+        this.executorService = builder.executorService;
+    }
+
+    /**
+     * Creates builder instance.
+     * @return new Builder instance {@link WebSocketClientImpl.Builder}.
+     */
+    public static Builder builder() {
+        return new Builder();
     }
 
     /**
@@ -133,11 +147,6 @@ public class WebSocketClientImpl extends org.java_websocket.client.WebSocketClie
     @Override
     public void onOpen(final ServerHandshake handshakeData) {
         LOG.info("*****Starting Skill Debug Session*****");
-        LOG.info("*****NOTE: Skill debugging is currently only available "
-        + "for invocations from customer in North America region "
-        + "(https://developer.amazon.com/en-US/docs/alexa/custom-skills/"
-        + "develop-skills-in-multiple-languages.html#h2-multiple-endpoints)"
-        + "*****");
         LOG.info("*****Session will last for 1 hour****");
     }
 
@@ -147,10 +156,11 @@ public class WebSocketClientImpl extends org.java_websocket.client.WebSocketClie
      */
     @Override
     public void onMessage(final String skillRequestPayload) {
-        LOG.info("Skill request: \n" + skillRequestPayload);
-        final Request skillRequest = RequestResponseUtils.getDeserializeRequest(skillRequestPayload);
-        final String skillResponse = RequestResponseUtils.getSkillResponse(skillRequest, skillInvokerConfiguration);
-        sendSkillResponse(skillResponse);
+        LOG.info("Received message \n" + skillRequestPayload);
+        CompletableFuture.supplyAsync(() -> RequestResponseUtils
+                .getSkillResponse(RequestResponseUtils
+                        .getDeserializeRequest(skillRequestPayload), skillInvokerConfiguration), executorService)
+                .thenAccept(this::sendSkillResponse);
     }
 
     /**
@@ -183,16 +193,68 @@ public class WebSocketClientImpl extends org.java_websocket.client.WebSocketClie
     @Override
     public void sendSkillResponse(final String localDebugASKResponse) {
         LOG.info("Skill response: \n" + localDebugASKResponse);
-        send(new String(localDebugASKResponse.getBytes(StandardCharsets.UTF_8),
-                StandardCharsets.UTF_8));
+        send(new String(localDebugASKResponse.getBytes(StandardCharsets.UTF_8)
+                , StandardCharsets.UTF_8));
     }
 
-    /**
-     * Event triggered when WebSocket client receives an incoming payload.
-     * @param bytes The buffer which contains the payload.
-     */
     @Override
     public void onMessage(final ByteBuffer bytes) {
         onMessage(new String(bytes.array(), StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Builder class.
+     */
+    public static class Builder {
+        /**
+         * Skill invoker configuration.
+         */
+        private SkillInvokerConfiguration skillInvokerConfiguration;
+        /**
+         * Thread executor service instance.
+         */
+        private ExecutorService executorService;
+        /**
+         * Client web socket configuration.
+         */
+        private WebSocketClientConfig webSocketClientConfig;
+
+        /**
+         * Initializes skill invoker configuration.
+         * @param skillInvokerConfiguration  skill invoker configuration.
+         * @return Builder instance {@link WebSocketClientImpl.Builder}
+         */
+        public Builder withSkillInvokerConfiguration(final SkillInvokerConfiguration skillInvokerConfiguration) {
+            this.skillInvokerConfiguration = skillInvokerConfiguration;
+            return this;
+        }
+
+        /**
+         * Initializes Thread executor service instance.
+         * @param executorService Thread executor service instance.
+         * @return Builder instance {@link WebSocketClientImpl.Builder}
+         */
+        public Builder withExecutorService(final ExecutorService executorService) {
+            this.executorService = executorService;
+            return this;
+        }
+
+        /**
+         * Initializes client web socket configuration.
+         * @param webSocketClientConfig client web socket configuration.
+         * @return Builder instance {@link WebSocketClientImpl.Builder}
+         */
+        public Builder withWebSocketClientConfig(final WebSocketClientConfig webSocketClientConfig) {
+            this.webSocketClientConfig = webSocketClientConfig;
+            return this;
+        }
+
+        /**
+         * Builds instance of WebSocketClientImpl.
+         * @return {@link WebSocketClientImpl}.
+         */
+        public WebSocketClientImpl build() {
+            return new WebSocketClientImpl(this);
+        }
     }
 }

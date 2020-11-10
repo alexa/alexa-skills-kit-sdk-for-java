@@ -15,10 +15,17 @@
 
 package com.amazon.ask.localdebug.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Client configuration class for local debug.
  */
 public final class ClientConfiguration {
+    /**
+     * Logger instance of the class.
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(ClientConfiguration.class);
     /**
      * Fully qualified name for skill entry class.
      */
@@ -34,6 +41,16 @@ public final class ClientConfiguration {
     private final String accessToken;
 
     /**
+     * Thread pool size.
+     */
+    private final int threadPoolSize;
+
+    /**
+     * Region for debug session.
+     */
+    private final String region;
+
+    /**
      * ClientConfiguration constructor.
      * @param builder builder instance {@link ClientConfiguration.Builder}.
      */
@@ -41,6 +58,8 @@ public final class ClientConfiguration {
         this.skillInvokerClassName = builder.skillInvokerClassName;
         this.skillId = builder.skillId;
         this.accessToken = builder.accessToken;
+        this.threadPoolSize = builder.threadPoolSize;
+        this.region = builder.region;
     }
 
     /**
@@ -76,9 +95,33 @@ public final class ClientConfiguration {
     }
 
     /**
+     * Gets thread pool size.
+     * @return thread pool size.
+     */
+    public int getThreadPoolSize() {
+        return this.threadPoolSize;
+    }
+
+    /**
+     * Gets the region.
+     * @return region.
+     */
+    public String getRegion() {
+        return this.region;
+    }
+
+    /**
      * Builder class.
      */
     public static class Builder {
+        /**
+         * Region for the debug session.
+         */
+        private String region;
+        /**
+         * Thread pool size.
+         */
+        private int threadPoolSize;
         /**
          * LWA access token.
          */
@@ -119,6 +162,26 @@ public final class ClientConfiguration {
          */
         public Builder withAccessToken(final String accessToken) {
             this.accessToken = accessToken;
+            return this;
+        }
+
+        /**
+         * Initializes number of worker threads for the debug session.
+         * @param threadPoolSize Thread pool size.
+         * @return Builder instance {@link ClientConfiguration.Builder}
+         */
+        public Builder withThreadPoolSize(final int threadPoolSize) {
+            this.threadPoolSize = threadPoolSize;
+            return this;
+        }
+
+        /**
+         * Initializes region for the debug session.
+         * @param region Thread pool size.
+         * @return Builder instance {@link ClientConfiguration.Builder}
+         */
+        public Builder withRegion(final String region) {
+            this.region = region;
             return this;
         }
 

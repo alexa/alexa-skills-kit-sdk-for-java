@@ -25,6 +25,9 @@ import com.google.inject.name.Named;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 
 /**
  * Configures client dependencies for injection.
@@ -42,6 +45,7 @@ public class ClientModule extends AbstractModule {
      * @param connectCustomDebugEndpointUri - Uri for debug connection.
      * @param skillInvokerConfiguration - Reflection configuration for invoking skill code.
      * @param headers - Headers for the web socket connection.
+     * @param executorService - Executor service instance for managing async tasks.
      * @return instance of {@link WebSocketClientImpl}.
      */
     @Provides
@@ -50,10 +54,30 @@ public class ClientModule extends AbstractModule {
                                                    final URI connectCustomDebugEndpointUri,
                                                final SkillInvokerConfiguration skillInvokerConfiguration,
                                                @Named("ConnectCustomDebugEndpointHeaders")
-                                                   final Map<String, String> headers) {
-        return new WebSocketClientImpl(WebSocketClientConfig.builder()
-                .withWebSocketServerUri(connectCustomDebugEndpointUri)
-                .withHeaders(headers)
-                .build(), skillInvokerConfiguration);
+                                                   final Map<String, String> headers,
+                                               final ExecutorService executorService) {
+        return WebSocketClientImpl.builder()
+                .withExecutorService(executorService)
+                .withSkillInvokerConfiguration(skillInvokerConfiguration)
+                .withWebSocketClientConfig(WebSocketClientConfig.builder()
+                        .withWebSocketServerUri(connectCustomDebugEndpointUri)
+                        .withHeaders(headers)
+                        .build())
+                .build();
+    }
+
+    /**
+     * Returns an Executor service instance for managing async tasks.
+     * Defaults to using the commonPool if the user configured thread pool size is 0.
+     * @param threadPoolSize - Number of worker threads in the pool.
+     * @return Executor service instance.
+     */
+    @Provides
+    @Singleton
+    public ExecutorService executorService(@Named("ThreadPoolSize") final int threadPoolSize) {
+        if (threadPoolSize > 0) {
+            return Executors.newFixedThreadPool(threadPoolSize);
+        }
+        return ForkJoinPool.commonPool();
     }
 }

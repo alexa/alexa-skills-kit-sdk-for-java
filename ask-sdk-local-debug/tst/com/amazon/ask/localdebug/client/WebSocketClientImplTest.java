@@ -15,63 +15,70 @@
 
 package com.amazon.ask.localdebug.client;
 
+import com.amazon.ask.localdebug.config.SkillInvokerConfiguration;
+import com.amazon.ask.localdebug.config.WebSocketClientConfig;
 import com.amazon.ask.localdebug.util.RequestResponseUtils;
 import com.amazon.ask.model.dynamicEndpoints.FailureResponse;
 import com.amazon.ask.model.dynamicEndpoints.SuccessResponse;
 import com.amazon.ask.model.services.util.JacksonSerializer;
 import org.apache.http.HttpStatus;
-import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.concurrent.ForkJoinPool;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.doCallRealMethod;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({
         RequestResponseUtils.class
 })
-@PowerMockIgnore("jdk.internal.reflect.*")
 public class WebSocketClientImplTest {
     private final String validSampleRequestData = "{\n" + "    \"version\": \"fooversion\",\n" + "    \"type\": \"SkillRequestMessage\",\n" + "    \"requestId\": \"foorequestid\",\n" + "    \"requestPayload\": \"foorequestpayload\"\n" + "}";
     private final String validSampleSuccessResponseData = "{\n" + "    \"version\": \"fooversion\",\n" + "    \"type\": \"SkillResponseSuccessMessage\",\n" + "    \"originalRequestId\": \"foorequestid\",\n" + "    \"responsePayload\": \"TestPayload\"\n" + "}";
     private final String validSampleFailureResponseData = "{\n" + "    \"version\": \"fooversion\",\n" + "    \"type\": \"SkillResponseFailureMessage\",\n" + "    \"originalRequestId\": \"foorequestid\",\n" + "    \"errorCode\": \"500\",\n" + "    \"errorMessage\": \"mock error\"\n" +"}";
 
-    @Mock
-    WebSocketClientImpl mockWebSocketClient;
+    WebSocketClientImpl webSocketClient;
 
     @Captor
     ArgumentCaptor<String> responseCaptor;
 
     JacksonSerializer jacksonSerializer = new JacksonSerializer();
 
-    @After
-    public void resetMock() {
-        reset(mockWebSocketClient);
+    @Before
+    public void setup() throws URISyntaxException {
+        WebSocketClientConfig mockWebSocketClientConfig = WebSocketClientConfig.builder()
+                .withWebSocketServerUri(new URI("foo"))
+                .build();
+        webSocketClient = WebSocketClientImpl.builder()
+                .withWebSocketClientConfig(mockWebSocketClientConfig)
+                .withSkillInvokerConfiguration(mock(SkillInvokerConfiguration.class))
+                .withExecutorService(ForkJoinPool.commonPool())
+                .build();
     }
 
     @Test
-    public void skillResponse_successTest() {
+    public void skillResponse_successTest() throws InterruptedException {
+        WebSocketClientImpl spyWebSocketClient = spy(webSocketClient);
         PowerMockito.mockStatic(RequestResponseUtils.class);
         when(RequestResponseUtils.getSkillResponse(any(), any())).thenReturn(validSampleSuccessResponseData);
 
-        doCallRealMethod().when(mockWebSocketClient).onMessage(anyString());
-        doCallRealMethod().when(mockWebSocketClient).sendSkillResponse(anyString());
-
-        mockWebSocketClient.onMessage(validSampleRequestData);
-        verify(mockWebSocketClient).sendSkillResponse(responseCaptor.capture());
+        spyWebSocketClient.onMessage(validSampleRequestData);
+        Thread.sleep(1000);
+        verify(spyWebSocketClient).sendSkillResponse(responseCaptor.capture());
         SuccessResponse response = jacksonSerializer.deserialize(responseCaptor.getValue(), SuccessResponse.class);
 
         Assert.assertNotNull(response);
@@ -82,15 +89,14 @@ public class WebSocketClientImplTest {
     }
 
     @Test
-    public void skillResponse_failureTest() {
+    public void skillResponse_failureTest() throws InterruptedException {
+        WebSocketClientImpl spyWebSocketClient = spy(webSocketClient);
         PowerMockito.mockStatic(RequestResponseUtils.class);
         when(RequestResponseUtils.getSkillResponse(any(), any())).thenReturn(validSampleFailureResponseData);
 
-        doCallRealMethod().when(mockWebSocketClient).onMessage(anyString());
-        doCallRealMethod().when(mockWebSocketClient).sendSkillResponse(anyString());
-
-        mockWebSocketClient.onMessage(validSampleRequestData);
-        verify(mockWebSocketClient).sendSkillResponse(responseCaptor.capture());
+        spyWebSocketClient.onMessage(validSampleRequestData);
+        Thread.sleep(1000);
+        verify(spyWebSocketClient).sendSkillResponse(responseCaptor.capture());
         FailureResponse response = jacksonSerializer.deserialize(responseCaptor.getValue(), FailureResponse.class);
 
         Assert.assertNotNull(response);
