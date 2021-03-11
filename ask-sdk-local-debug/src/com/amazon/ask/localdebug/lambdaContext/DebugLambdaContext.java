@@ -46,6 +46,16 @@ public class DebugLambdaContext implements Context {
     }
 
     @Override
+    public String getFunctionVersion() {
+        return null;
+    }
+
+    @Override
+    public String getInvokedFunctionArn() {
+        return null;
+    }
+
+    @Override
     public CognitoIdentity getIdentity() {
         return null;
     }
