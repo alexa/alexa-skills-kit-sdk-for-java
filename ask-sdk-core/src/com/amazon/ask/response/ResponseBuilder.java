@@ -13,6 +13,10 @@
 
 package com.amazon.ask.response;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import com.amazon.ask.model.Directive;
 import com.amazon.ask.model.Intent;
 import com.amazon.ask.model.Response;
@@ -22,6 +26,8 @@ import com.amazon.ask.model.dialog.ConfirmSlotDirective;
 import com.amazon.ask.model.dialog.DelegateDirective;
 import com.amazon.ask.model.dialog.ElicitSlotDirective;
 import com.amazon.ask.model.interfaces.audioplayer.AudioItem;
+import com.amazon.ask.model.interfaces.audioplayer.AudioItem.Builder;
+import com.amazon.ask.model.interfaces.audioplayer.AudioItemMetadata;
 import com.amazon.ask.model.interfaces.audioplayer.ClearBehavior;
 import com.amazon.ask.model.interfaces.audioplayer.ClearQueueDirective;
 import com.amazon.ask.model.interfaces.audioplayer.PlayBehavior;
@@ -44,10 +50,6 @@ import com.amazon.ask.model.ui.Reprompt;
 import com.amazon.ask.model.ui.SimpleCard;
 import com.amazon.ask.model.ui.SsmlOutputSpeech;
 import com.amazon.ask.model.ui.StandardCard;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * A builder that can be used to construct a complete skill response containing speech, directives, etc.
@@ -391,22 +393,26 @@ public class ResponseBuilder {
      */
     public ResponseBuilder addAudioPlayerPlayDirective(final PlayBehavior playBehavior, final Long offsetInMilliseconds,
                                                        final String expectedPreviousToken, final String token, final String url) {
-        Stream stream = Stream.builder()
-                .withOffsetInMilliseconds(offsetInMilliseconds)
-                .withExpectedPreviousToken(expectedPreviousToken)
-                .withToken(token)
-                .withUrl(url)
-                .build();
+        return addAudioPlayerPlayDirective(playBehavior, offsetInMilliseconds, expectedPreviousToken, token, url, null);
+    }
 
-        AudioItem audioItem = AudioItem.builder()
-                .withStream(stream)
-                .build();
+    /**
+     * Adds an AudioPlayer {@link PlayDirective} to the response.
+     *
+     * @param playBehavior Describes playback behavior
+     * @param offsetInMilliseconds The timestamp in the stream from which Alexa should begin playback
+     * @param expectedPreviousToken A token that represents the expected previous stream
+     * @param token A token that represents the audio stream. This token cannot exceed 1024 characters
+     * @param url Identifies the location of audio content at a remote HTTPS location
+     * @param metadata Stream's metadata that can be displayed on AudioPlayer
+     * @return response builder
+     */
+    public ResponseBuilder addAudioPlayerPlayDirective(final PlayBehavior playBehavior, final Long offsetInMilliseconds,
+            final String expectedPreviousToken, final String token, final String url,
+            final AudioItemMetadata metadata) {
 
-        PlayDirective playDirective = PlayDirective.builder()
-                .withPlayBehavior(playBehavior)
-                .withAudioItem(audioItem)
-                .build();
-        return addDirective(playDirective);
+        return addDirective(buildAudioPlayerPlayDirective(playBehavior, offsetInMilliseconds, expectedPreviousToken,
+                token, url, metadata));
     }
 
     /**
@@ -492,4 +498,39 @@ public class ResponseBuilder {
         return trimmedOutputSpeech;
     }
 
+    /**
+     * Builds an AudioPlayer {@link PlayDirective}.
+     *
+     * @param playBehavior Describes playback behavior
+     * @param offsetInMilliseconds The timestamp in the stream from which Alexa should begin playback
+     * @param expectedPreviousToken A token that represents the expected previous stream
+     * @param token A token that represents the audio stream. This token cannot exceed 1024 characters
+     * @param url Identifies the location of audio content at a remote HTTPS location
+     * @param metadata Metadata that can be displayed on AudioPlayer
+     * @return the play directive
+     */
+    private PlayDirective buildAudioPlayerPlayDirective(final PlayBehavior playBehavior,
+            final Long offsetInMilliseconds,
+            final String expectedPreviousToken, final String token, final String url,
+            final AudioItemMetadata metadata) {
+        Stream stream = Stream.builder()
+                .withOffsetInMilliseconds(offsetInMilliseconds)
+                .withExpectedPreviousToken(expectedPreviousToken)
+                .withToken(token)
+                .withUrl(url)
+                .build();
+
+        Builder audioItemBuilder = AudioItem.builder();
+        if (metadata != null) {
+            audioItemBuilder.withMetadata(metadata);
+        }
+        AudioItem audioItem = audioItemBuilder
+                .withStream(stream)
+                .build();
+
+        return PlayDirective.builder()
+                .withPlayBehavior(playBehavior)
+                .withAudioItem(audioItem)
+                .build();
+    }
 }
