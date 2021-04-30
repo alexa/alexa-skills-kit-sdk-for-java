@@ -26,7 +26,6 @@ import com.amazon.ask.model.dialog.ConfirmSlotDirective;
 import com.amazon.ask.model.dialog.DelegateDirective;
 import com.amazon.ask.model.dialog.ElicitSlotDirective;
 import com.amazon.ask.model.interfaces.audioplayer.AudioItem;
-import com.amazon.ask.model.interfaces.audioplayer.AudioItem.Builder;
 import com.amazon.ask.model.interfaces.audioplayer.AudioItemMetadata;
 import com.amazon.ask.model.interfaces.audioplayer.ClearBehavior;
 import com.amazon.ask.model.interfaces.audioplayer.ClearQueueDirective;
@@ -520,7 +519,7 @@ public class ResponseBuilder {
                 .withUrl(url)
                 .build();
 
-        Builder audioItemBuilder = AudioItem.builder();
+        AudioItem.Builder audioItemBuilder = AudioItem.builder();
         if (metadata != null) {
             audioItemBuilder.withMetadata(metadata);
         }
