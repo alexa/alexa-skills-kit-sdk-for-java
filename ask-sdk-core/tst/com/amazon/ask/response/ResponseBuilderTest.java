@@ -13,6 +13,16 @@
 
 package com.amazon.ask.response;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
 import com.amazon.ask.model.Intent;
 import com.amazon.ask.model.IntentConfirmationStatus;
 import com.amazon.ask.model.Response;
@@ -28,6 +38,7 @@ import com.amazon.ask.model.dialog.ConfirmSlotDirective;
 import com.amazon.ask.model.dialog.DelegateDirective;
 import com.amazon.ask.model.dialog.ElicitSlotDirective;
 import com.amazon.ask.model.interfaces.audioplayer.AudioItem;
+import com.amazon.ask.model.interfaces.audioplayer.AudioItemMetadata;
 import com.amazon.ask.model.interfaces.audioplayer.ClearBehavior;
 import com.amazon.ask.model.interfaces.audioplayer.ClearQueueDirective;
 import com.amazon.ask.model.interfaces.audioplayer.PlayBehavior;
@@ -44,7 +55,6 @@ import com.amazon.ask.model.interfaces.display.TextContent;
 import com.amazon.ask.model.interfaces.videoapp.LaunchDirective;
 import com.amazon.ask.model.interfaces.videoapp.Metadata;
 import com.amazon.ask.model.interfaces.videoapp.VideoItem;
-
 import com.amazon.ask.model.ui.AskForPermissionsConsentCard;
 import com.amazon.ask.model.ui.Image;
 import com.amazon.ask.model.ui.LinkAccountCard;
@@ -53,15 +63,6 @@ import com.amazon.ask.model.ui.Reprompt;
 import com.amazon.ask.model.ui.SimpleCard;
 import com.amazon.ask.model.ui.SsmlOutputSpeech;
 import com.amazon.ask.model.ui.StandardCard;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.Assert.assertEquals;
 
 public class ResponseBuilderTest {
     ResponseBuilder builder;
@@ -363,6 +364,54 @@ public class ResponseBuilderTest {
 
         AudioItem audioItem = AudioItem.builder()
                 .withStream(stream)
+                .build();
+
+        PlayDirective playDirective = PlayDirective.builder()
+                .withPlayBehavior(PlayBehavior.REPLACE_ALL)
+                .withAudioItem(audioItem)
+                .build();
+
+        Response response = Response.builder()
+                .withDirectives(Collections.singletonList(playDirective))
+                .build();
+
+        assertEquals(responseWithBuilder.get(), response);
+    }
+
+    @Test
+    public void build_response_with_play_directive_and_metadata() {
+        AudioItemMetadata fooMetadata = AudioItemMetadata.builder()
+                .withTitle("fooTitle")
+                .withSubtitle("fooSubtitle")
+                .withArt(
+                        com.amazon.ask.model.interfaces.display.Image.builder().addSourcesItem(
+                                ImageInstance.builder().withUrl("fooArtUrl").build()
+                        )
+                                .build()
+                )
+                .withBackgroundImage(
+                        com.amazon.ask.model.interfaces.display.Image.builder().addSourcesItem(
+                                ImageInstance.builder().withUrl("fooBackgroundUrl").build()
+                        )
+                                .build()
+                )
+                .build();
+
+        Optional<Response> responseWithBuilder = builder
+                .addAudioPlayerPlayDirective(PlayBehavior.REPLACE_ALL, 0L, "fooPreviousToken",
+                        "fooToken", "fooUrl", fooMetadata)
+                .build();
+
+        Stream stream = Stream.builder()
+                .withUrl("fooUrl")
+                .withToken("fooToken")
+                .withExpectedPreviousToken("fooPreviousToken")
+                .withOffsetInMilliseconds(0L)
+                .build();
+
+        AudioItem audioItem = AudioItem.builder()
+                .withStream(stream)
+                .withMetadata(fooMetadata)
                 .build();
 
         PlayDirective playDirective = PlayDirective.builder()
