@@ -5,3 +5,4 @@ target/
 *.project
 *.classpath
 *.prefs
+*.versionsBackup

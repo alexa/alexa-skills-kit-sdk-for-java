@@ -27,6 +27,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * This class provides the handler required when hosting the service as an AWS Lambda function.
@@ -80,8 +81,9 @@ public abstract class SkillStreamHandler implements RequestStreamHandler {
     public final void handleRequest(final InputStream input, final OutputStream output, final Context context)
             throws IOException {
         byte[] inputBytes = IOUtils.toByteArray(input);
-        for (AlexaSkill skill : skills) {
-            SkillResponse response = skill.execute(new BaseSkillRequest(inputBytes), context);
+        AtomicInteger atomicInteger = new AtomicInteger(1);
+        for (int i = 0; i < skills.size(); ++i) {
+            SkillResponse response = skills.get(i).execute(new BaseSkillRequest(inputBytes), context);
             if (response != null) {
                 if (response.isPresent()) {
                     response.writeTo(output);

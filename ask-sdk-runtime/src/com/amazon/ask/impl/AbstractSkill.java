@@ -82,6 +82,10 @@ public abstract class AbstractSkill<Request, Response> implements AlexaSkill<Req
         }
 
         Response response = invoke(deserializedRequest.get(), context);
+        if (response == null) {
+            return null;
+        }
+
         return new BaseSkillResponse<>(marshaller, response);
     }
 

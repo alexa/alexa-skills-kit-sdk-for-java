@@ -98,7 +98,7 @@ public class SkillTest {
         assertEquals(responseEnvelope.getSessionAttributes(), attributes);
     }
 
-    @Test(expected = AskSdkException.class)
+    @Test
     public void given_skillId_verification_fails() {
         Optional<Response> response = Optional.of(Response.builder().build());
         when(mockAdapter.supports(any())).thenReturn(true);
@@ -115,7 +115,7 @@ public class SkillTest {
                 .withSkillId("fooId")
                 .build();
         skill= new Skill(skillConfiguration);
-        skill.invoke(envelope);
+        assertNull(skill.invoke(envelope));
     }
 
     @Test
