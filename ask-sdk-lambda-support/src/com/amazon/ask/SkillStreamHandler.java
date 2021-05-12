@@ -81,7 +81,6 @@ public abstract class SkillStreamHandler implements RequestStreamHandler {
     public final void handleRequest(final InputStream input, final OutputStream output, final Context context)
             throws IOException {
         byte[] inputBytes = IOUtils.toByteArray(input);
-        AtomicInteger atomicInteger = new AtomicInteger(1);
         for (int i = 0; i < skills.size(); ++i) {
             SkillResponse response = skills.get(i).execute(new BaseSkillRequest(inputBytes), context);
             if (response != null) {
