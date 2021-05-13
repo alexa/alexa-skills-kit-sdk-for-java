@@ -126,9 +126,9 @@ public class CustomSkill extends AbstractSkill<RequestEnvelope, ResponseEnvelope
         RequestEnvelope requestEnvelope = unmarshalledRequest.getUnmarshalledRequest();
         JsonNode requestEnvelopeJson = unmarshalledRequest.getRequestJson();
 
-        String askRequestSkillId = requestEnvelope.getContext().getSystem().getApplication().getApplicationId();
-        if (skillId != null && !askRequestSkillId.equals(skillId)) {
-            LOGGER.debug("AlexaSkill ID verification failed. Expected skillId: {} and skillId in the request: {}", skillId, askRequestSkillId);
+        if (skillId != null && !requestEnvelope.getContext().getSystem().getApplication().getApplicationId().equals(skillId)) {
+            LOGGER.debug("AlexaSkill ID verification failed. Expected skillId: {} and skillId in the request: {}",
+                    skillId, requestEnvelope.getContext().getSystem().getApplication().getApplicationId());
             return null;
         }
 
