@@ -81,8 +81,8 @@ public abstract class SkillStreamHandler implements RequestStreamHandler {
     public final void handleRequest(final InputStream input, final OutputStream output, final Context context)
             throws IOException {
         byte[] inputBytes = IOUtils.toByteArray(input);
-        for (int i = 0; i < skills.size(); ++i) {
-            SkillResponse response = skills.get(i).execute(new BaseSkillRequest(inputBytes), context);
+        for (AlexaSkill skill : skills) {
+            SkillResponse response = skill.execute(new BaseSkillRequest(inputBytes), context);
             if (response != null) {
                 if (response.isPresent()) {
                     response.writeTo(output);
