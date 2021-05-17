@@ -90,6 +90,17 @@ public class SkillServletTest extends SkillServletTestBase {
     }
 
     @Test
+    public void doPost_sdkException_responseNull_throwsInternalServiceException() throws Exception {
+        SkillServlet servlet = new SkillServlet(skill, Collections.emptyList());
+        when(skill.execute(any())).thenReturn(null);
+        OffsetDateTime timestamp = OffsetDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault());
+        LaunchRequest request = LaunchRequest.builder().withRequestId("rId").withLocale(LOCALE).withTimestamp(timestamp).build();
+        ServletInvocationParameters invocation = build(FORMAT_VERSION, request, buildSession());
+        servlet.doPost(invocation.request, invocation.response);
+        verify(invocation.response).sendError(eq(HttpServletResponse.SC_INTERNAL_SERVER_ERROR), anyString());
+    }
+
+    @Test
     public void skill_response_returns_payload() throws Exception {
         SkillServlet servlet = new SkillServlet(skill, Collections.emptyList());
         Response response = Response.builder().build();
