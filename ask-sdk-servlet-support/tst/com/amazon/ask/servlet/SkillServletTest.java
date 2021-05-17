@@ -66,18 +66,6 @@ public class SkillServletTest extends SkillServletTestBase {
     }
 
     @Test
-    public void doPost_passedVerification_responseSuccess() throws Exception {
-        SkillServletVerifier mockVerifier = mock(SkillServletVerifier.class);
-        SkillServlet servlet = new SkillServlet(skill, Collections.singletonList(mockVerifier));
-        OffsetDateTime timestamp = OffsetDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault());
-        LaunchRequest request = LaunchRequest.builder().withRequestId("rId").withLocale(LOCALE).withTimestamp(timestamp).build();
-        ServletInvocationParameters invocation = build(FORMAT_VERSION, request, buildSession());
-        servlet.doPost(invocation.request, invocation.response);
-        verify(invocation.response).setStatus(HttpServletResponse.SC_OK);
-        verify(mockVerifier).verify(any());
-    }
-
-    @Test
     public void doPost_failedVerification_responseBadRequest() throws Exception {
         SkillServletVerifier mockVerifier = mock(SkillServletVerifier.class);
         doThrow(new SecurityException("foo")).when(mockVerifier).verify(any());
@@ -113,6 +101,7 @@ public class SkillServletTest extends SkillServletTestBase {
         servlet.doPost(invocation.request, invocation.response);
         byte[] output = invocation.output.toByteArray();
         assertTrue(output.length > 0);
+        verify(invocation.response).setStatus(HttpServletResponse.SC_OK);
     }
 
     @Test
