@@ -65,11 +65,17 @@ public class DebugLambdaContext implements Context {
         return null;
     }
 
+    /**
+     * Defaults to returning null cognito identity.
+     */
     @Override
     public String getInvokedFunctionArn() {
         return null;
     }
 
+    /**
+     * Defaults to returning null cognito identity.
+     */
     @Override
     public CognitoIdentity getIdentity() {
         return null;
