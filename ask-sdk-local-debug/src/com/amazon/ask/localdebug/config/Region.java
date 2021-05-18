@@ -40,7 +40,7 @@ public enum Region {
      * Enum constructor.
      * @param endpoint endpoint for a given region.
      */
-    private Region(final String endpoint) {
+    Region(final String endpoint) {
         this.endpoint = endpoint;
     }
 
