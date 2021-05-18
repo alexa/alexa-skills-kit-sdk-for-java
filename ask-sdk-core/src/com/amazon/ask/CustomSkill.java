@@ -14,7 +14,6 @@ import com.amazon.ask.util.impl.JacksonJsonUnmarshaller;
 import com.amazon.ask.attributes.persistence.PersistenceAdapter;
 import com.amazon.ask.builder.CustomSkillConfiguration;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
-import com.amazon.ask.exception.AskSdkException;
 import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.ResponseEnvelope;
