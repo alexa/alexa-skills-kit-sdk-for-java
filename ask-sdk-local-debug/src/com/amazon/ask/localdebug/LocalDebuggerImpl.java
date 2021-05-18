@@ -54,6 +54,9 @@ public class LocalDebuggerImpl implements LocalDebugger {
         this.skillInvokerConfiguration = skillInvokerConfiguration;
     }
 
+    /**
+     * Initialize web socket client.
+     */
     @Override
     public void init() {
         webSocketClient.invoke();

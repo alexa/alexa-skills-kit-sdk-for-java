@@ -35,7 +35,9 @@ public class LocalDebugSdkException extends RuntimeException {
     public LocalDebugSdkException(final String message, final Exception innerException) {
         super(message, innerException);
     }
-
+    /**
+     * To string conversion of local debug sdk exception.
+     */
     @Override
     public String toString() {
         if (getCause() != null) {
