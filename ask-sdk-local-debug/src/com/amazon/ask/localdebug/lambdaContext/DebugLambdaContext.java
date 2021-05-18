@@ -25,26 +25,41 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
  */
 public class DebugLambdaContext implements Context {
 
+    /**
+     * Defaults to returning null aws request Id.
+     */
     @Override
     public String getAwsRequestId() {
         return null;
     }
 
+    /**
+     * Defaults to returning null log group name.
+     */
     @Override
     public String getLogGroupName() {
         return null;
     }
 
+    /**
+     * Defaults to returning null log stream name.
+     */
     @Override
     public String getLogStreamName() {
         return null;
     }
 
+    /**
+     * Defaults to returning null function name.
+     */
     @Override
     public String getFunctionName() {
         return null;
     }
 
+    /**
+     * Defaults to returning null cognito identity.
+     */
     @Override
     public String getFunctionVersion() {
         return null;
@@ -60,21 +75,33 @@ public class DebugLambdaContext implements Context {
         return null;
     }
 
+    /**
+     * Defaults to returning null client context.
+     */
     @Override
     public ClientContext getClientContext() {
         return null;
     }
 
+    /**
+     * Defaults to returning remaining time in milli seconds as 0.
+     */
     @Override
     public int getRemainingTimeInMillis() {
         return 0;
     }
 
+    /**
+     * Defaults to returning memory limit of 0 MB.
+     */
     @Override
     public int getMemoryLimitInMB() {
         return 0;
     }
 
+    /**
+     * Defaults to returning null lambda logger.
+     */
     @Override
     public LambdaLogger getLogger() {
         return null;
