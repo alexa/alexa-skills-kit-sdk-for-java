@@ -145,8 +145,8 @@ public class BaseRequestDispatcher<Input, Output> implements GenericRequestDispa
             LOGGER.debug("Found matching handler");
         } else {
             String message = "Unable to find a suitable request handler";
-            LOGGER.error(message);
-            throw new AskSdkException(message);
+            LOGGER.debug(message);
+            return null;
         }
 
         Object requestHandler = handlerChain.get().getRequestHandler();

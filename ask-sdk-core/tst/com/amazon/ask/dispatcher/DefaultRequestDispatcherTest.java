@@ -33,6 +33,7 @@ import com.amazon.ask.exception.UnhandledSkillException;
 import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.Response;
+import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -45,6 +46,7 @@ import java.util.Optional;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -119,13 +121,10 @@ public class DefaultRequestDispatcherTest {
                 .build();
     }
 
-    @Test(expected = UnhandledSkillException.class)
-    public void no_handler_chain_throws_exception() {
+    @Test
+    public void no_handler_chain_returns_null() {
         when(mockMapper.getRequestHandlerChain(any(HandlerInput.class))).thenReturn(Optional.empty());
-        ArgumentCaptor<Throwable> throwableCaptor = ArgumentCaptor.forClass(Throwable.class);
-        when(mockExceptionMapper.getHandler(any(), throwableCaptor.capture())).thenReturn(Optional.empty());
-        dispatcher.dispatch(handlerInput);
-        assertTrue(throwableCaptor.getValue() instanceof AskSdkException);
+        assertNull(dispatcher.dispatch(handlerInput));
     }
 
     @Test(expected = UnhandledSkillException.class)
@@ -264,18 +263,8 @@ public class DefaultRequestDispatcherTest {
 
         when(mockMapper.getRequestHandlerChain(any())).thenReturn(Optional.empty());
         when(mockExceptionMapper.getHandler(any(), any())).thenReturn(Optional.empty());
-        try {
-            dispatcher.dispatch(handlerInput);
-            fail("Unhandled skill exception should have been thrown");
-        } catch (UnhandledSkillException ex) {
-            verify(globalRequestInterceptor).processRequest(handlerInput);
-            verify(chainRequestInterceptor, never()).processRequest(handlerInput);
-            verify(chainResponseInterceptor, never()).processResponse(handlerInput, Optional.of(mockResponse));
-            verify(globalResponseInterceptor, never()).processResponse(handlerInput, Optional.of(mockResponse));
-            verify(mockMapper).getRequestHandlerChain(any());
-            verify(mockAdapter, never()).supports(any());
-            verify(mockAdapter, never()).execute(any(), any());
-        }
+
+        assertNull(dispatcher.dispatch(handlerInput));
     }
 
     @Test

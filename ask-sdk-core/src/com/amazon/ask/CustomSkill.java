@@ -14,7 +14,6 @@ import com.amazon.ask.util.impl.JacksonJsonUnmarshaller;
 import com.amazon.ask.attributes.persistence.PersistenceAdapter;
 import com.amazon.ask.builder.CustomSkillConfiguration;
 import com.amazon.ask.dispatcher.request.handler.HandlerInput;
-import com.amazon.ask.exception.AskSdkException;
 import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.Response;
 import com.amazon.ask.model.ResponseEnvelope;
@@ -26,14 +25,22 @@ import com.amazon.ask.response.template.TemplateFactory;
 import com.amazon.ask.util.SdkConstants;
 import com.amazon.ask.util.UserAgentUtils;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.slf4j.Logger;
 
 import java.util.Arrays;
 import java.util.Optional;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Custom type Alexa Skill.
  */
 public class CustomSkill extends AbstractSkill<RequestEnvelope, ResponseEnvelope> implements AlexaSkill<RequestEnvelope, ResponseEnvelope> {
+
+    /**
+     * Logger instance to log information for debugging purposes.
+     */
+    private static final Logger LOGGER = getLogger(CustomSkill.class);
 
     /**
      * Request Dispatcher.
@@ -119,7 +126,9 @@ public class CustomSkill extends AbstractSkill<RequestEnvelope, ResponseEnvelope
         JsonNode requestEnvelopeJson = unmarshalledRequest.getRequestJson();
 
         if (skillId != null && !requestEnvelope.getContext().getSystem().getApplication().getApplicationId().equals(skillId)) {
-            throw new AskSdkException("AlexaSkill ID verification failed.");
+            LOGGER.debug("AlexaSkill ID verification failed. Expected skillId: {} and skillId in the request: {}",
+                    skillId, requestEnvelope.getContext().getSystem().getApplication().getApplicationId());
+            return null;
         }
 
         ServiceClientFactory serviceClientFactory = apiClient != null ? ServiceClientFactory.builder()
@@ -137,7 +146,7 @@ public class CustomSkill extends AbstractSkill<RequestEnvelope, ResponseEnvelope
 
         Optional<Response> response = requestDispatcher.dispatch(handlerInput);
         return ResponseEnvelope.builder()
-                .withResponse(response != null ? response.orElse(null) : null)
+                .withResponse(response.orElse(null))
                 .withSessionAttributes(requestEnvelope.getSession() != null ? handlerInput.getAttributesManager().getSessionAttributes() : null)
                 .withVersion(SdkConstants.FORMAT_VERSION)
                 .withUserAgent(UserAgentUtils.getUserAgent(customUserAgent))

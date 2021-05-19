@@ -58,6 +58,22 @@ public class DebugLambdaContext implements Context {
     }
 
     /**
+     * Defaults to returning null function version.
+     */
+    @Override
+    public String getFunctionVersion() {
+        return null;
+    }
+
+    /**
+     * Defaults to returning null invoked function ARN.
+     */
+    @Override
+    public String getInvokedFunctionArn() {
+        return null;
+    }
+
+    /**
      * Defaults to returning null cognito identity.
      */
     @Override

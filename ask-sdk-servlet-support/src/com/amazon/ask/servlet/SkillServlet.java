@@ -178,6 +178,10 @@ public class SkillServlet extends HttpServlet {
             if (skillResponse.isPresent()) {
                 skillResponse.writeTo(output);
             }
+        } else {
+            String message = "Unable to find a suitable request handler";
+            LOGGER.error(message);
+            throw new AskSdkException(message);
         }
     }
 
