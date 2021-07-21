@@ -18,16 +18,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import com.amazon.ask.model.*;
+import com.amazon.ask.model.services.directive.Directive;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-import com.amazon.ask.model.Intent;
-import com.amazon.ask.model.IntentConfirmationStatus;
-import com.amazon.ask.model.Response;
-import com.amazon.ask.model.Slot;
-import com.amazon.ask.model.SlotConfirmationStatus;
 import com.amazon.ask.model.canfulfill.CanFulfillIntent;
 import com.amazon.ask.model.canfulfill.CanFulfillIntentValues;
 import com.amazon.ask.model.canfulfill.CanFulfillSlot;
@@ -151,6 +148,41 @@ public class ResponseBuilderTest {
         Optional<Response> responseWithBuilder = builder
                 .withReprompt("foo", com.amazon.ask.model.ui.PlayBehavior.ENQUEUE)
                 .build();
+        assertEquals(responseWithBuilder.get(), response);
+    }
+
+    @Test
+    public void build_response_with_reprompt_and_directive() {
+        Slot slot1 = Slot.builder()
+                .withConfirmationStatus(SlotConfirmationStatus.NONE)
+                .withName("slot1")
+                .withValue("value1")
+                .build();
+
+        Intent updatedIntent = Intent.builder()
+                .withConfirmationStatus(IntentConfirmationStatus.NONE)
+                .withName("intentName")
+                .withSlots(Collections.singletonMap("slot1", slot1))
+                .build();
+
+        DelegateDirective delegateDirective = DelegateDirective.builder()
+                .withUpdatedIntent(updatedIntent)
+                .build();
+
+        Response response = Response.builder()
+                .withReprompt((Reprompt.builder()
+                        .withOutputSpeech(SsmlOutputSpeech.builder()
+                                .withSsml("<speak>" + "foo" + "</speak>")
+                                .build())
+                        .addDirectivesItem(delegateDirective)
+                        .build()))
+                .withShouldEndSession(false)
+                .build();
+
+        Optional<Response> responseWithBuilder = builder
+                .withReprompt("foo", delegateDirective)
+                .build();
+
         assertEquals(responseWithBuilder.get(), response);
     }
 

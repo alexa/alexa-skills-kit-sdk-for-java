@@ -214,7 +214,18 @@ public class ResponseBuilder {
      * @return response builder
      */
     public ResponseBuilder withReprompt(final String text) {
-        return withReprompt(text, null);
+        return withReprompt(text, null, null);
+    }
+
+    /**
+     * Sets {@link Reprompt} speech on the response. Speech is always wrapped in SSML tags.
+     *
+     * @param text reprompt text
+     * @param directive Directive object
+     * @return response builder
+     */
+    public ResponseBuilder withReprompt(final String text, final Directive directive) {
+        return withReprompt(text, directive, null);
     }
 
     /**
@@ -225,16 +236,36 @@ public class ResponseBuilder {
      * @return response builder
      */
     public ResponseBuilder withReprompt(final String text, final com.amazon.ask.model.ui.PlayBehavior playBehavior) {
-        this.reprompt = Reprompt.builder()
-                .withOutputSpeech(SsmlOutputSpeech.builder()
-                        .withSsml("<speak>" + trimOutputSpeech(text) + "</speak>")
-                        .withPlayBehavior(playBehavior)
-                        .build())
-                .build();
+        return withReprompt(text, null, playBehavior);
+    }
 
-        if (!this.isVideoAppLaunchDirectivePresent()) {
-            this.shouldEndSession = false;
+    /**
+     * Sets {@link Reprompt} speech on the response. Speech is always wrapped in SSML tags.
+     *
+     * @param text reprompt text
+     * @param directive Directive object
+     * @param playBehavior determines the queuing and playback of this output speech
+     * @return response builder
+     */
+    public ResponseBuilder withReprompt(final String text, final Directive directive, final com.amazon.ask.model.ui.PlayBehavior playBehavior) {
+        if (directive != null) {
+            this.reprompt = Reprompt.builder()
+                    .withOutputSpeech(SsmlOutputSpeech.builder()
+                            .withSsml("<speak>" + trimOutputSpeech(text) + "</speak>")
+                            .withPlayBehavior(playBehavior)
+                            .build())
+                    .addDirectivesItem(directive)
+                    .build();
+        } else {
+            this.reprompt = Reprompt.builder()
+                    .withOutputSpeech(SsmlOutputSpeech.builder()
+                            .withSsml("<speak>" + trimOutputSpeech(text) + "</speak>")
+                            .withPlayBehavior(playBehavior)
+                            .build())
+                    .build();
         }
+
+        this.withShouldEndSession(false);
 
         return this;
     }
