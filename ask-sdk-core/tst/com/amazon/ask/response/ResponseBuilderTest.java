@@ -155,6 +155,41 @@ public class ResponseBuilderTest {
     }
 
     @Test
+    public void build_response_with_reprompt_and_directive() {
+        Slot slot1 = Slot.builder()
+                .withConfirmationStatus(SlotConfirmationStatus.NONE)
+                .withName("slot1")
+                .withValue("value1")
+                .build();
+
+        Intent updatedIntent = Intent.builder()
+                .withConfirmationStatus(IntentConfirmationStatus.NONE)
+                .withName("intentName")
+                .withSlots(Collections.singletonMap("slot1", slot1))
+                .build();
+
+        DelegateDirective delegateDirective = DelegateDirective.builder()
+                .withUpdatedIntent(updatedIntent)
+                .build();
+
+        Response response = Response.builder()
+                .withReprompt((Reprompt.builder()
+                        .withOutputSpeech(SsmlOutputSpeech.builder()
+                                .withSsml("<speak>" + "foo" + "</speak>")
+                                .build())
+                        .addDirectivesItem(delegateDirective)
+                        .build()))
+                .withShouldEndSession(false)
+                .build();
+
+        Optional<Response> responseWithBuilder = builder
+                .withReprompt("foo", delegateDirective)
+                .build();
+
+        assertEquals(responseWithBuilder.get(), response);
+    }
+
+    @Test
     public void build_response_with_video_directive_with_reprompt_before() {
         Optional<Response> responseWithBuilder = builder
                 .withReprompt("fooReprompt")
