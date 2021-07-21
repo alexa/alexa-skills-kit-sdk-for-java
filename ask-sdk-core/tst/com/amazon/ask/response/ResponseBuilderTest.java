@@ -18,13 +18,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.amazon.ask.model.*;
-import com.amazon.ask.model.services.directive.Directive;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+import com.amazon.ask.model.Intent;
+import com.amazon.ask.model.IntentConfirmationStatus;
+import com.amazon.ask.model.Response;
+import com.amazon.ask.model.Slot;
+import com.amazon.ask.model.SlotConfirmationStatus;
 import com.amazon.ask.model.canfulfill.CanFulfillIntent;
 import com.amazon.ask.model.canfulfill.CanFulfillIntentValues;
 import com.amazon.ask.model.canfulfill.CanFulfillSlot;
