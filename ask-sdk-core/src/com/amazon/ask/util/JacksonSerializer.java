@@ -15,13 +15,15 @@ package com.amazon.ask.util;
 
 import com.amazon.ask.model.services.Serializer;
 import com.amazon.ask.exception.AskSdkException;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import static com.amazon.ask.util.impl.ObjectMapperFactory.MAPPER;
 
 /**
  * Jackson backed implementation of {@link Serializer}.
@@ -31,7 +33,13 @@ public final class JacksonSerializer implements Serializer {
     /**
      * Mapper used to serialize and de-serialize objects and byte streams respectively.
      */
-    private static ObjectMapper mapper = MAPPER;
+    private static ObjectMapper mapper = new ObjectMapper();
+    static {
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        mapper.registerModule(new JavaTimeModule());
+    }
 
     /**
      * For testing purposes.
