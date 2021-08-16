@@ -32,7 +32,7 @@ public final class ObjectMapperFactory {
     /**
      * Static instance of {@link ObjectMapper}.
      */
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    public static final ObjectMapper MAPPER = new ObjectMapper();
     static {
         MAPPER.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
