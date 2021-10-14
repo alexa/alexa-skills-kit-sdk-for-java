@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import com.amazon.ask.model.interfaces.alexa.presentation.apla.RenderDocumentDirective;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -184,6 +185,27 @@ public class ResponseBuilderTest {
 
         Optional<Response> responseWithBuilder = builder
                 .withReprompt("foo", delegateDirective)
+                .build();
+
+        assertEquals(responseWithBuilder.get(), response);
+    }
+
+    @Test
+    public void build_response_with_null_reprompt_and_directive() {
+
+        RenderDocumentDirective aplaDirective = RenderDocumentDirective.builder()
+                .build();
+
+        Response response = Response.builder()
+                .withReprompt((Reprompt.builder()
+                        .withOutputSpeech(SsmlOutputSpeech.builder().build())
+                        .addDirectivesItem(aplaDirective)
+                        .build()))
+                .withShouldEndSession(false)
+                .build();
+
+        Optional<Response> responseWithBuilder = builder
+                .withReprompt(null, aplaDirective)
                 .build();
 
         assertEquals(responseWithBuilder.get(), response);
