@@ -249,11 +249,21 @@ public class ResponseBuilder {
      */
     public ResponseBuilder withReprompt(final String text, final Directive directive, final com.amazon.ask.model.ui.PlayBehavior playBehavior) {
         if (directive != null) {
+
+            final SsmlOutputSpeech outputSpeech;
+            if (text == null || text.isEmpty()) {
+                outputSpeech = SsmlOutputSpeech.builder()
+                        .withPlayBehavior(playBehavior)
+                        .build();
+            } else {
+                outputSpeech = SsmlOutputSpeech.builder()
+                        .withSsml("<speak>" + trimOutputSpeech(text) + "</speak>")
+                        .withPlayBehavior(playBehavior)
+                        .build();
+            }
+
             this.reprompt = Reprompt.builder()
-                    .withOutputSpeech(SsmlOutputSpeech.builder()
-                            .withSsml("<speak>" + trimOutputSpeech(text) + "</speak>")
-                            .withPlayBehavior(playBehavior)
-                            .build())
+                    .withOutputSpeech(outputSpeech)
                     .addDirectivesItem(directive)
                     .build();
         } else {
