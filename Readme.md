@@ -61,6 +61,10 @@ The following features are released as public preview. The interfaces might chan
 
 The SDK works on model classes rather than native Alexa JSON requests and responses. These model classes are generated using the Request, Response JSON schemas from the [developer docs](https://developer.amazon.com/docs/custom-skills/request-and-response-json-reference.html). The source code for the model classes can be found [here](https://github.com/alexa/alexa-apis-for-java).
 
+## SDK Setup
+
+The SDK uses `slf4j-api`. You need to provide your own logging binding. See: http://www.slf4j.org/manual.html#swapping
+
 ## Samples
 
 ### [Hello World](https://github.com/alexa/alexa-skills-kit-sdk-for-java/tree/2.0.x/samples/helloworld)
