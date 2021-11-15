@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
 @PrepareForTest({
         ReflectionUtils.class
 })
-@PowerMockIgnore("javax.management.*")
+@PowerMockIgnore({"javax.management.*", "javax.script.*"})
 public class ConfigModulePowerMockTest {
     private ClientConfiguration mockClientConfiguration;
 

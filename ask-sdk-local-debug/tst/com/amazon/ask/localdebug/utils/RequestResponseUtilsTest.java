@@ -40,7 +40,7 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 @PrepareForTest({
         ReflectionUtils.class
 })
-@PowerMockIgnore("javax.management.*")
+@PowerMockIgnore({"javax.management.*", "javax.script.*"})
 public class RequestResponseUtilsTest {
     Request mockLocalDebugRequest = Request.builder()
             .withRequestId("fooRequestId")

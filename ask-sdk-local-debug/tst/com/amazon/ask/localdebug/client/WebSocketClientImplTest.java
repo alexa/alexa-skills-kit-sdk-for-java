@@ -47,7 +47,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({
         RequestResponseUtils.class
 })
-@PowerMockIgnore("javax.management.*")
+@PowerMockIgnore({"javax.management.*", "javax.script.*"})
 public class WebSocketClientImplTest {
     private final String validSampleRequestData = "{\n" + "    \"version\": \"fooversion\",\n" + "    \"type\": \"SkillRequestMessage\",\n" + "    \"requestId\": \"foorequestid\",\n" + "    \"requestPayload\": \"foorequestpayload\"\n" + "}";
     private final String validSampleSuccessResponseData = "{\n" + "    \"version\": \"fooversion\",\n" + "    \"type\": \"SkillResponseSuccessMessage\",\n" + "    \"originalRequestId\": \"foorequestid\",\n" + "    \"responsePayload\": \"TestPayload\"\n" + "}";

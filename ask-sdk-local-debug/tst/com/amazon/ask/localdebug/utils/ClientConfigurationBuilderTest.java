@@ -34,7 +34,7 @@ import static org.mockito.Mockito.when;
 @PrepareForTest({
         ArgumentParserUtils.class
 })
-@PowerMockIgnore("javax.management.*")
+@PowerMockIgnore({"javax.management.*", "javax.script.*"})
 public class ClientConfigurationBuilderTest {
     @Test
     public void buildClientConfiguration_validConfigurations_Test() {

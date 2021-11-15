@@ -56,7 +56,7 @@ import java.util.Date;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({SkillRequestSignatureVerifier.class, SkillServlet.class})
-@PowerMockIgnore("javax.management.*")
+@PowerMockIgnore({"javax.management.*", "javax.script.*"})
 public class SkillServletTest extends SkillServletTestBase {
     private static final String LOCALE = "en-US";
     private static Skill skill;
