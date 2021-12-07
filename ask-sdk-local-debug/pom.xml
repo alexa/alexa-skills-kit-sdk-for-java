@@ -88,6 +88,11 @@
     <build>
         <sourceDirectory>src</sourceDirectory>
         <testSourceDirectory>tst</testSourceDirectory>
+        <testResources>
+            <testResource>
+                <directory>tst/resources</directory>
+            </testResource>
+        </testResources>
         <pluginManagement>
             <plugins>
                 <plugin>

@@ -29,7 +29,6 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -37,7 +36,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.ForkJoinPool;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.spy;
@@ -47,7 +46,6 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({
         RequestResponseUtils.class
 })
-@PowerMockIgnore({"javax.management.*", "javax.script.*"})
 public class WebSocketClientImplTest {
     private final String validSampleRequestData = "{\n" + "    \"version\": \"fooversion\",\n" + "    \"type\": \"SkillRequestMessage\",\n" + "    \"requestId\": \"foorequestid\",\n" + "    \"requestPayload\": \"foorequestpayload\"\n" + "}";
     private final String validSampleSuccessResponseData = "{\n" + "    \"version\": \"fooversion\",\n" + "    \"type\": \"SkillResponseSuccessMessage\",\n" + "    \"originalRequestId\": \"foorequestid\",\n" + "    \"responsePayload\": \"TestPayload\"\n" + "}";
