@@ -21,6 +21,9 @@
       <organizationUrl>http://developer.amazon.com/ask</organizationUrl>
     </developer>
   </developers>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
   <scm>
     <connection>scm:git:https://github.com/amzn/alexa-skills-kit-java.git</connection>
     <developerConnection>scm:git:https://github.com/amzn/alexa-skills-kit-java.git</developerConnection>

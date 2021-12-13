@@ -15,9 +15,9 @@ package com.amazon.ask.servlet;
 
 import static com.amazon.ask.util.SdkConstants.FORMAT_VERSION;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,12 +33,12 @@ import com.amazon.ask.model.ResponseEnvelope;
 import com.amazon.ask.servlet.verifiers.SkillRequestSignatureVerifier;
 import com.amazon.ask.servlet.verifiers.SkillServletVerifier;
 import com.amazon.ask.response.impl.BaseSkillResponse;
-import com.amazon.ask.util.JsonMarshaller;
 import com.amazon.ask.util.impl.JacksonJsonMarshaller;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -55,6 +55,7 @@ import java.util.Date;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({SkillRequestSignatureVerifier.class, SkillServlet.class})
+@PowerMockIgnore({"javax.management.*", "javax.script.*"})
 public class SkillServletTest extends SkillServletTestBase {
     private static final String LOCALE = "en-US";
     private static Skill skill;

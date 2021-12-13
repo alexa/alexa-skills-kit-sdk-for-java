@@ -36,7 +36,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.concurrent.ForkJoinPool;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.spy;
