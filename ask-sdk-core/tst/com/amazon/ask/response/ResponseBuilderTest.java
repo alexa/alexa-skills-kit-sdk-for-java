@@ -38,6 +38,7 @@ import com.amazon.ask.model.dialog.ConfirmIntentDirective;
 import com.amazon.ask.model.dialog.ConfirmSlotDirective;
 import com.amazon.ask.model.dialog.DelegateDirective;
 import com.amazon.ask.model.dialog.ElicitSlotDirective;
+import com.amazon.ask.model.interfaces.alexa.experimentation.ExperimentTriggerResponse;
 import com.amazon.ask.model.interfaces.audioplayer.AudioItem;
 import com.amazon.ask.model.interfaces.audioplayer.AudioItemMetadata;
 import com.amazon.ask.model.interfaces.audioplayer.ClearBehavior;
@@ -757,5 +758,23 @@ public class ResponseBuilderTest {
                 .withApiResponse(apiResponse)
                 .build();
             assertEquals(responseWithBuilder.get(), response);
+    }
+
+    @Test
+    public void build_response_with_experiment_trigger_response() {
+        String experimentId = "foo";
+
+        ExperimentTriggerResponse experimentTriggerResponse = ExperimentTriggerResponse
+                .builder()
+                .addTriggeredExperimentsItem(experimentId)
+                .build();
+
+        Response response = Response.builder()
+                .withExperimentation(experimentTriggerResponse)
+                .build();
+        Optional<Response> responseWithBuilder = builder
+                .addExperimentTrigger(experimentId)
+                .build();
+        assertEquals(responseWithBuilder.get(), response);
     }
 }
