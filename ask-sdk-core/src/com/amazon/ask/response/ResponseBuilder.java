@@ -25,6 +25,7 @@ import com.amazon.ask.model.dialog.ConfirmIntentDirective;
 import com.amazon.ask.model.dialog.ConfirmSlotDirective;
 import com.amazon.ask.model.dialog.DelegateDirective;
 import com.amazon.ask.model.dialog.ElicitSlotDirective;
+import com.amazon.ask.model.interfaces.alexa.experimentation.ExperimentTriggerResponse;
 import com.amazon.ask.model.interfaces.audioplayer.AudioItem;
 import com.amazon.ask.model.interfaces.audioplayer.AudioItemMetadata;
 import com.amazon.ask.model.interfaces.audioplayer.ClearBehavior;
@@ -101,6 +102,11 @@ public class ResponseBuilder {
     protected Object apiResponse;
 
     /**
+     * {@link ExperimentTriggerResponse} to include in response.
+     */
+    protected ExperimentTriggerResponse experimentTriggerResponse;
+
+    /**
      * Builds an instance of Response to be returned to the client.
      * @return {@link Response}.
      */
@@ -113,6 +119,7 @@ public class ResponseBuilder {
                 .withCanFulfillIntent(canFulfillIntent)
                 .withShouldEndSession(shouldEndSession)
                 .withApiResponse(apiResponse)
+                .withExperimentation(experimentTriggerResponse)
                 .build());
     }
 
@@ -489,6 +496,21 @@ public class ResponseBuilder {
             directiveList = new ArrayList<>();
         }
         directiveList.add(directive);
+
+        return this;
+    }
+
+    /**
+     * Adds a given experimentId to the Experiment Trigger response.
+     *
+     * @param experimentId the identifier of the experiment that is executed
+     * @return response builder
+     */
+    public ResponseBuilder addExperimentTrigger(final String experimentId) {
+        if (experimentTriggerResponse == null) {
+            experimentTriggerResponse = ExperimentTriggerResponse.builder().build();
+        }
+        experimentTriggerResponse.getTriggeredExperiments().add(experimentId);
 
         return this;
     }
