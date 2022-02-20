@@ -6,3 +6,4 @@ target/
 *.classpath
 *.prefs
 *.versionsBackup
+*.vscode/
