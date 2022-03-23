@@ -60,7 +60,6 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.10</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
