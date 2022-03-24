@@ -51,7 +51,7 @@ public class ServletRequest implements AlexaHttpRequest {
      */
     public ServletRequest(final HttpServletRequest httpServletRequest, final byte[] serializedRequestEnvelope,
                           final RequestEnvelope deserializedRequestEnvelope) {
-        this.serializedRequestEnvelope = serializedRequestEnvelope;
+        this.serializedRequestEnvelope = serializedRequestEnvelope.clone();
         this.deserializedRequestEnvelope = deserializedRequestEnvelope;
         this.baseEncoded64Signature = httpServletRequest.getHeader(ServletConstants.SIGNATURE_REQUEST_HEADER);
         this.signingCertificateChainUrl = httpServletRequest.getHeader(ServletConstants.SIGNATURE_CERTIFICATE_CHAIN_URL_REQUEST_HEADER);
@@ -78,7 +78,7 @@ public class ServletRequest implements AlexaHttpRequest {
      */
     @Override
     public byte[] getSerializedRequestEnvelope() {
-        return serializedRequestEnvelope;
+        return serializedRequestEnvelope.clone();
     }
 
     /**
