@@ -32,7 +32,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import static com.amazon.ask.servlet.ServletConstants.MAXIMUM_TOLERANCE_MILLIS;
-import static com.amazon.ask.servlet.ServletConstants.TOLERANCE_SKILL_EVENTS_MILLIS;;
+import static com.amazon.ask.servlet.ServletConstants.TOLERANCE_SKILL_EVENTS_MILLIS;
 import static org.mockito.Mockito.mock;
 
 @RunWith(Parameterized.class)
