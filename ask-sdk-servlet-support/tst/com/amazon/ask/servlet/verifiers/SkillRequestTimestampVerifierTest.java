@@ -13,11 +13,6 @@
 
 package com.amazon.ask.servlet.verifiers;
 
-import com.amazon.ask.model.IntentRequest;
-import com.amazon.ask.model.LaunchRequest;
-import com.amazon.ask.model.RequestEnvelope;
-import com.amazon.ask.model.events.skillevents.SkillEnabledRequest;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -107,12 +102,12 @@ public class SkillRequestTimestampVerifierTest {
 
     @Test(expected = SecurityException.class)
     public void verify_nullRequest_throws_exception() {
-        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, RequestEnvelope.builder().build()));
+        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, GenericTimestampRequestEnvelope.builder().build()));
     }
 
     @Test(expected = SecurityException.class)
     public void verify_nullTimestamp_throws_exception() {
-        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build()));
+        verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, GenericTimestampRequestEnvelope.builder().withRequest(GenericTimestampRequest.builder().build()).build()));
     }
 
     @Test (expected = IllegalArgumentException.class)
@@ -135,21 +130,21 @@ public class SkillRequestTimestampVerifierTest {
         verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, getSkillEventRequestEnvelope(new Date(System.currentTimeMillis() - TOLERANCE_SKILL_EVENTS_MILLIS * 2))));
     }
 
-    private RequestEnvelope getRequestEnvelope(Date timestamp) {
-        return RequestEnvelope.builder().withRequest(LaunchRequest
+    private GenericTimestampRequestEnvelope getRequestEnvelope(Date timestamp) {
+        return GenericTimestampRequestEnvelope.builder().withRequest(GenericTimestampRequest
                 .builder()
                 .withRequestId("rId")
+                .withType("LaunchRequest")
                 .withTimestamp(timestamp != null ? OffsetDateTime.ofInstant(timestamp.toInstant(), ZoneId.systemDefault()) : null)
-                .withLocale("en-US")
                 .build()).build();
     }
 
-    private RequestEnvelope getSkillEventRequestEnvelope(Date timestamp) {
-        return RequestEnvelope.builder().withRequest(SkillEnabledRequest
+    private GenericTimestampRequestEnvelope getSkillEventRequestEnvelope(Date timestamp) {
+        return GenericTimestampRequestEnvelope.builder().withRequest(GenericTimestampRequest
                 .builder()
                 .withRequestId("rId")
+                .withType("AlexaSkillEvent.SkillEnabled")
                 .withTimestamp(timestamp != null ? OffsetDateTime.ofInstant(timestamp.toInstant(), ZoneId.systemDefault()) : null)
-                .withLocale("en-US")
                 .build()).build();
     }
 

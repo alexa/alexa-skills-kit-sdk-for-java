@@ -31,12 +31,12 @@ import java.util.List;
 
 import com.amazon.ask.Skill;
 import com.amazon.ask.exception.AskSdkException;
-import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.services.Serializer;
 import com.amazon.ask.request.impl.BaseSkillRequest;
 import com.amazon.ask.response.SkillResponse;
 import com.amazon.ask.servlet.util.ServletUtils;
 import com.amazon.ask.servlet.verifiers.AlexaHttpRequest;
+import com.amazon.ask.servlet.verifiers.GenericTimestampRequestEnvelope;
 import com.amazon.ask.servlet.verifiers.ServletRequest;
 import com.amazon.ask.servlet.verifiers.SkillRequestSignatureVerifier;
 import com.amazon.ask.servlet.verifiers.SkillRequestTimestampVerifier;
@@ -127,8 +127,8 @@ public class SkillServlet extends HttpServlet {
             throws IOException {
         byte[] serializedRequestEnvelope = IOUtils.toByteArray(request.getInputStream());
         try {
-            final RequestEnvelope deserializedRequestEnvelope = serializer.deserialize(IOUtils.toString(
-                    serializedRequestEnvelope, ServletConstants.CHARACTER_ENCODING), RequestEnvelope.class);
+            final GenericTimestampRequestEnvelope deserializedRequestEnvelope = serializer.deserialize(IOUtils.toString(
+                    serializedRequestEnvelope, ServletConstants.CHARACTER_ENCODING), GenericTimestampRequestEnvelope.class);
 
             final AlexaHttpRequest alexaHttpRequest = new ServletRequest(request, serializedRequestEnvelope, deserializedRequestEnvelope);
 

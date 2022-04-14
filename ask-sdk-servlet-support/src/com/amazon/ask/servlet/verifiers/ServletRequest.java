@@ -13,7 +13,6 @@
 
 package com.amazon.ask.servlet.verifiers;
 
-import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.servlet.ServletConstants;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +30,7 @@ public class ServletRequest implements AlexaHttpRequest {
     /**
      * De-serialized request envelope.
      */
-    private final RequestEnvelope deserializedRequestEnvelope;
+    private final GenericTimestampRequestEnvelope deserializedRequestEnvelope;
 
     /**
      * Base64 encoded signature.
@@ -50,7 +49,7 @@ public class ServletRequest implements AlexaHttpRequest {
      * @param deserializedRequestEnvelope de-serialized request envelope.
      */
     public ServletRequest(final HttpServletRequest httpServletRequest, final byte[] serializedRequestEnvelope,
-                          final RequestEnvelope deserializedRequestEnvelope) {
+                          final GenericTimestampRequestEnvelope deserializedRequestEnvelope) {
         this.serializedRequestEnvelope = serializedRequestEnvelope.clone();
         this.deserializedRequestEnvelope = deserializedRequestEnvelope;
         this.baseEncoded64Signature = httpServletRequest.getHeader(ServletConstants.SIGNATURE_REQUEST_HEADER);
@@ -85,7 +84,7 @@ public class ServletRequest implements AlexaHttpRequest {
      * {@inheritDoc}
      */
     @Override
-    public RequestEnvelope getDeserializedRequestEnvelope() {
+    public GenericTimestampRequestEnvelope getDeserializedRequestEnvelope() {
         return deserializedRequestEnvelope;
     }
 }

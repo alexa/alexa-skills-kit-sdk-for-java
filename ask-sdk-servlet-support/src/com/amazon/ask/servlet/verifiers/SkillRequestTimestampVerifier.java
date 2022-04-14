@@ -13,7 +13,6 @@
 
 package com.amazon.ask.servlet.verifiers;
 
-import com.amazon.ask.model.Request;
 import com.amazon.ask.servlet.ServletConstants;
 import com.amazon.ask.util.ValidationUtils;
 
@@ -94,7 +93,7 @@ public class SkillRequestTimestampVerifier implements SkillServletVerifier {
         if (alexaHttpRequest.getDeserializedRequestEnvelope() == null) {
             throw new SecurityException("Incoming request did not contain a request envelope");
         }
-        Request request = alexaHttpRequest.getDeserializedRequestEnvelope().getRequest();
+        GenericTimestampRequest request = alexaHttpRequest.getDeserializedRequestEnvelope().getRequest();
         if (request == null || request.getTimestamp() == null) {
             throw new SecurityException("Incoming request was null or did not contain a timestamp to evaluate");
         }

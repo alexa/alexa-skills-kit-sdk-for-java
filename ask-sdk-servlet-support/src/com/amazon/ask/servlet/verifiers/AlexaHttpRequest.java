@@ -13,8 +13,6 @@
 
 package com.amazon.ask.servlet.verifiers;
 
-import com.amazon.ask.model.RequestEnvelope;
-
 /**
  * Provides container for server request that should be validated.
  */
@@ -37,5 +35,5 @@ public interface AlexaHttpRequest {
     /**
      * @return the request envelope, in deserialized form.
      */
-    RequestEnvelope getDeserializedRequestEnvelope();
+    GenericTimestampRequestEnvelope getDeserializedRequestEnvelope();
 }

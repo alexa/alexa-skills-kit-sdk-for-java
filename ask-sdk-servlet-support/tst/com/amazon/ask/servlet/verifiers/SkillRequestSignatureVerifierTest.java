@@ -35,7 +35,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.security.auth.x500.X500Principal;
 import javax.servlet.http.HttpServletRequest;
 
-import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.servlet.ServletConstants;
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -75,7 +74,7 @@ public class SkillRequestSignatureVerifierTest {
     private static final String MALFORMED_URL = "badUrl";
 
     private static PrivateKey validPrivateKey = null;
-    private static RequestEnvelope deserializedRequestEnvelope;
+    private static GenericTimestampRequestEnvelope deserializedRequestEnvelope;
     private static SkillRequestSignatureVerifier verifier;
     private HttpServletRequest mockServletRequest;
 
@@ -105,7 +104,7 @@ public class SkillRequestSignatureVerifierTest {
         certCache.put(PREPOPULATED_CERT_URL, cert);
         whenNew(ConcurrentHashMap.class).withAnyArguments().thenReturn(certCache);
         verifier = new SkillRequestSignatureVerifier();
-        deserializedRequestEnvelope = RequestEnvelope.builder().build();
+        deserializedRequestEnvelope = GenericTimestampRequestEnvelope.builder().build();
     }
 
     @Before
