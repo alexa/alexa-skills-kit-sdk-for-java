@@ -30,7 +30,7 @@ public final class ServletConstants {
     /**
      * The algorithm used to generate the signature.
      */
-    public static final String SIGNATURE_ALGORITHM = "SHA1withRSA";
+    public static final String SIGNATURE_ALGORITHM = "SHA256withRSA";
 
     /**
      * The character encoding used.
@@ -55,7 +55,7 @@ public final class ServletConstants {
     /**
      * The name of the request header that contains the signature.
      */
-    public static final String SIGNATURE_REQUEST_HEADER = "Signature";
+    public static final String SIGNATURE_REQUEST_HEADER = "Signature-256";
 
     /**
      * The name of the request header that contains the URL for the certificate chain needed to
