@@ -15,7 +15,6 @@ package com.amazon.ask;
 
 import com.amazon.ask.builder.SkillConfiguration;
 import com.amazon.ask.dispatcher.exception.ExceptionMapper;
-import com.amazon.ask.exception.AskSdkException;
 import com.amazon.ask.model.Application;
 import com.amazon.ask.model.Context;
 import com.amazon.ask.dispatcher.request.handler.HandlerAdapter;
@@ -38,6 +37,7 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -70,8 +70,8 @@ public class SkillTest {
         Response response = Response.builder().build();
         when(mockAdapter.supports(any())).thenReturn(true);
         when(mockAdapter.execute(any(), any())).thenReturn(Optional.of(response));
-        RequestEnvelope envelope = RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build();
-        ResponseEnvelope responseEnvelope = skill.invoke(envelope);
+        RequestEnvelope requestEnvelope = RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build();
+        ResponseEnvelope responseEnvelope = skill.invoke(requestEnvelope);
         assertEquals(responseEnvelope.getResponse(), response);
     }
 
@@ -79,8 +79,17 @@ public class SkillTest {
     public void empty_handler_response_returns_envelope_with_empty_response() {
         when(mockAdapter.supports(any())).thenReturn(true);
         when(mockAdapter.execute(any(), any())).thenReturn(Optional.empty());
-        RequestEnvelope envelope = RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build();
-        ResponseEnvelope responseEnvelope = skill.invoke(envelope);
+        RequestEnvelope requestEnvelope = RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build();
+        ResponseEnvelope responseEnvelope = skill.invoke(requestEnvelope);
+        assertNull(responseEnvelope.getResponse());
+    }
+
+    @Test
+    public void no_handler_response_returns_envelope_with_empty_response() {
+        when(mockAdapter.supports(any())).thenReturn(true);
+        when(mockAdapter.execute(any(), isNull())).thenReturn(null);
+        RequestEnvelope requestEnvelope = RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build();
+        ResponseEnvelope responseEnvelope = skill.invoke(requestEnvelope);
         assertNull(responseEnvelope.getResponse());
     }
 
@@ -93,8 +102,8 @@ public class SkillTest {
         Session session = Session.builder()
                 .withAttributes(attributes)
                 .build();
-        RequestEnvelope envelope = RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).withSession(session).build();
-        ResponseEnvelope responseEnvelope = skill.invoke(envelope);
+        RequestEnvelope requestEnvelope = RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).withSession(session).build();
+        ResponseEnvelope responseEnvelope = skill.invoke(requestEnvelope);
         assertEquals(responseEnvelope.getSessionAttributes(), attributes);
     }
 
@@ -106,7 +115,7 @@ public class SkillTest {
         Application application = Application.builder().withApplicationId("barId").build();
         SystemState systemState = SystemState.builder().withApplication(application).build();
         Context context = Context.builder().withSystem(systemState).build();
-        RequestEnvelope envelope = RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).withContext(context).build();
+        RequestEnvelope requestEnvelope = RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).withContext(context).build();
 
         SkillConfiguration skillConfiguration = SkillConfiguration.builder()
                 .withRequestMappers(Collections.singletonList(mockRequestMapper))
@@ -115,7 +124,7 @@ public class SkillTest {
                 .withSkillId("fooId")
                 .build();
         skill= new Skill(skillConfiguration);
-        assertNull(skill.invoke(envelope));
+        assertNull(skill.invoke(requestEnvelope));
     }
 
     @Test
@@ -126,7 +135,7 @@ public class SkillTest {
         Application application = Application.builder().withApplicationId("fooId").build();
         SystemState systemState = SystemState.builder().withApplication(application).build();
         Context context = Context.builder().withSystem(systemState).build();
-        RequestEnvelope envelope = RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).withContext(context).build();
+        RequestEnvelope requestEnvelope = RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).withContext(context).build();
 
         SkillConfiguration skillConfiguration = SkillConfiguration.builder()
                 .withRequestMappers(Collections.singletonList(mockRequestMapper))
@@ -135,7 +144,7 @@ public class SkillTest {
                 .withSkillId("fooId")
                 .build();
         skill= new Skill(skillConfiguration);
-        skill.invoke(envelope);
+        skill.invoke(requestEnvelope);
     }
 
 }
