@@ -146,7 +146,7 @@ public class CustomSkill extends AbstractSkill<RequestEnvelope, ResponseEnvelope
 
         Optional<Response> response = requestDispatcher.dispatch(handlerInput);
         return ResponseEnvelope.builder()
-                .withResponse(response.isPresent() ? response.orElse(null) : null)
+                .withResponse(response != null ? response.orElse(null) : null)
                 .withSessionAttributes(requestEnvelope.getSession() != null ? handlerInput.getAttributesManager().getSessionAttributes() : null)
                 .withVersion(SdkConstants.FORMAT_VERSION)
                 .withUserAgent(UserAgentUtils.getUserAgent(customUserAgent))
