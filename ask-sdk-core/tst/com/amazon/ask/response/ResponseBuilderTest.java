@@ -199,7 +199,6 @@ public class ResponseBuilderTest {
 
         Response response = Response.builder()
                 .withReprompt((Reprompt.builder()
-                        .withOutputSpeech(SsmlOutputSpeech.builder().build())
                         .addDirectivesItem(aplaDirective)
                         .build()))
                 .withShouldEndSession(false)
