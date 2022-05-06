@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,6 +31,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -105,6 +107,18 @@ public class JacksonSerializerTest {
         InputStream is = mock(InputStream.class);
         when(mockMapper.readValue(is, RequestEnvelope.class)).thenReturn(requestEnvelope);
         assertEquals(serializer.deserialize(is, RequestEnvelope.class), requestEnvelope);
+    }
+
+    @Test
+    public void deserialize_from_integer_string_value_of_apl_command() throws IOException {
+        String expression = "{\"version\":\"1.0\",\"sessionAttributes\":{},"
+            + "\"userAgent\":\"ask-java/2.37.1 Java/1.8.0_322 templateResolver\","
+            + "\"response\":{\"directives\":[{\"type\":\"Alexa.Presentation.APL.ExecuteCommands\","
+            + "\"commands\":[{\"type\":\"Scroll\",\"distance\":\"75%\",\"componentId\":\"scrollComponent\"}],"
+            + "\"token\":\"kitchen-conversations\"}],\"apiResponse\":{\"status\":\"SUCCESS\","
+            + "\"experienceType\":\"MULTI_MODAL\",\"direction\":\"down\"}}}";
+        ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        assertNotNull(mapper.readValue(expression, ResponseEnvelope.class));
     }
 
     @Test(expected = AskSdkException.class)
