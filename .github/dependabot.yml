@@ -1,0 +1,47 @@
+version: 2
+updates:
+
+  - package-ecosystem: "maven"
+    directory: "/ask-sdk"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "maven"
+    directory: "/ask-sdk-apache-client"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "maven"
+    directory: "/ask-sdk-core"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "maven"
+    directory: "/ask-sdk-dynamodb-persistence-adapter"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "maven"
+    directory: "/ask-sdk-freemarker"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "maven"
+    directory: "/ask-sdk-lambda-support"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "maven"
+    directory: "/ask-sdk-local-debug"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "maven"
+    directory: "/ask-sdk-runtime"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "maven"
+    directory: "/ask-sdk-servlet-support"
+    schedule:
+      interval: "weekly"
