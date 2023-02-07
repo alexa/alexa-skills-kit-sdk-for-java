@@ -3,7 +3,7 @@
     <groupId>com.amazon.alexa</groupId>
     <artifactId>ask-smapi-sdk</artifactId>
     <packaging>jar</packaging>
-    <version>1.22.0</version>
+    <version>1.23.0</version>
     <name>ASK SMAPI SDK for Java</name>
     <description>Core components of the ASK SMAPI SDK for Java.</description>
     <url>http://developer.amazon.com/ask</url>
