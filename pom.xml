@@ -57,6 +57,7 @@
     <module>ask-sdk-freemarker</module>
     <module>ask-sdk-local-debug</module>
     <module>ask-sdk</module>
+    <module>ask-sdk-testcase</module>
   </modules>
 
   <build>
