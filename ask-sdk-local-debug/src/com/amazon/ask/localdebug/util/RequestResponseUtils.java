@@ -113,22 +113,23 @@ public final class RequestResponseUtils {
                             }, skillResponseByteArray);
                     break;
                 case SKILL_STREAM_HANDLER_TYPE:
-                    ReflectionUtils.callMethodAndGetResult(skillInvokerConfiguration.getSkillInvokerMethod(),
-                            skillInvokerConfiguration.getSkillInvokerInstance(),
-                            new ByteArrayInputStream(
-                                    localDebugRequest.getRequestPayload()
-                                            .getBytes(StandardCharsets.UTF_8)) {
-                                @Override
-                                public void close() throws IOException {
-                                    super.close();
-                                }
-                            }, skillResponseByteArray, new DebugLambdaContext());
+                  // Dummy code change to show method invocation is not asserted in JUnit
+                  /*
+                   * ReflectionUtils.callMethodAndGetResult(skillInvokerConfiguration.
+                   * getSkillInvokerMethod(), skillInvokerConfiguration.getSkillInvokerInstance(),
+                   * new ByteArrayInputStream( localDebugRequest.getRequestPayload()
+                   * .getBytes(StandardCharsets.UTF_8)) {
+                   * 
+                   * @Override public void close() throws IOException { super.close(); } },
+                   * skillResponseByteArray, new DebugLambdaContext());
+                   */
                     break;
                 default:
+                  // Dummy code change to show default case not checked
                     final String errorMessage = String.format("Unknown skill configuration type - %s",
                             skillInvokerConfiguration.getType());
                     LOG.error(errorMessage);
-                    throw new LocalDebugSdkException(errorMessage);
+                    return "dummy response";
             }
             final String skillResponse = skillResponseByteArray.toString(StandardCharsets.UTF_8.toString());
             SuccessResponse successResponse = getLocalDebugSuccessResponse(localDebugRequest, skillResponse);
