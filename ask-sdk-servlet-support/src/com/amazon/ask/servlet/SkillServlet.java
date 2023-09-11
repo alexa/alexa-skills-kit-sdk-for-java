@@ -13,22 +13,6 @@
 
 package com.amazon.ask.servlet;
 
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.NotSerializableException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.net.Proxy;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.amazon.ask.Skill;
 import com.amazon.ask.exception.AskSdkException;
 import com.amazon.ask.model.RequestEnvelope;
@@ -36,15 +20,19 @@ import com.amazon.ask.model.services.Serializer;
 import com.amazon.ask.request.impl.BaseSkillRequest;
 import com.amazon.ask.response.SkillResponse;
 import com.amazon.ask.servlet.util.ServletUtils;
-import com.amazon.ask.servlet.verifiers.AlexaHttpRequest;
-import com.amazon.ask.servlet.verifiers.ServletRequest;
-import com.amazon.ask.servlet.verifiers.SkillRequestSignatureVerifier;
-import com.amazon.ask.servlet.verifiers.SkillRequestTimestampVerifier;
-import com.amazon.ask.servlet.verifiers.SkillServletVerifier;
+import com.amazon.ask.servlet.verifiers.*;
 import com.amazon.ask.util.JacksonSerializer;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.net.Proxy;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.amazon.ask.servlet.ServletConstants.DEFAULT_TOLERANCE_MILLIS;
 
@@ -58,7 +46,6 @@ import static com.amazon.ask.servlet.ServletConstants.DEFAULT_TOLERANCE_MILLIS;
  * invocation of the right method of the provided {@code Skill} . It also handles sending back
  * modified session attributes, user attributes and authentication tokens when needed and handles
  * exception cases.
- *
  */
 public class SkillServlet extends HttpServlet {
     /**
@@ -90,6 +77,7 @@ public class SkillServlet extends HttpServlet {
 
     /**
      * Constructor to build an instance of SkillServlet.
+     *
      * @param skill an Alexa skill instance.
      */
     public SkillServlet(final Skill skill) {
@@ -106,7 +94,8 @@ public class SkillServlet extends HttpServlet {
 
     /**
      * Constructor to build an instance of SkillServlet.
-     * @param skill instance of {@link Skill}.
+     *
+     * @param skill     instance of {@link Skill}.
      * @param verifiers list of {@link SkillServletVerifier}.
      */
     SkillServlet(final Skill skill, final List<SkillServletVerifier> verifiers) {
@@ -166,7 +155,7 @@ public class SkillServlet extends HttpServlet {
      * {@code SkillServlet} determines the type of request and passes the request to
      * the configured {@code Skill}.
      *
-     * @param input - input stream of the request.
+     * @param input  - input stream of the request.
      * @param output - output stream of the response.
      * @throws IOException if an input or output error is detected when the servlet handles the request
      */
@@ -198,8 +187,9 @@ public class SkillServlet extends HttpServlet {
 
     /**
      * Method throws an {@link NotSerializableException} if the servlet is not serializable.
+     *
      * @param in instance of {@link ObjectInputStream}.
-     * @throws IOException I/O exception.
+     * @throws IOException            I/O exception.
      * @throws ClassNotFoundException cannot a class through its fully-qualified name and can not find its definition on the classpath.
      */
     private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -208,6 +198,7 @@ public class SkillServlet extends HttpServlet {
 
     /**
      * Method throws an {@link NotSerializableException} if the servlet is not serializable.
+     *
      * @param out instance of {@link ObjectOutputStream}.
      * @throws IOException I/O exception.
      */
