@@ -13,30 +13,9 @@
 
 package com.amazon.ask.servlet.verifiers;
 
-import static com.amazon.ask.servlet.verifiers.SkillRequestSignatureVerifier.getAndVerifySigningCertificateChainUrl;
-import static java.security.Security.addProvider;
-import static org.hamcrest.Matchers.isA;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
-
-import java.math.BigInteger;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.Signature;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.Date;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javax.security.auth.x500.X500Principal;
-import javax.servlet.http.HttpServletRequest;
-
 import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.servlet.ServletConstants;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
@@ -49,6 +28,22 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import javax.security.auth.x500.X500Principal;
+import java.math.BigInteger;
+import java.security.*;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Date;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static com.amazon.ask.servlet.verifiers.SkillRequestSignatureVerifier.getAndVerifySigningCertificateChainUrl;
+import static java.security.Security.addProvider;
+import static org.hamcrest.Matchers.isA;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore("javax.security.auth.x500.X500Principal")
@@ -77,10 +72,9 @@ public class SkillRequestSignatureVerifierTest {
     private static PrivateKey validPrivateKey = null;
     private static RequestEnvelope deserializedRequestEnvelope;
     private static SkillRequestSignatureVerifier verifier;
-    private HttpServletRequest mockServletRequest;
-
     @Rule
     public ExpectedException thrown = ExpectedException.none();
+    private HttpServletRequest mockServletRequest;
 
     @BeforeClass
     @SuppressWarnings("deprecation")
@@ -106,6 +100,19 @@ public class SkillRequestSignatureVerifierTest {
         whenNew(ConcurrentHashMap.class).withAnyArguments().thenReturn(certCache);
         verifier = new SkillRequestSignatureVerifier();
         deserializedRequestEnvelope = RequestEnvelope.builder().build();
+    }
+
+    private static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(ServletConstants.SIGNATURE_TYPE);
+        keyPairGenerator.initialize(512);
+        return keyPairGenerator.generateKeyPair();
+    }
+
+    private static byte[] signContent(String content, PrivateKey key) throws Exception {
+        Signature signature = Signature.getInstance(ServletConstants.SIGNATURE_ALGORITHM);
+        signature.initSign(key);
+        signature.update(content.getBytes());
+        return signature.sign();
     }
 
     @Before
@@ -221,18 +228,5 @@ public class SkillRequestSignatureVerifierTest {
         when(mockServletRequest.getHeader(ServletConstants.SIGNATURE_CERTIFICATE_CHAIN_URL_REQUEST_HEADER)).thenReturn(PREPOPULATED_CERT_URL);
 
         verifier.verify(new ServletRequest(mockServletRequest, testContent.getBytes(), deserializedRequestEnvelope));
-    }
-
-    private static KeyPair generateKeyPair() throws NoSuchAlgorithmException {
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(ServletConstants.SIGNATURE_TYPE);
-        keyPairGenerator.initialize(512);
-        return keyPairGenerator.generateKeyPair();
-    }
-
-    private static byte[] signContent(String content, PrivateKey key) throws Exception {
-        Signature signature = Signature.getInstance(ServletConstants.SIGNATURE_ALGORITHM);
-        signature.initSign(key);
-        signature.update(content.getBytes());
-        return signature.sign();
     }
 }

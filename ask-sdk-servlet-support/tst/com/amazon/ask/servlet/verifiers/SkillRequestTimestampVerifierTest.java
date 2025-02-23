@@ -17,13 +17,12 @@ import com.amazon.ask.model.IntentRequest;
 import com.amazon.ask.model.LaunchRequest;
 import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.model.events.skillevents.SkillEnabledRequest;
-
+import jakarta.servlet.http.HttpServletRequest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
@@ -38,12 +37,10 @@ import static org.mockito.Mockito.mock;
 @RunWith(Parameterized.class)
 public class SkillRequestTimestampVerifierTest {
 
-    private SkillRequestTimestampVerifier verifier;
-
     private static final long TOLERANCE_IN_MILLIS = 2000;
-
     private static HttpServletRequest mockServletRequest;
     private static byte[] serializedRequestEnvelope;
+    private final SkillRequestTimestampVerifier verifier;
 
     public SkillRequestTimestampVerifierTest(SkillRequestTimestampVerifier verifier) {
         this.verifier = verifier;
@@ -60,7 +57,7 @@ public class SkillRequestTimestampVerifierTest {
         serializedRequestEnvelope = "".getBytes();
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void construct_withNegativeTolerance_throwsIllegalArgumentException() {
         new SkillRequestTimestampVerifier(-1);
     }
@@ -115,7 +112,7 @@ public class SkillRequestTimestampVerifierTest {
         verifier.verify(new ServletRequest(mockServletRequest, serializedRequestEnvelope, RequestEnvelope.builder().withRequest(IntentRequest.builder().build()).build()));
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void construct_withNullTimeUnit_throwsIllegalArgumentException() {
         new SkillRequestTimestampVerifier(TOLERANCE_IN_MILLIS / 1000, null);
     }

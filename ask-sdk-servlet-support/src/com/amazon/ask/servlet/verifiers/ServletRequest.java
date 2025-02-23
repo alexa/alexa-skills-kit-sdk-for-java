@@ -15,8 +15,7 @@ package com.amazon.ask.servlet.verifiers;
 
 import com.amazon.ask.model.RequestEnvelope;
 import com.amazon.ask.servlet.ServletConstants;
-
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Servlet specific implementation of {@link AlexaHttpRequest}.
@@ -45,8 +44,9 @@ public class ServletRequest implements AlexaHttpRequest {
 
     /**
      * Constructor to build an instance of ServletRequest.
-     * @param httpServletRequest instance of type {@link HttpServletRequest}.
-     * @param serializedRequestEnvelope serialized request envelope.
+     *
+     * @param httpServletRequest          instance of type {@link HttpServletRequest}.
+     * @param serializedRequestEnvelope   serialized request envelope.
      * @param deserializedRequestEnvelope de-serialized request envelope.
      */
     public ServletRequest(final HttpServletRequest httpServletRequest, final byte[] serializedRequestEnvelope,

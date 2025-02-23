@@ -13,34 +13,27 @@
 
 package com.amazon.ask.servlet;
 
+import com.amazon.ask.model.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.servlet.ReadListener;
+import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.mockito.Mockito;
+
+import java.io.*;
+
 import static com.amazon.ask.util.SdkConstants.FORMAT_VERSION;
 import static org.mockito.Mockito.when;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.amazon.ask.model.Application;
-import com.amazon.ask.model.Request;
-import com.amazon.ask.model.RequestEnvelope;
-import com.amazon.ask.model.Session;
-import com.amazon.ask.model.User;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.mockito.Mockito;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 public class SkillServletTestBase {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     static {
         OBJECT_MAPPER.registerModule(new JavaTimeModule());
         OBJECT_MAPPER.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -48,67 +41,12 @@ public class SkillServletTestBase {
     }
 
     /**
-     * Tuple for useful parameters for a servlet invocation.
-     */
-    protected static final class ServletInvocationParameters {
-        public final HttpServletRequest request;
-        public final HttpServletResponse response;
-        public final ByteArrayOutputStream output;
-
-        public ServletInvocationParameters(final HttpServletRequest request,
-                                           final HttpServletResponse response, final ByteArrayOutputStream output) {
-            this.request = request;
-            this.response = response;
-            this.output = output;
-        }
-    }
-
-    /**
-     * Trivial implementation of the ServletInputStream that wraps an InputStream.
-     */
-    private static class MyServletInputStream extends ServletInputStream {
-        private final InputStream in;
-
-        public MyServletInputStream(final InputStream in) {
-            this.in = in;
-        }
-
-        @Override
-        public int read() throws IOException {
-            return in.read();
-        }
-    }
-
-    /**
-     * Trivial implementation of the ServletOutputStream that wraps an OutputStream.
-     */
-    private static class MyServletOutputStream extends ServletOutputStream {
-        private final OutputStream out;
-
-        public MyServletOutputStream(final OutputStream out) {
-            this.out = out;
-        }
-
-        @Override
-        public void write(int b) throws IOException {
-            out.write(b);
-        }
-    }
-
-    // ------------------------------
-    // Helper methods for subclasses
-
-    /**
      * Common logic for all the tests.
      *
-     * @param version
-     *            the envelope version for the request envelope
-     * @param request
-     *            a SkillRequest
-     * @param session
-     *            a session for this invocation
+     * @param version the envelope version for the request envelope
+     * @param request a SkillRequest
+     * @param session a session for this invocation
      * @return invocation parameters for a Skill
-     *
      * @throws IOException
      */
     protected ServletInvocationParameters build(final String version, final Request request, final Session session) throws IOException {
@@ -143,12 +81,9 @@ public class SkillServletTestBase {
      * <li>The current SDK version as a version</li>
      * </ul>
      *
-     * @param request
-     *            a SkillRequest or OnSessionEndedRequest
-     * @param session
-     *            a session for this invocation
+     * @param request a SkillRequest or OnSessionEndedRequest
+     * @param session a session for this invocation
      * @return invocation parameters for a Skill
-     *
      * @throws IOException
      */
     protected ServletInvocationParameters build(final Request request,
@@ -159,16 +94,17 @@ public class SkillServletTestBase {
     /**
      * Same as above using a simple Session and User.
      *
-     * @param request
-     *            a skill request
+     * @param request a skill request
      * @return invocation parameters for a Skill
-     *
      * @throws IOException
      */
     protected ServletInvocationParameters build(final Request request)
             throws IOException {
         return build(request, buildSession());
     }
+
+    // ------------------------------
+    // Helper methods for subclasses
 
     /**
      * @return a test session.
@@ -184,6 +120,79 @@ public class SkillServletTestBase {
                 .withApplication(Application.builder().withApplicationId(applicationId).build())
                 .withUser(User.builder().withUserId("UserId").build())
                 .build();
+    }
+
+    /**
+     * Tuple for useful parameters for a servlet invocation.
+     */
+    protected static final class ServletInvocationParameters {
+        public final HttpServletRequest request;
+        public final HttpServletResponse response;
+        public final ByteArrayOutputStream output;
+
+        public ServletInvocationParameters(final HttpServletRequest request,
+                                           final HttpServletResponse response, final ByteArrayOutputStream output) {
+            this.request = request;
+            this.response = response;
+            this.output = output;
+        }
+    }
+
+    /**
+     * Trivial implementation of the ServletInputStream that wraps an InputStream.
+     */
+    private static class MyServletInputStream extends ServletInputStream {
+        private final InputStream in;
+
+        public MyServletInputStream(final InputStream in) {
+            this.in = in;
+        }
+
+        @Override
+        public int read() throws IOException {
+            return in.read();
+        }
+
+        @Override
+        public boolean isFinished() {
+            return false;
+        }
+
+        @Override
+        public boolean isReady() {
+            return false;
+        }
+
+        @Override
+        public void setReadListener(ReadListener readListener) {
+
+        }
+    }
+
+    /**
+     * Trivial implementation of the ServletOutputStream that wraps an OutputStream.
+     */
+    private static class MyServletOutputStream extends ServletOutputStream {
+        private final OutputStream out;
+
+        public MyServletOutputStream(final OutputStream out) {
+            this.out = out;
+        }
+
+        @Override
+        public void write(int b) throws IOException {
+            out.write(b);
+        }
+
+        @Override
+        public boolean isReady() {
+            return false;
+        }
+
+        @Override
+        public void setWriteListener(WriteListener writeListener) {
+
+        }
     }
 
 }
