@@ -99,14 +99,13 @@ public class ConfigModule extends AbstractModule {
             try {
                 endpointUrl = Region.valueOf(region.toUpperCase()).getEndpoint();
             } catch (IllegalArgumentException ie) {
-                final String errorMessage = String.format("Invalid region - %1$s."
+                final String errorMessage = ("Invalid region - %1$s."
                         + " Please ensure that the region value is one of "
-                        + "NorthAmerica, Europe or FarEast", region);
+                        + "NorthAmerica, Europe or FarEast").formatted(region);
                 LOG.error(errorMessage);
                 throw new LocalDebugSdkException(errorMessage);
             }
-            return new URI(String.format(
-                    Constants.CONNECT_CUSTOM_DEBUG_URI_SKELETON, endpointUrl,
+            return new URI(Constants.CONNECT_CUSTOM_DEBUG_URI_SKELETON.formatted(endpointUrl,
                     clientConfiguration.getSkillId()));
         } catch (URISyntaxException e) {
             LOG.error("Encountered error when constructing Uri", e);

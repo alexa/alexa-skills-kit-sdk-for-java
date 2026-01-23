@@ -144,7 +144,7 @@ public final class DynamoDbPersistenceAdapter implements PersistenceAdapter {
         try {
             result = dynamoDb.getItem(request).getItem();
         } catch (ResourceNotFoundException e) {
-            throw new PersistenceException(String.format("Table %s does not exist or is in the process of being created", tableName), e);
+            throw new PersistenceException("Table %s does not exist or is in the process of being created".formatted(tableName), e);
         } catch (AmazonDynamoDBException e) {
             throw new PersistenceException("Failed to retrieve attributes from DynamoDB", e);
         }
@@ -170,7 +170,7 @@ public final class DynamoDbPersistenceAdapter implements PersistenceAdapter {
         try {
             dynamoDb.putItem(request);
         } catch (ResourceNotFoundException e) {
-            throw new PersistenceException(String.format("Table %s does not exist or is in the process of being created", tableName), e);
+            throw new PersistenceException("Table %s does not exist or is in the process of being created".formatted(tableName), e);
         } catch (AmazonDynamoDBException e) {
             throw new PersistenceException("Failed to save attributes to DynamoDB", e);
         }
@@ -190,7 +190,7 @@ public final class DynamoDbPersistenceAdapter implements PersistenceAdapter {
         try {
             dynamoDb.deleteItem(deleteItemRequest);
         } catch (ResourceNotFoundException e) {
-            throw new PersistenceException(String.format("Table %s does not exist", tableName), e);
+            throw new PersistenceException("Table %s does not exist".formatted(tableName), e);
         } catch (AmazonDynamoDBException e) {
             throw new PersistenceException("Failed to delete attributes from DynamoDB", e);
         }

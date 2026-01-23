@@ -150,11 +150,11 @@ public class ConcurrentLRUTemplateCache implements TemplateCache {
         synchronized (lock) {
             int size = templateContentData.getTemplateContent().length;
             if (size > capacity) {
-                LOGGER.warn(String.format("No caching for template with size: %s larger than total capacity: %s.", size, capacity));
+                LOGGER.warn("No caching for template with size: %s larger than total capacity: %s.".formatted(size, capacity));
                 return;
             }
             if (templateDataMap.containsKey(identifier)) {
-                LOGGER.info(String.format("Try to put the same template with identifier: %s into cache, removing duplicate entry in queue.",
+                LOGGER.info("Try to put the same template with identifier: %s into cache, removing duplicate entry in queue.".formatted(
                         identifier));
                 templateOrderQueue.remove(templateDataMap.get(identifier));
             }
@@ -193,7 +193,7 @@ public class ConcurrentLRUTemplateCache implements TemplateCache {
                     }
                     templateDataMap.remove(identifier);
                     deductAndGet(data.getTemplateContentData().getTemplateContent().length);
-                    LOGGER.warn(String.format("Template: %s is out of date, removing.", identifier));
+                    LOGGER.warn("Template: %s is out of date, removing.".formatted(identifier));
                 }
             }
         }

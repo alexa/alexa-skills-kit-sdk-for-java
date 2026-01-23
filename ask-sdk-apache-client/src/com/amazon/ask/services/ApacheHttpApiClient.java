@@ -124,9 +124,9 @@ public final class ApacheHttpApiClient implements ApiClient {
             }
         }
 
-        if (lowLevelRequest instanceof HttpEntityEnclosingRequestBase && request.getBody() != null) {
+        if (lowLevelRequest instanceof HttpEntityEnclosingRequestBase base && request.getBody() != null) {
             StringEntity entity = new StringEntity(request.getBody(), ContentType.APPLICATION_JSON);
-            ((HttpEntityEnclosingRequestBase) lowLevelRequest).setEntity(entity);
+            base.setEntity(entity);
         }
 
         return lowLevelRequest;

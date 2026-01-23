@@ -137,11 +137,11 @@ public class FreeMarkerTemplateRenderer<Output> implements TemplateRenderer<Outp
                                                      final Map<String, Object> dataMap) {
         String exceptionMsg = exceptionMessage + " with identifier: %s using data model map: %s with error: %s ";
         if (LOGGER.isTraceEnabled()) {
-            String traceMsg = String.format(exceptionMsg + "with template content data: %s.",
+            String traceMsg = (exceptionMsg + "with template content data: %s.").formatted(
                     templateContentData.getIdentifier(), dataMap, e.getMessage(), templateContentData);
             LOGGER.trace(traceMsg);
         }
-        return new TemplateRendererException(String.format(exceptionMessage,
+        return new TemplateRendererException(exceptionMessage.formatted(
                 templateContentData.getIdentifier(), dataMap, e.getMessage()));
     }
 

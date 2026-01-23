@@ -72,10 +72,10 @@ public final class ArgumentParserUtils {
       final List<String> argumentList,
       final boolean isRequired,
       final Object defaultValue) {
-        int index = argumentList.indexOf(String.format("--%s", argumentName));
+        int index = argumentList.indexOf("--%s".formatted(argumentName));
         if (index == -1) {
             if (isRequired) {
-                String error = String.format("Required argument - %s not provided.", argumentName);
+                String error = "Required argument - %s not provided.".formatted(argumentName);
                 LOG.error(error);
                 throw new LocalDebugSdkException(error);
             }

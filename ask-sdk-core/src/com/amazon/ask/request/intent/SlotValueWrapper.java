@@ -66,8 +66,8 @@ public final class SlotValueWrapper {
      *         or a singleton list consisting of the current wrapper.
      */
     public List<SlotValueWrapper> values() {
-        if (slotValue instanceof ListSlotValue) {
-            return ((ListSlotValue)slotValue).getValues().stream()
+        if (slotValue instanceof ListSlotValue value) {
+            return value.getValues().stream()
                     .map(SlotValueWrapper::createFrom)
                     .collect(Collectors.toList());
         }
@@ -81,7 +81,7 @@ public final class SlotValueWrapper {
      * @return underlying slot type as {@link SimpleSlotValue} or {@link Optional} empty.
      */
     public Optional<SimpleSlotValue> asSimple() {
-     return slotValue instanceof SimpleSlotValue ? Optional.of((SimpleSlotValue) slotValue) : Optional.empty();
+     return slotValue instanceof SimpleSlotValue ssv ? Optional.of(ssv) : Optional.empty();
      }
 
      /**
@@ -91,7 +91,7 @@ public final class SlotValueWrapper {
      * @return underlying slot type as {@link ListSlotValue} or {@link Optional} empty.
      */
     public Optional<ListSlotValue> asList() {
-        return slotValue instanceof ListSlotValue ? Optional.of((ListSlotValue) slotValue) : Optional.empty();
+        return slotValue instanceof ListSlotValue lsv ? Optional.of(lsv) : Optional.empty();
     }
 
     @Override

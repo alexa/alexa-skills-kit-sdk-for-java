@@ -199,8 +199,8 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
 
                 X509TrustManager x509TrustManager = null;
                 for (TrustManager trustManager : trustManagerFactory.getTrustManagers()) {
-                    if (trustManager instanceof X509TrustManager) {
-                        x509TrustManager = (X509TrustManager) trustManager;
+                    if (trustManager instanceof X509TrustManager manager) {
+                        x509TrustManager = manager;
                     }
                 }
 
@@ -267,12 +267,12 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
             final Collection<List<?>> subjectAlternativeNameEntries) {
         for (List<?> entry : subjectAlternativeNameEntries) {
             // first ensure that the subject alternative entry is in the expected form
-            if (entry.get(0) instanceof Integer && entry.get(1) instanceof String) {
+            if (entry.getFirst() instanceof Integer && entry.get(1) instanceof String) {
                 /*
                  * if the entry is for a domain name and that domain name matches the domain name
                  * for the echo sdk then return true
                  */
-                if (DOMAIN_NAME_SUBJECT_ALTERNATIVE_NAME_ENTRY.equals(entry.get(0))
+                if (DOMAIN_NAME_SUBJECT_ALTERNATIVE_NAME_ENTRY.equals(entry.getFirst())
                         && ServletConstants.ECHO_API_DOMAIN_NAME.equals((entry.get(1)))) {
                     return true;
                 }
@@ -297,26 +297,25 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
             URL url = new URI(signingCertificateChainUrl).normalize().toURL();
             // Validate the hostname
             if (!VALID_SIGNING_CERT_CHAIN_URL_HOST_NAME.equalsIgnoreCase(url.getHost())) {
-                throw new CertificateException(String.format(
+                throw new CertificateException((
                         "SigningCertificateChainUrl [%s] does not contain the required hostname"
-                                + " of [%s]", signingCertificateChainUrl,
+                                + " of [%s]").formatted(signingCertificateChainUrl,
                         VALID_SIGNING_CERT_CHAIN_URL_HOST_NAME));
             }
 
             // Validate the path prefix
             String path = url.getPath();
             if (!path.startsWith(VALID_SIGNING_CERT_CHAIN_URL_PATH_PREFIX)) {
-                throw new CertificateException(String.format(
+                throw new CertificateException((
                         "SigningCertificateChainUrl path [%s] is invalid. Expecting path to "
-                                + "start with [%s]", signingCertificateChainUrl,
+                                + "start with [%s]").formatted(signingCertificateChainUrl,
                         VALID_SIGNING_CERT_CHAIN_URL_PATH_PREFIX));
             }
 
             // Validate the protocol
             String urlProtocol = url.getProtocol();
             if (!VALID_SIGNING_CERT_CHAIN_PROTOCOL.equalsIgnoreCase(urlProtocol)) {
-                throw new CertificateException(String.format(
-                        "SigningCertificateChainUrl [%s] contains an unsupported protocol [%s]",
+                throw new CertificateException("SigningCertificateChainUrl [%s] contains an unsupported protocol [%s]".formatted(
                         signingCertificateChainUrl, urlProtocol));
             }
 
@@ -324,15 +323,13 @@ public final class SkillRequestSignatureVerifier implements SkillServletVerifier
             int urlPort = url.getPort();
             if ((urlPort != UNSPECIFIED_SIGNING_CERT_CHAIN_URL_PORT_VALUE)
                     && (urlPort != url.getDefaultPort())) {
-                throw new CertificateException(String.format(
-                        "SigningCertificateChainUrl [%s] contains an invalid port [%d]",
+                throw new CertificateException("SigningCertificateChainUrl [%s] contains an invalid port [%d]".formatted(
                         signingCertificateChainUrl, urlPort));
             }
 
             return url;
         } catch (IllegalArgumentException | MalformedURLException | URISyntaxException ex) {
-            throw new CertificateException(String.format(
-                    "SigningCertificateChainUrl [%s] is malformed", signingCertificateChainUrl), ex);
+            throw new CertificateException("SigningCertificateChainUrl [%s] is malformed".formatted(signingCertificateChainUrl), ex);
         }
     }
 

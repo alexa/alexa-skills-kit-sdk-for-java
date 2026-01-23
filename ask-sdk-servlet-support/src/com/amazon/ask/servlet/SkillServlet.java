@@ -22,6 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.NotSerializableException;
+import java.io.Serial;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -71,6 +72,7 @@ public class SkillServlet extends HttpServlet {
      * which is used during deserialization to verify that the sender and receiver of a serialized object have loaded
      * classes for that object that are compatible with respect to serialization.
      */
+    @Serial
     private static final long serialVersionUID = 3257254794185762002L;
 
     /**

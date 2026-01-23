@@ -151,7 +151,7 @@ public class SkillInvokerConfiguration {
         SkillHandlerType extendedClassType = SkillHandlerType
                 .getHandlerType(ReflectionUtils.getSuperClassName(skillInvokerClass));
         if (extendedClassType == null) {
-            final String errorMessage = String.format("Extension type cannot be null");
+            final String errorMessage = "Extension type cannot be null".formatted();
             LOG.error(errorMessage);
             throw new LocalDebugSdkException(errorMessage);
         }
@@ -165,7 +165,7 @@ public class SkillInvokerConfiguration {
                 paramTypes = new Class[]{InputStream.class, OutputStream.class, Context.class};
                 break;
             default:
-                final String errorMessage = String.format("Unknown extension type - %s", extendedClassType);
+                final String errorMessage = "Unknown extension type - %s".formatted(extendedClassType);
                 LOG.error(errorMessage);
                 throw new LocalDebugSdkException(errorMessage);
         }

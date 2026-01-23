@@ -37,7 +37,7 @@ public final class ValidationUtils {
      */
     public static <T> T assertNotNull(final T object, final String fieldName) throws IllegalArgumentException {
         if (object == null) {
-            throw new IllegalArgumentException(String.format("%s cannot be null", fieldName));
+            throw new IllegalArgumentException("%s cannot be null".formatted(fieldName));
         }
         return object;
     }
@@ -67,7 +67,7 @@ public final class ValidationUtils {
      */
     public static int assertIsPositive(final int num, final String fieldName) {
         if (num <= 0) {
-            throw new IllegalArgumentException(String.format("%s must be positive", fieldName));
+            throw new IllegalArgumentException("%s must be positive".formatted(fieldName));
         }
         return num;
     }
@@ -83,7 +83,7 @@ public final class ValidationUtils {
     public static <T extends Collection<?>> T assertNotEmpty(final T collection, final String fieldName) throws IllegalArgumentException {
         assertNotNull(collection, fieldName);
         if (collection.isEmpty()) {
-            throw new IllegalArgumentException(String.format("%s cannot be empty", fieldName));
+            throw new IllegalArgumentException("%s cannot be empty".formatted(fieldName));
         }
         return collection;
     }
@@ -99,7 +99,7 @@ public final class ValidationUtils {
     public static <T> T[] assertNotEmpty(final T[] array, final String fieldName) throws IllegalArgumentException {
         assertNotNull(array, fieldName);
         if (array.length == 0) {
-            throw new IllegalArgumentException(String.format("%s cannot be empty", fieldName));
+            throw new IllegalArgumentException("%s cannot be empty".formatted(fieldName));
         }
         return array;
     }
@@ -114,7 +114,7 @@ public final class ValidationUtils {
     public static String assertStringNotEmpty(final String string, final String fieldName) throws IllegalArgumentException {
         assertNotNull(string, fieldName);
         if (string.isEmpty()) {
-            throw new IllegalArgumentException(String.format("%s cannot be empty", fieldName));
+            throw new IllegalArgumentException("%s cannot be empty".formatted(fieldName));
         }
         return string;
     }

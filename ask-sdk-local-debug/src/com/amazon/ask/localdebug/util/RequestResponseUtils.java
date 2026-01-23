@@ -125,7 +125,7 @@ public final class RequestResponseUtils {
                             }, skillResponseByteArray, new DebugLambdaContext());
                     break;
                 default:
-                    final String errorMessage = String.format("Unknown skill configuration type - %s",
+                    final String errorMessage = "Unknown skill configuration type - %s".formatted(
                             skillInvokerConfiguration.getType());
                     LOG.error(errorMessage);
                     throw new LocalDebugSdkException(errorMessage);

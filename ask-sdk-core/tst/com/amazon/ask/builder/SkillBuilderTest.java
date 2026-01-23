@@ -63,7 +63,7 @@ public class SkillBuilderTest {
         when(mockRequestHandler.canHandle(any())).thenReturn(true);
         builder.addRequestHandler(mockRequestHandler);
         SkillConfiguration configuration = builder.getConfigBuilder().build();
-        GenericRequestMapper<HandlerInput, Optional<Response>> mapper = configuration.getRequestMappers().get(0);
+        GenericRequestMapper<HandlerInput, Optional<Response>> mapper = configuration.getRequestMappers().getFirst();
         assertTrue(mapper instanceof GenericRequestMapper);
         assertEquals(mockRequestHandler, mapper.getRequestHandlerChain(getInputForIntent("FooIntent")).get().getRequestHandler());
     }
@@ -74,7 +74,7 @@ public class SkillBuilderTest {
         builder.addRequestHandler(mockRequestHandler);
         builder.addRequestInterceptor(requestInterceptor);
         SkillConfiguration configuration = builder.getConfigBuilder().build();
-        assertEquals(configuration.getRequestInterceptors().get(0), requestInterceptor);
+        assertEquals(configuration.getRequestInterceptors().getFirst(), requestInterceptor);
     }
 
     @Test
@@ -83,7 +83,7 @@ public class SkillBuilderTest {
         builder.addRequestHandler(mockRequestHandler);
         builder.addResponseInterceptor(responseInterceptor);
         GenericSkillConfiguration configuration = builder.getConfigBuilder().build();
-        assertEquals(configuration.getResponseInterceptors().get(0), responseInterceptor);
+        assertEquals(configuration.getResponseInterceptors().getFirst(), responseInterceptor);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class SkillBuilderTest {
         builder.addRequestHandler(mockRequestHandler);
         SkillConfiguration configuration = builder.getConfigBuilder().build();
         assertEquals(1, configuration.getHandlerAdapters().size());
-        assertTrue(configuration.getHandlerAdapters().get(0) instanceof BaseHandlerAdapter);
+        assertTrue(configuration.getHandlerAdapters().getFirst() instanceof BaseHandlerAdapter);
     }
 
     @Test

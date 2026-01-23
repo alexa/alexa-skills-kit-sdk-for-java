@@ -66,7 +66,7 @@ public final class UserAgentUtils {
      * @return customUserAgent.
      */
     static String internalGetUserAgent(final Properties systemProperties, final String customUserAgent) {
-        String coreUserAgent = String.format("ask-java/%s Java/%s", SdkConstants.SDK_VERSION, getJavaVersion(systemProperties));
+        String coreUserAgent = "ask-java/%s Java/%s".formatted(SdkConstants.SDK_VERSION, getJavaVersion(systemProperties));
         return coreUserAgent + (customUserAgent != null ? " " + customUserAgent : "");
     }
 

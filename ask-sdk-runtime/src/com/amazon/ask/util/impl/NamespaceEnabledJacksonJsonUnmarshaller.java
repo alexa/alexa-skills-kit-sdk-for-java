@@ -76,7 +76,7 @@ public class NamespaceEnabledJacksonJsonUnmarshaller<Type> implements JsonUnmars
         try {
             JsonNode root = MAPPER.readTree(in);
             Optional<String> namespaceDiscriminator = UnmarshallUtils.getNamespaceDiscriminator(root);
-            if (!namespaceDiscriminator.isPresent() || !validTypes.containsKey(namespaceDiscriminator.get())) {
+            if (namespaceDiscriminator.isEmpty() || !validTypes.containsKey(namespaceDiscriminator.get())) {
                 return Optional.empty();
             }
             Class targetType = validTypes.get(namespaceDiscriminator.get());
