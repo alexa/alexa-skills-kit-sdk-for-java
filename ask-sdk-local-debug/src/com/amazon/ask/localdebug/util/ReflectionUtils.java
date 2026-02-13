@@ -50,7 +50,7 @@ public final class ReflectionUtils {
         try {
             return Class.forName(fullyQualifiedClassName);
         } catch (ClassNotFoundException e) {
-            LOG.error(String.format("Class not found exception for class - %s", fullyQualifiedClassName), e.toString());
+            LOG.error("Class not found exception for class - %s".formatted(fullyQualifiedClassName), e.toString());
             throw new LocalDebugSdkException(e.getMessage(), e);
         }
     }

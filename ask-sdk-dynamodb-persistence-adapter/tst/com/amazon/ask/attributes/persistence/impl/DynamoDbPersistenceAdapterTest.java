@@ -188,13 +188,13 @@ public class DynamoDbPersistenceAdapterTest {
 
         List<AttributeDefinition> attributeDefinitions = createTableRequestCaptor.getValue().getAttributeDefinitions();
         assertEquals(1, attributeDefinitions.size());
-        AttributeDefinition attributeDefinition = attributeDefinitions.get(0);
+        AttributeDefinition attributeDefinition = attributeDefinitions.getFirst();
         assertEquals("baz", attributeDefinition.getAttributeName());
         assertEquals("S", attributeDefinition.getAttributeType());
 
         List<KeySchemaElement> keySchemas = createTableRequestCaptor.getValue().getKeySchema();
         assertEquals(1, keySchemas.size());
-        KeySchemaElement keySchema = keySchemas.get(0);
+        KeySchemaElement keySchema = keySchemas.getFirst();
         assertEquals("baz", keySchema.getAttributeName());
         assertEquals("HASH", keySchema.getKeyType());
 

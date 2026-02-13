@@ -31,10 +31,12 @@ import static org.mockito.Mockito.when;
 public class FreeMarkerRendererTest {
 
     private static final String TEMPLATE =
-            "{\n" +
-            "    \"type\": \"PlainText\",\n" +
-            "    \"text\": \"${outputSpeechText}\"\n" +
-            "}";
+            """
+            {
+                "type": "PlainText",
+                "text": "${outputSpeechText}"
+            }\
+            """;
 
     private static final String EMPTY_TEMPLATE_JSON = "{ }";
 

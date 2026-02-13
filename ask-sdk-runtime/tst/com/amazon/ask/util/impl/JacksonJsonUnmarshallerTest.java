@@ -73,7 +73,7 @@ public class JacksonJsonUnmarshallerTest extends BaseUnmarshallerTest {
     }
 
     private byte[] getPayload(String discriminatorProperty, String discriminatorValue) {
-        String payload = String.format("{\"foo\":{\"validField\":\"foo\"}, \"header\":{\"%s\":\"%s\"}}", discriminatorProperty, discriminatorValue);
+        String payload = "{\"foo\":{\"validField\":\"foo\"}, \"header\":{\"%s\":\"%s\"}}".formatted(discriminatorProperty, discriminatorValue);
         return payload.getBytes();
     }
 

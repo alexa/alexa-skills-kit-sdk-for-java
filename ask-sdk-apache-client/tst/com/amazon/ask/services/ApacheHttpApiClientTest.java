@@ -136,7 +136,7 @@ public class ApacheHttpApiClientTest {
         assertEquals(response.getBody(), TEST_PAYLOAD);
         List<Pair<String, String>> headers = response.getHeaders();
         assertEquals(headers.size(), 1);
-        Pair<String, String> header = headers.get(0);
+        Pair<String, String> header = headers.getFirst();
         assertEquals(header.getName(), "foo");
         assertEquals(header.getValue(), "bar");
     }

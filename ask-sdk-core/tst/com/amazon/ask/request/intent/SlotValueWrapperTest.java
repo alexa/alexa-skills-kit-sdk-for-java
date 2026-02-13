@@ -53,7 +53,7 @@ public class SlotValueWrapperTest {
         SlotValueWrapper wrapper = SlotValueWrapper.createFrom(testSimpleSlotValue);
         List<SlotValueWrapper> values = wrapper.values();
         assertEquals(values.size(), 1);
-        SlotValueWrapper listWrapper = values.get(0);
+        SlotValueWrapper listWrapper = values.getFirst();
         assertEquals(listWrapper.unwrap(), testSimpleSlotValue);
     }
  

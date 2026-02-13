@@ -116,12 +116,12 @@ public class BaseTemplateFactory<Input, Output> implements TemplateFactory<Input
                     return templateContentData.get();
                 }
             } catch (TemplateFactoryException e) {
-                LOGGER.error(String.format("Fail to load template: %s using %s with error: %s.", responseTemplateName,
+                LOGGER.error("Fail to load template: %s using %s with error: %s.".formatted(responseTemplateName,
                         templateLoader, e.getMessage()));
                 throw e;
             }
         }
-        String message = String.format("Unable to load template: %s using provided Loader(s).", responseTemplateName);
+        String message = "Unable to load template: %s using provided Loader(s).".formatted(responseTemplateName);
         LOGGER.error(message);
         throw new TemplateFactoryException(message);
     }
@@ -138,7 +138,7 @@ public class BaseTemplateFactory<Input, Output> implements TemplateFactory<Input
         try {
             return templateRenderer.render(templateContentData, dataMap);
         } catch (TemplateFactoryException e) {
-            LOGGER.error(String.format("Fail to render template: %s using %s with error: %s.", templateContentData,
+            LOGGER.error("Fail to render template: %s using %s with error: %s.".formatted(templateContentData,
                     templateRenderer, e.getMessage()));
             throw e;
         }

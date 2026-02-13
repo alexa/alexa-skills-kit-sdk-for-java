@@ -116,7 +116,7 @@ public abstract class AbstractLocalTemplateFileLoader<Input> implements Template
                                     .withTemplateBaseDir(directoryPath)
                                     .build();
                         } catch (IOException e) {
-                            String message = String.format("Fail to read template file: %s with error: %s", templatePath, e.getMessage());
+                            String message = "Fail to read template file: %s with error: %s".formatted(templatePath, e.getMessage());
                             LOGGER.error(message);
                             throw new TemplateLoaderException(message);
                         }
@@ -125,12 +125,12 @@ public abstract class AbstractLocalTemplateFileLoader<Input> implements Template
                     return Optional.of(templateContentData);
                 }
             } catch (URISyntaxException e) {
-                String message = String.format("Cannot get valid URI for template file path: %s with error: %s", templatePath, e.getMessage());
+                String message = "Cannot get valid URI for template file path: %s with error: %s".formatted(templatePath, e.getMessage());
                 LOGGER.error(message);
                 throw new TemplateLoaderException(message);
             }
         }
-        String message = String.format("Cannot find template file: %s given directory path: %s and file extension: %s, returning empty.",
+        String message = "Cannot find template file: %s given directory path: %s and file extension: %s, returning empty.".formatted(
                 responseTemplateName, directoryPath, fileExtension);
         LOGGER.warn(message);
         return Optional.empty();

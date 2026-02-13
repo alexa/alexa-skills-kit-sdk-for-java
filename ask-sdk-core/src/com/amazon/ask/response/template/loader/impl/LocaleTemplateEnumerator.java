@@ -175,7 +175,7 @@ public final class LocaleTemplateEnumerator implements TemplateEnumerator<Handle
         if (matcher.matches()) {
             return NON_NULL_LOCALE_ENUMERATION_SIZE;
         }
-        String message = String.format("Invalid locale: %s", locale);
+        String message = "Invalid locale: %s".formatted(locale);
         LOGGER.error(message);
         throw new IllegalArgumentException(message);
     }

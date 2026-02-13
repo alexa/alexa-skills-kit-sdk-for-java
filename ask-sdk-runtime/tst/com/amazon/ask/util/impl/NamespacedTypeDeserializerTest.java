@@ -62,7 +62,7 @@ public class NamespacedTypeDeserializerTest extends BaseUnmarshallerTest {
     }
 
     private byte[] getPayload(String namespace, String name) {
-        String payload = String.format("{\"validField\":\"bar\", \"header\":{\"namespace\":\"%s\", \"name\":\"%s\"}}", namespace, name);
+        String payload = "{\"validField\":\"bar\", \"header\":{\"namespace\":\"%s\", \"name\":\"%s\"}}".formatted(namespace, name);
         return payload.getBytes();
     }
 

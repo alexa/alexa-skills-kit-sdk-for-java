@@ -28,7 +28,7 @@ public class UserAgentUtilsTest {
         String version = "1.8.0_151";
         Properties props = mock(Properties.class);
         when(props.getProperty("java.version")).thenReturn(version);
-        assertEquals(UserAgentUtils.internalGetUserAgent(props, null), String.format("ask-java/%s Java/%s", SdkConstants.SDK_VERSION, version));
+        assertEquals(UserAgentUtils.internalGetUserAgent(props, null), "ask-java/%s Java/%s".formatted(SdkConstants.SDK_VERSION, version));
     }
 
     @Test
@@ -37,12 +37,12 @@ public class UserAgentUtilsTest {
         String customUserAgent = "foo/bar/baz";
         Properties props = mock(Properties.class);
         when(props.getProperty("java.version")).thenReturn(version);
-        assertEquals(UserAgentUtils.internalGetUserAgent(props, customUserAgent), String.format("ask-java/%s Java/%s foo/bar/baz", SdkConstants.SDK_VERSION, version));
+        assertEquals(UserAgentUtils.internalGetUserAgent(props, customUserAgent), "ask-java/%s Java/%s foo/bar/baz".formatted(SdkConstants.SDK_VERSION, version));
     }
 
     @Test
     public void nullJvmPropertiesReturnsUnknownJvmVersion() {
-        assertEquals(UserAgentUtils.internalGetUserAgent(null, null), String.format("ask-java/%s Java/UNKNOWN", SdkConstants.SDK_VERSION));
+        assertEquals(UserAgentUtils.internalGetUserAgent(null, null), "ask-java/%s Java/UNKNOWN".formatted(SdkConstants.SDK_VERSION));
     }
 
 }

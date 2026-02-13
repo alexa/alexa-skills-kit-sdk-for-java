@@ -60,7 +60,7 @@ public class StandardSkillBuilderTest {
         when(mockRequestHandler.canHandle(any())).thenReturn(true);
         builder.addRequestHandler(mockRequestHandler);
         SkillConfiguration configuration = builder.getConfigBuilder().build();
-        GenericRequestMapper<HandlerInput, Optional<Response>> mapper = configuration.getRequestMappers().get(0);
+        GenericRequestMapper<HandlerInput, Optional<Response>> mapper = configuration.getRequestMappers().getFirst();
         assertTrue(mapper instanceof BaseRequestMapper);
         assertEquals(mockRequestHandler, mapper.getRequestHandlerChain(getInputForIntent("FooIntent")).get().getRequestHandler());
     }
@@ -83,7 +83,7 @@ public class StandardSkillBuilderTest {
         builder.addRequestHandler(mockRequestHandler);
         SkillConfiguration configuration = builder.getConfigBuilder().build();
         assertEquals(1, configuration.getHandlerAdapters().size());
-        assertTrue(configuration.getHandlerAdapters().get(0) instanceof BaseHandlerAdapter);
+        assertTrue(configuration.getHandlerAdapters().getFirst() instanceof BaseHandlerAdapter);
     }
 
     @Test

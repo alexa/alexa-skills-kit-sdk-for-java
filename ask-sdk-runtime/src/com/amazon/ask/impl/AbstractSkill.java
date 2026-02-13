@@ -77,7 +77,7 @@ public abstract class AbstractSkill<Request, Response> implements AlexaSkill<Req
                 break;
             }
         }
-        if (!deserializedRequest.isPresent()) {
+        if (deserializedRequest.isEmpty()) {
             return null;
         }
 

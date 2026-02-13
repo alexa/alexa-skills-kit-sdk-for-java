@@ -56,7 +56,7 @@ public class ServletUtilsTest {
     @Test
     public void numeric_value_parsed_timestamp_tolerance_system_property() {
         System.setProperty(ServletConstants.TIMESTAMP_TOLERANCE_SYSTEM_PROPERTY, "1234");
-        assertEquals(ServletUtils.getTimeStampToleranceSystemProperty(), new Long(1234));
+        assertEquals(ServletUtils.getTimeStampToleranceSystemProperty(), Long.valueOf(1234));
     }
 
     @Test

@@ -35,7 +35,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.6.0</version>
         <reportSets>
           <reportSet>
             <reports>
@@ -67,17 +67,16 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.7.0</version>
+          <version>3.14.1</version>
           <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
             <forceJavacCompilerUse>true</forceJavacCompilerUse>
+            <release>21</release>
           </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-checkstyle-plugin</artifactId>
-          <version>3.1.0</version>
+          <version>3.6.0</version>
           <configuration>
             <configLocation>checkstyle.xml</configLocation>
             <encoding>UTF-8</encoding>

@@ -59,8 +59,8 @@ public class SkillRequestTimestampVerifier implements SkillServletVerifier {
      */
     public SkillRequestTimestampVerifier(final long toleranceInMilliseconds) {
         if (toleranceInMilliseconds > MAXIMUM_TOLERANCE_MILLIS) {
-            LOGGER.warn(String.format("Provided tolerance value %s exceeds the maximum"
-                    + " allowed %s. Maximum value will be used instead.",
+            LOGGER.warn(("Provided tolerance value %s exceeds the maximum"
+                    + " allowed %s. Maximum value will be used instead.").formatted(
                     toleranceInMilliseconds, MAXIMUM_TOLERANCE_MILLIS));
             this.toleranceInMilliseconds = MAXIMUM_TOLERANCE_MILLIS;
         } else if (toleranceInMilliseconds < 0) {
@@ -110,8 +110,8 @@ public class SkillRequestTimestampVerifier implements SkillServletVerifier {
         }
 
         if (!withinTolerance) {
-            throw new SecurityException(String.format("Request with id %s and timestamp %s failed timestamp validation"
-                    + " with a delta of %s", request.getRequestId(), requestTimestamp, delta));
+            throw new SecurityException(("Request with id %s and timestamp %s failed timestamp validation"
+                    + " with a delta of %s").formatted(request.getRequestId(), requestTimestamp, delta));
         }
     }
 
